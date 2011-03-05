@@ -97,12 +97,14 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     }
 
+
+
     /**
      * Required by super-class. See android.view.View.
      * @param context Android Context used to doBeforeDraw this Plot.
      */
     public Plot(Context context, String title) {
-        super(context);
+        super(context);       
         this.title = title;
         postInit();
     }
@@ -494,6 +496,20 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     public void setBackgroundPaint(Paint backgroundPaint) {
         this.backgroundPaint = backgroundPaint;
+    }
+
+    /**
+     * Convenience method - wraps the individual setMarginXXX methods into a single method.
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     */
+    public void setMargins(float left, float top, float right, float bottom) {
+        setMarginLeft(left);
+        setMarginTop(top);
+        setMarginRight(right);
+        setMarginBottom(bottom);
     }
 
     public float getMarginTop() {

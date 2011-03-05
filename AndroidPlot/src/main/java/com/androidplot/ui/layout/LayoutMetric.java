@@ -5,12 +5,6 @@ package com.androidplot.ui.layout;
 abstract class LayoutMetric<LayoutType extends Enum> {
 
     private LayoutType layoutType;
-    /*
-    public enum LayoutType {
-        ABSOLUTE,
-        RELATIVE
-    }
-    */
 
     //private LayoutType layoutType;
     private float value;
@@ -24,6 +18,11 @@ abstract class LayoutMetric<LayoutType extends Enum> {
         //setLayoutType(layoutType);
     }
 
+    /**
+     * Verifies that the values passed in are valid for the layout algorithm being used.
+     * @param value 
+     * @param layoutType
+     */
     protected abstract void validatePair(float value, LayoutType layoutType);
 
     public void set(float value, LayoutType layoutType) {

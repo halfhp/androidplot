@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="06b5d626-3bd2-48c7-b804-b933970ea91c" name="Default" comment="" />
+    <list id="06b5d626-3bd2-48c7-b804-b933970ea91c" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/AnchorPosition.java" afterPath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/AnchorPosition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/LayoutMetric.java" afterPath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/LayoutMetric.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeLayoutType.java" afterPath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeLayoutType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeMetric.java" afterPath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeMetric.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeMetrics.java" afterPath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeMetrics.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/XMetric.java" afterPath="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/XMetric.java" />
+    </list>
+    <list default="true" id="f9b981ee-b45c-4044-b555-b029fa4fca92" name="ANDROIDPLOT-21: Javadoc for SizeMetrics" comment="" />
     <ignored path="AndroidPlot.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -60,10 +70,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="XYPlotTest.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/AndroidPlot/src/test/java/com/androidplot/xy/XYPlotTest.java">
+      <file leaf-file-name="SizeMetrics.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeMetrics.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="0" selection-start="739" selection-end="739" vertical-scroll-proportion="0.71145374">
+            <state line="15" column="7" selection-start="725" selection-end="725" vertical-scroll-proportion="0.03655914">
               <folding />
             </state>
           </provider>
@@ -84,6 +94,12 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/AndroidPlot/src/test/java/com/androidplot/xy/XYPlotTest.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/XMetric.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeMetrics.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/LayoutMetric.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeMetric.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeLayoutType.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/AnchorPosition.java" />
       </list>
     </option>
   </component>
@@ -124,9 +140,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
-      <pane id="Favorites" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -173,19 +187,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="androidplot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="xy" />
+              <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -203,7 +205,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
+              <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -215,8 +217,40 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="androidplot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Favorites" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -334,38 +368,90 @@
     <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
     <supportedVersion>125</supportedVersion>
   </component>
+  <component name="SvnFileUrlMappingImpl">
+    <option name="myMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot\OrientationSensorExample" />
+          <option name="myCopyRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot\OrientationSensorExample" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot\AndroidPlot" />
+          <option name="myCopyRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot\AndroidPlot" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot\SimpleXYPlotExample" />
+          <option name="myCopyRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot\SimpleXYPlotExample" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot\DynamicXYPlotExample" />
+          <option name="myCopyRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot\DynamicXYPlotExample" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot" />
+          <option name="myCopyRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot\HelperExample" />
+          <option name="myCopyRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot\HelperExample" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+    <option name="myMoreRealMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot" />
+          <option name="myCopyRoot" value="C:\Users\halfhp\Documents\Work\AndroidPlot" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+  </component>
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
+    <task id="Default" summary="Default task">
+      <changelist id="06b5d626-3bd2-48c7-b804-b933970ea91c" name="Default" comment="" />
       <created>1298963243899</created>
-      <updated>1298963243899</updated>
+      <updated>1299307253464</updated>
     </task>
-    <servers />
+    <task active="true" id="ANDROIDPLOT-21" summary="Javadoc for SizeMetrics">
+      <changelist id="f9b981ee-b45c-4044-b555-b029fa4fca92" name="ANDROIDPLOT-21: Javadoc for SizeMetrics" comment="" />
+      <created>1299289593000</created>
+      <option name="issue" value="true" />
+      <updated>1299307253565</updated>
+    </task>
+    <servers>
+      <JIRA shared="false" url="https://bridalveil.jira.com">
+        <password>df98dfc2dfc5dfdedf9edfdf</password>
+        <option name="useHttpAuthentication" value="false" />
+        <option name="useProxy" value="false" />
+        <username>halfhp</username>
+      </JIRA>
+    </servers>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="870" extended-state="0" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1456" height="886" extended-state="6" />
+    <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32914925" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3287858" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.67085075" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24982053" sideWeight="0.67121416" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsManagerConfiguration">
@@ -408,7 +494,55 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/AndroidPlot/src/test/java/com/androidplot/xy/XYPlotTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="0" selection-start="739" selection-end="739" vertical-scroll-proportion="0.71145374">
+        <state line="40" column="0" selection-start="834" selection-end="834" vertical-scroll-proportion="0.2924731" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/XMetric.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="0" selection-start="36" selection-end="36" vertical-scroll-proportion="0.07311828" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeMetric.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="50" selection-start="247" selection-end="247" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeLayoutType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="26" selection-start="630" selection-end="630" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/AnchorPosition.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="0" selection-start="467" selection-end="467" vertical-scroll-proportion="0.6215054">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/XLayoutStyle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="12" selection-start="48" selection-end="48" vertical-scroll-proportion="0.07311828">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/YMetric.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="13" selection-start="204" selection-end="204" vertical-scroll-proportion="0.03655914">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/LayoutMetric.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="28" selection-start="66" selection-end="66" vertical-scroll-proportion="0.03655914">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot/src/main/java/com/androidplot/ui/layout/SizeMetrics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="7" selection-start="725" selection-end="725" vertical-scroll-proportion="0.03655914">
           <folding />
         </state>
       </provider>

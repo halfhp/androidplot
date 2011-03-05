@@ -1,11 +1,10 @@
 package com.androidplot.ui.layout;
 
 /**
- * Created by IntelliJ IDEA.
- * User: nfellows
- * Date: 12/29/10
- * Time: 8:04 PM
- * To change this template use File | Settings | File Templates.
+ * Encapsulates a sizing algorithm and an associated value.
+ *
+ * The available algorithms list are stored in the {@link SizeLayoutType} enumeration.
+ *
  */
 public class SizeMetric extends LayoutMetric<SizeLayoutType> {
 

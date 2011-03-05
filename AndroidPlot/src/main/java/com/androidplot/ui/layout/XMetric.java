@@ -1,13 +1,5 @@
 package com.androidplot.ui.layout;
 
-/**
- * Created by IntelliJ IDEA.
- * User: nfellows
- * Date: 12/29/10
- * Time: 7:38 PM
- * To change this template use File | Settings | File Templates.
- */
-
 
 public class XMetric extends PositionMetric<XLayoutStyle> {
 

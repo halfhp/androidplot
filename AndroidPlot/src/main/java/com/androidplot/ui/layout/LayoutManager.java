@@ -18,6 +18,9 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
     private boolean drawOutlinesEnabled = true;
     private Paint outlinePaint;
 
+    private boolean drawOutlineShadowsEnabled = true;
+    private Paint outlineShadowPaint;
+
     private boolean drawMarginsEnabled = true;
     private Paint marginPaint;
 
@@ -34,6 +37,11 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
         outlinePaint = new Paint();
         outlinePaint.setColor(Color.GREEN);
         outlinePaint.setStyle(Paint.Style.STROKE);
+
+        outlineShadowPaint = new Paint();
+        outlineShadowPaint.setColor(Color.DKGRAY);
+        outlineShadowPaint.setStyle(Paint.Style.FILL);
+        outlineShadowPaint.setShadowLayer(3, 5, 5, Color.BLACK);
 
         marginPaint = new Paint();
         marginPaint.setColor(Color.YELLOW);
@@ -210,7 +218,6 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
     }
 
     public synchronized void draw(Canvas canvas, RectF canvasRect, RectF marginRect, RectF paddingRect) throws PlotRenderException {
-        int canvasState = canvas.save(); // preserve clipping etc
         //for(Widget widget : widgetOrder) {
         //synchronized(widgetRegistry) {
         if(isDrawMarginsEnabled()) {
@@ -220,6 +227,8 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
             drawSpacing(canvas, marginRect, paddingRect, paddingPaint);
         }
         for(Widget widget : getKeysAsList()) {
+            int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG); // preserve clipping etc
+            try {
             //PositionMetrics metrics = widgets.get(widget);
             PositionMetrics metrics = get(widget);
             /*
@@ -238,6 +247,16 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
 
             //RectF widgetRect = new RectF(coords.getX(), coords.getY(), coords.getX() + elementWidth, coords.getY() + elementHeight);
             RectF widgetRect = new RectF(l, t, r, b);
+
+            if(drawOutlineShadowsEnabled) {
+                //int masked = canvas.save();
+                //canvas.restoreToCount(canvasState);
+                //canvas.restoreToCount(canvasState);
+                //canvas.clipRect(widgetRect, Region.Op.REPLACE);
+                canvas.drawRect(widgetRect, outlineShadowPaint);
+                //canvas.drawRect(widgetRect, outlinePaint);
+                //canvas.restoreToCount(masked);
+            }
 
             // not sure why this is, but the rect clipped by clipRect is 1 less than the one drawn by drawRect.
             // so this is necessary to avoid clipping borders:
@@ -263,16 +282,25 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
                 drawAnchor(canvas, anchorCoords);
             }
 
+
             if(drawOutlinesEnabled) {
+                //int masked = canvas.save();
+                //canvas.restoreToCount(canvasState);
+                //canvas.drawRect(widgetRect, outlineShadowPaint);
                 canvas.drawRect(widgetRect, outlinePaint);
+                //canvas.restoreToCount(masked);
             }
+            } finally {
+                canvas.restoreToCount(canvasState);  // restore clipping etc.
+            }
+
         }
         //}
-        canvas.restoreToCount(canvasState);  // restore clipping etc.
+        //canvas.restoreToCount(canvasState);  // restore clipping etc.
     }
 
     private void drawSpacing(Canvas canvas, RectF outer, RectF inner, Paint paint) {
-        int saved = canvas.save();
+        int saved = canvas.save(Canvas.ALL_SAVE_FLAG);
         canvas.clipRect(inner, Region.Op.DIFFERENCE);
         canvas.drawRect(outer, paint);
         canvas.restoreToCount(saved);

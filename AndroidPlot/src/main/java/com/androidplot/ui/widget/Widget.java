@@ -97,6 +97,46 @@ public abstract class Widget implements BoxModelable {
         return boxModel.getMarginBottom();
     }
 
+    @Override
+    public float getPaddingLeft() {
+        return boxModel.getPaddingLeft();
+    }
+
+    @Override
+    public void setPaddingLeft(float paddingLeft) {
+        boxModel.setPaddingLeft(paddingLeft);
+    }
+
+    @Override
+    public float getPaddingTop() {
+        return boxModel.getPaddingTop();
+    }
+
+    @Override
+    public void setPaddingTop(float paddingTop) {
+        boxModel.setPaddingTop(paddingTop);
+    }
+
+    @Override
+    public float getPaddingRight() {
+        return boxModel.getPaddingRight();
+    }
+
+    @Override
+    public void setPaddingRight(float paddingRight) {
+        boxModel.setPaddingRight(paddingRight);
+    }
+
+    @Override
+    public float getPaddingBottom() {
+        return boxModel.getPaddingBottom();
+    }
+
+    @Override
+    public void setPaddingBottom(float paddingBottom) {
+        boxModel.setPaddingBottom(paddingBottom);
+    }
+
     public void setMarginBottom(float marginBottom) {
         boxModel.setMarginBottom(marginBottom);
     }

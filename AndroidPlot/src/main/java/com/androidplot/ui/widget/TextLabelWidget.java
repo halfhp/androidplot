@@ -75,6 +75,7 @@ public abstract class TextLabelWidget extends Widget {
 
         // BEGIN ROTATION CALCULATION
         int canvasState = canvas.save();
+        try {
         canvas.translate(start.x, start.y);
         switch(orientation) {
             case HORIZONTAL:
@@ -98,10 +99,14 @@ public abstract class TextLabelWidget extends Widget {
                 //hOffset = (widgetRect.height()-labelSize.width())/2;
                 break;
             default:
+
                 throw new UnsupportedOperationException("Orientation " + orientation + " not yet implemented for TextLabelWidget.");
         }
         canvas.drawText(label, 0, vOffset, labelPaint);
-        canvas.restoreToCount(canvasState);
+        } finally {
+            canvas.restoreToCount(canvasState);
+        }
+
         // END ROTATION CALCULATION
 
         //float bottomEdge = coords.getY() + size.getFontHeight();

@@ -46,7 +46,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
             canvas.drawRect(rect, formatter.getFillPaint());
         }
         if(formatter.getLinePaint() != null) {
-            canvas.drawLine(rect.left, rect.top, rect.right, rect.bottom, formatter.getLinePaint());
+            canvas.drawLine(rect.left, rect.bottom, rect.right, rect.top, formatter.getLinePaint());
         }
 
         if(formatter.getVertexPaint() != null) {
@@ -212,6 +212,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
 
     protected void drawLastPoint(Canvas canvas, RectF plotArea, LineAndPointFormatter format) throws PlotRenderException {
         canvas.drawPoint(lastPoint.x, lastPoint.y, format.getVertexPaint());
+       
     }
 
 

@@ -62,6 +62,22 @@ public class BoxModel implements BoxModelable{
                 marginRect.bottom - getPaddingBottom());
     }
 
+    @Override
+    public void setMargins(float left, float top, float right, float bottom) {
+        setMarginLeft(left);
+        setMarginTop(top);
+        setMarginRight(right);
+        setMarginBottom(bottom);
+    }
+
+    @Override
+    public void setPadding(float left, float top, float right, float bottom) {
+        setPaddingLeft(left);
+        setPaddingTop(top);
+        setPaddingRight(right);
+        setPaddingBottom(bottom);
+    }
+
 
     public float getMarginLeft() {
         return marginLeft;

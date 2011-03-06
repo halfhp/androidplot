@@ -67,6 +67,8 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
         setDrawAnchorsEnabled(false);
         setDrawMarginsEnabled(false);
         setDrawPaddingEnabled(false);
+        setDrawOutlineShadowsEnabled(false);
+
     }
 
 
@@ -498,5 +500,21 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
 
     public void setPaddingPaint(Paint paddingPaint) {
         this.paddingPaint = paddingPaint;
+    }
+
+    public boolean isDrawOutlineShadowsEnabled() {
+        return drawOutlineShadowsEnabled;
+    }
+
+    public void setDrawOutlineShadowsEnabled(boolean drawOutlineShadowsEnabled) {
+        this.drawOutlineShadowsEnabled = drawOutlineShadowsEnabled;
+    }
+
+    public Paint getOutlineShadowPaint() {
+        return outlineShadowPaint;
+    }
+
+    public void setOutlineShadowPaint(Paint outlineShadowPaint) {
+        this.outlineShadowPaint = outlineShadowPaint;
     }
 }

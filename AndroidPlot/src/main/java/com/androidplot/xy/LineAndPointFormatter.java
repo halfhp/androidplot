@@ -1,11 +1,12 @@
 package com.androidplot.xy;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 
 public class LineAndPointFormatter extends XYSeriesFormatter {
 
     private static final float DEFAULT_LINE_STROKE_WIDTH = 1.5f;
-    private static final float DEFAULT_VERTEX_STROKE_WIDTH = 2.5f;
+    private static final float DEFAULT_VERTEX_STROKE_WIDTH = 4.5f;
 
     private Paint linePaint;
     private Paint vertexPaint;
@@ -61,6 +62,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter {
             linePaint.setStrokeWidth(DEFAULT_LINE_STROKE_WIDTH);
             linePaint.setColor(lineColor);
             linePaint.setStyle(Paint.Style.STROKE);
+            linePaint.setShadowLayer(1, 3, 3, Color.BLACK);
         }
     }
 
@@ -72,6 +74,9 @@ public class LineAndPointFormatter extends XYSeriesFormatter {
             vertexPaint.setAntiAlias(true);
             vertexPaint.setStrokeWidth(DEFAULT_VERTEX_STROKE_WIDTH);
             vertexPaint.setColor(vertexColor);
+            vertexPaint.setStrokeCap(Paint.Cap.ROUND);
+
+            vertexPaint.setShadowLayer(1, 3, 3, Color.BLACK);
         }
     }
 

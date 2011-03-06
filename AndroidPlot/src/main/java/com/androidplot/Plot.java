@@ -51,8 +51,14 @@ import java.util.*;
  */
 public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends DataRenderer> extends View {
 
+    public enum BorderStyle {
+        ROUNDED,
+        SQUARE,
+        NO_BORDER
+    }
     protected String title;
     private BoxModel boxModel = new BoxModel(3, 3, 3, 3, 3, 3, 3, 3);
+    private BorderStyle borderStyle = Plot.BorderStyle.ROUNDED;
     private float borderRadiusX = 15;
     private float borderRadiusY = 15;
     private boolean drawBorderEnabled = true;
@@ -367,7 +373,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             synchronized(this) {
                 layoutManager.draw(canvas, canvasRect, marginatedRect, paddedRect);
             }
-            if (drawBorderEnabled) {
+            if (isDrawBorderEnabled() && getBorderPaint() != null) {
                 drawBorder(canvas, marginatedRect);
             }
         } catch (PlotRenderException e) {
@@ -382,17 +388,53 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     /**
+     * Sets the visual style of the plot's border.
+     * @param style
+     * @param radiusX Sets the X radius for BorderStyle.ROUNDED.  Use null for all other styles.
+     * @param radiusY Sets the Y radius for BorderStyle.ROUNDED.  Use null for all other styles.
+     */
+    public void setBorderStyle(BorderStyle style, Float radiusX, Float radiusY) {
+        if (style == Plot.BorderStyle.ROUNDED) {
+            if (radiusX != null || radiusY != null){
+                throw new IllegalArgumentException("radiusX and radiusY cannot be null when using BorderStyle.ROUNDED");
+            }
+            this.borderRadiusX = radiusX;
+            this.borderRadiusY = radiusY;
+        }
+        this.borderStyle = style;
+    }
+
+    /**
      * Draws the plot's outer border.
      * @param canvas
      * @throws PlotRenderException
      */
     protected void drawBorder(Canvas canvas, RectF dims) throws PlotRenderException {
 
-        canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, borderPaint);
+
+        switch(borderStyle) {
+            case ROUNDED:
+                canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, borderPaint);
+                break;
+            case SQUARE:
+                canvas.drawRect(dims, borderPaint);
+                break;
+            default:
+                return;
+        }
     }
 
     protected void drawBackground(Canvas canvas, RectF dims) throws PlotRenderException {
-        canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, backgroundPaint);
+        switch(borderStyle) {
+            case ROUNDED:
+                canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, backgroundPaint);
+                break;
+            case SQUARE:
+                canvas.drawRect(dims, backgroundPaint);
+                break;
+            default:
+                return;
+        }
     }
 
     /**
@@ -533,5 +575,13 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     public void setPlotPaddingRight(float plotPaddingRight) {
         boxModel.setPaddingRight(plotPaddingRight);
+    }
+
+    public Paint getBorderPaint() {
+        return borderPaint;
+    }
+
+    public void setBorderPaint(Paint borderPaint) {
+        this.borderPaint = borderPaint;
     }
 }

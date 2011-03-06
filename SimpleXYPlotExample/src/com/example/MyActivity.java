@@ -47,6 +47,9 @@ public class MyActivity extends Activity
         //plot.setUserRangeOrigin(44);
         plot.centerOnRangeOrigin(60);
         plot.centerOnDomainOrigin(5);
+
+
+        plot.setGridPadding(4, 4, 4, 4);
         //plot.setDomainBoundaries(5,7,BoundaryMode.FIXED);
 
         // get rid of the visual aids for positioning:

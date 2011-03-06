@@ -132,7 +132,7 @@ public class XYPlotLegendWidget extends Widget {
 
     }
 
-    protected float drawLegendItem(Canvas canvas, String text, PointF point, Paint linePaint, Paint vertexPaint) {
+  /*  protected float drawLegendItem(Canvas canvas, String text, PointF point, Paint linePaint, Paint vertexPaint) {
 
         drawIcon(canvas, point, linePaint, vertexPaint);
         canvas.drawText(text, point.x + iconWidth, point.y, legendLabelPaint);
@@ -146,6 +146,7 @@ public class XYPlotLegendWidget extends Widget {
         // draw the line:
 
         // horizontal icon:
+        //canvas.drawLine(point.x, point.y-5, point.x+iconWidth, point.y-5, linePaint);
         canvas.drawLine(point.x, point.y-5, point.x+iconWidth, point.y-5, linePaint);
         canvas.drawPoint(point.x + iconWidth/2, point.y-5, vertexPaint);
 
@@ -154,6 +155,6 @@ public class XYPlotLegendWidget extends Widget {
         // diagonal icon: (will take up less space than a horizontal line)
         //canvas.drawLine(point.getX(), point.getY()-(iconWidth*2), point.getX()+(iconWidth*2), point.getY(), linePaint);
         //canvas.drawPoint(point.getX() + iconWidth/2, point.getY()-(iconWidth/2), vertexPaint);
-    }
+    }*/
 
 }

@@ -23,6 +23,10 @@ public interface BoxModelable {
     public RectF getPaddedRect(RectF marginRect);
 
 
+    public void setMargins(float left, float top, float right, float bottom);
+
+    public void setPadding(float left, float top, float right, float bottom);
+
     public float getMarginLeft();
 
     public void setMarginLeft(float marginLeft);

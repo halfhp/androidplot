@@ -54,16 +54,16 @@ public class MyActivity extends Activity {
         SampleDynamicSeries sine1Series = new SampleDynamicSeries(data, 0, "Sine 1");
         SampleDynamicSeries sine2Series = new SampleDynamicSeries(data, 1, "Sine 2");
 
-        /*dynamicPlot.addSeries(sine1Series, new LineAndPointFormatter(Color.rgb(0, 0, 0), null, Color.rgb(0, 80, 0)));
+        dynamicPlot.addSeries(sine1Series, new LineAndPointFormatter(Color.rgb(0, 0, 0), null, Color.rgb(0, 80, 0)));
 
         // create a series using a formatter with some transparency applied:
         LineAndPointFormatter f1 = new LineAndPointFormatter(Color.rgb(0, 0, 200), null, Color.rgb(0, 0, 80));
         f1.getFillPaint().setAlpha(220);
         dynamicPlot.addSeries(sine2Series, f1);
-        dynamicPlot.setGridPadding(5, 0, 5, 0);*/
+        dynamicPlot.setGridPadding(5, 0, 5, 0);
 
-        dynamicPlot.addSeries(sine1Series, new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0)));
-        dynamicPlot.addSeries(sine2Series, new BarFormatter(Color.argb(100, 0, 0, 200), Color.rgb(0, 0, 80)));
+        //dynamicPlot.addSeries(sine1Series, new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0)));
+        //dynamicPlot.addSeries(sine2Series, new BarFormatter(Color.argb(100, 0, 0, 200), Color.rgb(0, 0, 80)));
 
         // hook up the plotUpdater to the data model:
         data.addObserver(plotUpdater);

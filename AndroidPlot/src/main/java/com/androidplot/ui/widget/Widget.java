@@ -85,6 +85,14 @@ public abstract class Widget implements BoxModelable {
         boxModel.setMarginRight(marginRight);
     }
 
+    public void setMargins(float left, float top, float right, float bottom) {
+        boxModel.setMargins(left, top, right, bottom);
+    }
+
+    public void setPadding(float left, float top, float right, float bottom) {
+        boxModel.setPadding(left, top, right, bottom);
+    }
+
     public float getMarginTop() {
         return boxModel.getMarginTop();
     }

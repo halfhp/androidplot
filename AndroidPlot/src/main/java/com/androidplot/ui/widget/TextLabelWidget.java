@@ -110,8 +110,8 @@ public abstract class TextLabelWidget extends Widget {
         //path.lineTo(end.getX(), end.getY());
         //path.close();
         //canvas.drawPath(path, labelPaint);
-        //float x = getMarginLeft();
-        //float y = getHeightPix(canvas.getFontHeight())-getMarginBottom();
+        //float x = getPlotMarginLeft();
+        //float y = getHeightPix(canvas.getFontHeight())-getPlotMarginBottom();
 
         //Paint.FontMetrics fMetrics = labelPaint.getFontMetrics();
          //vOffset = labelPaint.getFontMetrics().descent;

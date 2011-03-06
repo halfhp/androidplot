@@ -5,8 +5,6 @@ import android.view.View;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.ArrangeableHash;
-import com.androidplot.util.Dimension;
-import com.androidplot.util.Point;
 import com.androidplot.util.PointUtils;
 
 public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
@@ -20,6 +18,12 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
     private boolean drawOutlinesEnabled = true;
     private Paint outlinePaint;
 
+    private boolean drawMarginsEnabled = true;
+    private Paint marginPaint;
+
+    private boolean drawPaddingEnabled = true;
+    private Paint paddingPaint;
+
     //private View view;
 
     {
@@ -30,6 +34,16 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
         outlinePaint = new Paint();
         outlinePaint.setColor(Color.GREEN);
         outlinePaint.setStyle(Paint.Style.STROKE);
+
+        marginPaint = new Paint();
+        marginPaint.setColor(Color.YELLOW);
+        marginPaint.setStyle(Paint.Style.FILL);
+        marginPaint.setAlpha(200);
+
+        paddingPaint= new Paint();
+        paddingPaint.setColor(Color.BLUE);
+        paddingPaint.setStyle(Paint.Style.FILL);
+        paddingPaint.setAlpha(200);
     }
 
     @Deprecated
@@ -43,6 +57,8 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
     public void disableAllMarkup() {
         setDrawOutlinesEnabled(false);
         setDrawAnchorsEnabled(false);
+        setDrawMarginsEnabled(false);
+        setDrawPaddingEnabled(false);
     }
 
 
@@ -193,10 +209,16 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
         //return point;
     }
 
-    public synchronized void draw(Canvas canvas, RectF plotDims) throws PlotRenderException {
+    public synchronized void draw(Canvas canvas, RectF canvasRect, RectF marginRect, RectF paddingRect) throws PlotRenderException {
         int canvasState = canvas.save(); // preserve clipping etc
         //for(Widget widget : widgetOrder) {
         //synchronized(widgetRegistry) {
+        if(isDrawMarginsEnabled()) {
+            drawSpacing(canvas, canvasRect, marginRect, marginPaint);
+        }
+        if(isDrawPaddingEnabled()) {
+            drawSpacing(canvas, marginRect, paddingRect, paddingPaint);
+        }
         for(Widget widget : getKeysAsList()) {
             //PositionMetrics metrics = widgets.get(widget);
             PositionMetrics metrics = get(widget);
@@ -204,9 +226,9 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
             float elementWidth = widget.getWidthPix(canvas.getWidth());
             float elementHeight = widget.getHeightPix(canvas.getHeight());
             */
-            float elementWidth = widget.getWidthPix(plotDims.width());
-            float elementHeight = widget.getHeightPix(plotDims.height());
-            PointF coords = getElementCoordinates(elementHeight, elementWidth, plotDims, metrics);
+            float elementWidth = widget.getWidthPix(paddingRect.width());
+            float elementHeight = widget.getHeightPix(paddingRect.height());
+            PointF coords = getElementCoordinates(elementHeight, elementWidth, paddingRect, metrics);
 
             // remove the floating point to allow clipping to work:
             int t = (int)(coords.y + 0.5);
@@ -236,6 +258,14 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
         }
         //}
         canvas.restoreToCount(canvasState);  // restore clipping etc.
+    }
+
+    private void drawSpacing(Canvas canvas, RectF outer, RectF inner, Paint paint) {
+        int saved = canvas.save();
+        canvas.clipRect(inner, Region.Op.DIFFERENCE);
+        canvas.drawRect(outer, paint);
+        canvas.restoreToCount(saved);
+
     }
 
     protected void drawAnchor(Canvas canvas, PointF coords) {
@@ -397,5 +427,37 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
 
     public void setDrawAnchorsEnabled(boolean drawAnchorsEnabled) {
         this.drawAnchorsEnabled = drawAnchorsEnabled;
+    }
+
+    public boolean isDrawMarginsEnabled() {
+        return drawMarginsEnabled;
+    }
+
+    public void setDrawMarginsEnabled(boolean drawMarginsEnabled) {
+        this.drawMarginsEnabled = drawMarginsEnabled;
+    }
+
+    public Paint getMarginPaint() {
+        return marginPaint;
+    }
+
+    public void setMarginPaint(Paint marginPaint) {
+        this.marginPaint = marginPaint;
+    }
+
+    public boolean isDrawPaddingEnabled() {
+        return drawPaddingEnabled;
+    }
+
+    public void setDrawPaddingEnabled(boolean drawPaddingEnabled) {
+        this.drawPaddingEnabled = drawPaddingEnabled;
+    }
+
+    public Paint getPaddingPaint() {
+        return paddingPaint;
+    }
+
+    public void setPaddingPaint(Paint paddingPaint) {
+        this.paddingPaint = paddingPaint;
     }
 }

@@ -33,12 +33,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
-import com.androidplot.series.XYSeries;
 import com.androidplot.ui.widget.TextOrientationType;
 import com.androidplot.ui.widget.TitleWidget;
 import com.androidplot.ui.layout.*;
@@ -55,17 +53,22 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     //private Handler handler;
     //protected LayoutType layout;
+    private static final int RECT_ADJUSTMENT = 1;
     protected String title;
 
-    private float marginTop = 3;
-    private float marginBottom = 3;
-    private float marginLeft = 3;
-    private float marginRight = 3;
+    private BoxModel boxModel = new BoxModel(3, 3, 3, 3, 3, 3, 3, 3);
 
-    private float paddingTop = 3;
-    private float paddingBottom = 3;
-    private float paddingLeft = 3;
-    private float paddingRight = 3;
+    //private RectF margins = new RectF(3, 3, 3, 3);
+
+    /*private float plotMarginTop = 3;
+    private float plotMarginBottom = 3;
+    private float plotMarginLeft = 3;
+    private float plotMarginRight = 3;
+
+    private float plotPaddingTop = 3;
+    private float plotPaddingBottom = 3;
+    private float plotPaddingLeft = 3;
+    private float plotPaddingRight = 3;*/
     private float borderRadiusX = 15;
     private float borderRadiusY = 15;
     private boolean drawBorderEnabled = true;
@@ -390,19 +393,22 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             //lockDatasources();
             //doBeforeDraw();
             //layout.redraw();
-            RectF paddedDims = new RectF(paddingLeft, paddingTop, getWidth() - (paddingRight + 1), getHeight() - (paddingLeft + 1));
+            //RectF paddingRect = new RectF(plotPaddingLeft, plotPaddingTop, getWidth() - (plotPaddingRight + 1), getHeight() - (plotPaddingLeft + 1));
+
+            RectF canvasRect = new RectF(0, 0, getWidth(), getHeight());
+            RectF marginRect = boxModel.getMarginRect(canvasRect);
+            RectF paddingRect = boxModel.getPaddingRect(canvasRect);
             if (drawBackgroundEnabled) {
-                drawBackground(canvas, paddedDims);
+                drawBackground(canvas, marginRect);
             }
 
-            RectF maginatedDims = new RectF(paddedDims.left + marginLeft
-                    , paddedDims.top + marginTop, paddedDims.right - marginRight, paddedDims.bottom - marginBottom);
+            /*RectF marginRect = new RectF(paddingRect.left + margins.left
+                    , paddingRect.top + margins.top, paddingRect.right - margins.right, paddingRect.bottom - margins.bottom);*/
             synchronized(this) {
-                layoutManager.draw(canvas, maginatedDims);
+                layoutManager.draw(canvas, canvasRect, marginRect, paddingRect);
             }
             if (drawBorderEnabled) {
-
-                drawBorder(canvas, paddedDims);
+                drawBorder(canvas, marginRect);
             }
 
 
@@ -505,55 +511,100 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param right
      * @param bottom
      */
-    public void setMargins(float left, float top, float right, float bottom) {
-        setMarginLeft(left);
-        setMarginTop(top);
-        setMarginRight(right);
-        setMarginBottom(bottom);
-    }
-
-    public float getMarginTop() {
-        return marginTop;
-    }
-
-    public void setMarginTop(float marginTop) {
-        this.marginTop = marginTop;
-    }
-
-    public float getMarginBottom() {
-        return marginBottom;
-    }
-
-    public void setMarginBottom(float marginBottom) {
-        this.marginBottom = marginBottom;
-    }
-
-    public float getMarginLeft() {
-        return marginLeft;
-    }
-
-    public void setMarginLeft(float marginLeft) {
-        this.marginLeft = marginLeft;
-    }
-
-    public float getMarginRight() {
-        return marginRight;
-    }
-
-    public void setMarginRight(float marginRight) {
-        this.marginRight = marginRight;
+    public void setPlotMargins(float left, float top, float right, float bottom) {
+        setPlotMarginLeft(left);
+        setPlotMarginTop(top);
+        setPlotMarginRight(right);
+        setPlotMarginBottom(bottom);
     }
 
     /**
-     * Causes the Plot to be redrawn.  There is no gaurantee when this will occur, only that it will occur.
-     * @param o
-     * @param arg
-     *//*
-    @Override
-    public void update(Observable o, Object arg) {
-        this.redraw();
+     * Convenience method - wraps the individual setPaddingXXX methods into a single method.
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     */
+    public void setPlotPadding(float left, float top, float right, float bottom) {
+        setPlotPaddingLeft(left);
+        setPlotPaddingTop(top);
+        setPlotPaddingRight(right);
+        setPlotPaddingBottom(bottom);
     }
-*/
 
+    public float getPlotMarginTop() {
+        return boxModel.getMarginTop();
+    }
 
+    public void setPlotMarginTop(float plotMarginTop) {
+        boxModel.setMarginTop(plotMarginTop);
+    }
+
+    public float getPlotMarginBottom() {
+        return boxModel.getMarginBottom();
+    }
+
+    public void setPlotMarginBottom(float plotMarginBottom) {
+        boxModel.setMarginBottom(plotMarginBottom);
+    }
+
+    public float getPlotMarginLeft() {
+        return boxModel.getMarginLeft();
+    }
+
+    public void setPlotMarginLeft(float plotMarginLeft) {
+        boxModel.setMarginLeft(plotMarginLeft);
+    }
+
+    public float getPlotMarginRight() {
+        return boxModel.getMarginRight();
+    }
+
+    public void setPlotMarginRight(float plotMarginRight) {
+        boxModel.setMarginRight(plotMarginRight);
+    }
+
+    /*public RectF getPadingRect(RectF marginRect) {
+        //RectF marginRect = getMarginRect();
+        return new RectF(marginRect.left + getPlotPaddingLeft(), marginRect.top+getPlotPaddingTop(), marginRect.right - getPlotPaddingRight(), marginRect.bottom - getPlotPaddingBottom());
+    }*/
+
+   /* public RectF getMarginRect(RectF canvasRect) {
+        //return margins;
+        //RectF paddedDims = getPadingRect();
+        //return new RectF( canvasRect.left + getPlotMarginLeft() + RECT_ADJUSTMENT, canvasRect.top + getPlotMarginTop(), canvasRect.right - (getPlotMarginRight() + RECT_ADJUSTMENT), canvasRect.bottom - (getPlotMarginBottom() + RECT_ADJUSTMENT));
+        return
+    }*/
+
+    public float getPlotPaddingTop() {
+        return boxModel.getPaddingTop();
+    }
+
+    public void setPlotPaddingTop(float plotPaddingTop) {
+        boxModel.setPaddingTop(plotPaddingTop);
+    }
+
+    public float getPlotPaddingBottom() {
+        return boxModel.getPaddingBottom();
+    }
+
+    public void setPlotPaddingBottom(float plotPaddingBottom) {
+        boxModel.setPaddingBottom(plotPaddingBottom);
+    }
+
+    public float getPlotPaddingLeft() {
+        return boxModel.getPaddingLeft();
+    }
+
+    public void setPlotPaddingLeft(float plotPaddingLeft) {
+        boxModel.setPaddingLeft(plotPaddingLeft);
+    }
+
+    public float getPlotPaddingRight() {
+        return boxModel.getPaddingRight();
+    }
+
+    public void setPlotPaddingRight(float plotPaddingRight) {
+        boxModel.setPaddingRight(plotPaddingRight);
+    }
 }

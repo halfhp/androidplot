@@ -161,9 +161,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         getTitleWidget().pack();
         getDomainLabelWidget().pack();
         getRangeLabelWidget().pack();
-        setMarginLeft(2);
-        setMarginRight(2);
-        setMarginBottom(2);
+        setPlotMarginLeft(2);
+        setPlotMarginRight(2);
+        setPlotMarginBottom(2);
     }
 
 

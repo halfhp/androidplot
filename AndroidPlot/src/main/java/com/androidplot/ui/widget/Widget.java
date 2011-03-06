@@ -6,25 +6,19 @@ import com.androidplot.ui.layout.*;
 import com.androidplot.util.Dimension;
 import com.androidplot.util.Point;
 
-/**
- * Created by IntelliJ IDEA.
- * User: nfellows
- * Date: 12/29/10
- * Time: 3:39 PM
- * To change this template use File | Settings | File Templates.
- */
-public abstract class Widget {
+public abstract class Widget implements BoxModelable {
 
     private Paint borderPaint;
     private Paint backgroundPaint;
-    //private Paint anchorPaint;
     private boolean drawBorderEnabled = false;
     private boolean drawBackgroundEnabled = false;
-
     private boolean clippingEnabled = true;
-    //private boolean drawAnchorEnabled = true;
-
-    //private RectF margins;
+    /*private float marginTop = 0;
+    private float marginBottom = 0;
+    private float marginLeft = 0;
+    private float marginRight = 0;*/
+    private BoxModel boxModel = new BoxModel();
+    private SizeMetrics sizeMetrics;
 
     {
         borderPaint = new Paint();
@@ -34,44 +28,7 @@ public abstract class Widget {
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.DKGRAY);
         backgroundPaint.setStyle(Paint.Style.FILL);
-
-        //margins = new RectF(3, 3, 3, 3);
-
-        //anchorPaint = new Paint();
-        //anchorPaint.setColor(Color.YELLOW);
     }
-
-
-
-
-
-
-
-    private float marginTop = 0;
-    private float marginBottom = 0;
-    private float marginLeft = 0;
-    private float marginRight = 0;
-
-
-    //private PositionMetrics metric;
-    //private SizeMetric widthMetric;
-    //private SizeMetric heightMetric;
-    private SizeMetrics sizeMetrics;
-    //private AnchorPosition anchorLocation;
-
-
-    /*
-    public Widget(float width, SizeLayoutType widthLayoutType, float height, SizeLayoutType heightLayoutType) {
-        //metric = new PositionMetrics(width, widthLayoutType, height, heightLayoutType);
-        this(width, widthLayoutType, height, heightLayoutType);
-    }
-    */
-
-    /*
-    public Widget(float width, SizeLayoutType widthLayoutType, float height, SizeLayoutType heightLayoutType) {
-        sizeMetrics = new SizeMetrics(width, widthLayoutType, height, heightLayoutType);
-    }
-    */
 
     public Widget(SizeMetric heightMetric, SizeMetric widthMetric) {
         sizeMetrics = new SizeMetrics(heightMetric, widthMetric);
@@ -87,8 +44,6 @@ public abstract class Widget {
 
 
     public void setWidth(float width) {
-        //widthMetric.
-        //widthMetric.setValue(width);
         sizeMetrics.getWidthMetric().setValue(width);
     }
 
@@ -118,108 +73,71 @@ public abstract class Widget {
         return sizeMetrics.getHeightMetric().getPixelValue(size);
     }
 
-    /*
-    public AnchorPosition getAnchorLocation() {
-        return anchorLocation;
+    public RectF getMarginatedRect(RectF widgetRect) {
+        return boxModel.getMarginatedRect(widgetRect);
     }
 
-    public void setAnchorLocation(AnchorPosition anchorLocation) {
-        this.anchorLocation = anchorLocation;
+    public RectF getPaddedRect(RectF widgetMarginRect) {
+        return boxModel.getPaddedRect(widgetMarginRect);
     }
-    */
 
     public void setMarginRight(float marginRight) {
-        this.marginRight = marginRight;
+        boxModel.setMarginRight(marginRight);
     }
 
     public float getMarginTop() {
-        return marginTop;
+        return boxModel.getMarginTop();
     }
 
     public void setMarginTop(float marginTop) {
-        this.marginTop = marginTop;
+        boxModel.setMarginTop(marginTop);
     }
 
     public float getMarginBottom() {
-        return marginBottom;
+        return boxModel.getMarginBottom();
     }
 
     public void setMarginBottom(float marginBottom) {
-        this.marginBottom = marginBottom;
+        boxModel.setMarginBottom(marginBottom);
     }
 
     public float getMarginLeft() {
-        return marginLeft;
+        return boxModel.getMarginLeft();
     }
 
     public void setMarginLeft(float marginLeft) {
-        this.marginLeft = marginLeft;
+        boxModel.setMarginLeft(marginLeft);
     }
 
     public float getMarginRight() {
-        return marginRight;
+        return boxModel.getMarginRight();
     }
 
-    //public void draw(Canvas canvas, Dimension viewSize, Dimension size, Point coords) throws PlotRenderException {
-    /*public void draw(Canvas canvas, Dimension viewSize, RectF widgetRect) throws PlotRenderException {
-        //float width = getWidthPix(canvas.getWidth());
-        //float height = getHeightPix(canvas.getFontHeight());
-
-        if(drawBackgroundEnabled) {
-            drawBackground(canvas, viewSize, widgetRect);
-        }
-
-        RectF marginatedRect = new RectF(widgetRect.left + marginLeft,
-                widgetRect.top + marginTop,
-                widgetRect.right - marginRight,
-                widgetRect.bottom - marginBottom);
-
-        //doBeforeDraw(canvas, viewSize, widgetRect);
-        doOnDraw(canvas, viewSize, marginatedRect);
-        
-        if(drawBorderEnabled) {
-            drawBorder(canvas, viewSize, widgetRect);
-        }
-
-
-    }*/
-
      public void draw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
-        //float width = getWidthPix(canvas.getWidth());
-        //float height = getHeightPix(canvas.getFontHeight());
-
         if(drawBackgroundEnabled) {
             drawBackground(canvas, widgetRect);
         }
 
-        RectF marginatedRect = new RectF(widgetRect.left + marginLeft,
+       /* RectF marginatedRect = new RectF(widgetRect.left + marginLeft,
                 widgetRect.top + marginTop,
                 widgetRect.right - marginRight,
-                widgetRect.bottom - marginBottom);
+                widgetRect.bottom - marginBottom);*/
 
-        //doBeforeDraw(canvas, viewSize, widgetRect);
-        doOnDraw(canvas, marginatedRect);
+        RectF marginatedRect = boxModel.getMarginatedRect(widgetRect);
+        RectF paddedRect = boxModel.getPaddedRect(marginatedRect);
+        doOnDraw(canvas, paddedRect);
 
         if(drawBorderEnabled) {
-            drawBorder(canvas, widgetRect);
+            drawBorder(canvas, paddedRect);
         }
-
-
     }
 
-    //protected void drawBorder(Canvas canvas, Dimension viewSize, Dimension size, Point coords) {
-    protected void drawBorder(Canvas canvas, RectF widgetRect) {
-
-        //canvas.drawRect(coords.getX(), coords.getY(), coords.getX() + size.getWidth(), coords.getY() + size.getFontHeight(), borderPaint);
-        canvas.drawRect(widgetRect, borderPaint);
-        //canvas.drawRect(0, 0, 10, 10, borderPaint);
+    protected void drawBorder(Canvas canvas, RectF paddedRect) {
+        canvas.drawRect(paddedRect, borderPaint);
     }
 
     protected void drawBackground(Canvas canvas, RectF widgetRect) {
-
-        //canvas.drawRect(coords.getX(), coords.getY(), coords.getX() + size.getWidth(), coords.getY() + size.getFontHeight(), borderPaint);
         canvas.drawRect(widgetRect, backgroundPaint);
-        //canvas.drawRect(0, 0, 10, 10, borderPaint);
     }
 
     /**

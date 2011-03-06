@@ -51,24 +51,8 @@ import java.util.*;
  */
 public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends DataRenderer> extends View {
 
-    //private Handler handler;
-    //protected LayoutType layout;
-    private static final int RECT_ADJUSTMENT = 1;
     protected String title;
-
     private BoxModel boxModel = new BoxModel(3, 3, 3, 3, 3, 3, 3, 3);
-
-    //private RectF margins = new RectF(3, 3, 3, 3);
-
-    /*private float plotMarginTop = 3;
-    private float plotMarginBottom = 3;
-    private float plotMarginLeft = 3;
-    private float plotMarginRight = 3;
-
-    private float plotPaddingTop = 3;
-    private float plotPaddingBottom = 3;
-    private float plotPaddingLeft = 3;
-    private float plotPaddingRight = 3;*/
     private float borderRadiusX = 15;
     private float borderRadiusY = 15;
     private boolean drawBorderEnabled = true;
@@ -81,14 +65,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private LinkedHashMap<Class, SeriesAndFormatterList<SeriesType,FormatterType>> seriesRegistry;
 
     private final ArrayList<PlotListener> listeners;
-    //private Object drawMutex;
 
     {
         listeners = new ArrayList<PlotListener>();
-        //drawMutex = new Object(); // TODO: lock on use
         seriesRegistry = new LinkedHashMap<Class, SeriesAndFormatterList<SeriesType,FormatterType>>();
         renderers = new LinkedList<RendererType>();
-        //handler = new PlotUpdateHandler(this);
         borderPaint = new Paint();
         borderPaint.setColor(Color.rgb(150, 150, 150));
         borderPaint.setStyle(Paint.Style.STROKE);
@@ -144,18 +125,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     private void loadAttrs(Context context, AttributeSet attrs) {
-
         this.title = attrs.getAttributeValue(null, "title");
-
-        /* May be needed in the future if we ever switch to a resource-aware packaging scheme, such as .apk.
-        TypedArray a = context.obtainStyledAttributes(attrs,
-                com.androidplot.R.styleable.AndroidPlot);
-        CharSequence s = a.getString(com.androidplot.R.styleable.AndroidPlot_title);
-        if (s != null) {
-            title = s.toString();
-        }
-        a.recycle();
-        */
     }
 
     public boolean addListener(PlotListener listener) {
@@ -388,30 +358,18 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
         doBeforeDraw();
         try {
-
-
-            //lockDatasources();
-            //doBeforeDraw();
-            //layout.redraw();
-            //RectF paddingRect = new RectF(plotPaddingLeft, plotPaddingTop, getWidth() - (plotPaddingRight + 1), getHeight() - (plotPaddingLeft + 1));
-
             RectF canvasRect = new RectF(0, 0, getWidth(), getHeight());
-            RectF marginRect = boxModel.getMarginRect(canvasRect);
-            RectF paddingRect = boxModel.getPaddingRect(canvasRect);
+            RectF marginatedRect = boxModel.getMarginatedRect(canvasRect);
+            RectF paddedRect = boxModel.getPaddedRect(marginatedRect);
             if (drawBackgroundEnabled) {
-                drawBackground(canvas, marginRect);
+                drawBackground(canvas, marginatedRect);
             }
-
-            /*RectF marginRect = new RectF(paddingRect.left + margins.left
-                    , paddingRect.top + margins.top, paddingRect.right - margins.right, paddingRect.bottom - margins.bottom);*/
             synchronized(this) {
-                layoutManager.draw(canvas, canvasRect, marginRect, paddingRect);
+                layoutManager.draw(canvas, canvasRect, marginatedRect, paddedRect);
             }
             if (drawBorderEnabled) {
-                drawBorder(canvas, marginRect);
+                drawBorder(canvas, marginatedRect);
             }
-
-
         } catch (PlotRenderException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } finally {
@@ -436,25 +394,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     protected void drawBackground(Canvas canvas, RectF dims) throws PlotRenderException {
         canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, backgroundPaint);
     }
-
-    /**
-     * Get the Handler used to manage display updates.  This method should not typically
-     * be called by user code.
-     * @return
-     */
-    //public Handler getHandler() {
-    //    return handler;
-    //}
-
-    /**
-     * Set the Handler used to manage display updates.  While this method should not typically
-     * be called by user code, it can be used in advanced applications where overridden
-     * display functionality is necessary.
-     * @param handler
-     */
-    //public void setHandler(Handler handler) {
-    //    this.handler = handler;
-    //}
 
     /**
      *
@@ -563,18 +502,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     public void setPlotMarginRight(float plotMarginRight) {
         boxModel.setMarginRight(plotMarginRight);
     }
-
-    /*public RectF getPadingRect(RectF marginRect) {
-        //RectF marginRect = getMarginRect();
-        return new RectF(marginRect.left + getPlotPaddingLeft(), marginRect.top+getPlotPaddingTop(), marginRect.right - getPlotPaddingRight(), marginRect.bottom - getPlotPaddingBottom());
-    }*/
-
-   /* public RectF getMarginRect(RectF canvasRect) {
-        //return margins;
-        //RectF paddedDims = getPadingRect();
-        //return new RectF( canvasRect.left + getPlotMarginLeft() + RECT_ADJUSTMENT, canvasRect.top + getPlotMarginTop(), canvasRect.right - (getPlotMarginRight() + RECT_ADJUSTMENT), canvasRect.bottom - (getPlotMarginBottom() + RECT_ADJUSTMENT));
-        return
-    }*/
 
     public float getPlotPaddingTop() {
         return boxModel.getPaddingTop();

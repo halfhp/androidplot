@@ -3,11 +3,9 @@ package com.androidplot.ui.layout;
 import android.graphics.RectF;
 
 /**
- * Encapsulates the functionality of a BoxModel.
- * See http://www.w3.org/TR/CSS21/box.html for a good explanation of what
- * the box model is.
+ * Convenience implementation of {@link BoxModelable}.
  */
-public class BoxModel {
+public class BoxModel implements BoxModelable{
 
     private float marginLeft;
     private float marginTop;
@@ -22,6 +20,10 @@ public class BoxModel {
     //private RectF marginRect;
     //private RectF paddingRect;
 
+    public BoxModel() {
+        
+    }
+
     public BoxModel(float marginLeft, float marginTop, float marginRight, float marginBottom,
                     float paddingLeft, float paddingTop, float paddingRight, float paddingBottom) {
         this.marginLeft = marginLeft;
@@ -34,17 +36,26 @@ public class BoxModel {
         this.paddingBottom = paddingBottom;
     }
 
-    public RectF getMarginRect(RectF boundsRect) {
+    /**
+     * Returns a RectF instance describing the inner edge of the margin layer.
+     * @param boundsRect
+     * @return
+     */
+    public RectF getMarginatedRect(RectF boundsRect) {
         return new RectF( boundsRect.left + getMarginLeft(),
                 boundsRect.top + getMarginTop(),
                 boundsRect.right - getMarginRight(),
                 boundsRect.bottom - getMarginBottom());
     }
 
-
-    public RectF getPaddingRect(RectF boundsRect) {
-        //RectF marginRect = getMarginRect();
-        RectF marginRect = getMarginRect(boundsRect);
+    /**
+     * Returns a RectF instance describing the inner edge of the padding layer.
+     * @param marginRect
+     * @return
+     */
+    public RectF getPaddedRect(RectF marginRect) {
+        //RectF marginRect = getMarginatedRect();
+        //RectF marginRect = getMarginatedRect(boundsRect);
         return new RectF(marginRect.left + getPaddingLeft(),
                 marginRect.top+getPaddingTop(),
                 marginRect.right - getPaddingRight(),

@@ -247,6 +247,17 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
             }
             widget.draw(canvas, widgetRect);
 
+            RectF marginatedWidgetRect = widget.getMarginatedRect(widgetRect);
+            RectF paddedWidgetRect = widget.getPaddedRect(marginatedWidgetRect);
+
+            if(drawMarginsEnabled) {
+                drawSpacing(canvas, widgetRect, marginatedWidgetRect, getMarginPaint());
+            }
+
+            if(drawPaddingEnabled) {
+                drawSpacing(canvas, marginatedWidgetRect, paddedWidgetRect, getPaddingPaint());
+            }
+
             if(drawAnchorsEnabled) {
                 PointF anchorCoords = getAnchorCoordinates(coords.x, coords.y, elementWidth, elementHeight, metrics.getAnchor());
                 drawAnchor(canvas, anchorCoords);

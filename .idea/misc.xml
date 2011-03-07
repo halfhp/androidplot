@@ -86,7 +86,7 @@
             <SvnBranchConfiguration>
               <option name="branchMap">
                 <map>
-                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags">
+                  <entry key="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Tags">
                     <value>
                       <list />
                     </value>
@@ -95,10 +95,10 @@
               </option>
               <option name="branchUrls">
                 <list>
-                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags" />
+                  <option value="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Tags" />
                 </list>
               </option>
-              <option name="trunkUrl" value="https://bridalveil.jira.com/svn/ANDROIDPLOT/trunk" />
+              <option name="trunkUrl" value="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Trunk" />
             </SvnBranchConfiguration>
           </value>
         </entry>

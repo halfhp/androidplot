@@ -93,4 +93,26 @@ public class SimpleXYSeriesTest {
         assertEquals(66, series.getY(0));
         assertEquals(55, series.getX(0));
     }
+
+    @Test
+    public void testSet() throws Exception {
+        Number[] yVals = {5, 6, 7, 8, 9};
+        Number[] xVals = {1, 2, 3, 4, 5};
+        SimpleXYSeries series = new SimpleXYSeries(Arrays.asList(xVals), Arrays.asList(yVals), "test");
+
+        int size = series.size();
+
+        series.setX(22, 2);
+        assertEquals(22, series.getX(2));
+
+        // make sure size has not changed:
+        assertEquals(size, series.size());
+
+        series.setY(23, 2);
+        assertEquals(23, series.getY(2));
+
+        // make sure size has not changed:
+        assertEquals(size, series.size());
+    }
+
 }

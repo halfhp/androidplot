@@ -127,8 +127,10 @@ public class SimpleXYSeries implements XYSeries {
      * @param index
      */
     public void setX(Number value, int index) {
-        //resetMinMax();
-        // TODO
+        if(xVals == null || xVals.size() <= index) {
+            throw new IndexOutOfBoundsException();
+        }
+        xVals.set(index, value);
     }
 
     /**
@@ -137,8 +139,10 @@ public class SimpleXYSeries implements XYSeries {
      * @param index
      */
     public void setY(Number value, int index) {
-        //resetMinMax();
-        // TODO
+        if(yVals == null || yVals.size() <= index) {
+            throw new IndexOutOfBoundsException();
+        }
+        yVals.set(index, value);
     }
 
     public synchronized void addFirst(Number x, Number y) {

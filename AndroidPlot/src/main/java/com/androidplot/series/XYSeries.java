@@ -15,18 +15,6 @@ public interface XYSeries extends Series {
     public Number getX(int index);
 
     /**
-     *
-     * @return The lowest possible value returned by <code>getX()</code>.
-     */
-    //public Number getMinX();
-
-    /**
-     *
-     * @return The highest possible value returned by <code>getX()</code>.
-     */
-    //public Number getMaxX();
-
-    /**
      * Returns the y-value for an index within a series.
      *
      * @param index  the index index (in the range <code>0</code> to
@@ -35,16 +23,4 @@ public interface XYSeries extends Series {
      * @return The y-value.
      */
     public Number getY(int index);
-
-    /**
-     *
-     * @return The lowest possible value returned by <code>getY()</code>.
-     */
-    //public Number getMinY();
-
-    /**
-     *
-     * @return The highest possible value returned by <code>getY()</code>.
-     */
-    //public Number getMaxY();
 }

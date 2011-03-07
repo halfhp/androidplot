@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DependencyValidationManager">
+    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
+  </component>
+  <component name="EntryPointsManager">
+    <entry_points version="2.0" />
+  </component>
+  <component name="FacetAutodetectingManager">
+    <autodetection-disabled>
+      <facet-type id="android">
+        <modules>
+          <module name="AndroidPlot">
+            <files>
+              <file url="file://$PROJECT_DIR$/AndroidPlot/src/AndroidManifest.xml" />
+            </files>
+          </module>
+          <module name="AndroidWidgetsLib">
+            <files>
+              <file url="file://$PROJECT_DIR$/AndroidWidgetsLib/AndroidManifest.xml" />
+            </files>
+          </module>
+          <module name="AndroidWidgetsLibTests">
+            <files>
+              <file url="file://$PROJECT_DIR$/AndroidWidgetsLibTests/AndroidManifest.xml" />
+            </files>
+          </module>
+          <module name="BarPlotExample">
+            <files>
+              <file url="file://$PROJECT_DIR$/BarPlotExample/AndroidManifest.xml" />
+            </files>
+          </module>
+          <module name="SimpleFunctionPlotExample">
+            <files>
+              <file url="file://$PROJECT_DIR$/SimpleFunctionPlotExample/AndroidManifest.xml" />
+            </files>
+          </module>
+          <module name="SimpleXYPlotExample">
+            <files>
+              <file url="file://$PROJECT_DIR$/SimpleXYPlotExample/AndroidManifest.xml" />
+            </files>
+          </module>
+        </modules>
+      </facet-type>
+    </autodetection-disabled>
+  </component>
+  <component name="IdProvider" IDEtalkID="355A46783A3589378B92C478EA8F77A8" />
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../../Desktop/WidgetDocs" />
+    <option name="OPTION_SCOPE" value="protected" />
+    <option name="OPTION_HIERARCHY" value="true" />
+    <option name="OPTION_NAVIGATOR" value="true" />
+    <option name="OPTION_INDEX" value="true" />
+    <option name="OPTION_SEPARATE_INDEX" value="true" />
+    <option name="OPTION_DOCUMENT_TAG_USE" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_VERSION" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_DEPRECATED" value="true" />
+    <option name="OPTION_DEPRECATED_LIST" value="true" />
+    <option name="OTHER_OPTIONS" value="-overview overview.html" />
+    <option name="HEAP_SIZE" />
+    <option name="LOCALE" />
+    <option name="OPEN_IN_BROWSER" value="true" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/AndroidWidgets/pom.xml" />
+        <option value="$PROJECT_DIR$/AndroidWidgetsLib/pom.xml" />
+        <option value="$PROJECT_DIR$/AndroidWidgetsLib/pom.xml" />
+        <option value="$PROJECT_DIR$/AndroidPlot/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectResources">
+    <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://bridalveil.jira.com/svn/ANDROIDPLOT/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/AndroidPlot">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/BarPlotExample">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/DynamicXYPlotExample">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+  <component name="WebServicesPlugin" addRequiredLibraries="true" />
+</project>
+

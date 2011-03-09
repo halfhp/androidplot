@@ -42,10 +42,9 @@ import com.androidplot.ui.widget.TextOrientationType;
 import java.text.Format;
 
 /**
- * A basic XYPlot View to graphically display xy values.
+ * A View to graphically display x/y coordinates.
  */
 public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> {
-
 
     private BoundaryMode domainOriginBoundaryMode;
     private BoundaryMode rangeOriginBoundaryMode;
@@ -65,10 +64,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     public void setDrawRangeOriginEnabled(boolean drawRangeOriginEnabled) {
         this.drawRangeOriginEnabled = drawRangeOriginEnabled;
     }
-
-
-    //private BoundaryMode domainBoundaryMode = BoundaryMode.AUTO;
-    //private BoundaryMode rangeBoundaryMode = BoundaryMode.AUTO;
 
     // widgets
     private XYPlotLegendWidget legendWidget;
@@ -126,32 +121,66 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     private Number domainOriginExtent = null;
     private Number rangeOriginExtent = null;
-    //private DomainOrigin userDomainOrigin;
-    //private RangeOrigin userRangeOrigin;
-    //private Number userMaxX;
+
     private BoundaryMode domainUpperBoundaryMode = BoundaryMode.AUTO;
-    //private Number userMinX;
     private BoundaryMode domainLowerBoundaryMode = BoundaryMode.AUTO;
-    //private Number userMaxY;
     private BoundaryMode rangeUpperBoundaryMode = BoundaryMode.AUTO;
-    //private Number userMinY;
     private BoundaryMode rangeLowerBoundaryMode = BoundaryMode.AUTO;
 
     private boolean drawDomainOriginEnabled = true;
     private boolean drawRangeOriginEnabled = true;
 
     {
-        legendWidget = new XYPlotLegendWidget(this, new SizeMetrics(12, SizeLayoutType.ABSOLUTE, 0.5f, SizeLayoutType.RELATIVE), XYPlotLegendWidget.LayoutOrientation.HORIZONTAL);
-        graphWidget = new XYGraphWidget(this, new SizeMetrics(20, SizeLayoutType.FILL, 12, SizeLayoutType.FILL));
+        legendWidget = new XYPlotLegendWidget(
+                this,
+                new SizeMetrics(12, SizeLayoutType.ABSOLUTE, 0.5f, SizeLayoutType.RELATIVE),
+                XYPlotLegendWidget.LayoutOrientation.HORIZONTAL);
+
+        graphWidget = new XYGraphWidget(
+                this,
+                new SizeMetrics(20, SizeLayoutType.FILL, 12, SizeLayoutType.FILL));
         graphWidget.setDrawBackgroundEnabled(true);
 
-        domainLabelWidget = new DomainLabelWidget(this, new SizeMetrics(12, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
-        rangeLabelWidget = new RangeLabelWidget(this, new SizeMetrics(60, SizeLayoutType.ABSOLUTE, 12, SizeLayoutType.ABSOLUTE), TextOrientationType.VERTICAL_ASCENDING);
-        this.getLayoutManager().position(legendWidget, 40, XLayoutStyle.ABSOLUTE_FROM_RIGHT, 0, YLayoutStyle.ABSOLUTE_FROM_BOTTOM, AnchorPosition.RIGHT_BOTTOM);
-        this.getLayoutManager().position(graphWidget, 3, XLayoutStyle.ABSOLUTE_FROM_RIGHT, 0, YLayoutStyle.ABSOLUTE_FROM_CENTER, AnchorPosition.RIGHT_MIDDLE);
+        domainLabelWidget = new DomainLabelWidget(
+                this,
+                new SizeMetrics(12, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE),
+                TextOrientationType.HORIZONTAL);
+        rangeLabelWidget = new RangeLabelWidget(
+                this,
+                new SizeMetrics(60, SizeLayoutType.ABSOLUTE, 12, SizeLayoutType.ABSOLUTE),
+                TextOrientationType.VERTICAL_ASCENDING);
 
-        this.getLayoutManager().position(domainLabelWidget, 25, XLayoutStyle.ABSOLUTE_FROM_LEFT, 0, YLayoutStyle.ABSOLUTE_FROM_BOTTOM, AnchorPosition.LEFT_BOTTOM);
-        this.getLayoutManager().position(rangeLabelWidget, 0, XLayoutStyle.ABSOLUTE_FROM_LEFT, 0, YLayoutStyle.ABSOLUTE_FROM_CENTER, AnchorPosition.LEFT_MIDDLE);
+        getLayoutManager().position(
+                legendWidget,
+                40,
+                XLayoutStyle.ABSOLUTE_FROM_RIGHT,
+                0,
+                YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
+                AnchorPosition.RIGHT_BOTTOM);
+
+        getLayoutManager().position(
+                graphWidget,
+                3,
+                XLayoutStyle.ABSOLUTE_FROM_RIGHT,
+                0,
+                YLayoutStyle.ABSOLUTE_FROM_CENTER,
+                AnchorPosition.RIGHT_MIDDLE);
+
+        getLayoutManager().position(
+                domainLabelWidget,
+                25,
+                XLayoutStyle.ABSOLUTE_FROM_LEFT,
+                0,
+                YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
+                AnchorPosition.LEFT_BOTTOM);
+
+        getLayoutManager().position(
+                rangeLabelWidget,
+                0,
+                XLayoutStyle.ABSOLUTE_FROM_LEFT,
+                0,
+                YLayoutStyle.ABSOLUTE_FROM_CENTER,
+                AnchorPosition.LEFT_MIDDLE);
 
         getLayoutManager().moveToTop(getTitleWidget());
         getLayoutManager().moveToTop(getLegendWidget());
@@ -173,25 +202,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public XYPlot(Context context, AttributeSet attributes) {
         super(context, attributes);
-        //loadAttrs(context, attributes);
     }
 
     public XYPlot(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        //loadAttrs(context, attrs);
     }
-
-    /*public void setDomainBoundaries(Number minX, Number maxX, BoundaryMode mode) {
-        setDomainBoundaryMode(mode);
-        this.actualMinX = minX;
-        this.actualMaxX = maxX;
-    }
-
-    public void setRangeBoundaries(Number minY, Number maxY, BoundaryMode mode) {
-        setRangeBoundaryMode(mode);
-        this.actualMinY = minY;
-        this.actualMaxY = maxY;
-    }*/
 
     public void setGridPadding(float left, float top, float right, float bottom) {
         getGraphWidget().setGridPaddingTop(top);
@@ -331,19 +346,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             case FIXED:
                 break;
             case AUTO:
-                //userMaxX = actualMaxX;
-                //calculatedMaxX
                 break;
             case GROW:
-                if(prevMaxX == null || (calculatedMaxX.doubleValue() > prevMaxX.doubleValue())) {
-                    //userMaxX = actualMaxX;
-                } else {
+                if(!(prevMaxX == null || (calculatedMaxX.doubleValue() > prevMaxX.doubleValue()))) {
                     calculatedMaxX = prevMaxX;
                 }
                 break;
             case SHRINNK:
-                if(prevMaxX == null || calculatedMaxX.doubleValue() < prevMaxX.doubleValue()) {
-                } else {
+                if(!(prevMaxX == null || calculatedMaxX.doubleValue() < prevMaxX.doubleValue())) {
                     calculatedMaxX = prevMaxX;
                 }
                 break;
@@ -355,21 +365,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             case FIXED:
                 break;
             case AUTO:
-                //userMinX = actualMinX;
-                //actualMaxX = null;
                 break;
             case GROW:
-                if(prevMinX == null || calculatedMinX.doubleValue() < prevMinX.doubleValue()) {
-                    //userMinX = actualMinX;
-                   // calculatedMinX = prevMinX;
-                } else {
+                if(!(prevMinX == null || calculatedMinX.doubleValue() < prevMinX.doubleValue())) {
                     calculatedMinX = prevMinX;
                 }
                 break;
             case SHRINNK:
-                if(prevMinX == null || calculatedMinX.doubleValue() > prevMinX.doubleValue()) {
-                    //userMinX = actualMinX;
-                } else {
+                if(!(prevMinX == null || calculatedMinX.doubleValue() > prevMinX.doubleValue())) {
                     calculatedMinX = prevMinX;
                 }
                 break;
@@ -385,17 +388,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             case AUTO:
                 break;
             case GROW:
-                if(prevMaxY == null || calculatedMaxY.doubleValue() > prevMaxY.doubleValue()) {
-                    //userMaxY = actualMaxY;
-                } else {
+                if(!(prevMaxY == null || calculatedMaxY.doubleValue() > prevMaxY.doubleValue())) {
                     calculatedMaxY = prevMaxY;
                 }
                 break;
             case SHRINNK:
-                if(prevMaxY == null || calculatedMaxY.doubleValue() < prevMaxY.doubleValue()) {
-                   // userMaxY = actualMaxY;
-                } else {
-                    calculatedMaxY = prevMaxY;
+                if(!(prevMaxY == null || calculatedMaxY.doubleValue() < prevMaxY.doubleValue())) {
+                   calculatedMaxY = prevMaxY;
                 }
                 break;
             default:
@@ -406,20 +405,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             case FIXED:
                 break;
             case AUTO:
-                //actualMinY = null;
-                //userMinY = actualMinY;
                 break;
             case GROW:
-                if(prevMinY == null || calculatedMinY.doubleValue() < prevMinY.doubleValue()) {
-                    //userMinY = actualMinY;
-                } else {
+                if(!(prevMinY == null || calculatedMinY.doubleValue() < prevMinY.doubleValue())) {
                     calculatedMinY = prevMinY;
                 }
                 break;
             case SHRINNK:
-                if(prevMinY == null || calculatedMinY.doubleValue() > prevMinY.doubleValue()) {
-                    //userMinY = actualMinY;
-                } else {
+                if(!(prevMinY == null || calculatedMinY.doubleValue() > prevMinY.doubleValue())) {
                     calculatedMinY = prevMinY;
                 }
                 break;
@@ -429,36 +422,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     * Centers the domain axis on the currently set domain origin value.
-     */
-    /*public void centerOnDomainOrigin() {
-        if(this.userDomainOrigin == null) {
-            throw new NullPointerException("DomainOrigin is null.  You must first set DomainOrigin before you can center on it.");
-        }
-        domainFramingModel = XYPlot.FramingModel.ORIGIN;
-        //updateMinMaxVals();
-    }*/
-
-    /**
      * Centers the domain axis on origin.
      * @param origin
      */
     public void centerOnDomainOrigin(Number origin) {
         centerOnDomainOrigin(origin, null, BoundaryMode.AUTO);
     }
-
-    /**
-     * Centers the domain on the currently set domain origin value, calculating the upper
-     * and lower boundaries of the axis using the mode and extent.
-     * @param extent
-     * @param mode
-     */
-    /*public void centerOnDomainOrigin(Number extent, BoundaryMode mode) {
-        this.domainOriginExtent = extent;
-        this.domainOriginBoundaryMode = mode;
-        centerOnDomainOrigin();
-    }*/
-
 
     /**
      * Centers the domain on origin, calculating the upper and lower boundaries of the axis
@@ -485,19 +454,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             userMaxX = null;
             userMinX = null;
         }
-        //centerOnDomainOrigin(extent, mode);
     }
-
-    /**
-     * Centers the range axis on the currently set domain origin value.
-     */
-    /*public void centerOnRangeOrigin() {
-        if(this.userRangeOrigin == null) {
-            throw new NullPointerException("RangeOrigin is null.  You must first set RangeOrigin before you can center on it.");
-        }
-        rangeFramingModel = XYPlot.FramingModel.ORIGIN;
-        //updateMinMaxVals();
-    }*/
 
     /**
      * Centers the range axis on origin.
@@ -506,18 +463,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     public void centerOnRangeOrigin(Number origin) {
         centerOnRangeOrigin(origin, null, BoundaryMode.AUTO);
     }
-
-    /**
-     * Centers the range on the currently set domain origin value, calculating the upper
-     * and lower boundaries of the axis using the mode and extent.
-     * @param extent
-     * @param mode
-     */
-    /*public void centerOnRangeOrigin(Number extent, BoundaryMode mode) {
-        this.rangeOriginExtent = extent;
-        this.rangeOriginBoundaryMode = mode;
-        centerOnRangeOrigin();
-    }*/
 
     /**
      * Centers the domain on origin, calculating the upper and lower boundaries of the axis
@@ -544,10 +489,16 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             userMaxY = null;
             userMinY = null;
         }
-        //centerOnDomainOrigin(extent, mode);
     }
 
-    private double delta(double x, double y) {
+    /**
+     * Returns the distance between x and y.
+     * Result is never a negative number.
+     * @param x
+     * @param y
+     * @return
+     */
+    private double distance(double x, double y) {
         if(x > y) {
             return x - y;
         } else {
@@ -555,43 +506,26 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         }
     }
 
-    private double min(double a, double b) {
+    /*private double min(double a, double b) {
         if(a < b) {
             return a;
         } else {
             return b;
         }
-    }
+    }*/
 
-    private double max(double a, double b) {
+    /*private double max(double a, double b) {
         if(a > b) {
             return a;
         } else {
             return b;
         }
-    }
-
-    /**
-     * Not guaranteed to reflect the actual min max values contained in the associated series.
-     * Instead, the min/max values calculated represent those that will be visible when the
-     * display is next updated.
-     */
-    /*private void updateMinMax() {
-        switch(domainFramingModel) {
-            case ORIGIN:
-            {
-                
-            }
-                break;
-            default:
-                throw new UnsupportedOperationException("DomainFramingModel " + domainFramingModel + " is not yet supported.");
-        }
     }*/
 
     public void updateDomainMinMaxForOriginModel() {
         double origin = userDomainOrigin.doubleValue();
-        double maxXDelta = delta(calculatedMaxX.doubleValue(), origin);
-        double minXDelta = delta(calculatedMinX.doubleValue(), origin);
+        double maxXDelta = distance(calculatedMaxX.doubleValue(), origin);
+        double minXDelta = distance(calculatedMinX.doubleValue(), origin);
         double delta = maxXDelta > minXDelta ? maxXDelta : minXDelta;
         double dlb = origin - delta;
         double dub = origin + delta;
@@ -641,8 +575,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         switch (rangeOriginBoundaryMode) {
             case AUTO:
                 double origin = userRangeOrigin.doubleValue();
-                double maxYDelta = delta(calculatedMaxY.doubleValue(),origin);
-                double minYDelta = delta(calculatedMinY.doubleValue(), origin);
+                double maxYDelta = distance(calculatedMaxY.doubleValue(), origin);
+                double minYDelta = distance(calculatedMinY.doubleValue(), origin);
                 if(maxYDelta > minYDelta) {
                     calculatedMinY = origin - maxYDelta;
                     calculatedMaxY = origin + maxYDelta;
@@ -658,37 +592,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 throw new UnsupportedOperationException("Range Origin Boundary Mode not yet supported: " + rangeOriginBoundaryMode);
         }
     }
-
-    /*private void minMax2(Number minX, Number maxX, Number minY, Number maxY) {
-        //for(int i = 0; i < )
-    }*/
-
-
-    /*public void updateMinMaxVals() {
-        calculateMinMaxVals();
-
-        switch(domainFramingModel) {
-
-            case EDGE:
-                updateDomainMinMaxForEdgeModel();
-                break;
-            case ORIGIN:
-            default:
-                updateDomainMinMaxForOriginModel();
-                //throw new UnsupportedOperationException("Domain framing support not yet implemented for model: " + domainFramingModel);
-        }
-
-        switch(rangeFramingModel) {
-
-            case EDGE:
-                updateRangeMinMaxForEdgeModel();
-                break;
-            case ORIGIN:
-            default:
-                updateRangeMinMaxForOriginModel();
-                //throw new UnsupportedOperationException("Range framing support not yet implemented for model: " + domainFramingModel);
-        }
-    }*/
 
     public boolean addSeries(XYSeries series, LineAndPointFormatter formatter) {
         return addSeries(series, LineAndPointRenderer.class, formatter);
@@ -786,6 +689,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public void setDomainLabel(String domainLabel) {
         this.domainLabel = domainLabel;
+        if(getDomainLabelWidget() != null) {
+            getDomainLabelWidget().pack();
+        }
     }
 
     public String getRangeLabel() {
@@ -794,6 +700,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public void setRangeLabel(String rangeLabel) {
         this.rangeLabel = rangeLabel;
+        if(getRangeLabelWidget() != null) {
+            getRangeLabelWidget().pack();
+        }
     }
 
     public XYPlotLegendWidget getLegendWidget() {
@@ -827,23 +736,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     public void setRangeLabelWidget(RangeLabelWidget rangeLabelWidget) {
         this.rangeLabelWidget = rangeLabelWidget;
     }
-
-    // TODO: uncomment these
-    /*public Number getActualMinX() {
-        return actualMinX;
-    }
-
-    public Number getActualMaxX() {
-        return actualMaxX;
-    }
-
-    public Number getActualMinY() {
-        return actualMinY;
-    }
-
-    public Number getActualMaxY() {
-        return actualMaxY;
-    }*/
 
     /**
      * Convenience method - wraps XYGraphWidget.getRangeValueFormat().
@@ -989,41 +881,21 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         return calculatedRangeOrigin;
     }
 
-    /*public Number getUserMaxX() {
-        return userMaxX;
-    }*/
-
     protected BoundaryMode getDomainUpperBoundaryMode() {
         return domainUpperBoundaryMode;
     }
-
-    /*public Number getUserMinX() {
-        return userMinX;
-    }*/
 
     protected BoundaryMode getDomainLowerBoundaryMode() {
         return domainLowerBoundaryMode;
     }
 
-    /*public Number getUserMaxY() {
-        return userMaxY;
-    }*/
-
     protected BoundaryMode getRangeUpperBoundaryMode() {
         return rangeUpperBoundaryMode;
     }
 
-    /*public Number getUserMinY() {
-        return userMinY;
-    }*/
-
     protected BoundaryMode getRangeLowerBoundaryMode() {
         return rangeLowerBoundaryMode;
     }
-
-    /*public synchronized void setDomainOriginBoundaryMode(BoundaryMode mode) {
-        this.domainOriginBoundaryMode = mode;
-    }*/
 
     public synchronized void setUserDomainOrigin(Number origin) {
         if(origin == null) {
@@ -1032,26 +904,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         this.userDomainOrigin = origin;
     }
 
-    /*public synchronized void setUserDomainOrigin(Number origin, BoundaryMode mode) {
-        setUserDomainOrigin(origin);
-        setDomainOriginBoundaryMode(mode);
-    }*/
-
-    /*public synchronized void setRangeOriginBoundaryMode(BoundaryMode mode) {
-        this.rangeOriginBoundaryMode = mode;
-    }*/
-
     public synchronized void setUserRangeOrigin(Number origin) {
         if(origin == null) {
             throw new NullPointerException("Origin value cannot be null.");
         }
         this.userRangeOrigin = origin;
     }
-
-    /*public synchronized void setUserRangeOrigin(Number origin, BoundaryMode mode) {
-        setUserRangeOrigin(origin);
-        setRangeOriginBoundaryMode(mode);
-    }*/
 
     public XYPlotFramingModel getDomainFramingModel() {
         return domainFramingModel;
@@ -1060,9 +918,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     protected void setDomainFramingModel(XYPlotFramingModel domainFramingModel) {
         this.domainFramingModel = domainFramingModel;
     }
-
-
-
 
     public XYPlotFramingModel getRangeFramingModel() {
 
@@ -1089,4 +944,3 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         return calculatedMaxY;
     }
 }
-

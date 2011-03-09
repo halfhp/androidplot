@@ -1,12 +1,5 @@
 package com.androidplot.ui.layout;
 
-/**
- * Created by IntelliJ IDEA.
- * User: nfellows
- * Date: 12/29/10
- * Time: 5:52 PM
- * To change this template use File | Settings | File Templates.
- */
 public class PositionMetrics implements Comparable<PositionMetrics> {
 
     private XMetric xMetric;

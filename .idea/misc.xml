@@ -30,6 +30,11 @@
               <file url="file://$PROJECT_DIR$/BarPlotExample/AndroidManifest.xml" />
             </files>
           </module>
+          <module name="HelperExample">
+            <files>
+              <file url="file://$PROJECT_DIR$/HelperExample/AndroidManifest.xml" />
+            </files>
+          </module>
           <module name="SimpleFunctionPlotExample">
             <files>
               <file url="file://$PROJECT_DIR$/SimpleFunctionPlotExample/AndroidManifest.xml" />
@@ -86,7 +91,7 @@
             <SvnBranchConfiguration>
               <option name="branchMap">
                 <map>
-                  <entry key="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Tags">
+                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags">
                     <value>
                       <list />
                     </value>
@@ -95,10 +100,10 @@
               </option>
               <option name="branchUrls">
                 <list>
-                  <option value="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Tags" />
+                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags" />
                 </list>
               </option>
-              <option name="trunkUrl" value="https://free1.projectlocker.com/DarknessArts/AndroidWidgets/svn/Trunk" />
+              <option name="trunkUrl" value="https://bridalveil.jira.com/svn/ANDROIDPLOT/trunk" />
             </SvnBranchConfiguration>
           </value>
         </entry>

@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/OrientationSensorExample/OrientationSensorExample.iml" filepath="$PROJECT_DIR$/OrientationSensorExample/OrientationSensorExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/SimpleXYPlotExample/SimpleXYPlotExample.iml" filepath="$PROJECT_DIR$/SimpleXYPlotExample/SimpleXYPlotExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/SimpleXYPlotExample2/SimpleXYPlotExample2.iml" filepath="$PROJECT_DIR$/SimpleXYPlotExample2/SimpleXYPlotExample2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/StepChartExample/StepChartExample.iml" filepath="$PROJECT_DIR$/StepChartExample/StepChartExample.iml" />
       <module fileurl="file://$USER_HOME$/Desktop/testPlot/testPlot.iml" filepath="$USER_HOME$/Desktop/testPlot/testPlot.iml" />
     </modules>
   </component>

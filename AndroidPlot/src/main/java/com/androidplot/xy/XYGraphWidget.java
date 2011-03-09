@@ -18,6 +18,37 @@ public class XYGraphWidget extends Widget {
         return gridPaddingTop;
     }
 
+    public Paint getDomainOriginLinePaint() {
+        return domainOriginLinePaint;
+    }
+
+    public void setDomainOriginLinePaint(Paint domainOriginLinePaint) {
+        this.domainOriginLinePaint = domainOriginLinePaint;
+    }
+
+    public Paint getRangeOriginLinePaint() {
+        return rangeOriginLinePaint;
+    }
+
+    public void setRangeOriginLinePaint(Paint rangeOriginLinePaint) {
+        this.rangeOriginLinePaint = rangeOriginLinePaint;
+    }
+
+    public Paint getDomainOriginLabelPaint() {
+        return domainOriginLabelPaint;
+    }
+
+    public void setDomainOriginLabelPaint(Paint domainOriginLabelPaint) {
+        this.domainOriginLabelPaint = domainOriginLabelPaint;
+    }
+
+    public Paint getRangeOriginLabelPaint() {
+        return rangeOriginLabelPaint;
+    }
+
+    public void setRangeOriginLabelPaint(Paint rangeOriginLabelPaint) {
+        this.rangeOriginLabelPaint = rangeOriginLabelPaint;
+    }
 
 
     /**
@@ -57,8 +88,11 @@ public class XYGraphWidget extends Widget {
     private Format rangeValueFormat;
     private Format domainValueFormat;
 
-    private Paint domainOriginPaint;
-    private Paint rangeOriginPaint;
+    private Paint domainOriginLinePaint;
+    private Paint rangeOriginLinePaint;
+
+    private Paint domainOriginLabelPaint;
+    private Paint rangeOriginLabelPaint;
 
 
  /*   private double minX;
@@ -78,20 +112,31 @@ public class XYGraphWidget extends Widget {
         //gridLinePaint.setPathEffect(new DashPathEffect(new float[]{1,1}, 1));
         gridLinePaint.setAntiAlias(true);
 
-        domainOriginPaint = new Paint();
-        domainOriginPaint.setColor(Color.WHITE);
-        domainOriginPaint.setAntiAlias(true);
-        //domainOriginPaint.setStrokeWidth(2);
+        domainOriginLinePaint = new Paint();
+        domainOriginLinePaint.setColor(Color.WHITE);
+        domainOriginLinePaint.setAntiAlias(true);
+        //domainOriginLinePaint.setStrokeWidth(2);
 
-        rangeOriginPaint = new Paint();
-        rangeOriginPaint.setColor(Color.WHITE);
-        rangeOriginPaint.setAntiAlias(true);
-        //rangeOriginPaint.setStrokeWidth(2);
+        rangeOriginLinePaint = new Paint();
+        rangeOriginLinePaint.setColor(Color.WHITE);
+        rangeOriginLinePaint.setAntiAlias(true);
+        //rangeOriginLinePaint.setStrokeWidth(2);
+
+        domainOriginLabelPaint = new Paint();
+        domainOriginLabelPaint.setColor(Color.WHITE);
+        domainOriginLabelPaint.setAntiAlias(true);
+        domainOriginLabelPaint.setTextAlign(Paint.Align.CENTER);
+
+        rangeOriginLabelPaint = new Paint();
+        rangeOriginLabelPaint.setColor(Color.WHITE);
+        rangeOriginLabelPaint.setAntiAlias(true);
+        rangeOriginLabelPaint.setTextAlign(Paint.Align.RIGHT);
 
         domainLabelPaint = new Paint();
         domainLabelPaint.setColor(Color.LTGRAY);
         domainLabelPaint.setAntiAlias(true);
         domainLabelPaint.setTextAlign(Paint.Align.CENTER);
+
         rangeLabelPaint = new Paint();
         rangeLabelPaint.setColor(Color.LTGRAY);
         rangeLabelPaint.setAntiAlias(true);
@@ -235,9 +280,9 @@ public class XYGraphWidget extends Widget {
 
         // draw domain origin:
         if (domainOriginF >= paddedGridRect.left && domainOriginF <= paddedGridRect.right) {
-            domainOriginPaint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawLine(domainOriginF, gridRect.top, domainOriginF, gridRect.bottom + domainLabelTickExtension, domainOriginPaint);
-            canvas.drawText(getFormattedDomainValue(plot.getDomainOrigin().doubleValue()), domainOriginF, widgetRect.bottom, domainOriginPaint);
+            domainOriginLinePaint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawLine(domainOriginF, gridRect.top, domainOriginF, gridRect.bottom + domainLabelTickExtension, domainOriginLinePaint);
+            canvas.drawText(getFormattedDomainValue(plot.getDomainOrigin().doubleValue()), domainOriginF, widgetRect.bottom, domainOriginLabelPaint);
         }
 
         // draw ticks LEFT of origin:
@@ -310,10 +355,10 @@ public class XYGraphWidget extends Widget {
 
         // draw range origin:
         if (rangeOriginF >= paddedGridRect.top && rangeOriginF <= paddedGridRect.bottom) {
-            rangeOriginPaint.setTextAlign(Paint.Align.RIGHT);
-            canvas.drawLine(gridRect.left - rangeLabelTickExtension, rangeOriginF, gridRect.right, rangeOriginF, rangeOriginPaint);
+            rangeOriginLinePaint.setTextAlign(Paint.Align.RIGHT);
+            canvas.drawLine(gridRect.left - rangeLabelTickExtension, rangeOriginF, gridRect.right, rangeOriginF, rangeOriginLinePaint);
 
-            canvas.drawText(getFormattedRangeValue(plot.getRangeOrigin().doubleValue()), gridRect.left - rangeLabelTickExtension, rangeOriginF, rangeOriginPaint);
+            canvas.drawText(getFormattedRangeValue(plot.getRangeOrigin().doubleValue()), gridRect.left - rangeLabelTickExtension, rangeOriginF, rangeOriginLabelPaint);
         }
 
 
@@ -433,7 +478,7 @@ public class XYGraphWidget extends Widget {
                     false);*//*
 
 
-            canvas.drawLine(domainOriginF, widgetRect.top, domainOriginF, widgetRect.bottom - domainLabelWidth, domainOriginPaint);
+            canvas.drawLine(domainOriginF, widgetRect.top, domainOriginF, widgetRect.bottom - domainLabelWidth, domainOriginLinePaint);
         }*/
 
         /*// draw range origin:
@@ -447,7 +492,7 @@ public class XYGraphWidget extends Widget {
                     true);
             originF += paddedGridRect.top;
 
-            canvas.drawLine(widgetRect.left + rangeLabelWidth, originF, widgetRect.right, originF, rangeOriginPaint);
+            canvas.drawLine(widgetRect.left + rangeLabelWidth, originF, widgetRect.right, originF, rangeOriginLinePaint);
         }*/
     }
 

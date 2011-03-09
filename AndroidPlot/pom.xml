@@ -6,7 +6,7 @@
 
     <groupId>com.androidplot</groupId>
     <artifactId>AndroidPlot</artifactId>
-    <version>0.3b</version>
+    <version>0.4a</version>
     <name>AndroidPlot</name>
     <build>
         <plugins>

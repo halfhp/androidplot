@@ -4,10 +4,35 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="Hello World, MainActivity"
-    />
+    <Button android:id="@+id/startOrSensorExButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Realtime Orientation Sensor Plot" />
+    <Button android:id="@+id/startDynamicXyExButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="A Dynamic XY Plot"
+                android:enabled="false"/>
+    <Button android:id="@+id/startStepChartExButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Step Chart"
+                />
+    <Button android:id="@+id/startBarPlotExButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Bar Plot"
+                android:enabled="false"/>
+    <Button android:id="@+id/startXyScatterExButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="XY Scatter"
+                android:enabled="false"/>
+    <Button android:id="@+id/startXyScatterLineExButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="XY Scatter With Lines"
+                android:enabled="false"/>
+
 </LinearLayout>
 

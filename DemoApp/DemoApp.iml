@@ -20,7 +20,7 @@
         <option name="ADD_ANDROID_LIBRARY" value="true" />
         <option name="LIBRARY_PROJECT" value="false" />
         <option name="RUN_PROCESS_RESOURCES_MAVEN_TASK" value="true" />
-        <option name="GENERATE_UNSIGNED_APK" value="false" />
+        <option name="GENERATE_UNSIGNED_APK" value="true" />
       </configuration>
     </facet>
   </component>
@@ -33,6 +33,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Android 2.1-update1 Platform" level="application" />
+    <orderEntry type="module" module-name="AndroidPlot" />
   </component>
 </module>
 

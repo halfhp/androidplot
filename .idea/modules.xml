@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidPlot/AndroidPlot.iml" filepath="$PROJECT_DIR$/AndroidPlot/AndroidPlot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DemoApp/DemoApp.iml" filepath="$PROJECT_DIR$/DemoApp/DemoApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/DynamicXYPlotExample/DynamicXYPlotExample.iml" filepath="$PROJECT_DIR$/DynamicXYPlotExample/DynamicXYPlotExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/HelperExample/HelperExample.iml" filepath="$PROJECT_DIR$/HelperExample/HelperExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/OrientationSensorExample/OrientationSensorExample.iml" filepath="$PROJECT_DIR$/OrientationSensorExample/OrientationSensorExample.iml" />

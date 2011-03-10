@@ -2,15 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidPlot/AndroidPlot.iml" filepath="$PROJECT_DIR$/AndroidPlot/AndroidPlot.iml" />
-      <module fileurl="file://$PROJECT_DIR$/DemoApp/DemoApp.iml" filepath="$PROJECT_DIR$/DemoApp/DemoApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/DynamicXYPlotExample/DynamicXYPlotExample.iml" filepath="$PROJECT_DIR$/DynamicXYPlotExample/DynamicXYPlotExample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/HelperExample/HelperExample.iml" filepath="$PROJECT_DIR$/HelperExample/HelperExample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/OrientationSensorExample/OrientationSensorExample.iml" filepath="$PROJECT_DIR$/OrientationSensorExample/OrientationSensorExample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/SimpleXYPlotExample/SimpleXYPlotExample.iml" filepath="$PROJECT_DIR$/SimpleXYPlotExample/SimpleXYPlotExample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/SimpleXYPlotExample2/SimpleXYPlotExample2.iml" filepath="$PROJECT_DIR$/SimpleXYPlotExample2/SimpleXYPlotExample2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/StepChartExample/StepChartExample.iml" filepath="$PROJECT_DIR$/StepChartExample/StepChartExample.iml" />
-      <module fileurl="file://$USER_HOME$/Desktop/testPlot/testPlot.iml" filepath="$USER_HOME$/Desktop/testPlot/testPlot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidPlot-Lib/AndroidPlot-Lib.iml" filepath="$PROJECT_DIR$/AndroidPlot-Lib/AndroidPlot-Lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" filepath="$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/DynamicXYPlotExample.iml" filepath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/DynamicXYPlotExample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Examples/HelperExample/HelperExample.iml" filepath="$PROJECT_DIR$/Examples/HelperExample/HelperExample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Examples/OrientationSensorExample/OrientationSensorExample.iml" filepath="$PROJECT_DIR$/Examples/OrientationSensorExample/OrientationSensorExample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" filepath="$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" filepath="$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" />
     </modules>
   </component>
 </project>

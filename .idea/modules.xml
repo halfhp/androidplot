@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidPlot-Lib/AndroidPlot-Lib.iml" filepath="$PROJECT_DIR$/AndroidPlot-Lib/AndroidPlot-Lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidPlot.iml" filepath="$PROJECT_DIR$/AndroidPlot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidPlot-Lib/AndroidPlot-Core.iml" filepath="$PROJECT_DIR$/AndroidPlot-Lib/AndroidPlot-Core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Examples/AndroidPlot-Examples.iml" filepath="$PROJECT_DIR$/Examples/AndroidPlot-Examples.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" filepath="$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/DynamicXYPlotExample.iml" filepath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/DynamicXYPlotExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/HelperExample/HelperExample.iml" filepath="$PROJECT_DIR$/Examples/HelperExample/HelperExample.iml" />

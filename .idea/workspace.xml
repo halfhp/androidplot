@@ -3,8 +3,133 @@
   <component name="ChangeListManager">
     <list readonly="true" id="3bdf2e30-f020-4a8d-bc0c-b2d53dad2f40" name="Default" comment="" />
     <list id="4ecc9605-f0b7-4efa-b326-1b45a16ac1ef" name="ANDROIDPLOT-29: API Cleanup" comment="" />
-    <list default="true" id="74bbc238-da26-4201-8dca-21051ad8b191" name="ANDROIDPLOT-56" comment="ANDROIDPLOT-56&#10;Restructured project to place all sample apps under the Examples/ subdirectory.">
+    <list default="true" id="74bbc238-da26-4201-8dca-21051ad8b191" name="ANDROIDPLOT-56" comment="ANDROIDPLOT-56&#10;Created parent/child mvn pom structure.&#10;Created pom for Examples.">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AndroidPlot.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Examples/AndroidPlot-Examples.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Examples/pom.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\.classpath" afterPath="$PROJECT_DIR$/AndroidPlot-Core/.classpath" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\.project" afterPath="$PROJECT_DIR$/AndroidPlot-Core/.project" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\AndroidPlot-Lib.iml" afterPath="$PROJECT_DIR$/AndroidPlot-Core/AndroidPlot-Lib.iml" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\pom.xml" afterPath="$PROJECT_DIR$/AndroidPlot-Core/pom.xml" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/AndroidManifest.xml" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\android\res\values\attrs.xml" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/android/res/values/attrs.xml" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\Plot.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/Plot.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\PlotEvent.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/PlotEvent.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\PlotListener.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/PlotListener.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\PlotUpdateHandler.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/PlotUpdateHandler.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\SeriesAndFormatterList.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/SeriesAndFormatterList.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\exception\NoDataException.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/exception/NoDataException.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\exception\PlotRenderException.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/exception/PlotRenderException.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\series\ProportionalSeries.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/series/ProportionalSeries.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\series\Series.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/series/Series.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\series\VectorSeries.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/series/VectorSeries.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\series\XYSeries.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/series/XYSeries.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\AnchorPosition.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/AnchorPosition.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\BoxModel.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/BoxModel.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\BoxModelable.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/BoxModelable.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\LayoutManager.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/LayoutManager.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\LayoutMetric.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/LayoutMetric.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\PositionMetric.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/PositionMetric.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\PositionMetrics.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/PositionMetrics.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\SizeLayoutType.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeLayoutType.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\SizeMetric.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetric.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\SizeMetrics.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetrics.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\XLayoutStyle.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/XLayoutStyle.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\XMetric.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/XMetric.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\YLayoutStyle.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/YLayoutStyle.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout\YMetric.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/YMetric.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\DomainLabelWidget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/DomainLabelWidget.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\EmptyWidget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/EmptyWidget.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\RangeLabelWidget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/RangeLabelWidget.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\TextLabelWidget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/TextLabelWidget.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\TextOrientationType.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/TextOrientationType.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\TitleWidget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/TitleWidget.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\UserTextLabelWidget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/UserTextLabelWidget.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\Widget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/Widget.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\formatter\Formatter.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/formatter/Formatter.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\renderer\DataRenderer.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/renderer/DataRenderer.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\renderer\RenderBundle.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/renderer/RenderBundle.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\util\ArrangeableHash.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/ArrangeableHash.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\util\Dimension.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/Dimension.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\util\FontUtils.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/FontUtils.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\util\ListOrganizer.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/ListOrganizer.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\util\Organizeable.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/Organizeable.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\util\Point.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/Point.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\util\PointUtils.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/PointUtils.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\util\ValPixConverter.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/ValPixConverter.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\BarFormatter.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/BarFormatter.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\BarRenderer.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/BarRenderer.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\BoundaryMode.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/BoundaryMode.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\LineAndPointFormatter.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/LineAndPointFormatter.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\LineAndPointRenderer.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/LineAndPointRenderer.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\SimpleXYSeries.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/SimpleXYSeries.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\StepFormatter.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/StepFormatter.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\StepRenderer.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/StepRenderer.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\XYAxisType.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYAxisType.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\XYGraphBounds.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYGraphBounds.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\XYGraphWidget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYGraphWidget.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\XYPlot.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYPlot.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\XYPlotFramingModel.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYPlotFramingModel.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\XYPlotLegendWidget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYPlotLegendWidget.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\XYSeriesFormatter.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYSeriesFormatter.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\XYSeriesRenderer.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYSeriesRenderer.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\XYStep.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYStep.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\XYStepCalculator.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYStepCalculator.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy\XYStepMode.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYStepMode.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\javadoc\overview.html" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/javadoc/overview.html" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\plot\PlotTest.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/plot/PlotTest.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\util\ListOrganizerTest.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/util/ListOrganizerTest.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\util\ValPixConverterTest.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/util/ValPixConverterTest.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\xy\SimpleXYSeriesTest.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/xy/SimpleXYSeriesTest.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\xy\XYPlotTest.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/xy/XYPlotTest.java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\xy\XYSeriesRendererTest.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/xy/XYSeriesRendererTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" afterPath="$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/DynamicXYPlotExample.iml" afterPath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/DynamicXYPlotExample.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/HelperExample/HelperExample.iml" afterPath="$PROJECT_DIR$/Examples/HelperExample/HelperExample.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/HelperExample/build.xml" afterPath="$PROJECT_DIR$/Examples/HelperExample/build.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/OrientationSensorExample/OrientationSensorExample.iml" afterPath="$PROJECT_DIR$/Examples/OrientationSensorExample/OrientationSensorExample.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" afterPath="$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" afterPath="$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\android\gen\com" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/android/gen/com" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\android\gen" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/android/gen" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\android\res\drawable" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/android/res/drawable" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\android\res\layout" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/android/res/layout" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\android\res\values" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/android/res/values" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\android\res" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/android/res" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\android" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/android" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\exception" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/exception" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\series" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/series" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\layout" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\formatter" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/formatter" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget\renderer" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/renderer" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui\widget" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\ui" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\util" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot\xy" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com\androidplot" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java\com" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\javadoc\doc-files\barplot1.jpg" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/javadoc/doc-files/barplot1.jpg" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\javadoc\doc-files\lineplot1.jpg" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/javadoc/doc-files/lineplot1.jpg" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\javadoc\doc-files" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/javadoc/doc-files" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main\javadoc" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/javadoc" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\main" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\plot\bar" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/plot/bar" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\plot\ui" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/plot/ui" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\plot" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/plot" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\series" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/series" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\util" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/util" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot\xy" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/xy" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com\androidplot" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java\com" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test\java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src\test" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib\src" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src" />
+      <change type="MOVED" beforePath="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib" afterPath="$PROJECT_DIR$/AndroidPlot-Core" />
     </list>
     <ignored path="AndroidPlot-Trunk.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -15,6 +140,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="Commander">
+    <leftPanel />
+    <rightPanel />
+    <splitter proportion="0.5" />
+  </component>
   <component name="CoverageDataManager" choice="3" />
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -62,10 +192,78 @@
   <component name="FavoritesManager">
     <favorites_list name="AndroidPlot-Trunk" />
   </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Examples/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="30" column="82" selection-start="1296" selection-end="1296" vertical-scroll-proportion="0.5505443">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="default.properties" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Examples/DemoApp/default.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Examples/DemoApp/build.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="23" column="59" selection-start="1024" selection-end="1024" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Examples/HelperExample/build.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1" column="35" selection-start="74" selection-end="74" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="78" column="53" selection-start="3330" selection-end="3330" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
   <component name="FindManager">
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/AndroidPlot-Lib/pom.xml" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/Examples/HelperExample/build.xml" />
+        <option value="$PROJECT_DIR$/Examples/DemoApp/build.xml" />
+        <option value="$PROJECT_DIR$/Examples/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
   </component>
   <component name="MavenProjectNavigator">
     <treeState>
@@ -75,8 +273,38 @@
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="AndroidPlot" />
+          <option name="myItemId" value="AndroidPlot-Parent" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="AndroidPlot-Examples" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="AndroidPlot-Examples" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Lifecycle" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$LifecycleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
         </PATH_ELEMENT>
       </PATH>
     </treeState>
@@ -113,8 +341,9 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="Favorites" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -123,19 +352,78 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot-Trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot-Trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot-Trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot-Trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot-Trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot-Trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HelperExample" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot-Trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot-Trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DemoApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="options.lastSelected" value="preferences.externalResources" />
+    <property name="options.lastSelected" value="project.scopes" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -345,10 +633,6 @@
     <option name="myMappingRoots">
       <list>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib" />
-          <option name="myCopyRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Lib" />
-        </SvnCopyRootSimple>
-        <SvnCopyRootSimple>
           <option name="myVcsRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\Examples\OrientationSensorExample" />
           <option name="myCopyRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\Examples\OrientationSensorExample" />
         </SvnCopyRootSimple>
@@ -365,6 +649,10 @@
           <option name="myCopyRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\Examples\SimpleXYPlotExample" />
         </SvnCopyRootSimple>
         <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\Examples" />
+          <option name="myCopyRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\Examples" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
           <option name="myVcsRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\Examples\DynamicXYPlotExample" />
           <option name="myCopyRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\Examples\DynamicXYPlotExample" />
         </SvnCopyRootSimple>
@@ -375,6 +663,10 @@
         <SvnCopyRootSimple>
           <option name="myVcsRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\Examples\StepChartExample" />
           <option name="myCopyRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\Examples\StepChartExample" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Core" />
+          <option name="myCopyRoot" value="C:\Users\nfellows.AOPTIX\Work\AndroidPlot-Trunk\AndroidPlot-Core" />
         </SvnCopyRootSimple>
       </list>
     </option>
@@ -411,25 +703,26 @@
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32908913" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32908913" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Atlassian " active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32908913" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31820607" sideWeight="0.6709109" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24986653" sideWeight="0.6709109" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32568073" sideWeight="0.67092335" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39989322" sideWeight="0.6709109" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24986653" sideWeight="0.67092335" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32908913" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32907662" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32908913" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -449,7 +742,7 @@
     <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="ANDROIDPLOT-56&#10;Restructured project to place all sample apps under the Examples/ subdirectory." />
+    <option name="LAST_COMMIT_MESSAGE" value="ANDROIDPLOT-56&#10;Created parent/child mvn pom structure.&#10;Created pom for Examples." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -463,6 +756,7 @@
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
     <MESSAGE value="ANDROIDPLOT-56&#10;Restructured project to place all sample apps under the Examples/ subdirectory." />
+    <MESSAGE value="ANDROIDPLOT-56&#10;Created parent/child mvn pom structure.&#10;Created pom for Examples." />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -505,18 +799,37 @@
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
+  <component name="atlassian-ide-plugin-workspace">
+    <option name="bambooConfiguration">
+      <BambooWorkspaceConfiguration>
+        <option name="view">
+          <BambooViewConfigurationBean />
+        </option>
+      </BambooWorkspaceConfiguration>
+    </option>
+    <option name="defaultCredentials">
+      <UserCfgBean />
+    </option>
+  </component>
+  <component name="atlassian-ide-plugin-workspace-issues">
+    <option name="view">
+      <JiraViewConfigurationBean>
+        <option name="viewFilterId" value="" />
+      </JiraViewConfigurationBean>
+    </option>
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Lib/src/main/java/com/androidplot/Plot.java">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/Plot.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="100" column="24" selection-start="3276" selection-end="3276" vertical-scroll-proportion="0.4124031" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Lib/.project">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/.project">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Lib/.classpath">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/.classpath">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
@@ -526,40 +839,65 @@
         <state line="6" column="22" selection-start="136" selection-end="136" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Lib/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="92" column="43" selection-start="3638" selection-end="3638" vertical-scroll-proportion="0.99379843">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/src/com/example/MyActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="22" selection-start="130" selection-end="130" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="5" column="22" selection-start="130" selection-end="130" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Examples/OrientationSensorExample/src/com/example/MyActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="0" selection-start="293" selection-end="293" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="10" column="0" selection-start="293" selection-end="293" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Examples/SimpleXYPlotExample/src/com/example/SimpleXYSeries.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="29" selection-start="51" selection-end="51" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="2" column="29" selection-start="51" selection-end="51" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Examples/StepChartExample/src/com/example/MyActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="59" selection-start="672" selection-end="672" vertical-scroll-proportion="0.7379845">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="28" column="59" selection-start="672" selection-end="672" vertical-scroll-proportion="0.7379845" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="4" selection-start="725" selection-end="725" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/default.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="78" column="53" selection-start="3330" selection-end="3330" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/HelperExample/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="35" selection-start="74" selection-end="74" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="59" selection-start="1024" selection-end="1024" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="82" selection-start="1296" selection-end="1296" vertical-scroll-proportion="0.5505443">
+          <folding />
         </state>
       </provider>
     </entry>
@@ -569,7 +907,6 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>AndroidPlot-Lib:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -577,6 +914,11 @@
               </list>
             </option>
           </splitter-proportions>
+        </settings>
+      </state>
+      <state key="Copyright.UI">
+        <settings>
+          <splitter-proportions />
         </settings>
       </state>
       <state key="FacetStructureConfigurable.UI">
@@ -617,7 +959,20 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>StepChartExample</last-edited>
+          <last-edited>AndroidPlot</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.5" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: com.google.android:android:2.1_r1</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -627,9 +982,8 @@
           </splitter-proportions>
         </settings>
       </state>
-      <state key="ProjectLibrariesConfigurable.UI">
+      <state key="ScopeChooserConfigurable.UI">
         <settings>
-          <last-edited>Maven: com.google.android:android:2.1_r1</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

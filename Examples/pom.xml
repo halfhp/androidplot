@@ -13,10 +13,20 @@
     <name>AndroidPlot-Examples</name>
     <packaging>pom</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <version>2.1_r1</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -26,10 +36,29 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <echo message="THIS IS A TEST!!!!!!!!!!!!!!!!!!!!!!!!"/>
-                                <property name="sdk.dir" value="C:/frameworks/android-sdk-windows"/>
+                                <!--<property name="sdk.dir" value="C:/android-sdk"/>-->
+                                <property environment="env"/>
+                                <property name="sdk.dir" value="${env.ANDROID_HOME}"/>
+                                <property name="jar.libs.dir" value="../../AndroidPlot-Core/target"/>
                                 <property name="build.compiler" value="extJavac"/>
                                 <ant antfile="build.xml" target="release" dir="DemoApp">
+                                </ant>
+                            </tasks>
+
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <property environment="env"/>
+
+                                <property name="sdk.dir" value="${env.ANDROID_HOME}"/>
+                                <ant antfile="build.xml" target="clean" dir="DemoApp">
                                 </ant>
                             </tasks>
                         </configuration>

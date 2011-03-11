@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/Examples/OrientationSensorExample/OrientationSensorExample.iml" filepath="$PROJECT_DIR$/Examples/OrientationSensorExample/OrientationSensorExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" filepath="$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" filepath="$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidPlot-Core/androidplot-core.iml" filepath="$PROJECT_DIR$/AndroidPlot-Core/androidplot-core.iml" />
     </modules>
   </component>
 </project>

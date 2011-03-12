@@ -1,4 +1,4 @@
-package com.androidplot.demo;
+package com.androidplot.demos;
 
 
 import android.app.Activity;

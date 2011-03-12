@@ -20,6 +20,14 @@
             <version>2.1_r1</version>
             <scope>provided</scope>
         </dependency>
+        <!-- TODO: figure out how to use this dependency without breaking the clean target;
+        used as-is, the clean target can fail because the dependency is erased by maven.
+        <dependency>
+            <groupId>com.androidplot</groupId>
+            <artifactId>androidplot-core</artifactId>
+            <version>${applicationVersion}</version>
+        </dependency>
+        -->
     </dependencies>
 
     <build>
@@ -34,6 +42,7 @@
                         <goals>
                             <goal>run</goal>
                         </goals>
+                        
                         <configuration>
                             <tasks>
                                 <!--<property name="sdk.dir" value="C:/android-sdk"/>-->

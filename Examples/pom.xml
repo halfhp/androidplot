@@ -39,10 +39,30 @@
                                 <!--<property name="sdk.dir" value="C:/android-sdk"/>-->
                                 <property environment="env"/>
                                 <property name="sdk.dir" value="${env.ANDROID_HOME}"/>
+                                <!-- todo: include only the release jar, not everything inside
+                                           the artifacts dir.-->
                                 <property name="jar.libs.dir" value="../../AndroidPlot-Core/target"/>
                                 <property name="build.compiler" value="extJavac"/>
-                                <ant antfile="build.xml" target="release" dir="DemoApp">
-                                </ant>
+                                <property environment="env"/>
+                                <property name="sdk.dir" value="${env.ANDROID_HOME}"/>
+
+                                <!-- DemoApp-->
+                                <ant antfile="build.xml" target="release" dir="DemoApp"/>
+
+                                <!-- DynamicXYPlotExample-->
+                                <ant antfile="build.xml" target="release" dir="DynamicXYPlotExample"/>
+
+                                <!-- HelperExample-->
+                                <ant antfile="build.xml" target="release" dir="HelperExample"/>
+
+                                <!-- OrientationSensorExample-->
+                                <ant antfile="build.xml" target="release" dir="OrientationSensorExample"/>
+
+                                <!-- SimpleXYPlotExample-->
+                                <ant antfile="build.xml" target="release" dir="SimpleXYPlotExample"/>
+
+                                <!-- StepChartExample-->
+                                <ant antfile="build.xml" target="release" dir="StepChartExample"/>
                             </tasks>
 
                         </configuration>
@@ -56,10 +76,26 @@
                         <configuration>
                             <tasks>
                                 <property environment="env"/>
-
                                 <property name="sdk.dir" value="${env.ANDROID_HOME}"/>
-                                <ant antfile="build.xml" target="clean" dir="DemoApp">
-                                </ant>
+
+                                <!-- DemoApp-->
+                                <ant antfile="build.xml" target="clean" dir="DemoApp"/>
+
+                                <!-- DynamicXYPlotExample-->
+                                <ant antfile="build.xml" target="clean" dir="DynamicXYPlotExample"/>
+
+                                <!-- HelperExample-->
+                                <ant antfile="build.xml" target="clean" dir="HelperExample"/>
+
+                                <!-- OrientationSensorExample-->
+                                <ant antfile="build.xml" target="clean" dir="OrientationSensorExample"/>
+
+                                <!-- SimpleXYPlotExample-->
+                                <ant antfile="build.xml" target="clean" dir="SimpleXYPlotExample"/>
+
+                                <!-- StepChartExample-->
+                                <ant antfile="build.xml" target="clean" dir="StepChartExample"/>
+
                             </tasks>
                         </configuration>
                     </execution>

@@ -3,16 +3,22 @@
   <component name="ChangeListManager">
     <list readonly="true" id="3bdf2e30-f020-4a8d-bc0c-b2d53dad2f40" name="Default" comment="" />
     <list id="4ecc9605-f0b7-4efa-b326-1b45a16ac1ef" name="ANDROIDPLOT-29: API Cleanup" comment="" />
-    <list default="true" id="74bbc238-da26-4201-8dca-21051ad8b191" name="ANDROIDPLOT-56" comment="ANDROIDPLOT-56&#10;Examples now fire off of  Examples/pom.xml compile and clean maven targets.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations/DynamicXYPlotExample.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations/OrientationSensorExample.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations/SimpleXYPlotExample.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/build.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/build.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/default.properties" />
+    <list id="74bbc238-da26-4201-8dca-21051ad8b191" name="ANDROIDPLOT-56" comment="ANDROIDPLOT-56&#10;Setup parent pom to recursively build all sub modules." />
+    <list default="true" id="94e4a3d9-7098-4ce9-9eba-f09a127609df" name="ANDROIDPLOT-50" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations/DemoApp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/DemoApp/res/drawable-hdpi/icon.png" afterPath="$PROJECT_DIR$/Examples/DemoApp/res/drawable-hdpi/icon.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/DemoApp/res/drawable-ldpi/icon.png" afterPath="$PROJECT_DIR$/Examples/DemoApp/res/drawable-ldpi/icon.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/DemoApp/res/drawable-mdpi/icon.png" afterPath="$PROJECT_DIR$/Examples/DemoApp/res/drawable-mdpi/icon.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/pom.xml" afterPath="$PROJECT_DIR$/Examples/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" afterPath="$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/DemoApp/res/layout/main.xml" afterPath="$PROJECT_DIR$/Examples/DemoApp/res/layout/main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/DemoApp/res/layout/orientation_sensor_example.xml" afterPath="$PROJECT_DIR$/Examples/DemoApp/res/layout/orientation_sensor_example.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/DemoApp/res/layout/step_chart_example.xml" afterPath="$PROJECT_DIR$/Examples/DemoApp/res/layout/step_chart_example.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/DynamicXYPlotExample.iml" afterPath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/DynamicXYPlotExample.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/HelperExample/HelperExample.iml" afterPath="$PROJECT_DIR$/Examples/HelperExample/HelperExample.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/OrientationSensorExample/OrientationSensorExample.iml" afterPath="$PROJECT_DIR$/Examples/OrientationSensorExample/OrientationSensorExample.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" afterPath="$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" afterPath="$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" />
     </list>
     <ignored path="AndroidPlot-Trunk.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -77,37 +83,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Examples/pom.xml">
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Examples/DemoApp/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="45" selection-start="945" selection-end="945" vertical-scroll-proportion="0.64444447">
+            <state line="3" column="28" selection-start="174" selection-end="174" vertical-scroll-proportion="0.10408163">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
+      <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Examples/DemoApp/res/values/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="0" selection-start="725" selection-end="725" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="default.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Examples/DemoApp/default.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="34" selection-start="515" selection-end="536" vertical-scroll-proportion="0.0">
+            <state line="2" column="44" selection-start="95" selection-end="95" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -129,6 +117,11 @@
         <option value="$PROJECT_DIR$/Examples/HelperExample/build.xml" />
         <option value="$PROJECT_DIR$/Examples/DemoApp/build.xml" />
         <option value="$PROJECT_DIR$/Examples/pom.xml" />
+        <option value="$PROJECT_DIR$/Examples/DemoApp/res/layout/step_chart_example.xml" />
+        <option value="$PROJECT_DIR$/Examples/DemoApp/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/Examples/DemoApp/res/layout/orientation_sensor_example.xml" />
+        <option value="$PROJECT_DIR$/Examples/DemoApp/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/Examples/DemoApp/AndroidManifest.xml" />
       </list>
     </option>
   </component>
@@ -271,6 +264,86 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DemoApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DemoApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DemoApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AndroidPlot-Core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Favorites" />
@@ -278,12 +351,14 @@
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="ExportedApkPath" value="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\DemoApp\DemoApp.apk" />
     <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="options.lastSelected" value="project.scopes" />
+    <property name="ExportedModule" value="DemoApp" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -294,7 +369,36 @@
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
   </component>
-  <component name="RunManager" selected="Android Application.StepChartExample">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\DemoApp\res\drawable-hdpi" />
+      <recent name="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\DemoApp\res\drawable-ldpi" />
+      <recent name="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\DemoApp\res\drawable-mdpi" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Android Application.DemoApp">
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="CHOOSE_DEVICE_MANUALLY" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="true" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
     <configuration default="true" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings">
@@ -463,12 +567,13 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <list size="5">
+    <list size="6">
       <item index="0" class="java.lang.String" itemvalue="Android Application.DynamicXYPlotExample" />
       <item index="1" class="java.lang.String" itemvalue="Android Application.OrientationSensorExample" />
       <item index="2" class="java.lang.String" itemvalue="Android Application.SimpleXYPlotExample2" />
       <item index="3" class="java.lang.String" itemvalue="Android Application.SimpleXYPlotExample" />
       <item index="4" class="java.lang.String" itemvalue="Android Application.StepChartExample" />
+      <item index="5" class="java.lang.String" itemvalue="Android Application.DemoApp" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -550,35 +655,41 @@
       <created>1299792479244</created>
       <updated>1299792479244</updated>
     </task>
-    <task active="true" id="LOCAL-00002" summary="ANDROIDPLOT-56">
+    <task id="LOCAL-00002" summary="ANDROIDPLOT-56">
       <changelist id="74bbc238-da26-4201-8dca-21051ad8b191" name="ANDROIDPLOT-56" comment="" />
       <changelist id="74bbc238-da26-4201-8dca-21051ad8b191" name="ANDROIDPLOT-56" comment="" />
       <created>1299797545125</created>
-      <updated>1299797545174</updated>
+      <updated>1299906717499</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task active="true" id="LOCAL-00003" summary="ANDROIDPLOT-50">
+      <changelist id="94e4a3d9-7098-4ce9-9eba-f09a127609df" name="ANDROIDPLOT-50" comment="" />
+      <changelist id="94e4a3d9-7098-4ce9-9eba-f09a127609df" name="ANDROIDPLOT-50" comment="" />
+      <created>1299906717487</created>
+      <updated>1299906717541</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="886" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Atlassian " active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32742155" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Atlassian " active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32742155" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17946877" sideWeight="0.6712329" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17946877" sideWeight="0.7082192" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39989322" sideWeight="0.6709109" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24982053" sideWeight="0.6712329" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24982053" sideWeight="0.7082192" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29178083" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29178083" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -602,7 +713,7 @@
     <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="ANDROIDPLOT-56&#10;Examples now fire off of  Examples/pom.xml compile and clean maven targets." />
+    <option name="LAST_COMMIT_MESSAGE" value="ANDROIDPLOT-56&#10;Setup parent pom to recursively build all sub modules." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -619,6 +730,7 @@
     <MESSAGE value="ANDROIDPLOT-56&#10;Created parent/child mvn pom structure.&#10;Created pom for Examples." />
     <MESSAGE value="ANDROIDPLOT-56&#10;Added support for building native android projects from mvn." />
     <MESSAGE value="ANDROIDPLOT-56&#10;Examples now fire off of  Examples/pom.xml compile and clean maven targets." />
+    <MESSAGE value="ANDROIDPLOT-56&#10;Setup parent pom to recursively build all sub modules." />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -695,36 +807,6 @@
     </option>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/Plot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="24" selection-start="3276" selection-end="3276" vertical-scroll-proportion="0.4124031" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/.project">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/.classpath">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/src/com/androidplot/demo/StepChartExampleActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="22" selection-start="136" selection-end="136" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/src/com/example/MyActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="22" selection-start="130" selection-end="130" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/OrientationSensorExample/src/com/example/MyActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="0" selection-start="293" selection-end="293" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Examples/SimpleXYPlotExample/src/com/example/SimpleXYSeries.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="2" column="29" selection-start="51" selection-end="51" vertical-scroll-proportion="0.0" />
@@ -765,21 +847,70 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="0" selection-start="725" selection-end="725" vertical-scroll-proportion="0.0">
+        <state line="10" column="18" selection-start="472" selection-end="472" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/src/com/androidplot/demos/OrientationSensorExampleActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="0" selection-start="302" selection-end="302" vertical-scroll-proportion="0.31458333">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/res/layout/step_chart_example.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="33" selection-start="490" selection-end="490" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/res/layout/orientation_sensor_example.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="38" selection-start="377" selection-end="377" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/src/com/example/SampleDynamicSeries.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="29" selection-start="51" selection-end="51" vertical-scroll-proportion="0.07505519">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="34" selection-start="515" selection-end="536" vertical-scroll-proportion="0.0">
+        <state line="14" column="11" selection-start="593" selection-end="593" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Examples/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="45" selection-start="945" selection-end="945" vertical-scroll-proportion="0.64444447">
+        <state line="23" column="45" selection-start="945" selection-end="945" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="51" selection-start="1744" selection-end="1744" vertical-scroll-proportion="1.2836735">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="44" selection-start="95" selection-end="95" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="28" selection-start="174" selection-end="174" vertical-scroll-proportion="0.10408163">
           <folding />
         </state>
       </provider>
@@ -797,11 +928,6 @@
               </list>
             </option>
           </splitter-proportions>
-        </settings>
-      </state>
-      <state key="Copyright.UI">
-        <settings>
-          <splitter-proportions />
         </settings>
       </state>
       <state key="FacetStructureConfigurable.UI">
@@ -842,12 +968,11 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>AndroidPlot</last-edited>
+          <last-edited>StepChartExample</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
@@ -856,17 +981,6 @@
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
           <last-edited>Maven: com.google.android:android:2.1_r1</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ScopeChooserConfigurable.UI">
-        <settings>
           <splitter-proportions>
             <option name="proportions">
               <list>

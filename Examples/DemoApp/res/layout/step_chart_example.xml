@@ -8,10 +8,11 @@
     <com.androidplot.xy.XYPlot
     android:id="@+id/stepChartExamplePlot"
     android:layout_width="fill_parent"
-    android:layout_height="200px"
-    android:layout_marginTop="10px"
-    android:layout_marginLeft="0px"
-    android:layout_marginRight="0px"
+    android:layout_height="fill_parent"
+    android:layout_marginTop="3px"
+    android:layout_marginLeft="3px"
+    android:layout_marginRight="3px"
+    android:layout_marginBottom="3px"
     title="HTTP Server State (15  Sec)"
     />
 </LinearLayout>

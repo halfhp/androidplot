@@ -34,5 +34,12 @@
                 android:text="XY Scatter With Lines"
                 android:enabled="false"/>
 
+    <TextView android:id="@+id/text"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:autoLink="web"
+                  android:gravity="right"
+                  android:text="http://androidplot.com" />
+
 </LinearLayout>
 

@@ -3,11 +3,15 @@ package com.example;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import com.androidplot.ui.layout.AnchorPosition;
 import com.androidplot.ui.layout.XLayoutStyle;
 import com.androidplot.ui.layout.YLayoutStyle;
 import com.androidplot.ui.widget.Widget;
-import com.androidplot.xy.*;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.LineAndPointRenderer;
+import com.androidplot.xy.XYPlot;
+
 
 public class MyActivity extends Activity
 {

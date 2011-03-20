@@ -58,7 +58,7 @@ public class MyActivity extends Activity {
         LineAndPointFormatter f1 = new LineAndPointFormatter(Color.rgb(0, 0, 200), null, Color.rgb(0, 0, 80));
         f1.getFillPaint().setAlpha(220);
         dynamicPlot.addSeries(sine2Series, f1);
-        dynamicPlot.setGridPadding(5, 0, 5, 0);
+        //dynamicPlot.setGridPadding(5, 0, 5, 0);
 
         //dynamicPlot.addSeries(sine1Series, new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0)));
         //dynamicPlot.addSeries(sine2Series, new BarFormatter(Color.argb(100, 0, 0, 200), Color.rgb(0, 0, 80)));
@@ -72,7 +72,7 @@ public class MyActivity extends Activity {
         dynamicPlot.setTicksPerDomainLabel(5);
         dynamicPlot.setTicksPerRangeLabel(3);
         //dynamicPlot.getGraphWidget().setTicksPerRangeLabel(3);
-        dynamicPlot.disableAllMarkup();
+        //dynamicPlot.disableAllMarkup();
 
         // uncomment this line to freeze the range boundaries:
         dynamicPlot.setRangeBoundaries(-100, 100, BoundaryMode.FIXED);

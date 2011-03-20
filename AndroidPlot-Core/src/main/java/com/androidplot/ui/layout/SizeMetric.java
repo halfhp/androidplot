@@ -8,30 +8,9 @@ package com.androidplot.ui.layout;
  */
 public class SizeMetric extends LayoutMetric<SizeLayoutType> {
 
-
-
-    /*
-    public enum SizeLayoutType {
-        ABSOLUTE,
-        RELATIVE
-    }
-    */
-
-    //private SizeLayoutType layoutType;
-
-
     public SizeMetric(float value, SizeLayoutType layoutType) {
         super(value, layoutType);
-        //validatePair(value, layoutType);
-        //this.setLayoutType(layoutType);
     }
-
-    /*
-    public SizeMetric(float value, float hybridOffset) {
-        super(value, SizeLayoutType.FILL);
-        this.hybridOffset = hybridOffset;
-    }
-    */
 
     protected void validatePair(float value, SizeLayoutType layoutType) {
         switch(layoutType) {
@@ -45,22 +24,6 @@ public class SizeMetric extends LayoutMetric<SizeLayoutType> {
                 break;
         }
     }
-
-
-    /*
-    public void setValue(float value) {
-        validatePair(value, this.getLayoutType());
-        super.setValue(value);
-    }
-
-    @Override
-    public void set(float value, SizeLayoutType layoutType) {
-
-        validatePair(value, layoutType);
-        super.set(value, layoutType);
-    }
-    */
-
 
     @Override
     public float getPixelValue(float size) {

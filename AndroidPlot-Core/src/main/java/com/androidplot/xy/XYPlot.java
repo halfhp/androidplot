@@ -133,8 +133,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     {
         legendWidget = new XYLegendWidget(
                 this,
-                new SizeMetrics(12, SizeLayoutType.ABSOLUTE, 0.5f, SizeLayoutType.RELATIVE),
-                new TableModel(0, 1));
+                new SizeMetrics(14, SizeLayoutType.ABSOLUTE, 0.5f, SizeLayoutType.RELATIVE),
+                new TableModel(0, 1),
+                new SizeMetrics(12, SizeLayoutType.ABSOLUTE, 12, SizeLayoutType.ABSOLUTE));
 
         graphWidget = new XYGraphWidget(
                 this,

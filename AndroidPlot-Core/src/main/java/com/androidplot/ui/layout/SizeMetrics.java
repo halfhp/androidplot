@@ -1,5 +1,8 @@
 package com.androidplot.ui.layout;
 
+import android.graphics.RectF;
+import com.androidplot.util.PixelUtils;
+
 /**
  * Encapsulates sizing preferences associated with a Widget; how/if it scales etc.
  */
@@ -40,6 +43,29 @@ public class SizeMetrics {
 
     public SizeMetric getWidthMetric() {
         return widthMetric;
+    }
+
+    /**
+     * Calculates a RectF with calculated width and height.  The top-left corner is set to 0,0.
+     * @param canvasRect
+     * @return
+     */
+    public RectF getRectF(RectF canvasRect) {
+        return new RectF(
+                0,
+                0,
+                widthMetric.getPixelValue(canvasRect.width()),
+                heightMetric.getPixelValue(canvasRect.height()));
+    }
+
+    /**
+     * Same as getRectF but with edges rounded to the nearest full pixel.
+     * @param canvasRect
+     * @return
+     */
+    public RectF getRoundedRect(RectF canvasRect) {
+        return PixelUtils.nearestPixRect(0, 0, widthMetric.getPixelValue(canvasRect.width()),
+                heightMetric.getPixelValue(canvasRect.height()));
     }
 
     public void setWidthMetric(SizeMetric widthMetric) {

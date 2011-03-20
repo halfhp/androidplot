@@ -3,46 +3,67 @@ package com.androidplot.xy;
 import android.graphics.RectF;
 import com.androidplot.util.ValPixConverter;
 
-
+/**
+ * Calculates "stepping" values for a plot.  These values are most commonly used for
+ * drawing grid lines on a graph.
+ */
 public class XYStepCalculator {
 
 
-    //public static XYStep getStep(XYPlot plot, XYAxisType axisType, RectF rect, double minVal, double maxVal) {
-     //   return getStep(plot, axisType, new Dimension(rect.width(), rect.height()), minVal, maxVal);
-    //}
-    public static XYStep getStep(XYPlot plot, XYAxisType axisType, RectF rect, double minVal, double maxVal) {
+    /**
+     * Convenience method - wraps other form of getStep().
+     * @param plot
+     * @param axisType
+     * @param rect
+     * @param minVal
+     * @param maxVal
+     * @return
+     */
+    public static XYStep getStep(XYPlot plot, XYAxisType axisType, RectF rect, Number minVal, Number maxVal) {
         XYStep step = null;
         switch(axisType) {
             case DOMAIN:
-                step = getStep(plot, plot.getDomainStepMode(), rect.width(), plot.getDomainStepValue(), minVal, maxVal);
+                step = getStep(plot.getDomainStepMode(), rect.width(), plot.getDomainStepValue(), minVal, maxVal);
                 break;
             case RANGE:
-                step = getStep(plot, plot.getRangeStepMode(), rect.height(), plot.getRangeStepValue(), minVal, maxVal);
+                step = getStep(plot.getRangeStepMode(), rect.height(), plot.getRangeStepValue(), minVal, maxVal);
                 break;
         }
         return step;
     }
 
-    private static XYStep getStep(XYPlot plot, XYStepMode typeXY, float numPix, double stepValue, double minVal, double maxVal) {
-        XYStep step = new XYStep();
+    public static XYStep getStep(XYStepMode typeXY, float plotPixelSize, double stepValue, Number minVal, Number maxVal) {
+        //XYStep step = new XYStep();
+        double stepVal = 0;
+        float stepPix = 0;
+        float stepCount = 0;
         switch(typeXY) {
             case INCREMENT_BY_VAL:
                 //float sv = (float) stepValue;
-                step.setStepVal(stepValue);
-                step.setStepPix((float)(stepValue/ ValPixConverter.valPerPix(minVal, maxVal, numPix)));
-                step.setStepCount(numPix/step.getStepPix());
+                //step.setStepVal(stepValue);
+                stepVal = stepValue;
+                stepPix = (float)(stepValue/ ValPixConverter.valPerPix(minVal.floatValue(), maxVal.floatValue(), plotPixelSize));
+                stepCount = plotPixelSize /stepPix;
+                //step.setStepPix((float)(stepValue/ ValPixConverter.valPerPix(minVal, maxVal, plotPixelSize)));
+                //step.setStepCount(plotPixelSize/step.getStepPix());
                 break;
             case INCREMENT_BY_PIXELS:
-                step.setStepPix((float)stepValue);
-                step.setStepCount(numPix/step.getStepPix());
-                step.setStepVal(ValPixConverter.valPerPix(minVal, maxVal, numPix)*step.getStepPix());
+                stepPix = new Double(stepValue).floatValue();
+                stepCount = plotPixelSize /stepPix;
+                stepVal = ValPixConverter.valPerPix(minVal.floatValue(), maxVal.floatValue(), plotPixelSize)*stepPix;
+                //step.setStepPix((float)stepValue);
+                //step.setStepCount(plotPixelSize/step.getStepPix());
+                //step.setStepVal(ValPixConverter.valPerPix(minVal, maxVal, plotPixelSize)*step.getStepPix());
                 break;
             case SUBDIVIDE:
-                step.setStepCount(stepValue);
-                step.setStepPix((float)(numPix/(step.getStepCount()-1)));
-                step.setStepVal(ValPixConverter.valPerPix(minVal, maxVal, numPix)*step.getStepPix());
+                stepCount = new Double(stepValue).floatValue();
+                stepPix = (float)(plotPixelSize /(stepCount-1));
+                stepVal = ValPixConverter.valPerPix(minVal.floatValue(), maxVal.floatValue(), plotPixelSize)*stepPix;
+                //step.setStepCount(stepValue);
+                //step.setStepPix((float)(plotPixelSize/(step.getStepCount()-1)));
+                //step.setStepVal(ValPixConverter.valPerPix(minVal, maxVal, plotPixelSize)*step.getStepPix());
                 break;
         }
-        return step;
+        return new XYStep(stepCount, stepPix, stepVal);
     }
 }

@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidPlot.iml" filepath="$PROJECT_DIR$/AndroidPlot.iml" />
       <module fileurl="file://$PROJECT_DIR$/AndroidPlot-Lib/AndroidPlot-Core.iml" filepath="$PROJECT_DIR$/AndroidPlot-Lib/AndroidPlot-Core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Tests/AndroidPlot-Core-UnitTests.iml" filepath="$PROJECT_DIR$/Tests/AndroidPlot-Core-UnitTests.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/AndroidPlot-Examples.iml" filepath="$PROJECT_DIR$/Examples/AndroidPlot-Examples.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" filepath="$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/DynamicXYPlotExample.iml" filepath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/DynamicXYPlotExample.iml" />
@@ -12,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/Examples/OrientationSensorExample/OrientationSensorExample.iml" filepath="$PROJECT_DIR$/Examples/OrientationSensorExample/OrientationSensorExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" filepath="$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" filepath="$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Examples/TimeSeriesExample/TimeSeriesExample.iml" filepath="$PROJECT_DIR$/Examples/TimeSeriesExample/TimeSeriesExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/AndroidPlot-Core/androidplot-core.iml" filepath="$PROJECT_DIR$/AndroidPlot-Core/androidplot-core.iml" />
     </modules>
   </component>

@@ -5,7 +5,7 @@ import android.graphics.Paint;
 public class StepFormatter extends LineAndPointFormatter {
 
     public StepFormatter(Paint linePaint) {
-        super(linePaint, null);
+        super(linePaint, null, null);
     }
 
     public StepFormatter(Paint linePaint, Paint fillPaint) {

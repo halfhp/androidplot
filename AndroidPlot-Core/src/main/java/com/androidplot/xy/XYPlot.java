@@ -66,7 +66,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     // widgets
-    private XYPlotLegendWidget legendWidget;
+    private XYLegendWidget legendWidget;
     private XYGraphWidget graphWidget;
     private DomainLabelWidget domainLabelWidget;
     private RangeLabelWidget rangeLabelWidget;
@@ -110,8 +110,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     // using boundaries and origins are mutually exclusive.  because of this,
     // setting one will disable the other.  when only setting the FramingModel,
     // the origin or boundary is set to the current value of the plot.
-    private XYPlotFramingModel domainFramingModel = XYPlotFramingModel.EDGE;
-    private XYPlotFramingModel rangeFramingModel = XYPlotFramingModel.EDGE;
+    private XYFramingModel domainFramingModel = XYFramingModel.EDGE;
+    private XYFramingModel rangeFramingModel = XYFramingModel.EDGE;
 
     private Number userDomainOrigin;
     private Number userRangeOrigin;
@@ -131,10 +131,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private boolean drawRangeOriginEnabled = true;
 
     {
-        legendWidget = new XYPlotLegendWidget(
+        legendWidget = new XYLegendWidget(
                 this,
                 new SizeMetrics(12, SizeLayoutType.ABSOLUTE, 0.5f, SizeLayoutType.RELATIVE),
-                XYPlotLegendWidget.LayoutOrientation.HORIZONTAL);
+                new TableModel(0, 1));
 
         graphWidget = new XYGraphWidget(
                 this,
@@ -440,7 +440,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         if (origin == null) {
             throw new NullPointerException("Origin param cannot be null.");
         }
-        domainFramingModel = XYPlotFramingModel.ORIGIN;
+        domainFramingModel = XYFramingModel.ORIGIN;
         setUserDomainOrigin(origin);
         domainOriginExtent = extent;
         domainOriginBoundaryMode = mode;
@@ -475,7 +475,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         if (origin == null) {
             throw new NullPointerException("Origin param cannot be null.");
         }
-        rangeFramingModel = XYPlotFramingModel.ORIGIN;
+        rangeFramingModel = XYFramingModel.ORIGIN;
         setUserRangeOrigin(origin);
         rangeOriginExtent = extent;
         rangeOriginBoundaryMode = mode;
@@ -705,11 +705,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         }
     }
 
-    public XYPlotLegendWidget getLegendWidget() {
+    public XYLegendWidget getLegendWidget() {
         return legendWidget;
     }
 
-    public void setLegendWidget(XYPlotLegendWidget legendWidget) {
+    public void setLegendWidget(XYLegendWidget legendWidget) {
         this.legendWidget = legendWidget;
     }
 
@@ -801,7 +801,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     public synchronized void setDomainUpperBoundary(Number boundary, BoundaryMode mode) {
         setDomainUpperBoundaryMode(mode);
         setUserMaxX(boundary);
-        setDomainFramingModel(XYPlotFramingModel.EDGE);
+        setDomainFramingModel(XYFramingModel.EDGE);
     }
 
     protected synchronized void setDomainLowerBoundaryMode(BoundaryMode mode) {
@@ -818,7 +818,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     public synchronized void setDomainLowerBoundary(Number boundary, BoundaryMode mode) {
         setDomainLowerBoundaryMode(mode);
         setUserMinX(boundary);
-        setDomainFramingModel(XYPlotFramingModel.EDGE);
+        setDomainFramingModel(XYFramingModel.EDGE);
         //updateMinMaxVals();
     }
 
@@ -836,7 +836,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     public synchronized void setRangeUpperBoundary(Number boundary, BoundaryMode mode) {
         setRangeUpperBoundaryMode(mode);
         setUserMaxY(boundary);
-        setRangeFramingModel(XYPlotFramingModel.EDGE);
+        setRangeFramingModel(XYFramingModel.EDGE);
         //updateMinMaxVals();
     }
 
@@ -854,7 +854,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     public synchronized void setRangeLowerBoundary(Number boundary, BoundaryMode mode) {
         setRangeLowerBoundaryMode(mode);
         setUserMinY(boundary);
-        setRangeFramingModel(XYPlotFramingModel.EDGE);
+        setRangeFramingModel(XYFramingModel.EDGE);
     }
 
     private Number getUserMinX() {
@@ -911,20 +911,20 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         this.userRangeOrigin = origin;
     }
 
-    public XYPlotFramingModel getDomainFramingModel() {
+    public XYFramingModel getDomainFramingModel() {
         return domainFramingModel;
     }
 
-    protected void setDomainFramingModel(XYPlotFramingModel domainFramingModel) {
+    protected void setDomainFramingModel(XYFramingModel domainFramingModel) {
         this.domainFramingModel = domainFramingModel;
     }
 
-    public XYPlotFramingModel getRangeFramingModel() {
+    public XYFramingModel getRangeFramingModel() {
 
         return rangeFramingModel;
     }
 
-    protected void setRangeFramingModel(XYPlotFramingModel rangeFramingModel) {
+    protected void setRangeFramingModel(XYFramingModel rangeFramingModel) {
         this.rangeFramingModel = rangeFramingModel;
     }
 

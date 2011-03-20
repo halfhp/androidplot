@@ -60,7 +60,7 @@ public class StepRenderer extends XYSeriesRenderer<StepFormatter> {
     }
 
     @Override
-    public void drawLegendIcon(Canvas canvas, RectF rect, String text, StepFormatter formatter) {
+    public void doDrawLegendIcon(Canvas canvas, RectF rect, String text, StepFormatter formatter) {
         // horizontal icon:
         float centerY = rect.centerY();
         float centerX = rect.centerX();

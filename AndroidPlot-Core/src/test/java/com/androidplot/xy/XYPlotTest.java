@@ -3,6 +3,7 @@ package com.androidplot.xy;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Handler;
 import android.view.View;
 import com.androidplot.util.FontUtils;
@@ -10,14 +11,14 @@ import mockit.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class, Rect.class, FontUtils.class})
-
+@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class, Rect.class, RectF.class, FontUtils.class})
 
 public class XYPlotTest {
 

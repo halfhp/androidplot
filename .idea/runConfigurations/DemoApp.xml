@@ -12,6 +12,8 @@
     <option name="NETWORK_SPEED" value="full" />
     <option name="NETWORK_LATENCY" value="none" />
     <option name="CLEAR_LOGCAT" value="false" />
+    <RunnerSettings RunnerId="Run" />
+    <ConfigurationWrapper RunnerId="Run" />
     <method />
   </configuration>
 </component>

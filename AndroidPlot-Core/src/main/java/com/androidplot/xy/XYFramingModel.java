@@ -1,6 +1,6 @@
 package com.androidplot.xy;
 
-public enum XYPlotFramingModel {
+public enum XYFramingModel {
     ORIGIN,
     EDGE,
 }

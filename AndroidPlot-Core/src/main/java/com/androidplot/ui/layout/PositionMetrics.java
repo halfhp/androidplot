@@ -8,8 +8,8 @@ public class PositionMetrics implements Comparable<PositionMetrics> {
     private float layerDepth;
 
     /*
-    public PositionMetrics(float x, XLayoutStyle xLayoutType, float y, YLayoutStyle yLayoutType) {
-        this(x, xLayoutType, y, yLayoutType, AnchorPosition.LEFT_TOP);
+    public PositionMetrics(float lastColumn, XLayoutStyle xLayoutType, float lastRow, YLayoutStyle yLayoutType) {
+        this(lastColumn, xLayoutType, lastRow, yLayoutType, AnchorPosition.LEFT_TOP);
     }
     */
 

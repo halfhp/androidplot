@@ -38,10 +38,11 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     }
 
     @Override
-    public void drawLegendIcon(Canvas canvas, RectF rect, String text, LineAndPointFormatter formatter) {
+    public void doDrawLegendIcon(Canvas canvas, RectF rect, String text, LineAndPointFormatter formatter) {
         // horizontal icon:
         float centerY = rect.centerY();
         float centerX = rect.centerX();
+
         if(formatter.getFillPaint() != null) {
             canvas.drawRect(rect, formatter.getFillPaint());
         }

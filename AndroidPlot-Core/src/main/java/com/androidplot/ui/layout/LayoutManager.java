@@ -116,16 +116,16 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
         Point point = new Point(topLeft);
         point.add(getAnchorOffset(size.getWidth(), size.getHeight(), anchorPosition));
         //Point offset = getAnchorOffset(width, height, anchorPosition);
-        //point.setX(x)
+        //point.setX(lastColumn)
         return point;
     }*/
 
     public static PointF getAnchorCoordinates(float x, float y, float width, float height, AnchorPosition anchorPosition) {
-        //return getAnchorCoordinates(new Point(x, y), new Dimension(width, height), anchorPosition);
+        //return getAnchorCoordinates(new Point(lastColumn, lastRow), new Dimension(width, height), anchorPosition);
 
         return getAnchorCoordinates(new RectF(x, y, x+width, y+height), anchorPosition);
         /*
-        Point point = new Point(x, y);
+        Point point = new Point(lastColumn, lastRow);
         point.position(getAnchorOffset(width, height, anchorPosition));
 
         return point;
@@ -136,40 +136,40 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
         PointF point = new PointF();
         switch (anchorPosition) {
             case LEFT_TOP:
-                //point.set(x, y);
-                //component.doBeforeDraw(canvas, x, y);
+                //point.set(lastColumn, lastRow);
+                //component.doBeforeDraw(canvas, lastColumn, lastRow);
                 //component.doBeforeDraw(canvas, metric.getxMetric().getPixelValue(canvas.getWidth()));
                 break;
             case LEFT_MIDDLE:
-                //component.doBeforeDraw(canvas, x, y-(component.getHeightPix(height)/2));
+                //component.doBeforeDraw(canvas, lastColumn, lastRow-(component.getHeightPix(height)/2));
                 point.set(0, height / 2);
                 break;
             case LEFT_BOTTOM:
-                //component.doBeforeDraw(canvas, x, y-component.getHeightPix(height));
+                //component.doBeforeDraw(canvas, lastColumn, lastRow-component.getHeightPix(height));
                 point.set(0, height);
                 break;
             case RIGHT_TOP:
-                //component.doBeforeDraw(canvas, x-component.getWidthPix(width), y);
+                //component.doBeforeDraw(canvas, lastColumn-component.getWidthPix(width), lastRow);
                 point.set(width, 0);
                 break;
             case RIGHT_BOTTOM:
-                //component.doBeforeDraw(canvas, x-component.getWidthPix(width), y-component.getHeightPix(height));
+                //component.doBeforeDraw(canvas, lastColumn-component.getWidthPix(width), lastRow-component.getHeightPix(height));
                 point.set(width, height);
                 break;
             case RIGHT_MIDDLE:
-                //component.doBeforeDraw(canvas, x-component.getWidthPix(width), y-(component.getHeightPix(height)/2));
+                //component.doBeforeDraw(canvas, lastColumn-component.getWidthPix(width), lastRow-(component.getHeightPix(height)/2));
                 point.set(width, height / 2);
                 break;
             case TOP_MIDDLE:
-                //component.doBeforeDraw(canvas, x-(component.getWidthPix(width)/2), y);
+                //component.doBeforeDraw(canvas, lastColumn-(component.getWidthPix(width)/2), lastRow);
                 point.set(width / 2, 0);
                 break;
             case BOTTOM_MIDDLE:
-                //component.doBeforeDraw(canvas, x-(component.getWidthPix(width)/2), y-component.getHeightPix(height));
+                //component.doBeforeDraw(canvas, lastColumn-(component.getWidthPix(width)/2), lastRow-component.getHeightPix(height));
                 point.set(width / 2, height);
                 break;
             case CENTER:
-                //component.doBeforeDraw(canvas, x-(component.getWidthPix(width)/2), y-(component.getHeightPix(height)/2));
+                //component.doBeforeDraw(canvas, lastColumn-(component.getWidthPix(width)/2), lastRow-(component.getHeightPix(height)/2));
                 point.set(width / 2, height / 2);
                 break;
             default:
@@ -188,15 +188,15 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
         float width = canvas.getWidth();
         //for(Widget element : widgets.keySet()) {
         PositionMetrics metrics = widgets.get(element);
-        float x = metrics.getxMetric().getPixelValue(width);
-        float y = metrics.getyMetric().getPixelValue(height);
+        float lastColumn = metrics.getxMetric().getPixelValue(width);
+        float lastRow = metrics.getyMetric().getPixelValue(height);
 
         float elementWidth = element.getWidthPix(width);
         float elementHeight = element.getHeightPix(height);
 
-        //getAnchorCoordinates(x, y, width, height, metrics.getAnchor());
+        //getAnchorCoordinates(lastColumn, lastRow, width, height, metrics.getAnchor());
 
-        Point screenCoordinates = new Point(x, y);
+        Point screenCoordinates = new Point(lastColumn, lastRow);
         screenCoordinates.sub(getAnchorOffset(elementWidth, elementHeight, metrics.getAnchor()));
 
         return screenCoordinates;
@@ -211,7 +211,7 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
         //float elementWidth = element.getWidthPix(width);
         //float elementHeight = element.getHeightPix(height);
 
-        //getAnchorCoordinates(x, y, width, height, metrics.getAnchor());
+        //getAnchorCoordinates(lastColumn, lastRow, width, height, metrics.getAnchor());
 
         PointF point = new PointF(x, y);
         return PointUtils.sub(point, getAnchorOffset(width, height, metrics.getAnchor()));
@@ -336,7 +336,7 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
             throw new NullPointerException("Attempt to position null as Widget element.");
         }
 
-        widgets.put(element, new PositionMetrics(x, xLayoutStyle, y, yLayoutStyle, anchor));
+        widgets.put(element, new PositionMetrics(lastColumn, xLayoutStyle, lastRow, yLayoutStyle, anchor));
         if(!widgetOrder.contains(element)) {
             widgetOrder.addToBack(element);
         }

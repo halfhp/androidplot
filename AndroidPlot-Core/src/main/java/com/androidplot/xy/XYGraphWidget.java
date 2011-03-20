@@ -111,6 +111,7 @@ public class XYGraphWidget extends Widget {
         gridLinePaint.setColor(Color.rgb(180, 180, 180));
         //gridLinePaint.setPathEffect(new DashPathEffect(new float[]{1,1}, 1));
         gridLinePaint.setAntiAlias(true);
+        gridLinePaint.setStyle(Paint.Style.STROKE);
 
         domainOriginLinePaint = new Paint();
         domainOriginLinePaint.setColor(Color.WHITE);
@@ -679,8 +680,15 @@ public class XYGraphWidget extends Widget {
         return gridLinePaint;
     }
 
+    /**
+     * Creates a copy of gridLinePaint to be used for drawing
+     * grid lines.  The copied instance will have it's style
+     * attribute set to Paint.Style.STROKE.
+     * @param gridLinePaint
+     */
     public void setGridLinePaint(Paint gridLinePaint) {
-        this.gridLinePaint = gridLinePaint;
+        this.gridLinePaint = new Paint(gridLinePaint);
+        this.gridLinePaint.setStyle(Paint.Style.STROKE);
     }
 
         // TODO: make a generic renderer queue.

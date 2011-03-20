@@ -44,7 +44,11 @@
                         </goals>
                         
                         <configuration>
-                            <tasks>
+                            <target name="build-examples">
+                                <!--
+                                <property name="key.store" value="test"/>
+                                <property name="key.alias" value="test"/>
+                                -->
                                 <!--<property name="sdk.dir" value="C:/android-sdk"/>-->
                                 <property environment="env"/>
                                 <property name="sdk.dir" value="${env.ANDROID_HOME}"/>
@@ -54,9 +58,27 @@
                                 <property name="build.compiler" value="extJavac"/>
                                 <property environment="env"/>
                                 <property name="sdk.dir" value="${env.ANDROID_HOME}"/>
+                                <!--<property name="apkeystore" value="${env.AP_KEYSTORE}"/>-->
 
                                 <!-- DemoApp-->
                                 <ant antfile="build.xml" target="release" dir="DemoApp"/>
+                                <!--<target name="sign" if="${env.AP_KEYSTORE}">
+                                    <echo message="SUCCESS!"/>
+                                </target>-->
+                                
+
+                                <!--
+                                <signjar
+                                    alias="key0" keystore="testkeystore"
+                                    storepass="apacheant"
+                                    lazy="true"
+                                    >
+                                  <path>
+                                    <fileset dir="dist" includes="**/*.jar" />
+                                  </path>
+                                </signjar>
+                                -->
+
 
                                 <!-- DynamicXYPlotExample-->
                                 <ant antfile="build.xml" target="release" dir="DynamicXYPlotExample"/>
@@ -72,9 +94,10 @@
 
                                 <!-- StepChartExample-->
                                 <ant antfile="build.xml" target="release" dir="StepChartExample"/>
-                            </tasks>
+                            </target>
 
                         </configuration>
+                        
                     </execution>
                     <execution>
                         <id>clean</id>

@@ -8,7 +8,7 @@ abstract class LayoutMetric<LayoutType extends Enum> {
 
     //private LayoutType layoutType;
     private float value;
-    //private float y;
+    //private float lastRow;
 
     public LayoutMetric(float value, LayoutType layoutType) {
         validatePair(value, layoutType);

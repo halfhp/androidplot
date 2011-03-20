@@ -74,11 +74,9 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
     }
 
     @Override
-    public void drawLegendIcon(Canvas canvas, RectF rect, String text, BarFormatter formatter) {
-
+    public void doDrawLegendIcon(Canvas canvas, RectF rect, String text, BarFormatter formatter) {
         canvas.drawRect(rect, formatter.getFillPaint());
         canvas.drawRect(rect, formatter.getBorderPaint());
-
     }
 
     private int getLongestSeries() {

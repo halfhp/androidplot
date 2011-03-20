@@ -16,7 +16,7 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class, Rect.class, FontUtils.class})
+@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class, Rect.class, RectF.class, FontUtils.class})
 
 public class XYSeriesRendererTest {
 

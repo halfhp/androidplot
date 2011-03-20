@@ -3,6 +3,7 @@ package com.androidplot.ui.widget.renderer;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Region;
 import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.Plot;
@@ -41,6 +42,13 @@ public abstract class DataRenderer<PlotType extends Plot, SeriesFormatterType ex
      * @param rect
      * @param text
      */
-    public abstract void drawLegendIcon(Canvas canvas, RectF rect, String text, SeriesFormatterType formatter);
+    protected abstract void doDrawLegendIcon(Canvas canvas, RectF rect, String text, SeriesFormatterType formatter);
+
+    public void drawLegendIcon(Canvas canvas, RectF rect, String text, SeriesFormatterType formatter) {
+        int state = canvas.save(Canvas.CLIP_SAVE_FLAG);
+        canvas.clipRect(rect, Region.Op.INTERSECT);
+        doDrawLegendIcon(canvas, rect, text, formatter);
+        canvas.restoreToCount(state);
+    }
 
 }

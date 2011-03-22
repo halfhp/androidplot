@@ -1,6 +1,6 @@
 package com.androidplot.ui.layout;
 
-public enum TableOrientation {
+public enum TableOrder {
     ROW_MAJOR,    // standard c-style
     COLUMN_MAJOR
 }

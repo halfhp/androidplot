@@ -6,9 +6,11 @@ import mockit.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Iterator;
+
 import static junit.framework.Assert.assertEquals;
 
-public class TableModelTest {
+public class DynamicTableModelTest {
     @Before
     public void setUp() throws Exception {
         Mockit.setUpMocks(MockRectF.class);
@@ -16,7 +18,7 @@ public class TableModelTest {
 
     @Test
     public void testConstructor() throws Exception {
-        TableModel model = new TableModel(5, 5, TableOrientation.COLUMN_MAJOR);
+        TableModel model = new DynamicTableModel(5, 5, TableOrder.COLUMN_MAJOR);
         // TODO
     }
 
@@ -24,29 +26,29 @@ public class TableModelTest {
     public void testGetCellRect() throws Exception {
 
         // square table, both rows and columns defined:
-        TableModel model = new TableModel(5, 5);
+        DynamicTableModel model = new DynamicTableModel(5, 5);
         RectF tableRect = new RectF(0, 0, 1000, 2000);
         RectF cellRect = model.getCellRect(tableRect, 10);
         assertEquals(200f, cellRect.width());
 
         // only rows defined:
-        model = new TableModel(5, 0);
+        model = new DynamicTableModel(5, 0);
         cellRect = model.getCellRect(tableRect, 10);
         assertEquals(200f, cellRect.width());
 
         // only columns defined:
-        model = new TableModel(0, 5);
+        model = new DynamicTableModel(0, 5);
         cellRect = model.getCellRect(tableRect, 10);
         assertEquals(400f, cellRect.height());
     }
 
     @Test public void testIterator() throws Exception {
-        TableModel model = new TableModel(2, 2);
+        TableModel model = new DynamicTableModel(2, 2);
 
         RectF tableRect = new RectF(0, 0, 1000, 2000);
 
         // should stop at 4 iterations since the table can only hold that many:
-        TableModel.TableModelIterator it = model.getIterator(tableRect, 10);
+        Iterator<RectF> it = model.getIterator(tableRect, 10);
         int iterations = 0;
         while(it.hasNext()) {
             it.next();
@@ -56,7 +58,7 @@ public class TableModelTest {
 
         // now set a dynamic number of columns.  iterations should equal however
         // many elements we throw at it:
-        model = new TableModel(2, 0);
+        model = new DynamicTableModel(2, 0);
         it = model.getIterator(tableRect, 10);
         iterations = 0;
         while(it.hasNext()) {
@@ -72,10 +74,10 @@ public class TableModelTest {
     public void testRowMajorIteration() throws Exception {
 
         // square table, both rows and columns defined:
-        TableModel model = new TableModel(2, 2);
+        TableModel model = new DynamicTableModel(2, 2);
         RectF tableRect = new RectF(0, 0, 1000, 2000);
         int createdCells = 4;
-        TableModel.TableModelIterator it = model.getIterator(tableRect, createdCells);
+        Iterator<RectF> it = model.getIterator(tableRect, createdCells);
         
 
         // 2x2:
@@ -116,7 +118,7 @@ public class TableModelTest {
         assertEquals(2000f, cellRect.bottom);
 
         // 2xN:
-        /*model = new TableModel(2, 0);
+        /*model = new DynamicTableModel(2, 0);
         tableRect = new RectF(0, 0, 1000, 2000);
         createdCells = 4;
         it = model.getIterator(tableRect, createdCells);*/
@@ -130,10 +132,10 @@ public class TableModelTest {
     public void testColumnMajorIteration() throws Exception {
 
         // square table, both rows and columns defined:
-        TableModel model = new TableModel(2, 2, TableOrientation.COLUMN_MAJOR);
+        TableModel model = new DynamicTableModel(2, 2, TableOrder.COLUMN_MAJOR);
         RectF tableRect = new RectF(0, 0, 1000, 2000);
         int createdCells = 4;
-        TableModel.TableModelIterator it = model.getIterator(tableRect, createdCells);
+        Iterator<RectF> it = model.getIterator(tableRect, createdCells);
 
 
         // 2x2 fixed:
@@ -177,10 +179,10 @@ public class TableModelTest {
     @Test
     public void testSingleRowIteration() throws Exception {
         // square table, both rows and columns defined:
-        TableModel model = new TableModel(0, 1);
+        TableModel model = new DynamicTableModel(0, 1);
         RectF tableRect = new RectF(0, 0, 1000, 1000);
         int createdCells = 4;
-        TableModel.TableModelIterator it = model.getIterator(tableRect, createdCells);
+        Iterator<RectF> it = model.getIterator(tableRect, createdCells);
 
 
 

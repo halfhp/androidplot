@@ -30,6 +30,8 @@ package com.androidplot.xy;
 
 import android.content.Context;
 //import android.graphics.*;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
 import com.androidplot.series.XYSeries;
@@ -134,13 +136,16 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         legendWidget = new XYLegendWidget(
                 this,
                 new SizeMetrics(14, SizeLayoutType.ABSOLUTE, 0.5f, SizeLayoutType.RELATIVE),
-                new TableModel(0, 1),
+                new DynamicTableModel(0, 1),
                 new SizeMetrics(12, SizeLayoutType.ABSOLUTE, 12, SizeLayoutType.ABSOLUTE));
 
         graphWidget = new XYGraphWidget(
                 this,
                 new SizeMetrics(20, SizeLayoutType.FILL, 12, SizeLayoutType.FILL));
-        graphWidget.setDrawBackgroundEnabled(true);
+        Paint backgroundPaint = new Paint();
+        backgroundPaint.setColor(Color.DKGRAY);
+        backgroundPaint.setStyle(Paint.Style.FILL);
+        graphWidget.setBackgroundPaint(backgroundPaint);
 
         domainLabelWidget = new DomainLabelWidget(
                 this,

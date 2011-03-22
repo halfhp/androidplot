@@ -10,8 +10,8 @@ public abstract class Widget implements BoxModelable {
 
     private Paint borderPaint;
     private Paint backgroundPaint;
-    private boolean drawBorderEnabled = false;
-    private boolean drawBackgroundEnabled = false;
+    //private boolean drawBorderEnabled = false;
+    //private boolean drawBackgroundEnabled = false;
     private boolean clippingEnabled = true;
     /*private float marginTop = 0;
     private float marginBottom = 0;
@@ -21,13 +21,13 @@ public abstract class Widget implements BoxModelable {
     private SizeMetrics sizeMetrics;
 
     {
-        borderPaint = new Paint();
+        /*borderPaint = new Paint();
         borderPaint.setColor(Color.BLACK);
         borderPaint.setStyle(Paint.Style.STROKE);
 
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.DKGRAY);
-        backgroundPaint.setStyle(Paint.Style.FILL);
+        backgroundPaint.setStyle(Paint.Style.FILL);*/
     }
 
     public Widget(SizeMetric heightMetric, SizeMetric widthMetric) {
@@ -162,7 +162,7 @@ public abstract class Widget implements BoxModelable {
     }
 
      public void draw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
-        if(drawBackgroundEnabled) {
+        if(backgroundPaint != null) {
             drawBackground(canvas, widgetRect);
         }
 
@@ -175,7 +175,7 @@ public abstract class Widget implements BoxModelable {
         RectF paddedRect = boxModel.getPaddedRect(marginatedRect);
         doOnDraw(canvas, paddedRect);
 
-        if(drawBorderEnabled) {
+        if(borderPaint != null) {
             drawBorder(canvas, paddedRect);
         }
     }
@@ -212,7 +212,7 @@ public abstract class Widget implements BoxModelable {
         this.backgroundPaint = backgroundPaint;
     }
 
-    public boolean isDrawBorderEnabled() {
+    /*public boolean isDrawBorderEnabled() {
         return drawBorderEnabled;
     }
 
@@ -226,7 +226,7 @@ public abstract class Widget implements BoxModelable {
 
     public void setDrawBackgroundEnabled(boolean drawBackgroundEnabled) {
         this.drawBackgroundEnabled = drawBackgroundEnabled;
-    }
+    }*/
 
     public boolean isClippingEnabled() {
         return clippingEnabled;

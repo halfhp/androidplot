@@ -8,6 +8,8 @@ import com.androidplot.ui.widget.Widget;
 import com.androidplot.ui.layout.SizeMetrics;
 import com.androidplot.util.FontUtils;
 
+import java.util.Iterator;
+
 public class XYLegendWidget extends Widget {
     ////public static final int ICON_WIDTH_DEFAULT = 10;
     //public static final int ICON_HEIGHT_DEFAULT = 10;
@@ -94,7 +96,7 @@ public class XYLegendWidget extends Widget {
             seriesCount += plot.getSeriesAndFormatterListForRenderer(renderer.getClass()).size();
         }
 
-        TableModel.TableModelIterator it = tableModel.getIterator(widgetRect, seriesCount);
+        Iterator<RectF> it = tableModel.getIterator(widgetRect, seriesCount);
         for(XYSeriesRenderer renderer : plot.getRendererList()) {
             SeriesAndFormatterList<XYSeries,XYSeriesFormatter> sfList = plot.getSeriesAndFormatterListForRenderer(renderer.getClass());
 

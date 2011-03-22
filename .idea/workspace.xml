@@ -7,22 +7,19 @@
     <list id="94e4a3d9-7098-4ce9-9eba-f09a127609df" name="ANDROIDPLOT-50" comment="ANDROIDPLOT-50&#10;Removing dynamically generated directories from svn." />
     <list id="8595b6db-7921-4f7c-910a-96c8d3a63957" name="ANDROIDPLOT-55" comment="ANDROIDPLOT-55&#10;Removing dynamically generated directories from vcs." />
     <list default="true" id="5fbb8dfa-b579-4993-af17-a6abd16f33bd" name="ANDROIDPLOT-68" comment="ANDROIDPLOT-68&#10;Modified LegendWidge's implementation of TableModel to leverage SizeLayout for calculating icon sizes in absolute or relative values.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/mock" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/mock/MockRectF.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Examples/DemoApp/bin" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\HelperExample\bin" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\OrientationSensorExample\bin" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\SimpleXYPlotExample\bin" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\StepChartExample\bin" afterPath="" />
-      <change type="MOVED" beforePath="C:\Users\halfhp\Documents\Work\AndroidPlot\AndroidPlot-Core\src\main\java\com\androidplot\util\PointUtils.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/PixelUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/DynamicTableModel.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/FixedTableModel.java" />
+      <change type="MOVED" beforePath="C:\Users\halfhp\Documents\Work\AndroidPlot\AndroidPlot-Core\src\test\java\com\androidplot\ui\layout\TableModelTest.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/ui/layout/DynamicTableModelTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/LayoutManager.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/LayoutManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetric.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetric.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetrics.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetrics.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/TableModel.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/TableModel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/Widget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/Widget.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYLegendWidget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYLegendWidget.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYPlot.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYPlot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/src/com/example/MyActivity.java" afterPath="$PROJECT_DIR$/Examples/DynamicXYPlotExample/src/com/example/MyActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/HelperExample/res/layout/main.xml" afterPath="$PROJECT_DIR$/Examples/HelperExample/res/layout/main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/HelperExample/src/com/example/MyActivity.java" afterPath="$PROJECT_DIR$/Examples/HelperExample/src/com/example/MyActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/StepChartExample/src/com/example/MyActivity.java" afterPath="$PROJECT_DIR$/Examples/StepChartExample/src/com/example/MyActivity.java" />
     </list>
+    <list id="3f4d6e95-6b6d-4e4e-a5f4-46583813d3fe" name="ANDROIDPLOT-61" comment="ANDROIDPLOT-68&#10;Added" />
     <ignored path="AndroidPlot-Trunk.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -46,60 +43,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYLegendWidget.java" line="104" class="com.androidplot.xy.XYLegendWidget" package="com.androidplot.xy">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYLegendWidget.java" line="96" class="com.androidplot.xy.XYLegendWidget" package="com.androidplot.xy">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/ui/layout/TableModelTest.java" line="188" class="com.androidplot.ui.layout.TableModelTest" package="com.androidplot.ui.layout">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/TableModel.java" line="91" class="com.androidplot.ui.layout.TableModel.TableModelIterator" package="com.androidplot.ui.layout">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-    </line_breakpoints>
     <breakpoint_any>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -138,104 +81,6 @@
   <component name="FavoritesManager">
     <favorites_list name="AndroidPlot-Trunk" />
   </component>
-  <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="SizeMetrics.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetrics.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="61" column="38" selection-start="2150" selection-end="2150" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MyActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Examples/HelperExample/src/com/example/MyActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="60" column="99" selection-start="2701" selection-end="2701" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MyActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/src/com/example/MyActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="74" column="10" selection-start="2862" selection-end="2862" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TableModel.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/TableModel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="13" selection-start="856" selection-end="856" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="XYLegendWidget.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYLegendWidget.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="66" column="93" selection-start="2414" selection-end="2414" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FontUtils.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/FontUtils.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="13" selection-start="106" selection-end="106" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="XYPlot.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYPlot.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="135" column="34" selection-start="5150" selection-end="5150" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="XYFramingModel.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYFramingModel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="12" selection-start="41" selection-end="41" vertical-scroll-proportion="0.07606264">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Widget.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/Widget.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="68" column="53" selection-start="2095" selection-end="2095" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SizeMetric.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetric.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="0" selection-start="809" selection-end="809" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="FindManager">
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="false" />
@@ -244,22 +89,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/Examples/pom.xml" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/mock/MockRectF.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/ui/layout/TableModelTest.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/TableModel.java" />
-        <option value="$PROJECT_DIR$/Examples/HelperExample/src/com/example/MyActivity.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/renderer/DataRenderer.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/LineAndPointRenderer.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/plot/PlotTest.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/BarRenderer.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/LayoutManager.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetric.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/PixelUtils.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetrics.java" />
         <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYLegendWidget.java" />
-        <option value="$PROJECT_DIR$/Examples/DynamicXYPlotExample/src/com/example/MyActivity.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYPlot.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/TableModel.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/ui/layout/DynamicTableModelTest.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/DynamicTableModel.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/TableOrder.java" />
+        <option value="$PROJECT_DIR$/Examples/DemoApp/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/Examples/DemoApp/res/layout/orientation_sensor_example.xml" />
+        <option value="$PROJECT_DIR$/Examples/DemoApp/res/layout/step_chart_example.xml" />
+        <option value="$PROJECT_DIR$/Examples/DynamicXYPlotExample/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/Examples/HelperExample/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/Examples/OrientationSensorExample/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/Examples/SimpleXYPlotExample/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/Examples/StepChartExample/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/Examples/TimeSeriesExample/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/FixedTableModel.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/ui/layout/FixedTableModelTest.java" />
       </list>
     </option>
   </component>
@@ -297,6 +142,24 @@
         <PATH_ELEMENT>
           <option name="myItemId" value="" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="AndroidPlot-Examples" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="AndroidPlot-Examples" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Lifecycle" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$LifecycleNode" />
         </PATH_ELEMENT>
       </PATH>
       <PATH>
@@ -352,48 +215,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AndroidPlot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AndroidPlot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AndroidPlot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AndroidPlot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Examples" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AndroidPlot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AndroidPlot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Examples" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DemoApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -405,7 +226,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="OverrideImplement.combined" value="true" />
-    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.proportion" value="0.18604651" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="ExportedApkPath" value="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\DemoApp\DemoApp.apk" />
     <property name="recentsLimit" value="5" />
@@ -425,13 +246,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.androidplot.xy" />
       <recent name="com.androidplot.test" />
       <recent name="com.androidplot.ui.layout" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples" />
       <recent name="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\DemoApp\res\drawable-hdpi" />
       <recent name="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\DemoApp\res\drawable-ldpi" />
       <recent name="C:\Users\halfhp\Documents\Work\AndroidPlot\Examples\DemoApp\res\drawable-mdpi" />
+    </key>
+    <key name="ExtractSuperBase.RECENT_KEYS">
+      <recent name="com.androidplot.ui.layout" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.androidplot.ui.layout" />
@@ -550,8 +376,8 @@
       </UpdatedFiles>
     </UpdateInfo>
   </component>
-  <component name="RunManager" selected="Android Application.DynamicXYPlotExample">
-    <configuration default="false" name="TableModelTest" type="JUnit" factoryName="JUnit" temporary="true">
+  <component name="RunManager" selected="JUnit.FixedTableModelTest">
+    <configuration default="false" name="DynamicTableModelTest" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
           <option name="PATTERN" value="com.androidplot.ui.layout.*" />
@@ -562,7 +388,103 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
       <option name="PACKAGE_NAME" value="com.androidplot.ui.layout" />
-      <option name="MAIN_CLASS_NAME" value="com.androidplot.ui.layout.TableModelTest" />
+      <option name="MAIN_CLASS_NAME" value="com.androidplot.ui.layout.DynamicTableModelTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/AndroidPlot-Core" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="61019" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="XYStepCalculatorTest" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false">
+        <pattern>
+          <option name="PATTERN" value="com.androidplot.xy.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="androidplot-core" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.androidplot.xy" />
+      <option name="MAIN_CLASS_NAME" value="com.androidplot.xy.XYStepCalculatorTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="FixedTableModelTest" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false">
+        <pattern>
+          <option name="PATTERN" value="com.androidplot.ui.layout.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="androidplot-core" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.androidplot.ui.layout" />
+      <option name="MAIN_CLASS_NAME" value="com.androidplot.ui.layout.FixedTableModelTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="55807" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="DynamicTableModelTest" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.androidplot.ui.layout.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="androidplot-core" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="com.androidplot.ui.layout" />
+      <option name="MAIN_CLASS_NAME" value="com.androidplot.ui.layout.DynamicTableModelTest" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" value="" />
@@ -809,7 +731,26 @@
       <option name="CLEAR_LOGCAT" value="false" />
       <method />
     </configuration>
-    <list size="9">
+    <configuration default="false" name="TimeSeriesExample" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="TimeSeriesExample" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="CHOOSE_DEVICE_MANUALLY" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <RunnerSettings RunnerId="AndroidDebugRunner" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <list size="13">
       <item index="0" class="java.lang.String" itemvalue="Android Application.DynamicXYPlotExample" />
       <item index="1" class="java.lang.String" itemvalue="Android Application.OrientationSensorExample" />
       <item index="2" class="java.lang.String" itemvalue="Android Application.SimpleXYPlotExample2" />
@@ -817,8 +758,12 @@
       <item index="4" class="java.lang.String" itemvalue="Android Application.StepChartExample" />
       <item index="5" class="java.lang.String" itemvalue="Android Application.DemoApp" />
       <item index="6" class="java.lang.String" itemvalue="Android Application.HelperExample" />
-      <item index="7" class="java.lang.String" itemvalue="JUnit.TableModelTest" />
-      <item index="8" class="java.lang.String" itemvalue="Android Application.AndroidPlot-Core-UnitTests" />
+      <item index="7" class="java.lang.String" itemvalue="Android Application.AndroidPlot-Core-UnitTests" />
+      <item index="8" class="java.lang.String" itemvalue="Android Application.TimeSeriesExample" />
+      <item index="9" class="java.lang.String" itemvalue="JUnit.TableModelTest" />
+      <item index="10" class="java.lang.String" itemvalue="JUnit.XYStepCalculatorTest" />
+      <item index="11" class="java.lang.String" itemvalue="JUnit.FixedTableModelTest" />
+      <item index="12" class="java.lang.String" itemvalue="JUnit.DynamicTableModelTest" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -827,7 +772,7 @@
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="StructureViewFactory">
-    <option name="ACTIVE_ACTIONS" value="ALPHA_COMPARATOR" />
+    <option name="ACTIVE_ACTIONS" value="SHOW_INHERITED,ALPHA_COMPARATOR" />
   </component>
   <component name="SvnConfiguration" maxAnnotateRevisions="500">
     <option name="USER" value="" />
@@ -929,16 +874,27 @@
       <changelist id="5fbb8dfa-b579-4993-af17-a6abd16f33bd" name="ANDROIDPLOT-68" comment="" />
       <changelist id="5fbb8dfa-b579-4993-af17-a6abd16f33bd" name="ANDROIDPLOT-68" comment="" />
       <created>1300326430795</created>
-      <updated>1300326430848</updated>
+      <updated>1300780258073</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="ANDROIDPLOT-61">
+      <changelist id="3f4d6e95-6b6d-4e4e-a5f4-46583813d3fe" name="ANDROIDPLOT-61" comment="" />
+      <changelist id="3f4d6e95-6b6d-4e4e-a5f4-46583813d3fe" name="ANDROIDPLOT-61" comment="" />
+      <created>1300653157781</created>
+      <updated>1300780165277</updated>
+    </task>
+    <task id="LOCAL-00007" summary="ANDROIDPLOT-68">
+      <changelist id="5fbb8dfa-b579-4993-af17-a6abd16f33bd" name="ANDROIDPLOT-68" comment="ANDROIDPLOT-68&#10;Modified LegendWidge's implementation of TableModel to leverage SizeLayout for calculating icon sizes in absolute or relative values." />
+      <created>1300780165263</created>
+      <updated>1300780258073</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="886" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32469305" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32465753" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Atlassian " active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32739726" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32739726" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -946,19 +902,19 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41232878" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3287858" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32469305" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287858" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32465753" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18194842" sideWeight="0.675307" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19484241" sideWeight="0.67121416" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1833811" sideWeight="0.67534244" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.10458453" sideWeight="0.6726027" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39989322" sideWeight="0.6709109" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26432666" sideWeight="0.67121416" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Issues - JIRA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2722063" sideWeight="0.67534244" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22919509" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31917807" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Issues - JIRA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -978,7 +934,7 @@
     <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="ANDROIDPLOT-68&#10;Modified LegendWidge's implementation of TableModel to leverage SizeLayout for calculating icon sizes in absolute or relative values." />
+    <option name="LAST_COMMIT_MESSAGE" value="ANDROIDPLOT-61&#10;Fixed plot title." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1001,6 +957,8 @@
     <MESSAGE value="ANDROIDPLOT-55&#10;Removing dynamically generated directories from vcs." />
     <MESSAGE value="ANDROIDPLOT-68&#10;Implemented tabular legend functionality for LegendWidget." />
     <MESSAGE value="ANDROIDPLOT-68&#10;Modified LegendWidge's implementation of TableModel to leverage SizeLayout for calculating icon sizes in absolute or relative values." />
+    <MESSAGE value="ANDROIDPLOT-61&#10;Created a rudimentary time series sample project." />
+    <MESSAGE value="ANDROIDPLOT-61&#10;Fixed plot title." />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -1059,9 +1017,9 @@
   <component name="atlassian-ide-plugin-workspace-issues">
     <option name="activeJiraIssuee">
       <ActiveJiraIssueBean>
-        <option name="issueKey" value="ANDROIDPLOT-55" />
-        <option name="issueUrl" value="https://bridalveil.jira.com/browse/ANDROIDPLOT-55" />
-        <option name="secondsSpent" value="476904" />
+        <option name="issueKey" value="ANDROIDPLOT-61" />
+        <option name="issueUrl" value="https://bridalveil.jira.com/browse/ANDROIDPLOT-61" />
+        <option name="secondsSpent" value="127066" />
         <option name="serverId">
           <ServerIdImpl>
             <option name="id" value="90385f68-9ab6-4be9-a795-46bdc2ea939c" />
@@ -1085,6 +1043,15 @@
     </option>
     <option name="recentlyOpenIssuess">
       <list>
+        <IssueRecentlyOpenBean>
+          <option name="issueKey" value="ANDROIDPLOT-61" />
+          <option name="issueUrl" value="https://bridalveil.jira.com/browse/ANDROIDPLOT-61" />
+          <option name="serverId">
+            <ServerIdImpl>
+              <option name="id" value="90385f68-9ab6-4be9-a795-46bdc2ea939c" />
+            </ServerIdImpl>
+          </option>
+        </IssueRecentlyOpenBean>
         <IssueRecentlyOpenBean>
           <option name="issueKey" value="ANDROIDPLOT-55" />
           <option name="issueUrl" value="https://bridalveil.jira.com/browse/ANDROIDPLOT-55" />
@@ -1153,123 +1120,123 @@
     </option>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/renderer/DataRenderer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="28" selection-start="1332" selection-end="1332" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeLayoutType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="21" selection-start="726" selection-end="726" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/PositionMetrics.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="13" selection-start="49" selection-end="49" vertical-scroll-proportion="0.07816092">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/LayoutManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="118" column="18" selection-start="4030" selection-end="4030" vertical-scroll-proportion="13.24">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/TextLabelWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="60" selection-start="1522" selection-end="1522" vertical-scroll-proportion="0.33333334">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/PixelUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="16" selection-start="1210" selection-end="1210" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetric.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="0" selection-start="809" selection-end="809" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/SizeMetrics.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="38" selection-start="2150" selection-end="2150" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/FontUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="13" selection-start="106" selection-end="106" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYLegendWidget.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="66" column="93" selection-start="2414" selection-end="2414" vertical-scroll-proportion="0.0">
+        <state line="18" column="28" selection-start="591" selection-end="591" vertical-scroll-proportion="-4.08">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/HelperExample/src/com/example/MyActivity.java">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/TableOrder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="99" selection-start="2701" selection-end="2701" vertical-scroll-proportion="0.0">
+        <state line="2" column="20" selection-start="56" selection-end="56" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/Widget.java">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/ui/layout/DynamicTableModelTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="53" selection-start="2095" selection-end="2095" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/src/com/example/MyActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="10" selection-start="2862" selection-end="2862" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/TableModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="13" selection-start="856" selection-end="856" vertical-scroll-proportion="0.0">
+        <state line="12" column="13" selection-start="265" selection-end="265" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYPlot.java">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/DynamicTableModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="135" column="34" selection-start="5150" selection-end="5150" vertical-scroll-proportion="0.0">
+        <state line="74" column="30" selection-start="2504" selection-end="2504" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="25" selection-start="137" selection-end="137" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYFramingModel.java">
+    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/res/layout/orientation_sensor_example.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="12" selection-start="41" selection-end="41" vertical-scroll-proportion="0.07606264">
+        <state line="2" column="23" selection-start="135" selection-end="135" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/res/layout/step_chart_example.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="23" selection-start="135" selection-end="135" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="23" selection-start="135" selection-end="135" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/HelperExample/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="23" selection-start="135" selection-end="135" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/OrientationSensorExample/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="23" selection-start="135" selection-end="135" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/SimpleXYPlotExample/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="23" selection-start="135" selection-end="135" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/StepChartExample/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="23" selection-start="135" selection-end="135" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/TimeSeriesExample/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="6" selection-start="522" selection-end="522" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.6.0_21/src.zip!/java/util/Iterator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="12" selection-start="1188" selection-end="1188" vertical-scroll-proportion="0.33333334">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/FixedTableModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="17" selection-start="2385" selection-end="2385" vertical-scroll-proportion="0.49002218">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/ui/layout/FixedTableModelTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="214" column="29" selection-start="6776" selection-end="6776" vertical-scroll-proportion="0.9439655">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1312,9 +1279,21 @@
           </splitter-proportions>
         </settings>
       </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.6</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>StepChartExample</last-edited>
+          <last-edited>DynamicXYPlotExample</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

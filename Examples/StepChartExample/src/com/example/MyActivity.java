@@ -31,6 +31,7 @@ public class MyActivity extends Activity
 
         // y-vals to plot:
         Number[] series1Numbers = {1, 2, 3, 4, 2, 3, 4, 2, 2, 2, 3, 4, 2, 3, 2, 2};
+
         // create our series from our array of nums:
         XYSeries series2 = new SimpleXYSeries(
                 Arrays.asList(series1Numbers),

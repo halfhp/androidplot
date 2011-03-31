@@ -4,13 +4,15 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import com.androidplot.ui.layout.*;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.*;
 
 import java.util.Arrays;
 
-public class MyActivity extends Activity
+public class MyActivity extends Activity implements View.OnTouchListener
 {
 
     private XYPlot mySimpleXYPlot;
@@ -88,9 +90,33 @@ public class MyActivity extends Activity
         // reduce the number of range labels
         mySimpleXYPlot.setTicksPerRangeLabel(3);
 
+        mySimpleXYPlot.getGraphWidget().setRangeLabelMargin(-10);
+        mySimpleXYPlot.getGraphWidget().setRangeLabelTickExtension(-10);
+        mySimpleXYPlot.position(
+                mySimpleXYPlot.getRangeLabelWidget(),
+                0,
+                XLayoutStyle.ABSOLUTE_FROM_RIGHT,
+                0,
+                YLayoutStyle.ABSOLUTE_FROM_CENTER,
+                AnchorPosition.RIGHT_MIDDLE);
+
+
         // by default, AndroidPlot displays developer guides to aid in laying out your plot.
         // To get rid of them call disableAllMarkup():
         mySimpleXYPlot.disableAllMarkup();
+        mySimpleXYPlot.setOnTouchListener(this);
 
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        float x = motionEvent.getX();
+        float y = motionEvent.getY();
+        if(mySimpleXYPlot.containsPoint(x, y)) {
+
+            mySimpleXYPlot.setCursorPosition(x, y);
+            mySimpleXYPlot.redraw();
+        }
+        return true;
     }
 }

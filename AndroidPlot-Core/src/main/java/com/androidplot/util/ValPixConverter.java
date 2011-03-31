@@ -49,6 +49,16 @@ public class ValPixConverter {
         return valRange/lengthPix;
     }
 
+    /**
+     * Convert a value in pixels to the type passed into min/max
+     * @param pix
+     * @param min
+     * @param max
+     * @param lengthPix
+     * @param flip True if the axis should be reversed before calculated. This is the case
+     * with the y axis for screen coords.
+     * @return
+     */
     public static double pixToVal(float pix, double min, double max, int lengthPix, boolean flip) {
         if(pix < 0) {
             throw new IllegalArgumentException("pixel values cannot be negative.");

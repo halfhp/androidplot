@@ -3,8 +3,6 @@ package com.androidplot.ui.widget;
 import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.layout.*;
-import com.androidplot.util.Dimension;
-import com.androidplot.util.Point;
 
 public abstract class Widget implements BoxModelable {
 
@@ -19,6 +17,7 @@ public abstract class Widget implements BoxModelable {
     private float marginRight = 0;*/
     private BoxModel boxModel = new BoxModel();
     private SizeMetrics sizeMetrics;
+    private RectF outlineRect;  // last known dimensions of this widget
 
     {
         /*borderPaint = new Paint();
@@ -36,6 +35,18 @@ public abstract class Widget implements BoxModelable {
 
     public Widget(SizeMetrics sizeMetrics) {
         this.sizeMetrics = sizeMetrics;
+    }
+
+    /**
+     * Determines whether or not point lies within this Widget.
+     * @param point
+     * @return
+     */
+    public boolean containsPoint(PointF point){
+        if(outlineRect != null && outlineRect.contains(point.x, point.y)) {
+            return true;
+        }
+        return false;
     }
 
     public void setSize(SizeMetrics sizeMetrics) {
@@ -161,21 +172,22 @@ public abstract class Widget implements BoxModelable {
         return boxModel.getMarginRight();
     }
 
-     public void draw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
-        if(backgroundPaint != null) {
-            drawBackground(canvas, widgetRect);
+    public void draw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
+        outlineRect = widgetRect;
+        if (backgroundPaint != null) {
+            drawBackground(canvas, outlineRect);
         }
 
-       /* RectF marginatedRect = new RectF(widgetRect.left + marginLeft,
-                widgetRect.top + marginTop,
-                widgetRect.right - marginRight,
-                widgetRect.bottom - marginBottom);*/
+        /* RectF marginatedRect = new RectF(outlineRect.left + marginLeft,
+      outlineRect.top + marginTop,
+      outlineRect.right - marginRight,
+      outlineRect.bottom - marginBottom);*/
 
         RectF marginatedRect = boxModel.getMarginatedRect(widgetRect);
         RectF paddedRect = boxModel.getPaddedRect(marginatedRect);
         doOnDraw(canvas, paddedRect);
 
-        if(borderPaint != null) {
+        if (borderPaint != null) {
             drawBorder(canvas, paddedRect);
         }
     }
@@ -234,5 +246,9 @@ public abstract class Widget implements BoxModelable {
 
     public void setClippingEnabled(boolean clippingEnabled) {
         this.clippingEnabled = clippingEnabled;
+    }
+
+    public RectF getOutlineRect() {
+        return outlineRect;
     }
 }

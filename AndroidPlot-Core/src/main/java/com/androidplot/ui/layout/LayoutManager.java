@@ -1,13 +1,14 @@
 package com.androidplot.ui.layout;
 
 import android.graphics.*;
+import android.view.MotionEvent;
 import android.view.View;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.ArrangeableHash;
 import com.androidplot.util.PixelUtils;
 
-public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
+public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics> implements View.OnTouchListener {
     private boolean drawAnchorsEnabled = true;
     private Paint anchorPaint;
     private boolean drawOutlinesEnabled = true;
@@ -283,5 +284,14 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics>{
 
     public void setOutlineShadowPaint(Paint outlineShadowPaint) {
         this.outlineShadowPaint = outlineShadowPaint;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
+    }
+
+    private void delegateOnTouchEvt(View v, MotionEvent event) {
+
     }
 }

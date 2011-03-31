@@ -32,6 +32,7 @@ import android.content.Context;
 //import android.graphics.*;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
 import com.androidplot.series.XYSeries;
@@ -242,6 +243,37 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     @Override
     protected void doAfterDraw() {
 
+    }
+
+    /**
+     * Checks whether the point is within the plot's graph area.
+     * @param x
+     * @param y
+     * @return
+     */
+    public boolean containsPoint(float x, float y) {
+        if(getGraphWidget().getGridRect() != null) {
+            return getGraphWidget().getGridRect().contains(x, y);
+        }
+        return false;
+    }
+
+
+    /**
+     * Convenience method - wraps containsPoint(PointF).
+     * @param point
+     * @return
+     */
+    public boolean containsPoint(PointF point) {
+        return containsPoint(point.x, point.y);
+    }
+
+    public void setCursorPosition(PointF point) {
+        getGraphWidget().setCursorPosition(point);
+    }
+
+    public void setCursorPosition(float x, float y) {
+        getGraphWidget().setCursorPosition(x, y);
     }
 
     private boolean isXValWithinView(double xVal) {

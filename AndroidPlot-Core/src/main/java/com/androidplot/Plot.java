@@ -32,7 +32,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private float borderRadiusY = 15;
     private boolean drawBorderEnabled = true;
     private Paint borderPaint;
-    private boolean drawBackgroundEnabled = true;
+
     private Paint backgroundPaint;
     private LayoutManager layoutManager;
     private TitleWidget titleWidget;
@@ -336,7 +336,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             RectF canvasRect = new RectF(0, 0, getWidth(), getHeight());
             RectF marginatedRect = boxModel.getMarginatedRect(canvasRect);
             RectF paddedRect = boxModel.getPaddedRect(marginatedRect);
-            if (drawBackgroundEnabled) {
+            if (backgroundPaint != null) {
                 drawBackground(canvas, marginatedRect);
             }
             synchronized(this) {

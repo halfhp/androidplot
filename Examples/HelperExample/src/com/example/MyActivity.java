@@ -106,6 +106,15 @@ public class MyActivity extends Activity implements View.OnTouchListener
         mySimpleXYPlot.disableAllMarkup();
         mySimpleXYPlot.setOnTouchListener(this);
 
+        //mySimpleXYPlot.getBackgroundPaint().setAlpha(0);
+        //mySimpleXYPlot.getGraphWidget().getBackgroundPaint().setAlpha(0);
+        //mySimpleXYPlot.setBackgroundPaint(null);
+        //mySimpleXYPlot.getGraphWidget().setBackgroundPaint(null);
+        //mySimpleXYPlot.getGraphWidget().setGridBackgroundPaint(null);
+        //mySimpleXYPlot.getGraphWidget().getGridBackgroundPaint().setAlpha(0);
+        mySimpleXYPlot.getGraphWidget().getDomainLabelPaint().setTextSize(16);
+        mySimpleXYPlot.getGraphWidget().getRangeLabelPaint().setTextSize(16);
+
     }
 
     @Override

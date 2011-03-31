@@ -264,7 +264,9 @@ public class XYGraphWidget extends Widget {
 
         //RectF gridRect = getGridRect(widgetRect); // used for drawing the background of the grid
         //paddedGridRect = getPaddedGridRect(gridRect); // used for drawing lines etc.
-        canvas.drawRect(gridRect, gridBackgroundPaint);
+        if(gridBackgroundPaint != null) {
+            canvas.drawRect(gridRect, gridBackgroundPaint);
+        }
 
         float domainOriginF;
         //double domainOriginVal;

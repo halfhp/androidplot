@@ -5,6 +5,7 @@ import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
 //import com.androidplot.util.Point;
 import com.androidplot.ui.layout.SizeMetrics;
+import com.androidplot.util.FontUtils;
 import com.androidplot.util.ValPixConverter;
 //import com.sun.org.apache.xml.internal.security.c14n.helper.C14nHelper;
 
@@ -12,29 +13,20 @@ import java.text.DecimalFormat;
 import java.text.Format;
 
 public class XYGraphWidget extends Widget {
-    public void setCursorPosition(float x, float y) {
-        setDomainCursorPosition(x);
-        setRangeCursorPosition(y);
-    }
-    
-    public void setCursorPosition(PointF point) {
-        setCursorPosition(point.x,  point.y);
+    public Paint getCursorLabelPaint() {
+        return cursorLabelPaint;
     }
 
-    public float getDomainCursorPosition() {
-        return domainCursorPosition;
+    public void setCursorLabelPaint(Paint cursorLabelPaint) {
+        this.cursorLabelPaint = cursorLabelPaint;
     }
 
-    public void setDomainCursorPosition(float domainCursorPosition) {
-        this.domainCursorPosition = domainCursorPosition;
+    public Paint getCursorLabelBackgroundPaint() {
+        return cursorLabelBackgroundPaint;
     }
 
-    public float getRangeCursorPosition() {
-        return rangeCursorPosition;
-    }
-
-    public void setRangeCursorPosition(float rangeCursorPosition) {
-        this.rangeCursorPosition = rangeCursorPosition;
+    public void setCursorLabelBackgroundPaint(Paint cursorLabelBackgroundPaint) {
+        this.cursorLabelBackgroundPaint = cursorLabelBackgroundPaint;
     }
 
     /**
@@ -45,6 +37,7 @@ public class XYGraphWidget extends Widget {
         VERTICAL
     }
 
+    private static final int CURSOR_LABEL_SPACING = 2;  // space between cursor lines and label in pixels
     private float domainLabelWidth = 15;  // how many pixels is the area allocated for domain labels
     private float rangeLabelWidth = 41;  // ...
 
@@ -71,6 +64,8 @@ public class XYGraphWidget extends Widget {
 
     private Paint domainCursorPaint;
     private Paint rangeCursorPaint;
+    private Paint cursorLabelPaint;
+    private Paint cursorLabelBackgroundPaint;
 
     private XYPlot plot;
 
@@ -88,6 +83,8 @@ public class XYGraphWidget extends Widget {
 
     private float domainCursorPosition;
     private float rangeCursorPosition;
+
+    private boolean drawCursorLabelEnabled = true;
 
 
  /*   private double minX;
@@ -144,6 +141,12 @@ public class XYGraphWidget extends Widget {
         rangeCursorPaint = new Paint();
         rangeCursorPaint.setColor(Color.YELLOW);
 
+        cursorLabelPaint = new Paint();
+        cursorLabelPaint.setColor(Color.YELLOW);
+
+        cursorLabelBackgroundPaint = new Paint();
+        cursorLabelBackgroundPaint.setColor(Color.argb(100, 50, 50, 50));
+
         setMarginTop(7);
         setMarginRight(4);
         setMarginBottom(4);
@@ -183,6 +186,48 @@ public class XYGraphWidget extends Widget {
 
     private String getFormattedDomainValue(double value) {
         return domainValueFormat.format(value);
+    }
+
+    /**
+     * Convenience method.  Wraps getYVal(float)
+     * @param point
+     * @return
+     */
+    public Double getYVal(PointF point) {
+        return getYVal(point.y);
+    }
+
+    /**
+     * Converts a y pixel to a y value.
+     * @param yPix
+     * @return
+     */
+    public Double getYVal(float yPix) {
+        if(plot.getCalculatedMinY() == null || plot.getCalculatedMaxY() == null) {
+            return null;
+        }
+        return ValPixConverter.pixToVal(yPix - paddedGridRect.top, plot.getCalculatedMinY().doubleValue(), plot.getCalculatedMaxY().doubleValue(), paddedGridRect.height(), true);
+    }
+
+    /**
+     * Convenience method.  Wraps getXVal(float)
+     * @param point
+     * @return
+     */
+    public Double getXVal(PointF point) {
+        return getXVal(point.x);
+    }
+
+    /**
+     * Converts an x pixel into an x value.
+     * @param xPix
+     * @return
+     */
+    public Double getXVal(float xPix) {
+        if(plot.getCalculatedMinX() == null || plot.getCalculatedMaxX() == null) {
+            return null;
+        }
+        return ValPixConverter.pixToVal(xPix - paddedGridRect.left, plot.getCalculatedMinX().doubleValue(), plot.getCalculatedMaxX().doubleValue(), paddedGridRect.width(), false);
     }
 
     @Override
@@ -369,10 +414,12 @@ public class XYGraphWidget extends Widget {
     }
 
     protected void drawCursors(Canvas canvas) {
+        boolean hasDomainCursor = false;
         // draw the domain cursor:
         if(domainCursorPaint != null &&
                 domainCursorPosition <= paddedGridRect.right &&
                 domainCursorPosition >= paddedGridRect.left) {
+            hasDomainCursor = true;
             canvas.drawLine(
                     domainCursorPosition,
                     paddedGridRect.top,
@@ -381,16 +428,57 @@ public class XYGraphWidget extends Widget {
                     domainCursorPaint);
         }
 
+        boolean hasRangeCursor = false;
         // draw the range cursor:
         if(rangeCursorPaint != null &&
                 rangeCursorPosition >= paddedGridRect.top &&
                 rangeCursorPosition <= paddedGridRect.bottom) {
+            hasRangeCursor = true;
             canvas.drawLine(
                     paddedGridRect.left,
                     rangeCursorPosition,
                     paddedGridRect.right,
                     rangeCursorPosition,
                     rangeCursorPaint);
+        }
+
+        if(drawCursorLabelEnabled && cursorLabelPaint != null && hasRangeCursor && hasDomainCursor) {
+
+
+            String label =  "X=" + getDomainValueFormat().format(getDomainCursorVal());
+            label += " Y=" + getRangeValueFormat().format(getRangeCursorVal());
+
+            //Rect cr = FontUtils.getPackedStringDimensions(label, cursorLabelPaint);
+
+            // convert the label dimensions rect into floating-point:
+            RectF cursorRect = new RectF(FontUtils.getPackedStringDimensions(label, cursorLabelPaint));
+            cursorRect.offsetTo(domainCursorPosition, rangeCursorPosition - cursorRect.height());
+
+            // if we are too close to the right edge of the plot, we will move the
+            // label to the left side of our cursor:
+            //float xpos = domainCursorPosition + CURSOR_LABEL_SPACING;
+            //float labelEdgeRight = domainCursorPosition + cursorRect.width();
+            if(cursorRect.right >= paddedGridRect.right) {
+                //xpos = paddedGridRect.right - cursorRect.right;
+                //xpos = (domainCursorPosition - cursorRect.width()) - CURSOR_LABEL_SPACING;
+                cursorRect.offsetTo(domainCursorPosition - cursorRect.width(), cursorRect.top);
+            }
+
+            // same thing for the top edge of the plot:
+            //float ypos = rangeCursorPosition - CURSOR_LABEL_SPACING;
+            // dunno why but these rects can have negative values for top and bottom.
+            //float labelEdgeTop = rangeCursorPosition - cursorRect.height();
+            if(cursorRect.top <= paddedGridRect.top) {
+                //ypos = rangeCursorPosition + cursorRect.height() + CURSOR_LABEL_SPACING;
+                cursorRect.offsetTo(cursorRect.left, rangeCursorPosition);
+            }
+
+
+            if(cursorLabelBackgroundPaint != null) {
+                canvas.drawRect(cursorRect, cursorLabelBackgroundPaint);
+            }
+
+            canvas.drawText(label, cursorRect.left, cursorRect.bottom, cursorLabelPaint);
         }
     }
 
@@ -510,10 +598,6 @@ public class XYGraphWidget extends Widget {
     public void setDomainValueFormat(Format domainValueFormat) {
         this.domainValueFormat = domainValueFormat;
     }
-
-
-
-
 
     public int getDomainLabelTickExtension() {
         return domainLabelTickExtension;
@@ -651,6 +735,39 @@ public class XYGraphWidget extends Widget {
 
     public void setRangeOriginLabelPaint(Paint rangeOriginLabelPaint) {
         this.rangeOriginLabelPaint = rangeOriginLabelPaint;
+    }
+
+    public void setCursorPosition(float x, float y) {
+        setDomainCursorPosition(x);
+        setRangeCursorPosition(y);
+    }
+
+    public void setCursorPosition(PointF point) {
+        setCursorPosition(point.x,  point.y);
+    }
+
+    public float getDomainCursorPosition() {
+        return domainCursorPosition;
+    }
+
+    public Double getDomainCursorVal() {
+        return getXVal(getDomainCursorPosition());
+    }
+
+    public void setDomainCursorPosition(float domainCursorPosition) {
+        this.domainCursorPosition = domainCursorPosition;
+    }
+
+    public float getRangeCursorPosition() {
+        return rangeCursorPosition;
+    }
+
+    public Double getRangeCursorVal() {
+        return getYVal(getRangeCursorPosition());
+    }
+
+    public void setRangeCursorPosition(float rangeCursorPosition) {
+        this.rangeCursorPosition = rangeCursorPosition;
     }
 
 }

@@ -59,7 +59,7 @@ public class ValPixConverter {
      * with the y axis for screen coords.
      * @return
      */
-    public static double pixToVal(float pix, double min, double max, int lengthPix, boolean flip) {
+    public static double pixToVal(float pix, double min, double max, float lengthPix, boolean flip) {
         if(pix < 0) {
             throw new IllegalArgumentException("pixel values cannot be negative.");
         }
@@ -82,7 +82,8 @@ public class ValPixConverter {
         //throw new UnsupportedOperationException("Not yet implemented.");
     }
 
-    public static PointF pixToVal(PointF point) {
+    /*public static PointF pixToVal(RectF rect, PointF point) {
         throw new UnsupportedOperationException("Not yet implemented.");
-    }
+        float x = pixToVal()
+    }*/
 }

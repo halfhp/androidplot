@@ -41,6 +41,7 @@ import com.androidplot.ui.widget.RangeLabelWidget;
 import com.androidplot.ui.widget.DomainLabelWidget;
 import com.androidplot.ui.layout.*;
 import com.androidplot.ui.widget.TextOrientationType;
+import com.androidplot.util.ValPixConverter;
 
 import java.text.Format;
 
@@ -274,6 +275,15 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public void setCursorPosition(float x, float y) {
         getGraphWidget().setCursorPosition(x, y);
+    }
+
+    public Number getYVal(PointF point) {
+        throw new UnsupportedOperationException("Not yet implemented.");
+        //ValPixConverter.pixToVal(point.y, )
+    }
+
+    public Number getXVal(PointF point) {
+        throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     private boolean isXValWithinView(double xVal) {

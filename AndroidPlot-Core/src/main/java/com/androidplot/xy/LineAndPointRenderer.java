@@ -33,8 +33,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
 
             drawSeries(canvas, plotArea, series, getFormatter(series));
         }
-        //foreach(this.)
-        //foreach()
     }
 
     @Override
@@ -53,8 +51,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         if(formatter.getVertexPaint() != null) {
             canvas.drawPoint(centerX, centerY, formatter.getVertexPaint());
         }
-        //canvas.drawRect(rect, formatter.getLinePaint());
-
     }
 
     /**
@@ -108,10 +104,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                     path.moveTo(firstPoint.x, firstPoint.y);
                 }
 
-                // update our lastDrawn point;
-
-
-
                 if(lastPoint != null) {
                     appendToPath(path, thisPoint, lastPoint);
                 }
@@ -123,13 +115,9 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 }
                 firstPoint = null;
                 lastPoint = null;
-
-                //path = null;
             }
-            //drawPoint(canvas, thisPoint, plotArea, formatter);
         }
         if(firstPoint != null) {
-            //canvas.renderPath(path, formatter.getLinePaint());
             renderPath(canvas, plotArea, path, firstPoint, lastPoint, formatter);
         }
 
@@ -139,7 +127,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 canvas.drawPoint(p.x, p.y, formatter.getVertexPaint());
             }
         }
-        //endSeries(canvas, plotArea, formatter);
     }
 
     protected void renderPath(Canvas canvas, RectF plotArea, Path path, PointF firstPoint, PointF lastPoint, LineAndPointFormatter formatter) {

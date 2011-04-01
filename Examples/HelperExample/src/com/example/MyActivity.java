@@ -114,6 +114,8 @@ public class MyActivity extends Activity implements View.OnTouchListener
         //mySimpleXYPlot.getGraphWidget().getGridBackgroundPaint().setAlpha(0);
         mySimpleXYPlot.getGraphWidget().getDomainLabelPaint().setTextSize(16);
         mySimpleXYPlot.getGraphWidget().getRangeLabelPaint().setTextSize(16);
+        mySimpleXYPlot.getTitleWidget().getLabelPaint().setTextSize(16);
+        mySimpleXYPlot.getTitleWidget().pack();
 
     }
 
@@ -121,6 +123,7 @@ public class MyActivity extends Activity implements View.OnTouchListener
     public boolean onTouch(View view, MotionEvent motionEvent) {
         float x = motionEvent.getX();
         float y = motionEvent.getY();
+       
         if(mySimpleXYPlot.containsPoint(x, y)) {
 
             mySimpleXYPlot.setCursorPosition(x, y);

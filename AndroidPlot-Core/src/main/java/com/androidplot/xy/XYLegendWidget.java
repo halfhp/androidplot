@@ -60,8 +60,9 @@ public class XYLegendWidget extends Widget {
 
         //RectF  iconRect = PixelUtils.sink(iconRect);
 
-        if(drawIconBackgroundEnabled) {
-            canvas.drawRect(iconRect, plot.getGraphWidget().getGridBackgroundPaint());
+        Paint bgPaint = plot.getGraphWidget().getGridBackgroundPaint();
+        if(drawIconBackgroundEnabled && bgPaint != null) {
+            canvas.drawRect(iconRect, bgPaint);
             //bgPaint = plot.getGraphWidget().getGridBackgroundPaint();
         }
 
@@ -77,8 +78,8 @@ public class XYLegendWidget extends Widget {
                         formatter);
                 canvas.drawText(seriesTitle, iconRect.right + 2, centeredTextOriginY, textPaint);
 
-        if(drawIconBorderEnabled) {
-            iconBorderPaint.setColor(plot.getGraphWidget().getGridBackgroundPaint().getColor());
+        if(drawIconBorderEnabled && bgPaint != null) {
+            iconBorderPaint.setColor(bgPaint.getColor());
             canvas.drawRect(iconRect, iconBorderPaint);
         }
     }

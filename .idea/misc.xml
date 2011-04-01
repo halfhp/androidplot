@@ -81,6 +81,60 @@
             </SvnBranchConfiguration>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/AndroidPlot-Core">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches" />
+                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://bridalveil.jira.com/svn/ANDROIDPLOT/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/Examples/OrientationSensorExample">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches" />
+                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://bridalveil.jira.com/svn/ANDROIDPLOT/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
       </map>
     </option>
     <option name="mySupportsUserInfoFilter" value="true" />

@@ -8,26 +8,10 @@ public abstract class Widget implements BoxModelable {
 
     private Paint borderPaint;
     private Paint backgroundPaint;
-    //private boolean drawBorderEnabled = false;
-    //private boolean drawBackgroundEnabled = false;
     private boolean clippingEnabled = true;
-    /*private float marginTop = 0;
-    private float marginBottom = 0;
-    private float marginLeft = 0;
-    private float marginRight = 0;*/
     private BoxModel boxModel = new BoxModel();
     private SizeMetrics sizeMetrics;
     private RectF outlineRect;  // last known dimensions of this widget
-
-    {
-        /*borderPaint = new Paint();
-        borderPaint.setColor(Color.BLACK);
-        borderPaint.setStyle(Paint.Style.STROKE);
-
-        backgroundPaint = new Paint();
-        backgroundPaint.setColor(Color.DKGRAY);
-        backgroundPaint.setStyle(Paint.Style.FILL);*/
-    }
 
     public Widget(SizeMetric heightMetric, SizeMetric widthMetric) {
         sizeMetrics = new SizeMetrics(heightMetric, widthMetric);

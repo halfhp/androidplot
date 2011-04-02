@@ -550,7 +550,15 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         return borderPaint;
     }
 
+    /**
+     * Set's the paint used to draw the border.  Note that this method
+     * copies borderPaint and set's the copy's Paint.Style attribute to
+     * Paint.Style.STROKE.
+     * @param borderPaint
+     */
     public void setBorderPaint(Paint borderPaint) {
-        this.borderPaint = borderPaint;
+        this.borderPaint = new Paint(borderPaint);
+        this.borderPaint.setStyle(Paint.Style.STROKE);
+        //this.borderPaint = borderPaint;
     }
 }

@@ -44,6 +44,8 @@ import com.androidplot.ui.widget.TextOrientationType;
 import com.androidplot.util.ValPixConverter;
 
 import java.text.Format;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A View to graphically display x/y coordinates.
@@ -52,22 +54,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     private BoundaryMode domainOriginBoundaryMode;
     private BoundaryMode rangeOriginBoundaryMode;
-
-    public boolean isDrawDomainOriginEnabled() {
-        return drawDomainOriginEnabled;
-    }
-
-    public void setDrawDomainOriginEnabled(boolean drawDomainOriginEnabled) {
-        this.drawDomainOriginEnabled = drawDomainOriginEnabled;
-    }
-
-    public boolean isDrawRangeOriginEnabled() {
-        return drawRangeOriginEnabled;
-    }
-
-    public void setDrawRangeOriginEnabled(boolean drawRangeOriginEnabled) {
-        this.drawRangeOriginEnabled = drawRangeOriginEnabled;
-    }
 
     // widgets
     private XYLegendWidget legendWidget;
@@ -83,13 +69,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     private String domainLabel = "domain";
     private String rangeLabel = "range";
-
-    // mabsolute  in/max of all series assigned to this plot.
-    // may be removed soon.
-/*    private Number actualMinX;
-    private Number actualMaxX;
-    private Number actualMinY;
-    private Number actualMaxY;*/
 
     // user settable min/max values
     private Number userMinX;
@@ -133,6 +112,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     private boolean drawDomainOriginEnabled = true;
     private boolean drawRangeOriginEnabled = true;
+
+    private ArrayList<YValueMarker> yValueMarkers;
+    private ArrayList<XValueMarker> xValueMarkers;
 
     {
         legendWidget = new XYLegendWidget(
@@ -201,6 +183,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         setPlotMarginLeft(2);
         setPlotMarginRight(2);
         setPlotMarginBottom(2);
+
+        xValueMarkers = new ArrayList<XValueMarker>();
+        yValueMarkers = new ArrayList<YValueMarker>();
     }
 
 
@@ -990,5 +975,95 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public Number getCalculatedMaxY() {
         return calculatedMaxY;
+    }
+
+    public boolean isDrawDomainOriginEnabled() {
+        return drawDomainOriginEnabled;
+    }
+
+    public void setDrawDomainOriginEnabled(boolean drawDomainOriginEnabled) {
+        this.drawDomainOriginEnabled = drawDomainOriginEnabled;
+    }
+
+    public boolean isDrawRangeOriginEnabled() {
+        return drawRangeOriginEnabled;
+    }
+
+    public void setDrawRangeOriginEnabled(boolean drawRangeOriginEnabled) {
+        this.drawRangeOriginEnabled = drawRangeOriginEnabled;
+    }
+
+    /**
+     * Appends the specified marker to the end of plot's yValueMarkers list.
+     * @param marker The YValueMarker to be added.
+     * @return true if the object was successfully added, false otherwise.
+     */
+    public boolean addYValueMarker(YValueMarker marker) {
+        if(yValueMarkers.contains(marker)) {
+            return false;
+        } else {
+            return yValueMarkers.add(marker);
+        }
+    }
+
+    /**
+     * Removes the specified marker from the plot.
+     * @param marker
+     * @return The YValueMarker removed if successfull,  null otherwise.
+     */
+    public YValueMarker removeYValueMarker(YValueMarker marker) {
+        int markerIndex = yValueMarkers.indexOf(marker);
+        if(markerIndex == -1) {
+            return null;
+        } else {
+            return yValueMarkers.remove(markerIndex);
+        }
+    }
+
+    /**
+     * Removes all YValueMarker instances from the plot.
+     * @return
+     */
+    public int removeAllYValueMarkers() {
+        int numMarkersRemoved = yValueMarkers.size();
+        yValueMarkers.clear();
+        return numMarkersRemoved;
+    }
+
+    /**
+     * Appends the specified marker to the end of plot's xValueMarkers list.
+     * @param marker The XValueMarker to be added.
+     * @return true if the object was successfully added, false otherwise.
+     */
+    public boolean addXValueMarker(XValueMarker marker) {
+        if(xValueMarkers.contains(marker)) {
+            return false;
+        } else {
+            return xValueMarkers.add(marker);
+        }
+    }
+
+    /**
+     * Removes the specified marker from the plot.
+     * @param marker
+     * @return The XValueMarker removed if successfull,  null otherwise.
+     */
+    public XValueMarker removeXValueMarker(XValueMarker marker) {
+        int markerIndex = xValueMarkers.indexOf(marker);
+        if(markerIndex == -1) {
+            return null;
+        } else {
+            return xValueMarkers.remove(markerIndex);
+        }
+    }
+
+    /**
+     * Removes all XValueMarker instances from the plot.
+     * @return
+     */
+    public int removeAllXValueMarkers() {
+        int numMarkersRemoved = xValueMarkers.size();
+        xValueMarkers.clear();
+        return numMarkersRemoved;
     }
 }

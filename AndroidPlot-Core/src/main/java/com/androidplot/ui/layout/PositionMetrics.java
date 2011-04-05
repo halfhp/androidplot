@@ -2,8 +2,8 @@ package com.androidplot.ui.layout;
 
 public class PositionMetrics implements Comparable<PositionMetrics> {
 
-    private XMetric xMetric;
-    private YMetric yMetric;
+    private XPositionMetric xPositionMetric;
+    private YPositionMetric yPositionMetric;
     private AnchorPosition anchor;
     private float layerDepth;
 
@@ -14,27 +14,27 @@ public class PositionMetrics implements Comparable<PositionMetrics> {
     */
 
     public PositionMetrics(float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle, AnchorPosition anchor) {
-        setxMetric(new XMetric(x, xLayoutStyle));
-        setyMetric(new YMetric(y, yLayoutStyle));
+        setxPositionMetric(new XPositionMetric(x, xLayoutStyle));
+        setyPositionMetric(new YPositionMetric(y, yLayoutStyle));
         setAnchor(anchor);
 
     }
 
 
-    public XMetric getxMetric() {
-        return xMetric;
+    public XPositionMetric getxPositionMetric() {
+        return xPositionMetric;
     }
 
-    public void setxMetric(XMetric xMetric) {
-        this.xMetric = xMetric;
+    public void setxPositionMetric(XPositionMetric xPositionMetric) {
+        this.xPositionMetric = xPositionMetric;
     }
 
-    public YMetric getyMetric() {
-        return yMetric;
+    public YPositionMetric getyPositionMetric() {
+        return yPositionMetric;
     }
 
-    public void setyMetric(YMetric yMetric) {
-        this.yMetric = yMetric;
+    public void setyPositionMetric(YPositionMetric yPositionMetric) {
+        this.yPositionMetric = yPositionMetric;
     }
 
     public AnchorPosition getAnchor() {

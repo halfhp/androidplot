@@ -998,7 +998,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @param marker The YValueMarker to be added.
      * @return true if the object was successfully added, false otherwise.
      */
-    public boolean addYValueMarker(YValueMarker marker) {
+    public boolean addMarker(YValueMarker marker) {
         if(yValueMarkers.contains(marker)) {
             return false;
         } else {
@@ -1011,7 +1011,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @param marker
      * @return The YValueMarker removed if successfull,  null otherwise.
      */
-    public YValueMarker removeYValueMarker(YValueMarker marker) {
+    public YValueMarker removeMarker(YValueMarker marker) {
         int markerIndex = yValueMarkers.indexOf(marker);
         if(markerIndex == -1) {
             return null;
@@ -1021,10 +1021,20 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
+     * Convenience method - combines removeYMarkers() and removeXMarkers().
+     * @return
+     */
+    public int removeMarkers() {
+        int removed = removeXMarkers();
+        removed += removeYMarkers();
+        return removed;
+    }
+
+    /**
      * Removes all YValueMarker instances from the plot.
      * @return
      */
-    public int removeAllYValueMarkers() {
+    public int removeYMarkers() {
         int numMarkersRemoved = yValueMarkers.size();
         yValueMarkers.clear();
         return numMarkersRemoved;
@@ -1035,7 +1045,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @param marker The XValueMarker to be added.
      * @return true if the object was successfully added, false otherwise.
      */
-    public boolean addXValueMarker(XValueMarker marker) {
+    public boolean addMarker(XValueMarker marker) {
         if(xValueMarkers.contains(marker)) {
             return false;
         } else {
@@ -1048,7 +1058,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @param marker
      * @return The XValueMarker removed if successfull,  null otherwise.
      */
-    public XValueMarker removeXValueMarker(XValueMarker marker) {
+    public XValueMarker removeMarker(XValueMarker marker) {
         int markerIndex = xValueMarkers.indexOf(marker);
         if(markerIndex == -1) {
             return null;
@@ -1061,9 +1071,17 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * Removes all XValueMarker instances from the plot.
      * @return
      */
-    public int removeAllXValueMarkers() {
+    public int removeXMarkers() {
         int numMarkersRemoved = xValueMarkers.size();
         xValueMarkers.clear();
         return numMarkersRemoved;
+    }
+
+    protected List<YValueMarker> getYValueMarkers() {
+        return yValueMarkers;
+    }
+
+    protected List<XValueMarker> getXValueMarkers() {
+        return xValueMarkers;
     }
 }

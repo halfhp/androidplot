@@ -2,7 +2,7 @@ package com.example;
 
 import com.androidplot.series.XYSeries;
 
-public class SimpleXYSeries implements XYSeries {
+public class MyXYSeries implements XYSeries {
     private static final int[] vals = {0, 25, 55, 2, 80, 30, 99, 0, 44, 6};
 
     // f(x) = x

@@ -87,6 +87,10 @@ public class MyActivity extends Activity implements View.OnTouchListener
                 YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
                 AnchorPosition.RIGHT_BOTTOM);
 
+
+        mySimpleXYPlot.addMarker(new YValueMarker(87.9));
+        mySimpleXYPlot.addMarker(new XValueMarker(5));
+
         // reduce the number of range labels
         mySimpleXYPlot.setTicksPerRangeLabel(3);
 

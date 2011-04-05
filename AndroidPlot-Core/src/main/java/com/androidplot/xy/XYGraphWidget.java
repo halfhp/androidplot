@@ -1,6 +1,7 @@
 package com.androidplot.xy;
 
 import android.graphics.*;
+import android.text.TextUtils;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
 //import com.androidplot.util.Point;
@@ -17,6 +18,14 @@ import java.text.Format;
  */
 public class XYGraphWidget extends Widget {
 
+    public boolean isDrawMarkersEnabled() {
+        return drawMarkersEnabled;
+    }
+
+    public void setDrawMarkersEnabled(boolean drawMarkersEnabled) {
+        this.drawMarkersEnabled = drawMarkersEnabled;
+    }
+
     /**
      * Will be used in a future version.
      */
@@ -25,6 +34,7 @@ public class XYGraphWidget extends Widget {
         VERTICAL
     }
 
+    private static final int MARKER_LABEL_SPACING = 2;
     private static final int CURSOR_LABEL_SPACING = 2;  // space between cursor lines and label in pixels
     private float domainLabelWidth = 15;  // how many pixels is the area allocated for domain labels
     private float rangeLabelWidth = 41;  // ...
@@ -58,6 +68,7 @@ public class XYGraphWidget extends Widget {
     private float domainCursorPosition;
     private float rangeCursorPosition;
     private boolean drawCursorLabelEnabled = true;
+    private boolean drawMarkersEnabled = true;
 
     {
         gridBackgroundPaint = new Paint();
@@ -180,6 +191,9 @@ public class XYGraphWidget extends Widget {
                 drawGrid(canvas);
                 drawData(canvas);
                 drawCursors(canvas);
+                if(isDrawMarkersEnabled()) {
+                    drawMarkers(canvas);
+                }
             }
         }
     }
@@ -355,6 +369,72 @@ public class XYGraphWidget extends Widget {
                 i++;
             }
         }
+    }
+
+    private void drawMarkerText(Canvas canvas, String text, ValueMarker marker, float x, float y) {
+
+        x += MARKER_LABEL_SPACING;
+        y -= MARKER_LABEL_SPACING;
+        RectF textRect = new RectF(FontUtils.getStringDimensions(text, marker.getTextPaint()));
+        textRect.offsetTo(x, y-textRect.height());
+
+
+        if(textRect.right > paddedGridRect.right) {
+            textRect.offset(-(textRect.right - paddedGridRect.right), 0);
+        }
+
+        if(textRect.top < paddedGridRect.top) {
+            textRect.offset(0, paddedGridRect.top - textRect.top);
+        }
+
+        canvas.drawText(text, textRect.left, textRect.bottom, marker.getTextPaint());
+
+    }
+
+    protected void drawMarkers(Canvas canvas) {
+        for (YValueMarker marker : plot.getYValueMarkers()) {
+
+            if (marker.getValue() != null) {
+                double yVal = marker.getValue().doubleValue();
+                float yPix = ValPixConverter.valToPix(
+                        yVal,
+                        plot.getCalculatedMinY().doubleValue(),
+                        plot.getCalculatedMaxY().doubleValue(),
+                        paddedGridRect.height(),
+                        true);
+                yPix += paddedGridRect.top;
+                canvas.drawLine(paddedGridRect.left, yPix, paddedGridRect.right, yPix, marker.getLinePaint());
+
+                String text = getFormattedRangeValue(yVal);
+                float xPix = marker.getTextPosition().getPixelValue(paddedGridRect.width());
+                xPix += paddedGridRect.left;
+
+                drawMarkerText(canvas, text, marker, xPix, yPix);
+                //canvas.drawText(text, xPix, yPix-MARKER_LABEL_SPACING, marker.getTextPaint());
+            }
+        }
+
+        for(XValueMarker marker : plot.getXValueMarkers()) {
+            if(marker.getValue() != null) {
+                double xVal = marker.getValue().doubleValue();
+                float xPix = ValPixConverter.valToPix(
+                        xVal,
+                        plot.getCalculatedMinX().doubleValue(),
+                        plot.getCalculatedMaxX().doubleValue(),
+                        paddedGridRect.width(),
+                        true);
+                xPix += paddedGridRect.left;
+                canvas.drawLine(xPix, paddedGridRect.top, xPix, paddedGridRect.bottom, marker.getLinePaint());
+
+                String text = getFormattedDomainValue(xVal);
+                float yPix = marker.getTextPosition().getPixelValue(paddedGridRect.height());
+                yPix += paddedGridRect.top;
+                drawMarkerText(canvas, text, marker, xPix, yPix);
+                //canvas.drawText(text, xPix, yPix + MARKER_LABEL_SPACING, marker.getTextPaint());
+            }
+        }
+
+
     }
 
     protected void drawCursors(Canvas canvas) {

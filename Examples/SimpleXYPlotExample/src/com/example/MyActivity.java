@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import com.androidplot.series.XYSeries;
 import com.androidplot.ui.layout.AnchorPosition;
 import com.androidplot.ui.layout.XLayoutStyle;
 import com.androidplot.ui.layout.YLayoutStyle;
 import com.androidplot.ui.widget.Widget;
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.LineAndPointRenderer;
-import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.*;
+
+import java.util.Arrays;
 
 
 public class MyActivity extends Activity
@@ -19,8 +20,31 @@ public class MyActivity extends Activity
     private XYPlot plot;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
+        /*super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+
+        // initialize our XYPlot reference:
+        plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+        //XYPlot xyPlot = (XYPlot) findViewById(R.id.chart);
+        Number[] series1Numbers = {0, 40, 5, 40, 10, 40, 15, 40, 20, 30, 25, 30, 30, 30};
+// Turn the above arrays into XYSeries':
+        XYSeries series1 = new SimpleXYSeries(Arrays.asList(series1Numbers),
+                com.androidplot.xy.SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED,
+                "Damage");
+
+// Create a formatter to use for drawing a series using LineAndPointRenderer:
+        LineAndPointFormatter series1Format = new LineAndPointFormatter(
+                Color.rgb(0, 200, 0),                   // line color
+                Color.rgb(0, 100, 0),
+                Color.TRANSPARENT);                  // point color
+
+        plot.addSeries(series1, LineAndPointRenderer.class, new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(200, 0, 0), Color.RED));
+        plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 5);
+
+// reduce the number of range labels
+        plot.setTitle("");
+        plot.disableAllMarkup();*/
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
@@ -29,8 +53,8 @@ public class MyActivity extends Activity
         plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
         
         // add a new series
-        plot.addSeries(new SimpleXYSeries(), LineAndPointRenderer.class, new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(200, 0, 0)));
-        //plot.addSeries(new SimpleXYSeries(), BarRenderer.class, new BarFormatter(Color.RED, Color.WHITE));
+        plot.addSeries(new MyXYSeries(), LineAndPointRenderer.class, new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(200, 0, 0)));
+        //plot.addSeries(new MyXYSeries(), BarRenderer.class, new BarFormatter(Color.RED, Color.WHITE));
 
         // reduce the number of range labels
         //plot.getGraphWidget().setRangeTicksPerLabel(4);

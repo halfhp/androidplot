@@ -118,8 +118,8 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics> impl
 
 
     public PointF getElementCoordinates(float height, float width, RectF viewRect, PositionMetrics metrics) {
-        float x = metrics.getxMetric().getPixelValue(viewRect.width()) + viewRect.left;
-        float y = metrics.getyMetric().getPixelValue(viewRect.height()) + viewRect.top;
+        float x = metrics.getxPositionMetric().getPixelValue(viewRect.width()) + viewRect.left;
+        float y = metrics.getyPositionMetric().getPixelValue(viewRect.height()) + viewRect.top;
         PointF point = new PointF(x, y);
         return PixelUtils.sub(point, getAnchorOffset(width, height, metrics.getAnchor()));
     }

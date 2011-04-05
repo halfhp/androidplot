@@ -203,9 +203,18 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     public boolean removeSeries(SeriesType series, Class rendererClass) {
+    	
         boolean result = seriesRegistry.get(rendererClass).remove(series);
+        
         if(seriesRegistry.get(rendererClass).size() <= 0) {
             seriesRegistry.remove(rendererClass);
+            // find the renderer of type renderClass, but first need to get the instance.
+            for (RendererType rt : renderers) {
+            	if (rt.getClass() == rendererClass) {
+            		renderers.remove(rt);
+            		break;
+            	}
+            }
         }
         return result;
     }
@@ -213,7 +222,18 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     public void removeSeries(SeriesType series) {
         for(Class rendererClass : seriesRegistry.keySet()) {
             seriesRegistry.get(rendererClass).remove(series);
-        }
+            if(seriesRegistry.get(rendererClass).size() <= 0) {
+                seriesRegistry.remove(rendererClass);
+                // find the renderer of type renderClass, but first need to get the instance.
+                for (RendererType rt : renderers) {
+                	if (rt.getClass() == rendererClass) {
+                		renderers.remove(rt);
+                		break;
+                	}
+                }
+            }
+        }       
+        
         for(Iterator<SeriesAndFormatterList<SeriesType,FormatterType>> it = seriesRegistry.values().iterator(); it.hasNext();) {
             if(it.next().size() <= 0) {
                 it.remove();

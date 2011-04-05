@@ -188,7 +188,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         // if there is no list for this renderer type, we need to getInstance one:
         if(sfList == null) {
             // if rendererClass is an invalid type, getInstance will throw an IllegalArgumentException:
-            renderers.add(getRendererInstance(rendererClass));
+            // make sure there is not already an instance of this renderer available:
+            if(getRenderer(rendererClass) == null) {
+                renderers.add(getRendererInstance(rendererClass));
+            }
             sfList = new SeriesAndFormatterList<SeriesType,FormatterType>();
             seriesRegistry.put(rendererClass, sfList);
         }
@@ -209,20 +212,21 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         if(seriesRegistry.get(rendererClass).size() <= 0) {
             seriesRegistry.remove(rendererClass);
             // find the renderer of type renderClass, but first need to get the instance.
-            for (RendererType rt : renderers) {
+            /*for (RendererType rt : renderers) {
             	if (rt.getClass() == rendererClass) {
             		renderers.remove(rt);
             		break;
             	}
-            }
+            }*/
         }
         return result;
     }
 
     public void removeSeries(SeriesType series) {
+
         for(Class rendererClass : seriesRegistry.keySet()) {
             seriesRegistry.get(rendererClass).remove(series);
-            if(seriesRegistry.get(rendererClass).size() <= 0) {
+           /* if(seriesRegistry.get(rendererClass).size() <= 0) {
                 seriesRegistry.remove(rendererClass);
                 // find the renderer of type renderClass, but first need to get the instance.
                 for (RendererType rt : renderers) {
@@ -231,7 +235,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 		break;
                 	}
                 }
-            }
+            }*/
         }       
         
         for(Iterator<SeriesAndFormatterList<SeriesType,FormatterType>> it = seriesRegistry.values().iterator(); it.hasNext();) {

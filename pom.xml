@@ -11,7 +11,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <applicationVersion>0.3d</applicationVersion>
+        <applicationVersion>0.4a</applicationVersion>
         <examplesDir>Examples</examplesDir>
     </properties>
 

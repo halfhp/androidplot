@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import com.androidplot.series.XYSeries;
 import com.androidplot.ui.layout.*;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.*;
@@ -51,12 +52,12 @@ public class MyActivity extends Activity implements View.OnTouchListener
                                     new Double(Math.random()*255).intValue(),
                                     new Double(Math.random()*255).intValue()));
             lpFormatter.setFillPaint(null);
-            mySimpleXYPlot.addSeries(
-                    new SimpleXYSeries(
-                            Arrays.asList(seriesNumbers),           // SimpleXYSeries takes a List so turn our array into a List
-                            SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
-                            "S" + i),
-                    lpFormatter);                                   // Set the display title of the series);
+            XYSeries series = new SimpleXYSeries(
+                                        Arrays.asList(seriesNumbers),           // SimpleXYSeries takes a List so turn our array into a List
+                                        SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
+                                        "S" + i);
+
+            mySimpleXYPlot.addSeries(series, lpFormatter);                      // Set the display title of the series);
         }
 
         // use a 2x2 grid:

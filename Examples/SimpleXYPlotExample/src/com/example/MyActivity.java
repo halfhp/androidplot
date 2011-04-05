@@ -53,7 +53,11 @@ public class MyActivity extends Activity
         plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
         
         // add a new series
-        plot.addSeries(new MyXYSeries(), LineAndPointRenderer.class, new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(200, 0, 0)));
+        XYSeries mySeries = new MyXYSeries();
+        plot.addSeries(mySeries, LineAndPointRenderer.class, new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(200, 0, 0)));
+        plot.removeSeries(mySeries);
+        plot.addSeries(mySeries, LineAndPointRenderer.class, new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(200, 0, 0)));
+
         //plot.addSeries(new MyXYSeries(), BarRenderer.class, new BarFormatter(Color.RED, Color.WHITE));
 
         // reduce the number of range labels

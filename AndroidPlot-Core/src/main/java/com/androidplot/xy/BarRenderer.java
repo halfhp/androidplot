@@ -114,10 +114,13 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
         //for (Map.Entry<Number, XYSeries> entry = seriesMap.lastEntry(); entry != null; entry = seriesMap.lowerEntry(entry.getKey())) {
             BarFormatter formatter = getFormatter(entry.getValue()); // TODO: make this more efficient
             Number yVal = null;
+            Number xVal = null;
             if(entry.getValue() != null) {
                 yVal = entry.getValue().getY(x);
-            }
-            if (yVal != null) {  // make sure there's a real value to draw
+                xVal = entry.getValue().getX(x);
+            }  
+          
+            if (yVal != null && xVal != null) {  // make sure there's a real value to draw
                 switch (style) {
                     case FIXED_WIDTH:
                         float halfWidth = barWidth/2;

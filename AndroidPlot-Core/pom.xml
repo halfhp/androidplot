@@ -83,7 +83,7 @@
                         <option>-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod</option>
                     </options>
                     <injar>${project.build.finalName}.jar</injar>
-                    <outjar>${project.build.finalName}-release.jar</outjar>
+                    <outjar>obfuscated/${project.build.finalName}-release.jar</outjar>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>

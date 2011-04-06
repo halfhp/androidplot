@@ -13,6 +13,8 @@
     <properties>
         <applicationVersion>0.4a</applicationVersion>
         <examplesDir>Examples</examplesDir>
+        <obfuscatedJarPath>${project.build.directory}/obfuscated</obfuscatedJarPath>
+        <obfuscatedJarName>${project.build.finalName}-release.jar</obfuscatedJarName>
     </properties>
 
     <modules>

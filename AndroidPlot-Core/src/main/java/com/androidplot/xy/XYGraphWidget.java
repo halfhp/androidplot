@@ -38,8 +38,8 @@ public class XYGraphWidget extends Widget {
     private static final int CURSOR_LABEL_SPACING = 2;  // space between cursor lines and label in pixels
     private float domainLabelWidth = 15;  // how many pixels is the area allocated for domain labels
     private float rangeLabelWidth = 41;  // ...
-    private float domainLabelMargin = 3;
-    private float rangeLabelMargin = 5;  // not currently used since this margin can be adjusted via rangeLabelWidth
+    private float domainLabelMargin = 1;
+    private float rangeLabelMargin = 1;  // not currently used since this margin can be adjusted via rangeLabelWidth
     private int ticksPerRangeLabel = 1;
     private int ticksPerDomainLabel = 1;
     private float gridPaddingTop = 0;
@@ -209,8 +209,17 @@ public class XYGraphWidget extends Widget {
     private void drawDomainTick(Canvas canvas, float xPix, double xVal, Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         //if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
             if (!drawLineOnly) {
-                canvas.drawText(getFormattedDomainValue(xVal), xPix, getOutlineRect().bottom, labelPaint);
-                canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom + domainLabelTickExtension, linePaint);
+                float fontHeight = FontUtils.getFontHeight(labelPaint);
+                canvas.drawText(getFormattedDomainValue(xVal),
+                        xPix,
+                        gridRect.bottom+rangeLabelTickExtension + domainLabelMargin+fontHeight,
+                        labelPaint);
+
+                //canvas.drawText(getFormattedDomainValue(xVal), xPix, getOutlineRect().bottom, labelPaint);
+                canvas.drawLine(xPix,
+                        gridRect.top,
+                        xPix, gridRect.bottom + domainLabelTickExtension,
+                        linePaint);
             } else {
                 canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom, linePaint);
             }
@@ -219,8 +228,17 @@ public class XYGraphWidget extends Widget {
 
     public void drawRangeTick(Canvas canvas, float yPix, double yVal, Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         if (!drawLineOnly) {
-            canvas.drawLine(gridRect.left - rangeLabelTickExtension, yPix, gridRect.right, yPix, linePaint);
-            canvas.drawText(getFormattedRangeValue(yVal), gridRect.left - rangeLabelMargin, yPix, labelPaint);
+            canvas.drawLine(
+                    gridRect.left - rangeLabelTickExtension,
+                    yPix,
+                    gridRect.right,
+                    yPix,
+                    linePaint);
+            canvas.drawText(
+                    getFormattedRangeValue(yVal),
+                    gridRect.left - (rangeLabelTickExtension + rangeLabelMargin),
+                    yPix,
+                    labelPaint);
         } else {
             canvas.drawLine(gridRect.left, yPix, gridRect.right, yPix, linePaint);
         }

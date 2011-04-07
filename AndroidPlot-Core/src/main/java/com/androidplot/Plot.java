@@ -454,10 +454,19 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         this.layoutManager = layoutManager;
     }
 
+    /**
+     * Deprecated.  Use getBorderPaint instead.  If return is null then
+     * borders are disabled.
+     * @return
+     */
     public boolean isDrawBorderEnabled() {
         return drawBorderEnabled;
     }
 
+    /**
+     * Deprecated - Use setBorderPaint(null) instead.
+     * @param drawBorderEnabled
+     */
     public void setDrawBorderEnabled(boolean drawBorderEnabled) {
         this.drawBorderEnabled = drawBorderEnabled;
     }
@@ -581,8 +590,12 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param borderPaint
      */
     public void setBorderPaint(Paint borderPaint) {
-        this.borderPaint = new Paint(borderPaint);
-        this.borderPaint.setStyle(Paint.Style.STROKE);
+        if(borderPaint == null) {
+            this.borderPaint = null;
+        } else {
+            this.borderPaint = new Paint(borderPaint);
+            this.borderPaint.setStyle(Paint.Style.STROKE);
+        }
         //this.borderPaint = borderPaint;
     }
 }

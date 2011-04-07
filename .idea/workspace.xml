@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="3bdf2e30-f020-4a8d-bc0c-b2d53dad2f40" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/BezierLineAndPointFormatter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/BezierLineAndPointRenderer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot-Core/pom.xml" afterPath="$PROJECT_DIR$/AndroidPlot-Core/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/pom.xml" afterPath="$PROJECT_DIR$/Examples/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/Plot.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/Plot.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/LineAndPointRenderer.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/LineAndPointRenderer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYGraphWidget.java" afterPath="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYGraphWidget.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/HelperExample/res/layout/main.xml" afterPath="$PROJECT_DIR$/Examples/HelperExample/res/layout/main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Examples/HelperExample/src/com/example/MyActivity.java" afterPath="$PROJECT_DIR$/Examples/HelperExample/src/com/example/MyActivity.java" />
     </list>
     <list id="4ecc9605-f0b7-4efa-b326-1b45a16ac1ef" name="ANDROIDPLOT-29: API Cleanup" comment="" />
     <list id="74bbc238-da26-4201-8dca-21051ad8b191" name="ANDROIDPLOT-56" comment="ANDROIDPLOT-56&#10;Setup parent pom to recursively build all sub modules." />
@@ -83,22 +87,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/util/FontUtils.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/widget/Widget.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/AxisMarker.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYPlot.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/XPositionMetric.java" />
         <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XValueMarker.java" />
         <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/YValueMarker.java" />
         <option value="$PROJECT_DIR$/Examples/SimpleXYPlotExample/src/com/example/MyXYSeries.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYGraphWidget.java" />
         <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/ValueMarker.java" />
-        <option value="$PROJECT_DIR$/Examples/HelperExample/src/com/example/MyActivity.java" />
         <option value="$PROJECT_DIR$/Examples/SimpleXYPlotExample/src/com/example/MyActivity.java" />
-        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/Plot.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/Examples/pom.xml" />
         <option value="$PROJECT_DIR$/AndroidPlot-Core/pom.xml" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/Plot.java" />
+        <option value="$PROJECT_DIR$/Examples/HelperExample/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYGraphWidget.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/LineAndPointRenderer.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/BezierLineAndPointRenderer.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/LineAndPointFormatter.java" />
+        <option value="$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/BezierLineAndPointFormatter.java" />
+        <option value="$PROJECT_DIR$/Examples/HelperExample/src/com/example/MyActivity.java" />
       </list>
     </option>
   </component>
@@ -216,16 +220,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="AndroidPlot" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AndroidPlot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AndroidPlot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -411,7 +405,7 @@
       </UpdatedFiles>
     </UpdateInfo>
   </component>
-  <component name="RunManager" selected="Android Application.SimpleXYPlotExample">
+  <component name="RunManager" selected="Android Application.HelperExample">
     <configuration default="false" name="XYStepCalculatorTest" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false">
         <pattern>
@@ -925,11 +919,19 @@
       <created>1302018467267</created>
       <updated>1302070419312</updated>
     </task>
-    <task active="true" id="LOCAL-00013" summary="ANDROIDPLOT-72">
+    <task id="LOCAL-00013" summary="ANDROIDPLOT-72">
       <created>1302064771313</created>
-      <updated>1302070419322</updated>
+      <updated>1302216170897</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="ANDROIDPLOT-44">
+      <created>1302216170881</created>
+      <updated>1302216214654</updated>
+    </task>
+    <task active="true" id="LOCAL-00015" summary="ANDROIDPLOT-44">
+      <created>1302216214642</created>
+      <updated>1302216214657</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <option name="createChangelist" value="false" />
     <servers />
   </component>
@@ -957,24 +959,24 @@
     <frame x="-8" y="-8" width="1456" height="886" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32328767" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Atlassian " active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32465753" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32328767" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Atlassian " active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32465753" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32605729" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3260274" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41200545" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287858" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32328767" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287858" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17406876" sideWeight="0.675307" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1325215" sideWeight="0.67534244" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16905445" sideWeight="0.67671233" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1325215" sideWeight="0.62876713" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39971346" sideWeight="0.72305596" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Issues - JIRA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.256447" sideWeight="0.67534244" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.256447" sideWeight="0.67671233" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37123287" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23424658" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1224,118 +1226,118 @@
     </option>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Examples/SimpleXYPlotExample/src/com/example/MyXYSeries.java">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="16" selection-start="79" selection-end="79" vertical-scroll-proportion="0.14623655">
+        <state line="85" column="38" selection-start="3408" selection-end="3408" vertical-scroll-proportion="0.48210025">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/ui/layout/YPositionMetric.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/com/google/android/android/2.1_r1/android-2.1_r1-sources.jar!/android/os/Handler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="13" selection-start="49" selection-end="49" vertical-scroll-proportion="0.0">
+        <state line="41" column="0" selection-start="3591" selection-end="3591" vertical-scroll-proportion="0.7733333">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Examples/HelperExample/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="36" selection-start="518" selection-end="518" vertical-scroll-proportion="0.5509259">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYGraphWidget.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="376" column="34" selection-start="15850" selection-end="15850" vertical-scroll-proportion="0.0">
+        <state line="41" column="18" selection-start="1329" selection-end="1329" vertical-scroll-proportion="-6.56">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/test/java/com/androidplot/plot/PlotTest.java">
+    <entry file="jar://C:/android-sdk/platforms/android-7/android.jar!/java/lang/reflect/Method.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="296" column="0" selection-start="8262" selection-end="8262" vertical-scroll-proportion="0.0">
+        <state line="50" column="0" selection-start="2142" selection-end="2142" vertical-scroll-proportion="0.85503685">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Examples/OrientationSensorExample/src/com/example/MyActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="87" column="46" selection-start="3096" selection-end="3096" vertical-scroll-proportion="0.39054728">
+        <state line="43" column="0" selection-start="1483" selection-end="1483" vertical-scroll-proportion="0.9837963">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/ValueMarker.java">
+    <entry file="jar://C:/android-sdk/platforms/android-7/android.jar!/android/app/Instrumentation.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="84" selection-start="229" selection-end="229" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/HelperExample/src/com/example/MyActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="120" selection-start="2647" selection-end="2647" vertical-scroll-proportion="0.36666667">
+        <state line="154" column="1" selection-start="8112" selection-end="8112" vertical-scroll-proportion="0.8108108">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/SimpleXYPlotExample/src/com/example/MyActivity.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/com/google/android/android/2.1_r1/android-2.1_r1-sources.jar!/android/media/MediaPlayer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="18" selection-start="2150" selection-end="2150" vertical-scroll-proportion="0.0">
+        <state line="76" column="0" selection-start="5076" selection-end="5076" vertical-scroll-proportion="0.7733333">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/Plot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="190" column="85" selection-start="6364" selection-end="6364" vertical-scroll-proportion="0.0">
+        <state line="355" column="19" selection-start="11618" selection-end="11618" vertical-scroll-proportion="9.070796">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/src/com/androidplot/demos/OrientationSensorExampleActivity.java">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/StepFormatter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="13" selection-start="667" selection-end="667" vertical-scroll-proportion="0.0">
+        <state line="4" column="13" selection-start="74" selection-end="74" vertical-scroll-proportion="0.14623655">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/build.properties">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/LineAndPointFormatter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="53" column="5" selection-start="524" selection-end="1433" vertical-scroll-proportion="0.92258066">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/build.xml">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/BezierLineAndPointFormatter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="67" column="66" selection-start="2589" selection-end="2589" vertical-scroll-proportion="1.1018518">
+        <state line="10" column="49" selection-start="434" selection-end="434" vertical-scroll-proportion="0.3655914">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/DemoApp/default.properties">
+    <entry file="file://$PROJECT_DIR$/Examples/HelperExample/src/com/example/MyActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="49" column="14" selection-start="1646" selection-end="1646" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/BezierLineAndPointRenderer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="0" selection-start="896" selection-end="896" vertical-scroll-proportion="0.0">
+        <state line="9" column="0" selection-start="272" selection-end="272" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/LineAndPointRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="4" selection-start="1766" selection-end="1897" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Examples/pom.xml">
+    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/src/main/java/com/androidplot/xy/XYPlot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="110" selection-start="2482" selection-end="2482" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidPlot-Core/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="38" selection-start="3408" selection-end="3408" vertical-scroll-proportion="0.48210025">
+        <state line="213" column="23" selection-start="8020" selection-end="8020" vertical-scroll-proportion="0.31858408">
           <folding />
         </state>
       </provider>

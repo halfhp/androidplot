@@ -18,6 +18,8 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     private boolean drawLinesEnabled = true;
     private boolean drawPointsEnabled = true;
 
+    //private boolean drawAsBeziersEnabled = true;
+
 
 
     public LineAndPointRenderer(XYPlot plot) {
@@ -58,6 +60,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
      * additional code.
      */
     protected void appendToPath(Path path, PointF thisPoint, PointF lastPoint) {
+
         path.lineTo(thisPoint.x, thisPoint.y);
     }
 
@@ -99,8 +102,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                     firstPoint = thisPoint;
                     // create our first point at the bottom/x position so filling
                     // will look good
-                    //path.moveTo(firstPoint.x, plotArea.bottom);
-                    //path.lineTo(firstPoint.x, firstPoint.y);
                     path.moveTo(firstPoint.x, firstPoint.y);
                 }
 
@@ -163,45 +164,8 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
     }
 
-    /*protected void renderLines() {
-
-    }
-
-    protected void renderPoints() {
-
-    }
-
-    protected void renderFill() {
-
-    }*/
-
-    /*private void beginSeries(Canvas canvas, RectF plotArea, LineAndPointFormatter format) throws PlotRenderException {
-        lastPoint = null;
-    }
-
-    private void drawPoint(Canvas canvas, PointF point, RectF plotArea, LineAndPointFormatter format) throws PlotRenderException {
-        if (lastPoint != null) {
-            if (point != null) {
-                //doDrawLine(canvas, lastPoint, point, plotArea, format);
-                canvas.drawLine(lastPoint.x, lastPoint.y, point.x, point.y, format.getLinePaint());
-
-            }
-            drawLastPoint(canvas, plotArea, format);
-        }
-
-        lastPoint = point;
-    }
-
-    private void endSeries(Canvas canvas, RectF plotArea, LineAndPointFormatter format) throws PlotRenderException {
-        if(lastPoint != null) {
-            drawLastPoint(canvas, plotArea, format);
-        }
-    }*/
-
     protected void drawLastPoint(Canvas canvas, RectF plotArea, LineAndPointFormatter format) throws PlotRenderException {
         canvas.drawPoint(lastPoint.x, lastPoint.y, format.getVertexPaint());
        
     }
-
-
 }

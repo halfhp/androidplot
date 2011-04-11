@@ -41,7 +41,6 @@ import com.androidplot.ui.widget.RangeLabelWidget;
 import com.androidplot.ui.widget.DomainLabelWidget;
 import com.androidplot.ui.layout.*;
 import com.androidplot.ui.widget.TextOrientationType;
-import com.androidplot.util.ValPixConverter;
 
 import java.text.Format;
 import java.util.ArrayList;
@@ -210,15 +209,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     @Override
     protected XYSeriesRenderer doGetRendererInstance(Class clazz) {
-        if (clazz == LineAndPointRenderer.class) {
-            return new LineAndPointRenderer(this);
-        } else if (clazz == BarRenderer.class) {
-            return new BarRenderer(this);
-        } else if (clazz == StepRenderer.class) {
-            return new StepRenderer(this);
-        } else {
-            return null;
-        }
+        return XYRendererFactory.getInstance(this, clazz);
     }
 
     @Override
@@ -626,7 +617,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         }
     }
 
-    public boolean addSeries(XYSeries series, LineAndPointFormatter formatter) {
+    public boolean addSeries(XYSeries series, XYSeriesFormatter formatter) {
+        Class clazz = XYRendererFactory.getRendererClass(formatter);
+        return addSeries(series, clazz, formatter);
+    }
+
+    /*public boolean addSeries(XYSeries series, LineAndPointFormatter formatter) {
         return addSeries(series, LineAndPointRenderer.class, formatter);
     }
 
@@ -636,7 +632,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public boolean addSeries(XYSeries series, StepFormatter formatter) {
         return addSeries(series, StepRenderer.class, formatter);
-    }
+    }*/
     
     /**
      * Convenience method - wraps XYGraphWidget.getTicksPerRangeLabel().

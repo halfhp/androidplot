@@ -3,6 +3,10 @@ package com.androidplot.xy;
 import android.graphics.Path;
 import android.graphics.PointF;
 
+/**
+ * WARNING: This is an unfinished class.  Series drawn by this implementation may look nice
+ * but they are not yet accurate representations of the control points from which they are derived.
+ */
 public class BezierLineAndPointRenderer extends LineAndPointRenderer<BezierLineAndPointFormatter> {
     public BezierLineAndPointRenderer(XYPlot plot) {
         super(plot);

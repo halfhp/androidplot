@@ -135,29 +135,4 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
             }
         }
     }
-
-/*private void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, LineAndPointFormatter formatter) throws PlotRenderException {
-        //beginSeries(canvas, plotArea, formatter);
-        //XYDataset series = bundle.getDataset();
-        //int seriesIndex = bundle.getSeriesIndex();
-        Point thisPoint;
-
-        for (int i = 0; i < series.size(); i++) {
-                        Number y = series.getY(i);
-                        Number x = series.getX(i);
-
-                        if (y != null && x != null) {
-
-                            float pixX = ValPixConverter.valToPix(x.doubleValue(), getPlot().getActualMinX(), getPlot().getActualMaxX(), plotArea.width(), false) + (plotArea.left);
-                            float pixY = ValPixConverter.valToPix(y.doubleValue(), getPlot().getActualMinY(), getPlot().getActualMaxY(), plotArea.height(), true) + plotArea.top;
-                            //thisPoint = new Point((int) (pixX + 0.5), (int) (pixY + 0.5));
-                            thisPoint = new Point(pixX, pixY);
-                        } else {
-                            thisPoint = null;
-                        }
-                        drawPoint(canvas, thisPoint, plotArea, formatter);
-                    }
-        //endSeries(canvas, plotArea, formatter);
-    }*/
-
 }

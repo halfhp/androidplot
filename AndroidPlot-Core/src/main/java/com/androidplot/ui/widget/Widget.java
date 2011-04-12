@@ -12,6 +12,7 @@ public abstract class Widget implements BoxModelable {
     private BoxModel boxModel = new BoxModel();
     private SizeMetrics sizeMetrics;
     private RectF outlineRect;  // last known dimensions of this widget
+    private boolean isVisible = true;
 
     public Widget(SizeMetric heightMetric, SizeMetric widthMetric) {
         sizeMetrics = new SizeMetrics(heightMetric, widthMetric);
@@ -158,21 +159,23 @@ public abstract class Widget implements BoxModelable {
 
     public void draw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
         outlineRect = widgetRect;
-        if (backgroundPaint != null) {
-            drawBackground(canvas, outlineRect);
-        }
+        if (isVisible()) {
+            if (backgroundPaint != null) {
+                drawBackground(canvas, outlineRect);
+            }
 
-        /* RectF marginatedRect = new RectF(outlineRect.left + marginLeft,
-      outlineRect.top + marginTop,
-      outlineRect.right - marginRight,
-      outlineRect.bottom - marginBottom);*/
+            /* RectF marginatedRect = new RectF(outlineRect.left + marginLeft,
+          outlineRect.top + marginTop,
+          outlineRect.right - marginRight,
+          outlineRect.bottom - marginBottom);*/
 
-        RectF marginatedRect = boxModel.getMarginatedRect(widgetRect);
-        RectF paddedRect = boxModel.getPaddedRect(marginatedRect);
-        doOnDraw(canvas, paddedRect);
+            RectF marginatedRect = boxModel.getMarginatedRect(widgetRect);
+            RectF paddedRect = boxModel.getPaddedRect(marginatedRect);
+            doOnDraw(canvas, paddedRect);
 
-        if (borderPaint != null) {
-            drawBorder(canvas, paddedRect);
+            if (borderPaint != null) {
+                drawBorder(canvas, paddedRect);
+            }
         }
     }
 
@@ -234,5 +237,13 @@ public abstract class Widget implements BoxModelable {
 
     public RectF getOutlineRect() {
         return outlineRect;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
     }
 }

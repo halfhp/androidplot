@@ -41,9 +41,9 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics> impl
         paddingPaint.setAlpha(200);
     }
 
-    @Deprecated
+    /*@Deprecated
     public LayoutManager(View view) {
-    }
+    }*/
 
     public LayoutManager() {
     }

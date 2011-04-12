@@ -31,13 +31,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter {
     protected LineAndPointFormatter() {        
     }
 
-    /**
-     * Creates a new LineAndPointFormatter using default Paint configurations
-     * for line and vertex, but using the specified colors.
-     * @param lineColor
-     * @param vertexColor
-     */
-    @Deprecated
+    /*@Deprecated
     public LineAndPointFormatter(Integer lineColor, Integer vertexColor) {
 
         initLinePaint(lineColor);
@@ -46,10 +40,12 @@ public class LineAndPointFormatter extends XYSeriesFormatter {
         initVertexPaint(vertexColor);
 
         fillPaint = null;
-    }
+    }*/
 
     public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor) {
-        this(lineColor, vertexColor);
+        initLinePaint(lineColor);
+        initVertexPaint(vertexColor);
+        //this(lineColor, vertexColor);
         initFillPaint(fillColor);
     }
 

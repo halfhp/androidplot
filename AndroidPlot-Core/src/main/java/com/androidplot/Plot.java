@@ -95,7 +95,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     private void postInit() {
         titleWidget = new TitleWidget(this, new SizeMetrics(25, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
-        layoutManager = new LayoutManager(this);
+        //layoutManager = new LayoutManager(this);
+        layoutManager = new LayoutManager();
         layoutManager.position(titleWidget, 0, XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
     }
 

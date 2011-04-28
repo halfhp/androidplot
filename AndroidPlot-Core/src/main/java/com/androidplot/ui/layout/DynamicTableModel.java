@@ -209,14 +209,7 @@ public class DynamicTableModel extends TableModel {
 
         @Override
         public boolean hasNext() {
-            if (isOk && lastElement < calculatedNumElements) {
-                    /*lastElement < totalElements &&
-                    lastColumn < calculatedColumns &&
-                    lastRow < calculatedRows) {*/
-                return true;
-            } else {
-                return false;
-            }
+            return isOk && lastElement < calculatedNumElements;
         }
 
         @Override

@@ -35,9 +35,8 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
     /**
      * Sets the width of the bars draw.
      * @param barWidth
-     * @param style
      */
-    public void setBarWidth(float barWidth, BarWidthStyle style) {
+    public void setBarWidth(float barWidth) {
         this.barWidth = barWidth;
     }
 

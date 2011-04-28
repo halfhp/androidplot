@@ -18,12 +18,8 @@ public class Line {
      * @return
      */
     public boolean contains(double value) {
-        if((getMinVal() == null || value >= getMinVal().doubleValue()) &&
-                (getMaxVal() == null || value <= getMaxVal().doubleValue())) {
-            return true;
-        } else {
-            return false;
-        }
+        return (getMinVal() == null || value >= getMinVal().doubleValue()) &&
+                (getMaxVal() == null || value <= getMaxVal().doubleValue());
     }
 
     public boolean intersects(Line line) {

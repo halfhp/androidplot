@@ -57,7 +57,7 @@ public class XYStepCalculator {
                 break;
             case SUBDIVIDE:
                 stepCount = new Double(stepValue).floatValue();
-                stepPix = (float)(plotPixelSize /(stepCount-1));
+                stepPix = (plotPixelSize /(stepCount-1));
                 stepVal = ValPixConverter.valPerPix(minVal.floatValue(), maxVal.floatValue(), plotPixelSize)*stepPix;
                 //step.setStepCount(stepValue);
                 //step.setStepPix((float)(plotPixelSize/(step.getStepCount()-1)));

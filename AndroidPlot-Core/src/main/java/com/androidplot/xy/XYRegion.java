@@ -62,17 +62,7 @@ public class XYRegion {
      * @return
      */
     public boolean intersects(Number minX, Number maxX, Number minY, Number maxY) {
-        if(xLine.intersects(minX, maxX) && yLine.intersects(minY, maxY)) {
-            return true;
-        } else {
-            return false;
-        }
-       /* if (linesIntersect(this.getMinX(), this.getMaxX(), minX, maxX) &&
-                linesIntersect(this.getMinY(), this.getMaxY(), minY, maxY)) {
-            return true;
-        } else {
-            return false;
-        }*/
+        return xLine.intersects(minX, maxX) && yLine.intersects(minY, maxY);
     }
 
     public boolean intersects(RectF region, Number visMinX, Number visMaxX, Number visMinY, Number visMaxY) {

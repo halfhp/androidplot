@@ -55,11 +55,7 @@ public class FixedTableModel extends TableModel {
         @Override
         public boolean hasNext() {
             // was this the last element or is there no room in either axis for another cell?
-            if(lastElement >= numElements || (isColumnFinished() && isRowFinished())) {
-                return false;
-            } else {
-                return true;
-            }
+            return !(lastElement >= numElements || (isColumnFinished() && isRowFinished()));
         }
 
         private boolean isColumnFinished() {
@@ -70,11 +66,8 @@ public class FixedTableModel extends TableModel {
         }
 
         private boolean isRowFinished() {
-            if(lastRect.right + model.getCellWidth() > tableRect.width() ) {
-                return true;
+            return lastRect.right + model.getCellWidth() > tableRect.width();
             }
-            return false;
-        }
 
         @Override
         public RectF next() {

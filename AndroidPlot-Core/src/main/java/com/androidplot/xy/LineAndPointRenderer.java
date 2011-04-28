@@ -59,9 +59,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
 
 
     private void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, LineAndPointFormatter formatter) throws PlotRenderException {
-        //beginSeries(canvas, plotArea, formatter);
-        //XYDataset series = bundle.getDataset();
-        //int seriesIndex = bundle.getSeriesIndex();
         PointF thisPoint = null;
         PointF lastPoint = null;
         PointF firstPoint = null;
@@ -125,20 +122,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
 
     protected void renderPath(Canvas canvas, RectF plotArea, Path path, PointF firstPoint, PointF lastPoint, LineAndPointFormatter formatter) {
         Path outlinePath = new Path(path);
-        /*Path outlinePath = null;
-        if (formatter.getLinePaint() != null) {
-            if (formatter.getFillPaint() == null) {
-                outlinePath = path;
-
-            // if there is no fillpaint, then we dont need to
-            // clone the original path to avoid fill points being added.
-            } else {
-                outlinePath = new Path(path);
-            }
-        }*/
-
-        // draw the fill "layer":
-        //if (formatter.getFillPaint() != null) {
             // create our last point at the bottom/x position so filling
             // will look good
             path.lineTo(lastPoint.x, plotArea.bottom);
@@ -174,12 +157,10 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
 
         // finally we draw the outline path on top of everything else:
-        if(outlinePath != null) {
-            //formatter.getLinePaint().setStrokeWidth(5);
-            canvas.drawPath(outlinePath, formatter.getLinePaint());
-        }
+        //formatter.getLinePaint().setStrokeWidth(5);
+        canvas.drawPath(outlinePath, formatter.getLinePaint());
 
-        if(path != null) {
+        if (path != null) {
             path.rewind();
         }
     }

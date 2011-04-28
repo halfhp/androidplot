@@ -12,27 +12,6 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     private Paint vertexPaint;
     private Paint fillPaint;
 
-    @Deprecated
-    public LineAndPointFormatter(Paint linePaint, Paint vertexPaint) {
-        this(linePaint, vertexPaint, null);
-    }
-
-    /**
-     * Deprecated as of 0.4.1.  Use form that takes int color arguments instead.  If additional control over
-     * Paint properties is needed, use the appropriate getXXXPaint() method to access the generated Paint instance.
-     * @param linePaint
-     * @param vertexPaint
-     * @param fillPaint
-     */
-    @Deprecated
-    public LineAndPointFormatter(Paint linePaint, Paint vertexPaint, Paint fillPaint) {
-        this.linePaint = linePaint;
-        this.vertexPaint = vertexPaint;
-        this.linePaint = linePaint;
-        this.vertexPaint = vertexPaint;
-        this.fillPaint = fillPaint;
-    }
-
     protected LineAndPointFormatter() {        
     }
 

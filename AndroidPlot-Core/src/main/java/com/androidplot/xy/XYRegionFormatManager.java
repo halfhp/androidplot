@@ -8,22 +8,22 @@ import java.util.Hashtable;
  */
 @Deprecated
 public class XYRegionFormatManager<XYRegionFormatterType> {
-    XYRegionGroup regions;
+    //XYRegionGroup regions;
     Hashtable<XYRegion, XYRegionFormatterType> regionFormatterLookup;
 
     {
-        regions = new XYRegionGroup();
+        //regions = new XYRegionGroup();
         regionFormatterLookup = new Hashtable<XYRegion, XYRegionFormatterType>();
     }
 
     public void addRegion(XYRegion region, XYRegionFormatterType regionFormatter) {
 
-        regions.addToTop(region);
+        //regions.addToTop(region);
         regionFormatterLookup.put(region, regionFormatter);
     }
 
     public void removeRegion(XYRegion region) {
-        regions.remove(region);
+        //regions.remove(region);
         regionFormatterLookup.remove(region);
     }
 
@@ -31,9 +31,9 @@ public class XYRegionFormatManager<XYRegionFormatterType> {
      * Can be used to access z-index manipulation methods of XYRegionGroup.
      * @return
      */
-    public XYRegionGroup getRegionGroup() {
+    /*public XYRegionGroup getRegionGroup() {
         return regions;
-    }
+    }*/
 
     /**
      * @param region

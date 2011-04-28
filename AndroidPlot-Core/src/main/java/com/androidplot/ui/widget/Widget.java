@@ -28,11 +28,8 @@ public abstract class Widget implements BoxModelable {
      * @return
      */
     public boolean containsPoint(PointF point){
-        if(outlineRect != null && outlineRect.contains(point.x, point.y)) {
-            return true;
+        return outlineRect != null && outlineRect.contains(point.x, point.y);
         }
-        return false;
-    }
 
     public void setSize(SizeMetrics sizeMetrics) {
         this.sizeMetrics = sizeMetrics;

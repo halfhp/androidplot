@@ -7,12 +7,18 @@ import com.androidplot.ui.layout.TableModel;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.ui.layout.SizeMetrics;
 import com.androidplot.util.FontUtils;
+import com.androidplot.util.ZIndexable;
 
-import java.util.Iterator;
+import java.util.*;
 
 public class XYLegendWidget extends Widget {
     ////public static final int ICON_WIDTH_DEFAULT = 10;
     //public static final int ICON_HEIGHT_DEFAULT = 10;
+
+    private enum CellType {
+        SERIES,
+        REGION
+    }
 
     private XYPlot plot;
     //private float iconWidth = 12;
@@ -48,40 +54,61 @@ public class XYLegendWidget extends Widget {
         this.tableModel = tableModel;
     }
 
-    private void drawCell(Canvas canvas, XYSeriesRenderer renderer, XYSeriesFormatter formatter, RectF cellRect, String seriesTitle) {
-
+    private RectF getIconRect(RectF cellRect) {
         float cellRectCenterY = cellRect.top + (cellRect.height()/2);
         RectF iconRect = iconSizeMetrics.getRectF(cellRect);
 
         // center the icon rect vertically
         float centeredIconOriginY = cellRectCenterY - (iconRect.height()/2);
         iconRect.offsetTo(cellRect.left + 1, centeredIconOriginY);
+        return iconRect;
+    }
 
+    private static float getRectCenterY(RectF cellRect) {
+        return cellRect.top + (cellRect.height()/2);
+    }
 
-        //RectF  iconRect = PixelUtils.sink(iconRect);
+    private void beginDrawingCell(Canvas canvas, RectF iconRect) {
 
         Paint bgPaint = plot.getGraphWidget().getGridBackgroundPaint();
         if(drawIconBackgroundEnabled && bgPaint != null) {
             canvas.drawRect(iconRect, bgPaint);
-            //bgPaint = plot.getGraphWidget().getGridBackgroundPaint();
         }
+    }
 
-        // center the label text vetically
-        float centeredTextOriginY = cellRectCenterY + (FontUtils.getFontHeight(textPaint)/2);
+    private void finishDrawingCell(Canvas canvas, RectF cellRect, RectF iconRect, String text) {
 
-
-
-                renderer.drawLegendIcon(
-                        canvas,
-                        iconRect,
-                        seriesTitle,
-                        formatter);
-                canvas.drawText(seriesTitle, iconRect.right + 2, centeredTextOriginY, textPaint);
-
+        Paint bgPaint = plot.getGraphWidget().getGridBackgroundPaint();
         if(drawIconBorderEnabled && bgPaint != null) {
             iconBorderPaint.setColor(bgPaint.getColor());
             canvas.drawRect(iconRect, iconBorderPaint);
         }
+
+        float centeredTextOriginY = getRectCenterY(cellRect) + (FontUtils.getFontHeight(textPaint)/2);
+                canvas.drawText(text, iconRect.right + 2, centeredTextOriginY, textPaint);
+    }
+
+    private void drawRegionLegendCell(Canvas canvas, XYSeriesRenderer renderer, XYRegionFormatter formatter, RectF cellRect, String text) {
+        RectF iconRect = getIconRect(cellRect);
+        beginDrawingCell(canvas, iconRect);
+
+                renderer.drawRegionLegendIcon(
+                        canvas,
+                        iconRect,
+                        formatter
+                        );
+        finishDrawingCell(canvas, cellRect, iconRect, text);
+    }
+
+    private void drawSeriesLegendCell(Canvas canvas, XYSeriesRenderer renderer, XYSeriesFormatter formatter, RectF cellRect, String seriesTitle) {
+        RectF iconRect = getIconRect(cellRect);
+        beginDrawingCell(canvas, iconRect);
+
+                renderer.drawSeriesLegendIcon(
+                        canvas,
+                        iconRect,
+                        formatter);
+        finishDrawingCell(canvas, cellRect, iconRect, seriesTitle);
     }
 
     @Override
@@ -92,23 +119,87 @@ public class XYLegendWidget extends Widget {
             return;
         }
 
+        Hashtable<XYRegionFormatter, XYSeriesRenderer> regionRendererLookup = new Hashtable<XYRegionFormatter, XYSeriesRenderer>();
+        Hashtable<XYRegionFormatter, String> regionFormatters = new Hashtable<XYRegionFormatter, String>();
+
+
+
+
+
+        // Calculate the number of cells needed to draw the Legend:
         int seriesCount = 0;
         for(XYSeriesRenderer renderer : plot.getRendererList()) {
             seriesCount += plot.getSeriesAndFormatterListForRenderer(renderer.getClass()).size();
+
+
+
+            // Figure out how many regions need to be added to the legend:
+            Hashtable<XYRegionFormatter, String> urf = renderer.getUniqueRegionFormatters();
+            for(XYRegionFormatter xyf : urf.keySet()) {
+                regionRendererLookup.put(xyf, renderer);
+            }
+            regionFormatters.putAll(renderer.getUniqueRegionFormatters());
+
+           /* XYSeriesFormatter formatter = renderer.getF
+
+
+            // TODO: make regions reusable
+                ZIndexable<XYRegion> regionIndexer = formatter.getRegions();
+
+            // Keep a record of the formatters already drawn:
+                Hashtable<XYRegionFormatter, XYRegionFormatter> renderedFormatters = new Hashtable<XYRegionFormatter, XYRegionFormatter>();
+                for(XYRegion region : regionIndexer.elements()) {
+                    //drawCell()
+                    XYRegionFormatter f = formatter.getRegionFormatter(region);
+                    if(! renderedFormatters.contains(f)) {} {
+                        drawRegionLegendCell(canvas, renderer, f, cellRect, region.getLabel());
+                        renderedFormatters.put(f, f);
+                    }
+                }*/
         }
 
+        seriesCount += regionFormatters.size();
+
+        // Create an iterator specially created to draw the number of cells we calculated:
         Iterator<RectF> it = tableModel.getIterator(widgetRect, seriesCount);
+
+        // Draw each cell:
+        RectF cellRect = null;
         for(XYSeriesRenderer renderer : plot.getRendererList()) {
             SeriesAndFormatterList<XYSeries,XYSeriesFormatter> sfList = plot.getSeriesAndFormatterListForRenderer(renderer.getClass());
 
             // maxIndex is only used if it has been determined.
             // if it is 0 then it could not be determined.
+
             for(int i = 0; i < sfList.size() && it.hasNext(); i++) {
-                RectF cellRect = it.next();
-                drawCell(canvas, renderer, sfList.getFormatter(i), cellRect, sfList.getSeries(i).getTitle());
+                cellRect = it.next();
+                XYSeriesFormatter formatter = sfList.getFormatter(i);
+                drawSeriesLegendCell(canvas, renderer, formatter, cellRect, sfList.getSeries(i).getTitle());
+
+                /*// TODO: make regions reusable
+                ZIndexable<XYRegion> regionIndexer = formatter.getRegions();*/
+
+                /*// Keep a record of the formatters already drawn:
+                Hashtable<XYRegionFormatter, XYRegionFormatter> renderedFormatters = new Hashtable<XYRegionFormatter, XYRegionFormatter>();
+                for(XYRegion region : regionIndexer.elements()) {
+                    //drawCell()
+                    XYRegionFormatter f = formatter.getRegionFormatter(region);
+                    if(! renderedFormatters.contains(f)) {} {
+                        drawRegionLegendCell(canvas, renderer, f, cellRect, region.getLabel());
+                        renderedFormatters.put(f, f);
+                    }
+                }*/
             }
         }
+        for(Map.Entry<XYRegionFormatter, String> s : regionFormatters.entrySet()) {
+            if(!it.hasNext()) {
+                break;
+            }
+            cellRect = it.next();
+            drawRegionLegendCell(canvas, regionRendererLookup.get(s.getKey()), s.getKey(), cellRect, s.getValue());
+        }
     }
+
 
     public Paint getTextPaint() {
         return textPaint;

@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="SimpleXYPlotExample" type="AndroidRunConfigurationType" factoryName="Android Application">
     <module name="SimpleXYPlotExample" />
-    <option name="ACTIVITY_CLASS" value="" />
+    <option name="ACTIVITY_CLASS" />
     <option name="MODE" value="default_activity" />
     <option name="DEPLOY" value="true" />
     <option name="CHOOSE_DEVICE_MANUALLY" value="false" />

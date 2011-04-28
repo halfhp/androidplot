@@ -4,34 +4,20 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 /**
- * Converts pixel coordinates to and from Dataset values.
+ * Utility methods for converting pixel coordinates into real values and vice versa.
  */
 public class ValPixConverter {
-
-
-    /*
-    public static float indexToPix(int index, int itemCount, int lengthPix) {
-        if(index > (itemCount-1)) {
-            throw new IndexOutOfBoundsException();
-        }
-        if(lengthPix <= 0) {
-            throw new IllegalArgumentException("Length in pixels must be greater than 0.");
-        }
-        double scale = ((float) lengthPix) / itemCount;
-        float pix = (float)(index * scale);
-        return pix;
-    }
-    */
+    private static final int ZERO = 0;
 
 
     public static float valToPix(double val, double min, double max, float lengthPix, boolean flip) {
-        if(lengthPix <= 0) {
+        if(lengthPix <= ZERO) {
             throw new IllegalArgumentException("Length in pixels must be greater than 0.");
         }
         double range = range(min, max);
         double scale = lengthPix / range;
         double raw = val - min;
-        float pix = (float)(raw * scale);  // the 0.5 turns floor into avg
+        float pix = (float)(raw * scale);
 
         if(flip) {
             pix = (lengthPix - pix);
@@ -60,11 +46,11 @@ public class ValPixConverter {
      * @return
      */
     public static double pixToVal(float pix, double min, double max, float lengthPix, boolean flip) {
-        if(pix < 0) {
+        if(pix < ZERO) {
             throw new IllegalArgumentException("pixel values cannot be negative.");
         }
 
-        if(lengthPix <= 0) {
+        if(lengthPix <= ZERO) {
             throw new IllegalArgumentException("Length in pixels must be greater than 0.");
         }
         float pMult = pix;
@@ -75,15 +61,20 @@ public class ValPixConverter {
         return ((range / lengthPix) * pMult) + min;
     }
 
+    /**
+     * Converts a real value into a pixel value.
+     * @param x Real x (domain) component of the point to convert.
+     * @param y Real y (range) component of the point to convert.
+     * @param plotArea
+     * @param minX Minimum visible real value on the x (domain) axis.
+     * @param maxX Maximum visible real value on the y (domain) axis.
+     * @param minY Minimum visible real value on the y (range) axis.
+     * @param maxY Maximum visible real value on the y (range axis.
+     * @return
+     */
     public static PointF valToPix(Number x, Number y, RectF plotArea, Number minX, Number maxX, Number minY, Number maxY) {
         float pixX = ValPixConverter.valToPix(x.doubleValue(), minX.doubleValue(), maxX.doubleValue(), plotArea.width(), false) + (plotArea.left);
         float pixY = ValPixConverter.valToPix(y.doubleValue(), minY.doubleValue(), maxY.doubleValue(), plotArea.height(), true) + plotArea.top;
         return new PointF(pixX, pixY);
-        //throw new UnsupportedOperationException("Not yet implemented.");
     }
-
-    /*public static PointF pixToVal(RectF rect, PointF point) {
-        throw new UnsupportedOperationException("Not yet implemented.");
-        float x = pixToVal()
-    }*/
 }

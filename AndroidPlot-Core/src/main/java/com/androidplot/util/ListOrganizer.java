@@ -6,7 +6,7 @@ import java.util.List;
  * Utility class providing additional element organization operations.
  * @param <ElementType>
  */
-public class ListOrganizer<ElementType> implements Organizeable<ElementType> {
+public class ListOrganizer<ElementType> implements ZIndexable<ElementType> {
     private List<ElementType> list;
 
     public ListOrganizer(List<ElementType> list) {
@@ -14,7 +14,7 @@ public class ListOrganizer<ElementType> implements Organizeable<ElementType> {
     }
 
 
-    public boolean moveToEnd(ElementType element) {
+    public boolean moveToTop(ElementType element) {
             if(list.remove(element)) {
                 list.add(list.size(), element);
                 return true;
@@ -23,9 +23,9 @@ public class ListOrganizer<ElementType> implements Organizeable<ElementType> {
             }
     }
 
-    public boolean moveAfter(ElementType objectToMove, ElementType reference) {
+    public boolean moveAbove(ElementType objectToMove, ElementType reference) {
         if(objectToMove == reference) {
-            throw new IllegalArgumentException("Illegal argument to moveAfter(A, B); A cannot be equal to B.");
+            throw new IllegalArgumentException("Illegal argument to moveAbove(A, B); A cannot be equal to B.");
         }
 
 
@@ -37,7 +37,7 @@ public class ListOrganizer<ElementType> implements Organizeable<ElementType> {
 
     }
 
-    public boolean moveBefore(ElementType objectToMove, ElementType reference) {
+    public boolean moveBeneath(ElementType objectToMove, ElementType reference) {
         if (objectToMove == reference) {
             throw new IllegalArgumentException("Illegal argument to moveBeaneath(A, B); A cannot be equal to B.");
         }
@@ -49,7 +49,7 @@ public class ListOrganizer<ElementType> implements Organizeable<ElementType> {
 
     }
 
-    public boolean moveToFront(ElementType key) {
+    public boolean moveToBottom(ElementType key) {
 
         //int widgetIndex = widgetOrder.indexOf(key);
         list.remove(key);
@@ -59,7 +59,7 @@ public class ListOrganizer<ElementType> implements Organizeable<ElementType> {
         //widgetOrder.remove(key);
     }
 
-    public boolean moveBack(ElementType key) {
+    public boolean moveUp(ElementType key) {
         int widgetIndex = list.indexOf(key);
         if(widgetIndex == -1) {
             // key not found:
@@ -71,10 +71,10 @@ public class ListOrganizer<ElementType> implements Organizeable<ElementType> {
         }
 
         ElementType widgetAbove = list.get(widgetIndex+1);
-        return moveAfter(key, widgetAbove);
+        return moveAbove(key, widgetAbove);
     }
 
-    public boolean moveForward(ElementType key) {
+    public boolean moveDown(ElementType key) {
         int widgetIndex = list.indexOf(key);
         if(widgetIndex == -1) {
             // key not found:
@@ -86,14 +86,19 @@ public class ListOrganizer<ElementType> implements Organizeable<ElementType> {
         }
 
         ElementType widgetBeneath = list.get(widgetIndex-1);
-        return moveBefore(key, widgetBeneath);
+        return moveBeneath(key, widgetBeneath);
     }
 
-    public void addToFront(ElementType element) {
+    @Override
+    public List<ElementType> elements() {
+        return list;
+    }
+
+    public void addToBottom(ElementType element) {
         list.add(0, element);
     }
 
-    public void addToBack(ElementType element) {
+    public void addToTop(ElementType element) {
         list.add(list.size(), element);
     }
 }

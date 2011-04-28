@@ -29,5 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ListViewActivity" android:label="ListView Example"/>
     </application>
 </manifest> 

@@ -50,7 +50,7 @@ public class ListOrganizerTest {
 
         ListOrganizer organizer = new ListOrganizer(list);
 
-        organizer.moveToFront(obj3);
+        organizer.moveToBottom(obj3);
 
         assertEquals(obj2, list.getLast());
         assertEquals(obj3, list.getFirst());

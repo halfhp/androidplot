@@ -13,14 +13,7 @@ import java.util.ArrayList;
  */
 public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> extends XYSeriesRenderer<FormatterType> {
 
-    private PointF lastPoint;
-
-    private boolean drawLinesEnabled = true;
-    private boolean drawPointsEnabled = true;
-
-    //private boolean drawAsBeziersEnabled = true;
-
-
+    //private PointF lastPoint;
 
     public LineAndPointRenderer(XYPlot plot) {
         super(plot);
@@ -38,7 +31,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     }
 
     @Override
-    public void doDrawLegendIcon(Canvas canvas, RectF rect, String text, LineAndPointFormatter formatter) {
+    public void doDrawLegendIcon(Canvas canvas, RectF rect, LineAndPointFormatter formatter) {
         // horizontal icon:
         float centerY = rect.centerY();
         float centerX = rect.centerX();
@@ -131,7 +124,8 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     }
 
     protected void renderPath(Canvas canvas, RectF plotArea, Path path, PointF firstPoint, PointF lastPoint, LineAndPointFormatter formatter) {
-        Path outlinePath = null;
+        Path outlinePath = new Path(path);
+        /*Path outlinePath = null;
         if (formatter.getLinePaint() != null) {
             if (formatter.getFillPaint() == null) {
                 outlinePath = path;
@@ -141,16 +135,42 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
             } else {
                 outlinePath = new Path(path);
             }
-        }
+        }*/
 
         // draw the fill "layer":
-        if (formatter.getFillPaint() != null) {
+        //if (formatter.getFillPaint() != null) {
             // create our last point at the bottom/x position so filling
             // will look good
             path.lineTo(lastPoint.x, plotArea.bottom);
             path.lineTo(firstPoint.x, plotArea.bottom);
             path.close();
+        if (formatter.getFillPaint() != null) {
             canvas.drawPath(path, formatter.getFillPaint());
+        }
+
+
+        //}
+
+        // draw any visible regions on top of the base region:
+        Number minX = getPlot().getCalculatedMinX();
+        Number maxX = getPlot().getCalculatedMaxX();
+        Number minY = getPlot().getCalculatedMinY();
+        Number maxY = getPlot().getCalculatedMaxY();
+
+        // TODO: move to class decl
+        Paint regionPaint = new Paint();
+        regionPaint.setStyle(Paint.Style.FILL);
+        //int saved = canvas.save();
+        for (XYRegion r : XYRegion.regionsWithin(formatter.getRegions().elements(), minX, maxX, minY, maxY)) {
+            XYRegionFormatter f = formatter.getRegionFormatter(r);
+            RectF regionRect = r.getRectF(plotArea, minX, maxX, minY, maxY);
+            if (regionRect != null) {
+                canvas.save();
+                canvas.clipPath(path);
+                regionPaint.setColor(f.getColor());
+                canvas.drawRect(regionRect, regionPaint);
+                canvas.restore();
+            }
         }
 
         // finally we draw the outline path on top of everything else:
@@ -164,8 +184,8 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
     }
 
-    protected void drawLastPoint(Canvas canvas, RectF plotArea, LineAndPointFormatter format) throws PlotRenderException {
+    /*protected void drawLastPoint(Canvas canvas, RectF plotArea, LineAndPointFormatter format) throws PlotRenderException {
         canvas.drawPoint(lastPoint.x, lastPoint.y, format.getVertexPaint());
        
-    }
+    }*/
 }

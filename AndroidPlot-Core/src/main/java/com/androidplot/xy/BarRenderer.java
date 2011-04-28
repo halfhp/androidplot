@@ -51,7 +51,7 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
         //Point[] seriesMap = new Point[longest];
 
         //int canvasState = canvas.save();
-        //canvas.clipRect(plotArea, Region.Op.REPLACE);
+        //canvas.clipRect(plotArea, Line.Op.REPLACE);
         for(int i = 0; i < longest; i++) {
             seriesMap.clear();
             List<XYSeries> seriesList = getPlot().getSeriesListForRenderer(this.getClass());
@@ -74,7 +74,7 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
     }
 
     @Override
-    public void doDrawLegendIcon(Canvas canvas, RectF rect, String text, BarFormatter formatter) {
+    public void doDrawLegendIcon(Canvas canvas, RectF rect, BarFormatter formatter) {
         canvas.drawRect(rect, formatter.getFillPaint());
         canvas.drawRect(rect, formatter.getBorderPaint());
     }

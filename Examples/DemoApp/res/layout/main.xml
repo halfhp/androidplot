@@ -33,6 +33,11 @@
                 android:layout_height="wrap_content"
                 android:text="XY Scatter With Lines"
                 android:enabled="false"/>
+    <Button android:id="@+id/startXyListViewExButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="ListView of XYPlots"
+                android:enabled="true"/>
 
     <TextView android:id="@+id/text"
                   android:layout_width="fill_parent"

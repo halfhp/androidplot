@@ -1,14 +1,16 @@
 package com.androidplot.xy;
 
+//import android.graphics.*;
 import android.graphics.*;
-import android.text.TextUtils;
+import com.androidplot.Region;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
 //import com.androidplot.util.Point;
 import com.androidplot.ui.layout.SizeMetrics;
 import com.androidplot.util.FontUtils;
 import com.androidplot.util.ValPixConverter;
-//import com.sun.org.apache.xml.internal.security.c14n.helper.C14nHelper;
+import com.androidplot.util.ZHash;
+import com.androidplot.util.ZIndexable;
 
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -17,14 +19,6 @@ import java.text.Format;
  * Displays graphical data annotated with domain and range tick markers.
  */
 public class XYGraphWidget extends Widget {
-
-    public boolean isDrawMarkersEnabled() {
-        return drawMarkersEnabled;
-    }
-
-    public void setDrawMarkersEnabled(boolean drawMarkersEnabled) {
-        this.drawMarkersEnabled = drawMarkersEnabled;
-    }
 
     /**
      * Will be used in a future version.
@@ -70,6 +64,11 @@ public class XYGraphWidget extends Widget {
     private boolean drawCursorLabelEnabled = true;
     private boolean drawMarkersEnabled = true;
 
+    // TODO: consider typing this manager with a special axisLabelRegionFormatter
+   // private XYRegionFormatManager<XYAxisRegionFormatter> domainLabelRegions;
+    private ZHash<Region, XYAxisRegionFormatter> domainLabelRegions;
+    private ZHash<Region, XYAxisRegionFormatter> rangeLabelRegions;
+
     {
         gridBackgroundPaint = new Paint();
         gridBackgroundPaint.setColor(Color.rgb(140, 140, 140));
@@ -113,11 +112,66 @@ public class XYGraphWidget extends Widget {
         setMarginBottom(4);
         rangeValueFormat = new DecimalFormat("0.0");
         domainValueFormat = new DecimalFormat("0.0");
+        domainLabelRegions =  new ZHash<Region, XYAxisRegionFormatter>();
+        rangeLabelRegions =  new ZHash<Region, XYAxisRegionFormatter>();
     }
 
     public XYGraphWidget(XYPlot plot, SizeMetrics sizeMetrics) {
         super(sizeMetrics);
         this.plot = plot;
+    }
+
+    public ZIndexable<Region> getDomainLabelRegions() {
+        return domainLabelRegions;
+    }
+
+    public ZIndexable<Region> getRangeLabelRegions() {
+        return rangeLabelRegions;
+    }
+
+    /**
+     * Add a new Region used for rendering range labels.  Note that it is possible
+     * to add multiple Region instances which overlap.  It is up to the developer to guard
+     * against this often undesireable situation.
+     * @param region
+     * @param formatter
+     */
+    public void addRangeLabelRegion(Region region, XYAxisRegionFormatter formatter) {
+        rangeLabelRegions.addToTop(region, formatter);
+    }
+
+    public boolean removeRangeLabelRegion(Region region) {
+        return rangeLabelRegions.remove(region);
+    }
+
+    /**
+     * Returns the formatter associated with the first (bottom-most) Region containing
+     * value.
+     * @param value
+     * @return
+     */
+    public XYAxisRegionFormatter getXYAxisFormatterForRangeVal(double value) {
+        return getRegionContainingVal(rangeLabelRegions, value);
+    }
+
+    /**
+     * Returns the formatter associated with the first (bottom-most) Region containing
+     * value.
+     * @param value
+     * @return
+     */
+    public XYAxisRegionFormatter getXYAxisFormatterForDomainVal(double value) {
+        return getRegionContainingVal(domainLabelRegions, value);
+    }
+
+    private XYAxisRegionFormatter getRegionContainingVal(ZHash<Region, XYAxisRegionFormatter> zhash, double val) {
+        for (Region r : zhash.elements()) {
+            if (r.contains(val)) {
+                return rangeLabelRegions.get(r);
+            }
+        }
+        // nothing found
+        return null;
     }
 
     /**
@@ -206,23 +260,55 @@ public class XYGraphWidget extends Widget {
         return new RectF(gridRect.left + gridPaddingLeft, gridRect.top + gridPaddingTop, gridRect.right - gridPaddingRight, gridRect.bottom - gridPaddingBottom);
     }
 
+    private void drawTickText(Canvas canvas, XYAxisType axis, double value, float xPix, float yPix, Paint labelPaint) {
+        XYAxisRegionFormatter rf = null;
+        String txt = null;
+        switch(axis) {
+            case DOMAIN:
+                rf = getXYAxisFormatterForDomainVal(value);
+                txt = getFormattedDomainValue(value);
+                break;
+            case RANGE:
+                rf = getXYAxisFormatterForRangeVal(value);
+                txt = getFormattedRangeValue(value);
+                break;
+        }
+
+        // if a matching region formatter was found, create a clone
+        // of labelPaint and use the formatter's color.  Otherwise
+        // just use labelPaint:
+        Paint p = null;
+        if(rf != null) {
+            p = new Paint(labelPaint);
+            p.setColor(rf.getColor());
+        } else {
+            p = labelPaint;
+        }
+
+        //Paint p = rf != null ? rf.getTextPaint() : labelPaint;
+        canvas.drawText(txt, xPix, yPix, p);
+    }
+
     private void drawDomainTick(Canvas canvas, float xPix, double xVal, Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         //if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
-            if (!drawLineOnly) {
-                float fontHeight = FontUtils.getFontHeight(labelPaint);
-                canvas.drawText(getFormattedDomainValue(xVal),
-                        xPix,
-                        gridRect.bottom+rangeLabelTickExtension + domainLabelMargin+fontHeight,
-                        labelPaint);
+        if (!drawLineOnly) {
+            canvas.drawLine(xPix,
+                    gridRect.top,
+                    xPix, gridRect.bottom + domainLabelTickExtension,
+                    linePaint);
+            float fontHeight = FontUtils.getFontHeight(labelPaint);
+            float yPix = gridRect.bottom + rangeLabelTickExtension + domainLabelMargin + fontHeight;
+            drawTickText(canvas, XYAxisType.DOMAIN, xVal, xPix, yPix, labelPaint);
+            /*canvas.drawText(getFormattedDomainValue(xVal),
+                    xPix,
+                    gridRect.bottom + rangeLabelTickExtension + domainLabelMargin + fontHeight,
+                    labelPaint);*/
 
-                //canvas.drawText(getFormattedDomainValue(xVal), xPix, getOutlineRect().bottom, labelPaint);
-                canvas.drawLine(xPix,
-                        gridRect.top,
-                        xPix, gridRect.bottom + domainLabelTickExtension,
-                        linePaint);
-            } else {
-                canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom, linePaint);
-            }
+            //canvas.drawText(getFormattedDomainValue(xVal), xPix, getOutlineRect().bottom, labelPaint);
+
+        } else {
+            canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom, linePaint);
+        }
         //}
     }
 
@@ -234,11 +320,13 @@ public class XYGraphWidget extends Widget {
                     gridRect.right,
                     yPix,
                     linePaint);
-            canvas.drawText(
+            float xPix = gridRect.left - (rangeLabelTickExtension + rangeLabelMargin);
+            drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix, labelPaint);
+            /* canvas.drawText(
                     getFormattedRangeValue(yVal),
                     gridRect.left - (rangeLabelTickExtension + rangeLabelMargin),
                     yPix,
-                    labelPaint);
+                    labelPaint);*/
         } else {
             canvas.drawLine(gridRect.left, yPix, gridRect.right, yPix, linePaint);
         }
@@ -389,10 +477,19 @@ public class XYGraphWidget extends Widget {
         }
     }
 
+    /**
+     * Renders the text associated with user defined markers
+     * @param canvas
+     * @param text
+     * @param marker
+     * @param x
+     * @param y
+     */
     private void drawMarkerText(Canvas canvas, String text, ValueMarker marker, float x, float y) {
-
         x += MARKER_LABEL_SPACING;
         y -= MARKER_LABEL_SPACING;
+        //Region labelRegion = marker.g
+
         RectF textRect = new RectF(FontUtils.getStringDimensions(text, marker.getTextPaint()));
         textRect.offsetTo(x, y-textRect.height());
 
@@ -538,7 +635,7 @@ public class XYGraphWidget extends Widget {
         //this.lpRenderer.render(canvas, gridRect);
 
         int canvasState = canvas.save();
-        canvas.clipRect(gridRect, Region.Op.REPLACE);
+        canvas.clipRect(gridRect, android.graphics.Region.Op.REPLACE);
         for(XYSeriesRenderer renderer : plot.getRendererList()) {
             renderer.render(canvas, paddedGridRect);
         }
@@ -826,6 +923,14 @@ public class XYGraphWidget extends Widget {
 
     public void setCursorLabelBackgroundPaint(Paint cursorLabelBackgroundPaint) {
         this.cursorLabelBackgroundPaint = cursorLabelBackgroundPaint;
+    }
+
+    public boolean isDrawMarkersEnabled() {
+        return drawMarkersEnabled;
+    }
+
+    public void setDrawMarkersEnabled(boolean drawMarkersEnabled) {
+        this.drawMarkersEnabled = drawMarkersEnabled;
     }
 
 }

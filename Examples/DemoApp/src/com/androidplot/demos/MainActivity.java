@@ -35,5 +35,16 @@ public class MainActivity extends Activity
             }
         });
 
+        Button listViewExButton = (Button)findViewById(R.id.startXyListViewExButton);
+        listViewExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(MainActivity.this, ListViewActivity.class));
+                //setContentView(R.layout.orientation_sensor_example);
+            }
+        });
+
+
     }
 }

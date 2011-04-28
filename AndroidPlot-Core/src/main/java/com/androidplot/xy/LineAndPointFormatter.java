@@ -3,7 +3,7 @@ package com.androidplot.xy;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class LineAndPointFormatter extends XYSeriesFormatter {
+public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> {
 
     private static final float DEFAULT_LINE_STROKE_WIDTH = 1.5f;
     private static final float DEFAULT_VERTEX_STROKE_WIDTH = 4.5f;
@@ -12,14 +12,19 @@ public class LineAndPointFormatter extends XYSeriesFormatter {
     private Paint vertexPaint;
     private Paint fillPaint;
 
-
-
-
     @Deprecated
     public LineAndPointFormatter(Paint linePaint, Paint vertexPaint) {
         this(linePaint, vertexPaint, null);
     }
 
+    /**
+     * Deprecated as of 0.4.1.  Use form that takes int color arguments instead.  If additional control over
+     * Paint properties is needed, use the appropriate getXXXPaint() method to access the generated Paint instance.
+     * @param linePaint
+     * @param vertexPaint
+     * @param fillPaint
+     */
+    @Deprecated
     public LineAndPointFormatter(Paint linePaint, Paint vertexPaint, Paint fillPaint) {
         this.linePaint = linePaint;
         this.vertexPaint = vertexPaint;
@@ -31,17 +36,12 @@ public class LineAndPointFormatter extends XYSeriesFormatter {
     protected LineAndPointFormatter() {        
     }
 
-    /*@Deprecated
-    public LineAndPointFormatter(Integer lineColor, Integer vertexColor) {
-
-        initLinePaint(lineColor);
-
-
-        initVertexPaint(vertexColor);
-
-        fillPaint = null;
-    }*/
-
+    /**
+     * Set corresponding parameter to null to disable the drawing of lines, vertexes or fill.
+     * @param lineColor
+     * @param vertexColor
+     * @param fillColor
+     */
     public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor) {
         initLinePaint(lineColor);
         initVertexPaint(vertexColor);

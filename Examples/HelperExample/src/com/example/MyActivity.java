@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import com.androidplot.Region;
 import com.androidplot.series.XYSeries;
 import com.androidplot.ui.layout.*;
 import com.androidplot.xy.SimpleXYSeries;
@@ -33,13 +34,14 @@ public class MyActivity extends Activity implements View.OnTouchListener
 
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
-        plot.setTitle("Bezier Test");
+        plot.setTitle("Random Data");
 
         //addBeziers();
         addNormal();
+        //addCustom();
 
-        // use a 2x4 grid:
-        plot.getLegendWidget().setTableModel(new DynamicTableModel(2, 4));
+        // use a 2x2 grid:
+        plot.getLegendWidget().setTableModel(new DynamicTableModel(2, 5));
 
         // add a semi-transparent black background to the legend
         // so it's easier to see overlaid on top of our plot:
@@ -54,7 +56,7 @@ public class MyActivity extends Activity implements View.OnTouchListener
 
         // adjust the legend size so there is enough room
         // to draw the new legend grid:
-        plot.getLegendWidget().setSize(new SizeMetrics(60, SizeLayoutType.ABSOLUTE, 85, SizeLayoutType.ABSOLUTE));
+        plot.getLegendWidget().setSize(new SizeMetrics(70, SizeLayoutType.ABSOLUTE, 80, SizeLayoutType.ABSOLUTE));
 
         // reposition the grid so that it rests above the bottom-left
         // edge of the graph widget:
@@ -66,21 +68,10 @@ public class MyActivity extends Activity implements View.OnTouchListener
                 YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
                 AnchorPosition.RIGHT_BOTTOM);
 
-
-
-
         plot.getGraphWidget().setMarginBottom(10);
 
-
-
-
-        //plot.addMarker(new YValueMarker(87.9));
-        //plot.addMarker(new XValueMarker(5));
-
         // reduce the number of range labels
-        plot.setTicksPerRangeLabel(3);
-        //plot.setTicksPerDomainLabel(2);
-        plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
+
 
         plot.getGraphWidget().setRangeLabelMargin(-1);
         plot.getGraphWidget().setRangeLabelWidth(25);
@@ -201,6 +192,8 @@ public class MyActivity extends Activity implements View.OnTouchListener
     }
 
     protected void addNormal() {
+
+
         LineAndPointFormatter lpFormatter1 = new LineAndPointFormatter(
                 Color.rgb(100, 25, 20),
                 Color.rgb(4, 100, 88),
@@ -208,6 +201,13 @@ public class MyActivity extends Activity implements View.OnTouchListener
         lpFormatter1.setFillPaint(null);
         lpFormatter1.setVertexPaint(null);
         lpFormatter1.getLinePaint().setShadowLayer(0, 0, 0, 0);
+
+        XYRegionFormatter regionFormatter = new XYRegionFormatter(Color.RED);
+        lpFormatter1.addRegion(new XYRegion(null, null, 0, 5, "R1"), regionFormatter);
+
+        XYRegionFormatter regionFormatter2 = new XYRegionFormatter(Color.BLUE);
+
+        lpFormatter1.addRegion(new XYRegion(null, null, 5, null, "R2"), regionFormatter2);
         //lpFormatter1.getVertexPaint().setShadowLayer(0, 0, 0, 0);
         plot.addSeries(new SimpleXYSeries(Arrays.asList(series1Numbers),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
@@ -217,10 +217,18 @@ public class MyActivity extends Activity implements View.OnTouchListener
                 Color.rgb(100, 25, 200),
                 Color.rgb(114, 100, 88),
                 Color.rgb(66, 100, 200));
+        XYRegionFormatter regionFormatter3 = new XYRegionFormatter(Color.GREEN);
+        XYRegionFormatter regionFormatter4 = new XYRegionFormatter(Color.YELLOW);
+        XYRegionFormatter regionFormatter5 = new XYRegionFormatter(Color.MAGENTA);
+        lpFormatter2.addRegion(new XYRegion(0, 2, null, null, "R3"), regionFormatter3);
+        lpFormatter2.addRegion(new XYRegion(2, 4, null, null, "R4"), regionFormatter4);
+        lpFormatter2.addRegion(new XYRegion(4, null, null, null, "R4"), regionFormatter5);
+
         lpFormatter2.setFillPaint(null);
         lpFormatter2.setVertexPaint(null);
         lpFormatter2.getLinePaint().setShadowLayer(0, 0, 0, 0);
         //lpFormatter2.getVertexPaint().setShadowLayer(0, 0, 0, 0);
+        //lpFormatter2.addRegion(new XYRegion(0, 5, 0, 5), regionFormatter);
         plot.addSeries(new SimpleXYSeries(Arrays.asList(series2Numbers),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
                 "S2"), lpFormatter2);
@@ -248,5 +256,23 @@ public class MyActivity extends Activity implements View.OnTouchListener
         plot.addSeries(new SimpleXYSeries(Arrays.asList(series4Numbers),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
                 "S4"), lpFormatter4);
+        plot.setTicksPerRangeLabel(3);
+        plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
+
+        plot.getGraphWidget().addRangeLabelRegion(new Region(null, 5), new XYAxisRegionFormatter(Color.RED));
+    }
+
+    public void addCustom() {
+        Number[] xvals = {100, 200, 300, 400, 500, 600};
+        Number[] yvals = {1, 1, 2, 3, 5, 8};
+        XYSeries data1 = new SimpleXYSeries(Arrays.asList(xvals), Arrays.asList(yvals), "Fibonacci Sequence");
+       // XYPlot plot = (XYPlot) findViewById(R.id.xyplot);
+        plot.addSeries(data1, BarRenderer.class, new BarFormatter(Color.rgb(0, 0, 200), Color.rgb(0, 0, 150)));
+        //plot.disableAllMarkup();
+
+        BarRenderer br = (BarRenderer) plot.getRenderer(BarRenderer.class);
+        if (br != null) {
+            br.setBarWidth(50, BarRenderer.BarWidthStyle.FIXED_WIDTH);
+        }
     }
 }

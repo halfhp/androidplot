@@ -124,7 +124,7 @@ public class PlotTest {
         }
 
         @Override
-        public void doDrawLegendIcon(Canvas canvas, RectF rect, String text, Formatter formatter) {
+        public void doDrawLegendIcon(Canvas canvas, RectF rect, Formatter formatter) {
 
         }
     }
@@ -140,7 +140,7 @@ public class PlotTest {
         }
 
         @Override
-        public void doDrawLegendIcon(Canvas canvas, RectF rect, String text, Formatter formatter) {
+        public void doDrawLegendIcon(Canvas canvas, RectF rect, Formatter formatter) {
 
         }
     }

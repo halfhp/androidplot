@@ -5,10 +5,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
-import com.androidplot.util.ArrangeableHash;
+import com.androidplot.util.ZHash;
 import com.androidplot.util.PixelUtils;
 
-public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics> implements View.OnTouchListener {
+public class LayoutManager extends ZHash<Widget, PositionMetrics> implements View.OnTouchListener {
     private boolean drawAnchorsEnabled = true;
     private Paint anchorPaint;
     private boolean drawOutlinesEnabled = true;
@@ -211,7 +211,7 @@ public class LayoutManager extends ArrangeableHash<Widget, PositionMetrics> impl
     }
 
     public void position(Widget element, float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle, AnchorPosition anchor) {
-        addLast(element, new PositionMetrics(x, xLayoutStyle, y, yLayoutStyle, anchor));
+        addToTop(element, new PositionMetrics(x, xLayoutStyle, y, yLayoutStyle, anchor));
     }
 
     public boolean isDrawOutlinesEnabled() {

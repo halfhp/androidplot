@@ -189,7 +189,6 @@ public abstract class Widget implements BoxModelable {
      * @param canvas The Canvas to draw onto
      * @param widgetRect the size and coordinates of this widget
      */
-    //protected abstract void doBeforeDraw(Canvas canvas, Dimension viewSize, Dimension size, Point coords) throws PlotRenderException;
     protected abstract void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException;
 
     public Paint getBorderPaint() {

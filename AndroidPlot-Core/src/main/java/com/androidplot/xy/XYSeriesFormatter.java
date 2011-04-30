@@ -5,11 +5,9 @@ import com.androidplot.util.ZHash;
 import com.androidplot.util.ZIndexable;
 
 public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFormatter> extends Formatter {
-    //XYRegionFormatManager<XYRegionFormatterType> regionFormatters;
     ZHash<XYRegion, XYRegionFormatterType>  regions;
 
     {
-        //regionFormatters = new XYRegionFormatManager<XYRegionFormatterType>();
         regions = new ZHash<XYRegion, XYRegionFormatterType>();
     }
 
@@ -22,7 +20,7 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
     }
 
     /**
-     * Can be used to access z-index manipulation methods of XYRegionGroup.
+     * Can be used to access z-index manipulation methods of ZIndexable.
      * @return
      */
     public ZIndexable<XYRegion> getRegions() {

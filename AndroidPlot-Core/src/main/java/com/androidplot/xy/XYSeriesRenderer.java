@@ -3,6 +3,7 @@ package com.androidplot.xy;
 import com.androidplot.SeriesAndFormatterList;
 import com.androidplot.series.XYSeries;
 import com.androidplot.ui.widget.renderer.DataRenderer;
+import com.androidplot.util.ZHash;
 import com.androidplot.util.ZIndexable;
 
 import java.util.HashSet;
@@ -23,16 +24,8 @@ public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter
         for (XYFormatterType xyf : sfl.getFormatterList()) {
             ZIndexable<XYRegion> regionIndexer = xyf.getRegions();
             for (XYRegion region : regionIndexer.elements()) {
-                //drawCell()
                 XYRegionFormatter f = xyf.getRegionFormatter(region);
                 found.put(f, region.getLabel());
-                /*if (!found.contains(f)) {
-                }
-                {
-                    //drawRegionLegendCell(canvas, renderer, f, cellRect, region.getLabel());
-                    //found.add(f);
-                    found.put
-                }*/
             }
         }
 

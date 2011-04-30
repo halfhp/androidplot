@@ -1,13 +1,13 @@
 package com.androidplot;
 
 /**
- * A one dimensional element
+ * A one dimensional element with a start point and end point.
  */
 public class Line {
-    private Number minVal;
-    private Number maxVal;
+    private double minVal;
+    private double maxVal;
 
-    public Line(Number minVal, Number maxVal) {
+    public Line(double minVal, double maxVal) {
         this.setMinVal(minVal);
         this.setMaxVal(maxVal);
     }
@@ -18,8 +18,7 @@ public class Line {
      * @return
      */
     public boolean contains(double value) {
-        return (getMinVal() == null || value >= getMinVal().doubleValue()) &&
-                (getMaxVal() == null || value <= getMaxVal().doubleValue());
+        return value >= minVal && value <= maxVal;
     }
 
     public boolean intersects(Line line) {
@@ -32,39 +31,34 @@ public class Line {
      * @param line2Max
      * @return
      */
-    public  boolean intersects(Number line2Min, Number line2Max) {
+    public  boolean intersects(double line2Min, double line2Max) {
 
-        double l1min = getMinVal() == null ? Double.NEGATIVE_INFINITY : getMinVal().doubleValue();
-        double l1max = getMaxVal() == null ? Double.POSITIVE_INFINITY : getMaxVal().doubleValue();
+        //double l1min = getMinVal() == null ? Double.NEGATIVE_INFINITY : getMinVal().doubleValue();
+        //double l1max = getMaxVal() == null ? Double.POSITIVE_INFINITY : getMaxVal().doubleValue();
 
-        double l2min = line2Min == null ? Double.NEGATIVE_INFINITY : line2Min.doubleValue();
-        double l2max = line2Max == null ? Double.POSITIVE_INFINITY : line2Max.doubleValue();
+        //double l2min = line2Min == null ? Double.NEGATIVE_INFINITY : line2Min.doubleValue();
+        //double l2max = line2Max == null ? Double.POSITIVE_INFINITY : line2Max.doubleValue();
 
         // is this line completely within line2?
-        if(l2min <= l1min && l2max >= l1max) {
+        if(line2Min <= this.minVal && line2Max >= this.maxVal) {
             return true;
         // is line1 partially within line2
-        } else if(contains(l2min) || contains(l2max)) {
-            return true;
-        // lines do not intersect at all
-        } else {
-            return false;
-        }
+        } else return contains(line2Min) || contains(line2Max);
     }
 
-    public Number getMinVal() {
+    public double getMinVal() {
         return minVal;
     }
 
-    public void setMinVal(Number minVal) {
+    public void setMinVal(double minVal) {
         this.minVal = minVal;
     }
 
-    public Number getMaxVal() {
+    public double getMaxVal() {
         return maxVal;
     }
 
-    public void setMaxVal(Number maxVal) {
+    public void setMaxVal(double maxVal) {
         this.maxVal = maxVal;
     }
 }

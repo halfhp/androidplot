@@ -1,11 +1,9 @@
 package com.androidplot.xy;
 
-//import android.graphics.*;
 import android.graphics.*;
 import com.androidplot.Region;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
-//import com.androidplot.util.Point;
 import com.androidplot.ui.layout.SizeMetrics;
 import com.androidplot.util.FontUtils;
 import com.androidplot.util.ValPixConverter;
@@ -65,7 +63,6 @@ public class XYGraphWidget extends Widget {
     private boolean drawMarkersEnabled = true;
 
     // TODO: consider typing this manager with a special axisLabelRegionFormatter
-   // private XYRegionFormatManager<XYAxisRegionFormatter> domainLabelRegions;
     private ZHash<Region, XYAxisRegionFormatter> domainLabelRegions;
     private ZHash<Region, XYAxisRegionFormatter> rangeLabelRegions;
 
@@ -284,13 +281,10 @@ public class XYGraphWidget extends Widget {
         } else {
             p = labelPaint;
         }
-
-        //Paint p = rf != null ? rf.getTextPaint() : labelPaint;
         canvas.drawText(txt, xPix, yPix, p);
     }
 
     private void drawDomainTick(Canvas canvas, float xPix, double xVal, Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
-        //if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
         if (!drawLineOnly) {
             canvas.drawLine(xPix,
                     gridRect.top,
@@ -299,17 +293,9 @@ public class XYGraphWidget extends Widget {
             float fontHeight = FontUtils.getFontHeight(labelPaint);
             float yPix = gridRect.bottom + rangeLabelTickExtension + domainLabelMargin + fontHeight;
             drawTickText(canvas, XYAxisType.DOMAIN, xVal, xPix, yPix, labelPaint);
-            /*canvas.drawText(getFormattedDomainValue(xVal),
-                    xPix,
-                    gridRect.bottom + rangeLabelTickExtension + domainLabelMargin + fontHeight,
-                    labelPaint);*/
-
-            //canvas.drawText(getFormattedDomainValue(xVal), xPix, getOutlineRect().bottom, labelPaint);
-
         } else {
             canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom, linePaint);
         }
-        //}
     }
 
     public void drawRangeTick(Canvas canvas, float yPix, double yVal, Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
@@ -322,11 +308,6 @@ public class XYGraphWidget extends Widget {
                     linePaint);
             float xPix = gridRect.left - (rangeLabelTickExtension + rangeLabelMargin);
             drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix, labelPaint);
-            /* canvas.drawText(
-                    getFormattedRangeValue(yVal),
-                    gridRect.left - (rangeLabelTickExtension + rangeLabelMargin),
-                    yPix,
-                    labelPaint);*/
         } else {
             canvas.drawLine(gridRect.left, yPix, gridRect.right, yPix, linePaint);
         }
@@ -427,16 +408,10 @@ public class XYGraphWidget extends Widget {
         if (rangeOriginF >= paddedGridRect.top && rangeOriginF <= paddedGridRect.bottom) {
             rangeOriginLinePaint.setTextAlign(Paint.Align.RIGHT);
             drawRangeTick(canvas, rangeOriginF, plot.getRangeOrigin().doubleValue(), rangeOriginLabelPaint, rangeOriginLinePaint, false);
-            //canvas.drawLine(gridRect.left - rangeLabelTickExtension, rangeOriginF, gridRect.right, rangeOriginF, rangeOriginLinePaint);
-
-            //canvas.drawText(getFormattedRangeValue(plot.getRangeOrigin().doubleValue()), gridRect.left - rangeLabelTickExtension, rangeOriginF, rangeOriginLabelPaint);
         }
-
-
         // draw ticks ABOVE origin:
         {
             int i = 1;
-            //float yPix = domainStep.getStepPix();
             double yVal;
             float yPix = rangeOriginF - rangeStep.getStepPix();
             for(; yPix >= paddedGridRect.top; yPix = rangeOriginF - (i * rangeStep.getStepPix())) {
@@ -444,10 +419,7 @@ public class XYGraphWidget extends Widget {
                 if(yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
                     if(i % getTicksPerRangeLabel() == 0) {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint, gridLinePaint, false);
-                        //canvas.drawLine(gridRect.left-rangeLabelTickExtension, yPix, gridRect.right, yPix, gridLinePaint);
-                        //canvas.drawText(getFormattedRangeValue(yVal), gridRect.left - rangeLabelMargin, yPix, rangeLabelPaint);
                     } else {
-                        //canvas.drawLine(gridRect.left, yPix, gridRect.right, yPix, gridLinePaint);
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint, gridLinePaint, true);
                     }
                 }
@@ -465,10 +437,7 @@ public class XYGraphWidget extends Widget {
                 if(yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
                     if(i % getTicksPerRangeLabel() == 0) {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint, gridLinePaint, false);
-                        //canvas.drawLine(gridRect.left-rangeLabelTickExtension, yPix, gridRect.right, yPix, gridLinePaint);
-                        //canvas.drawText(getFormattedRangeValue(yVal), gridRect.left - rangeLabelMargin, yPix, rangeLabelPaint);
                     } else {
-                        //canvas.drawLine(gridRect.left, yPix, gridRect.right, yPix, gridLinePaint);
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint, gridLinePaint, true);
                     }
                 }
@@ -488,8 +457,6 @@ public class XYGraphWidget extends Widget {
     private void drawMarkerText(Canvas canvas, String text, ValueMarker marker, float x, float y) {
         x += MARKER_LABEL_SPACING;
         y -= MARKER_LABEL_SPACING;
-        //Region labelRegion = marker.g
-
         RectF textRect = new RectF(FontUtils.getStringDimensions(text, marker.getTextPaint()));
         textRect.offsetTo(x, y-textRect.height());
 
@@ -525,7 +492,6 @@ public class XYGraphWidget extends Widget {
                 xPix += paddedGridRect.left;
 
                 drawMarkerText(canvas, text, marker, xPix, yPix);
-                //canvas.drawText(text, xPix, yPix-MARKER_LABEL_SPACING, marker.getTextPaint());
             }
         }
 
@@ -545,11 +511,8 @@ public class XYGraphWidget extends Widget {
                 float yPix = marker.getTextPosition().getPixelValue(paddedGridRect.height());
                 yPix += paddedGridRect.top;
                 drawMarkerText(canvas, text, marker, xPix, yPix);
-                //canvas.drawText(text, xPix, yPix + MARKER_LABEL_SPACING, marker.getTextPaint());
             }
         }
-
-
     }
 
     protected void drawCursors(Canvas canvas) {
@@ -587,28 +550,19 @@ public class XYGraphWidget extends Widget {
             String label =  "X=" + getDomainValueFormat().format(getDomainCursorVal());
             label += " Y=" + getRangeValueFormat().format(getRangeCursorVal());
 
-            //Rect cr = FontUtils.getPackedStringDimensions(label, cursorLabelPaint);
-
             // convert the label dimensions rect into floating-point:
             RectF cursorRect = new RectF(FontUtils.getPackedStringDimensions(label, cursorLabelPaint));
             cursorRect.offsetTo(domainCursorPosition, rangeCursorPosition - cursorRect.height());
 
             // if we are too close to the right edge of the plot, we will move the
             // label to the left side of our cursor:
-            //float xpos = domainCursorPosition + CURSOR_LABEL_SPACING;
-            //float labelEdgeRight = domainCursorPosition + cursorRect.width();
             if(cursorRect.right >= paddedGridRect.right) {
-                //xpos = paddedGridRect.right - cursorRect.right;
-                //xpos = (domainCursorPosition - cursorRect.width()) - CURSOR_LABEL_SPACING;
                 cursorRect.offsetTo(domainCursorPosition - cursorRect.width(), cursorRect.top);
             }
 
             // same thing for the top edge of the plot:
-            //float ypos = rangeCursorPosition - CURSOR_LABEL_SPACING;
             // dunno why but these rects can have negative values for top and bottom.
-            //float labelEdgeTop = rangeCursorPosition - cursorRect.height();
             if(cursorRect.top <= paddedGridRect.top) {
-                //ypos = rangeCursorPosition + cursorRect.height() + CURSOR_LABEL_SPACING;
                 cursorRect.offsetTo(cursorRect.left, rangeCursorPosition);
             }
 
@@ -629,10 +583,6 @@ public class XYGraphWidget extends Widget {
      */
     protected void drawData(Canvas canvas) throws PlotRenderException {
         // TODO: iterate through a XYSeriesRenderer list
-        //RectF gridRect = new RectF(widgetRect.left + rangeLabelWidth, widgetRect.top, widgetRect.right, widgetRect.bottom-domainLabelWidth);
-        //RectF gridRect = getGridRect(widgetRect); // used to calculate the paddedGridRect
-        //RectF paddedGridRect = getPaddedGridRect(gridRect); // used for drawing everything else
-        //this.lpRenderer.render(canvas, gridRect);
 
         int canvasState = canvas.save();
         canvas.clipRect(gridRect, android.graphics.Region.Op.REPLACE);
@@ -717,10 +667,7 @@ public class XYGraphWidget extends Widget {
         this.gridLinePaint.setStyle(Paint.Style.STROKE);
     }
 
-        // TODO: make a generic renderer queue.
-    //LineAndPointRenderer lpRenderer;
-
-    //private TreeMap<XYRendererType, XYSeriesRenderer> renderers;
+    // TODO: make a generic renderer queue.
 
     public Format getRangeValueFormat() {
         return rangeValueFormat;
@@ -754,12 +701,6 @@ public class XYGraphWidget extends Widget {
         this.rangeLabelTickExtension = rangeLabelTickExtension;
     }
 
-    /*
-    public Collection<XYSeriesRenderer> getRenderers() {
-        return renderers.values();
-    }
-    */
-
     public int getTicksPerRangeLabel() {
         return ticksPerRangeLabel;
     }
@@ -792,24 +733,6 @@ public class XYGraphWidget extends Widget {
     @Deprecated
     public void setRangeTicksPerLabel(int rangeTicksPerLabel) {
         this.ticksPerRangeLabel = rangeTicksPerLabel;
-    }
-
-    /**
-     * Deprecated - use getTicksPerDomainLabel() instead.
-     * @return
-     */
-    @Deprecated
-    public int getDomainTicksPerLabel() {
-        return ticksPerDomainLabel;
-    }
-
-    /**
-     * Deprecated - use setTicksPerDomainLabel() instead.
-     * @param domainTicksPerLabel
-     */
-    @Deprecated
-    public void setDomainTicksPerLabel(int domainTicksPerLabel) {
-        this.ticksPerDomainLabel = domainTicksPerLabel;
     }
 
     public void setGridPaddingTop(float gridPaddingTop) {

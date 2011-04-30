@@ -135,10 +135,10 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         //}
 
         // draw any visible regions on top of the base region:
-        Number minX = getPlot().getCalculatedMinX();
-        Number maxX = getPlot().getCalculatedMaxX();
-        Number minY = getPlot().getCalculatedMinY();
-        Number maxY = getPlot().getCalculatedMaxY();
+        double minX = getPlot().getCalculatedMinX().doubleValue();
+        double maxX = getPlot().getCalculatedMaxX().doubleValue();
+        double minY = getPlot().getCalculatedMinY().doubleValue();
+        double maxY = getPlot().getCalculatedMaxY().doubleValue();
 
         // TODO: move to class decl
         Paint regionPaint = new Paint();

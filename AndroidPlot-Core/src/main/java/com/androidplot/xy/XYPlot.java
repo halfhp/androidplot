@@ -1042,11 +1042,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @return true if the object was successfully added, false otherwise.
      */
     public boolean addMarker(XValueMarker marker) {
-        if(xValueMarkers.contains(marker)) {
-            return false;
-        } else {
-            return xValueMarkers.add(marker);
-        }
+        return !xValueMarkers.contains(marker) && xValueMarkers.add(marker);
     }
 
     /**

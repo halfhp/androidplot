@@ -59,11 +59,8 @@ public class FixedTableModel extends TableModel {
         }
 
         private boolean isColumnFinished() {
-            if(lastRect.bottom + model.getCellHeight() > tableRect.height()) {
-                return true;
+            return lastRect.bottom + model.getCellHeight() > tableRect.height();
             }
-            return false;
-        }
 
         private boolean isRowFinished() {
             return lastRect.right + model.getCellWidth() > tableRect.width();

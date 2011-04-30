@@ -7,13 +7,21 @@ import com.androidplot.ui.layout.TableModel;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.ui.layout.SizeMetrics;
 import com.androidplot.util.FontUtils;
-import com.androidplot.util.ZIndexable;
 
 import java.util.*;
 
 public class XYLegendWidget extends Widget {
-    ////public static final int ICON_WIDTH_DEFAULT = 10;
-    //public static final int ICON_HEIGHT_DEFAULT = 10;
+
+    /**
+     * This class is of no use outside of XYLegendWidget.  It's just used to alphabetically sort
+     * Region legend entries.
+     */
+    private static class RegionEntryComparator implements Comparator<Map.Entry<XYRegionFormatter, String>> {
+        @Override
+        public int compare(Map.Entry<XYRegionFormatter, String> o1, Map.Entry<XYRegionFormatter, String> o2) {
+            return o1.getValue().compareTo(o2.getValue());
+        }
+    }
 
     private enum CellType {
         SERIES,
@@ -29,6 +37,7 @@ public class XYLegendWidget extends Widget {
     private boolean drawIconBorderEnabled = true;
 
     private SizeMetrics iconSizeMetrics;
+    private static final RegionEntryComparator regionEntryComparator = new RegionEntryComparator();
     //private RectF iconRect = new RectF(0, 0, ICON_WIDTH_DEFAULT, ICON_HEIGHT_DEFAULT);
 
     {
@@ -38,6 +47,7 @@ public class XYLegendWidget extends Widget {
 
         iconBorderPaint = new Paint();
         iconBorderPaint.setStyle(Paint.Style.STROKE);
+        //regionEntryComparator = new RegionEntryComparator();
     }
 
     public XYLegendWidget(XYPlot plot,
@@ -120,83 +130,50 @@ public class XYLegendWidget extends Widget {
         }
 
         Hashtable<XYRegionFormatter, XYSeriesRenderer> regionRendererLookup = new Hashtable<XYRegionFormatter, XYSeriesRenderer>();
-        Hashtable<XYRegionFormatter, String> regionFormatters = new Hashtable<XYRegionFormatter, String>();
 
-
-
-
+        // Keep an alphabetically sorted list of regions:
+        TreeSet<Map.Entry<XYRegionFormatter, String>> sortedRegions = new TreeSet<Map.Entry<XYRegionFormatter, String>>(new RegionEntryComparator());
 
         // Calculate the number of cells needed to draw the Legend:
         int seriesCount = 0;
         for(XYSeriesRenderer renderer : plot.getRendererList()) {
             seriesCount += plot.getSeriesAndFormatterListForRenderer(renderer.getClass()).size();
 
-
-
             // Figure out how many regions need to be added to the legend:
             Hashtable<XYRegionFormatter, String> urf = renderer.getUniqueRegionFormatters();
             for(XYRegionFormatter xyf : urf.keySet()) {
                 regionRendererLookup.put(xyf, renderer);
             }
-            regionFormatters.putAll(renderer.getUniqueRegionFormatters());
-
-           /* XYSeriesFormatter formatter = renderer.getF
-
-
-            // TODO: make regions reusable
-                ZIndexable<XYRegion> regionIndexer = formatter.getRegions();
-
-            // Keep a record of the formatters already drawn:
-                Hashtable<XYRegionFormatter, XYRegionFormatter> renderedFormatters = new Hashtable<XYRegionFormatter, XYRegionFormatter>();
-                for(XYRegion region : regionIndexer.elements()) {
-                    //drawCell()
-                    XYRegionFormatter f = formatter.getRegionFormatter(region);
-                    if(! renderedFormatters.contains(f)) {} {
-                        drawRegionLegendCell(canvas, renderer, f, cellRect, region.getLabel());
-                        renderedFormatters.put(f, f);
-                    }
-                }*/
+            sortedRegions.addAll(renderer.getUniqueRegionFormatters().entrySet());
         }
-
-        seriesCount += regionFormatters.size();
+        seriesCount += sortedRegions.size();
 
         // Create an iterator specially created to draw the number of cells we calculated:
         Iterator<RectF> it = tableModel.getIterator(widgetRect, seriesCount);
 
-        // Draw each cell:
         RectF cellRect = null;
+
+        // draw each series legend item:
         for(XYSeriesRenderer renderer : plot.getRendererList()) {
             SeriesAndFormatterList<XYSeries,XYSeriesFormatter> sfList = plot.getSeriesAndFormatterListForRenderer(renderer.getClass());
 
             // maxIndex is only used if it has been determined.
             // if it is 0 then it could not be determined.
-
             for(int i = 0; i < sfList.size() && it.hasNext(); i++) {
                 cellRect = it.next();
                 XYSeriesFormatter formatter = sfList.getFormatter(i);
                 drawSeriesLegendCell(canvas, renderer, formatter, cellRect, sfList.getSeries(i).getTitle());
-
-                /*// TODO: make regions reusable
-                ZIndexable<XYRegion> regionIndexer = formatter.getRegions();*/
-
-                /*// Keep a record of the formatters already drawn:
-                Hashtable<XYRegionFormatter, XYRegionFormatter> renderedFormatters = new Hashtable<XYRegionFormatter, XYRegionFormatter>();
-                for(XYRegion region : regionIndexer.elements()) {
-                    //drawCell()
-                    XYRegionFormatter f = formatter.getRegionFormatter(region);
-                    if(! renderedFormatters.contains(f)) {} {
-                        drawRegionLegendCell(canvas, renderer, f, cellRect, region.getLabel());
-                        renderedFormatters.put(f, f);
-                    }
-                }*/
             }
         }
-        for(Map.Entry<XYRegionFormatter, String> s : regionFormatters.entrySet()) {
+
+        // draw each region legend item:
+        for(Map.Entry<XYRegionFormatter, String> entry : sortedRegions) {
             if(!it.hasNext()) {
                 break;
             }
             cellRect = it.next();
-            drawRegionLegendCell(canvas, regionRendererLookup.get(s.getKey()), s.getKey(), cellRect, s.getValue());
+            XYRegionFormatter formatter = entry.getKey();
+            drawRegionLegendCell(canvas, regionRendererLookup.get(formatter), formatter, cellRect, entry.getValue());
         }
     }
 

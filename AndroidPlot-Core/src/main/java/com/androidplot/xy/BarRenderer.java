@@ -47,29 +47,16 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
             return;  // no data, nothing to do.
         }
         TreeMap<Number, XYSeries> seriesMap = new TreeMap<Number, XYSeries>();
-        //Point[] seriesMap = new Point[longest];
-
-        //int canvasState = canvas.save();
-        //canvas.clipRect(plotArea, Line.Op.REPLACE);
         for(int i = 0; i < longest; i++) {
             seriesMap.clear();
             List<XYSeries> seriesList = getPlot().getSeriesListForRenderer(this.getClass());
             for(XYSeries series : seriesList) {
                 if(i < series.size()) {
                     seriesMap.put(series.getY(i), series);
-                }// else {
-                //    seriesMap.put(null, series);
-                //}
+                }
             }
             drawBars(canvas, plotArea, seriesMap, i);
         }
-
-        //canvas.restoreToCount(canvasState);
-
-        /*for(XYSeries series : getPlot().getSeriesListForRenderer(this.getClass())) {
-
-            drawSeries(canvas, plotArea, series, getFormatter(series));
-        }*/
     }
 
     @Override
@@ -86,7 +73,6 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
             if(seriesSize > longest) {
                 longest = seriesSize;
             }
-            //drawSeries(canvas, plotArea, series, getFormatter(series));
         }
         return longest;
     }
@@ -94,23 +80,10 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
     private void drawBars(Canvas canvas, RectF plotArea, TreeMap<Number, XYSeries> seriesMap, int x) {
         Paint p = new Paint();
         p.setColor(Color.RED);
-
-
-
         Object[] oa = seriesMap.entrySet().toArray();
-
-        //(Map.Entry<Number, XYSeries>[])
-        //Map.Entry<Number, XYSeries>[] entryArr = new Map.Entry<Number, XYSeries>[0];
-        //entryArr = seriesMap.entrySet().toArray(entryArr);
-
-        //seriesMap.entrySet().
-
-        //
-        //for (Map.Entry<Number, XYSeries> entry : seriesMap.entrySet()) {
         Map.Entry<Number, XYSeries> entry;
         for(int i = oa.length-1; i >= 0; i--) {
             entry = (Map.Entry<Number, XYSeries>) oa[i];
-        //for (Map.Entry<Number, XYSeries> entry = seriesMap.lastEntry(); entry != null; entry = seriesMap.lowerEntry(entry.getKey())) {
             BarFormatter formatter = getFormatter(entry.getValue()); // TODO: make this more efficient
             Number yVal = null;
             Number xVal = null;

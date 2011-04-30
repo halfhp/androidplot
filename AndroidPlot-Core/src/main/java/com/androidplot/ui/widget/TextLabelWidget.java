@@ -55,20 +55,17 @@ public abstract class TextLabelWidget extends Widget {
 
     }
 
+    /**
+     * Do not call this method directly.  It is indirectly invoked every time a plot is
+     * redrawn.
+     * @param canvas The Canvas to draw onto
+     * @param widgetRect the size and coordinates of this widget
+     */
     @Override
     public void doOnDraw(Canvas canvas, RectF widgetRect) {
-        //Path path = new Path();
-        //Point start;
-        //Point end;
-        //Rect labelSize = new Rect();
         String label = getText();
-        //labelPaint.getTextBounds(label,0, label.length(), labelSize);
         FontUtils.getStringDimensions(label, labelPaint);
-        //float hOffset = 0;
-        //float vOffset = labelSize.height()/2;
         float vOffset = labelPaint.getFontMetrics().descent;
-        //PointF start;
-
         PointF start = LayoutManager.getAnchorCoordinates(widgetRect, AnchorPosition.CENTER);
 
         // BEGIN ROTATION CALCULATION
@@ -106,56 +103,7 @@ public abstract class TextLabelWidget extends Widget {
         }
 
         // END ROTATION CALCULATION
-
-        //float bottomEdge = coords.getY() + size.getFontHeight();
-        //Path path = new Path();
-        //path.moveTo(start.getX(), start.getY());
-        //path.lineTo(end.getX(), end.getY());
-        //path.close();
-        //canvas.drawPath(path, labelPaint);
-        //float x = getPlotMarginLeft();
-        //float y = getHeightPix(canvas.getFontHeight())-getPlotMarginBottom();
-
-        //Paint.FontMetrics fMetrics = labelPaint.getFontMetrics();
-         //vOffset = labelPaint.getFontMetrics().descent;
-        //vOffset = 0;
-
-        /*
-        if(orientation == TextOrientationType.HORIZONTAL) {
-            canvas.save();
-            canvas.translate(start.getX(), start.getY());
-            canvas.rotate(90);
-            //canvas.drawText(label, start.getX(), widgetRect.bottom - vOffset, labelPaint);
-            canvas.drawText(label, 0, 0, labelPaint);
-            canvas.restore();
-
-            //canvas.translate(-10, -10);
-            //canvas.rotate(-90);
-            //canvas.translate(-start.getX(), -start.getY());
-            //canvas.drawLine(start.getX(), start.getY()+ fMetrics.ascent, end.getX(), end.getY() + fMetrics.ascent, labelPaint);
-            //canvas.drawLine(start.getX(), start.getY()+ fMetrics.descent, end.getX(), end.getY() + fMetrics.descent, labelPaint);
-            //canvas.drawLine(start.getX(), start.getY(), end.getX(), end.getY(), labelPaint);
-        }
-
-        canvas.drawPath(path, labelPaint);
-        */
-        //canvas.drawTextOnPath(label, path, -45, vOffset, labelPaint);
-
-        //Point centerPoint = LayoutManager.getAnchorCoordinates(coords.getX(), coords.getY(), size.getWidth(), size.getFontHeight(), AnchorPosition.CENTER);
-
-        //canvas.drawText(plot.getTitle(), centerPoint.getX(), centerPoint.getY(), labelPaint);
-        //canvas.drawText(plot.getTitle(), 15, 15, labelPaint);
     }
-
-    /*
-    public Plot getPlot() {
-        return plot;
-    }
-
-    public void setPlot(Plot plot) {
-        this.plot = plot;
-    }
-    */
 
     public Paint getLabelPaint() {
         return labelPaint;

@@ -57,4 +57,6 @@ public class ZLinkedList<Type> extends LinkedList<Type> implements ZIndexable<Ty
         organizer.addToTop(element);
     }
 
+
+
 }

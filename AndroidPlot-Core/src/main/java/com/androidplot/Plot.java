@@ -23,7 +23,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     public enum BorderStyle {
         ROUNDED,
         SQUARE,
-        NO_BORDER
+        NONE
     }
     protected String title;
     private BoxModel boxModel = new BoxModel(3, 3, 3, 3, 3, 3, 3, 3);
@@ -106,10 +106,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     public boolean addListener(PlotListener listener) {
         synchronized (listeners) {
-            if (listeners.contains(listener)) {
-                return false;
-            }
-            return listeners.add(listener);
+            return !listeners.contains(listener) && listeners.add(listener);
         }
     }
 
@@ -414,8 +411,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 canvas.drawRect(dims, borderPaint);
                 break;
             default:
-                return;
-        }
+                }
     }
 
     protected void drawBackground(Canvas canvas, RectF dims) throws PlotRenderException {
@@ -427,8 +423,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 canvas.drawRect(dims, backgroundPaint);
                 break;
             default:
-                return;
-        }
+                }
     }
 
     /**

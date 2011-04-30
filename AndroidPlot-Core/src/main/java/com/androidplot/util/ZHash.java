@@ -67,7 +67,6 @@ public class ZHash<KeyType, ValueType> implements ZIndexable<KeyType> {
         }
     }
 
-
     public synchronized boolean moveToTop(KeyType element) {
         if(!hash.containsKey(element)) {
             return false;
@@ -125,6 +124,14 @@ public class ZHash<KeyType, ValueType> implements ZIndexable<KeyType> {
     @Override
     public List<KeyType> elements() {
         return zlist;
+    }
+
+    /**
+     *
+     * @return Ordered list of keys.
+     */
+    public List<KeyType> keys() {
+        return elements();
     }
 
 

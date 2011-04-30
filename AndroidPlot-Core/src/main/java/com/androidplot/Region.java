@@ -18,12 +18,8 @@ public class Region {
      * @return
      */
     public boolean contains(double value) {
-        if((getMinVal() == null || value >= getMinVal().doubleValue()) &&
-                (getMaxVal() == null || value <= getMaxVal().doubleValue())) {
-            return true;
-        } else {
-            return false;
-        }
+        return (getMinVal() == null || value >= getMinVal().doubleValue()) &&
+                (getMaxVal() == null || value <= getMaxVal().doubleValue());
     }
 
     public boolean intersects(Region line) {
@@ -48,12 +44,7 @@ public class Region {
         if(l1min <= l2min && l1max >= l2max) {
             return true;
         // is line1 partially within line2
-        } else if(contains(l2min) || contains(l2max)) {
-            return true;
-        // lines do not intersect at all
-        } else {
-            return false;
-        }
+        } else return contains(l2min) || contains(l2max);
     }
 
     public Number getMinVal() {

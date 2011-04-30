@@ -21,7 +21,7 @@ public class XYRegion {
      * @param minY
      * @param maxY
      */
-    public XYRegion(Number minX, Number maxX, Number minY, Number maxY, String label) {
+    public XYRegion(double minX, double maxX, double minY, double maxY, String label) {
         xLine = new Line(minX, maxX);
         yLine = new Line(minY, maxY);
         this.setLabel(label);
@@ -61,21 +61,21 @@ public class XYRegion {
      * @param maxY
      * @return
      */
-    public boolean intersects(Number minX, Number maxX, Number minY, Number maxY) {
+    public boolean intersects(double minX, double maxX, double minY, double maxY) {
         return xLine.intersects(minX, maxX) && yLine.intersects(minY, maxY);
     }
 
-    public boolean intersects(RectF region, Number visMinX, Number visMaxX, Number visMinY, Number visMaxY) {
+    public boolean intersects(RectF region, double visMinX, double visMaxX, double visMinY, double visMaxY) {
 
         RectF thisRegion = getRectF(region, visMinX, visMaxX, visMinY, visMaxY);
         return RectF.intersects(thisRegion, region);
     }
 
-    public RectF getRectF(RectF plotRect, Number visMinX, Number visMaxX, Number visMinY, Number visMaxY) {
+    public RectF getRectF(RectF plotRect, double visMinX, double visMaxX, double visMinY, double visMaxY) {
         PointF topLeftPoint = ValPixConverter.valToPix(
-                xLine.getMinVal() != null ? xLine.getMinVal() : visMinX,
+                xLine.getMinVal() != Double.NEGATIVE_INFINITY ? xLine.getMinVal() : visMinX,
                 //this.minX,
-                yLine.getMaxVal() != null ? yLine.getMaxVal() : visMaxY,
+                yLine.getMaxVal() != Double.NEGATIVE_INFINITY ? yLine.getMaxVal() : visMaxY,
                 //this.maxY,
                 plotRect,
                 visMinX,
@@ -83,9 +83,9 @@ public class XYRegion {
                 visMinY,
                 visMaxY);
         PointF bottomRightPoint = ValPixConverter.valToPix(
-                xLine.getMaxVal() != null ? xLine.getMaxVal() : visMaxX,
+                xLine.getMaxVal() != Double.POSITIVE_INFINITY ? xLine.getMaxVal() : visMaxX,
                 //this.maxX,
-                yLine.getMinVal() != null ? yLine.getMinVal() : visMinY,
+                yLine.getMinVal() != Double.POSITIVE_INFINITY ? yLine.getMinVal() : visMinY,
                 //this.minY,
                 plotRect,
                 visMinX,
@@ -106,7 +106,7 @@ public class XYRegion {
      * @param maxY
      * @return
      */
-    public static List<XYRegion> regionsWithin(List<XYRegion> regions, Number minX, Number maxX, Number minY, Number maxY) {
+    public static List<XYRegion> regionsWithin(List<XYRegion> regions, double minX, double maxX, double minY, double maxY) {
         ArrayList<XYRegion> intersectingRegions = new ArrayList<XYRegion>();
         for(XYRegion r : regions) {
             if(r.intersects(minX, maxX, minY, maxY)) {
@@ -117,35 +117,35 @@ public class XYRegion {
     }
 
 
-    public Number getMinX() {
+    public double getMinX() {
         return xLine.getMinVal();
     }
 
-    public void setMinX(Number minX) {
+    public void setMinX(double minX) {
         xLine.setMinVal(minX);
     }
 
-    public Number getMaxX() {
+    public double getMaxX() {
         return xLine.getMaxVal();
     }
 
-    public void setMaxX(Number maxX) {
+    public void setMaxX(double maxX) {
         xLine.setMaxVal(maxX);
     }
 
-    public Number getMinY() {
+    public double getMinY() {
         return yLine.getMinVal();
     }
 
-    public void setMinY(Number minY) {
+    public void setMinY(double minY) {
         yLine.setMinVal(minY);
     }
 
-    public Number getMaxY() {
+    public double getMaxY() {
         return yLine.getMaxVal();
     }
 
-    public void setMaxY(Number maxY) {
+    public void setMaxY(double maxY) {
         yLine.setMaxVal(maxY);
     }
 

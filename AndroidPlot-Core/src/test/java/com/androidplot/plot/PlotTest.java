@@ -351,7 +351,7 @@ public class PlotTest {
         plot.addSeries(m2, MockRenderer2.class, new MockFormatter());
         plot.addSeries(m3, MockRenderer2.class, new MockFormatter());
 
-        List<MockRenderer1> m1List = plot.getSeriesListForRenderer(MockRenderer1.class);
+        List<MockSeries> m1List = plot.getSeriesListForRenderer(MockRenderer1.class);
         assertEquals(3, m1List.size());
         assertEquals(m1, m1List.get(0));
         assertNotSame(m2, m1List.get(0));

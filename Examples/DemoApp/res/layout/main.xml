@@ -33,6 +33,11 @@
                 android:layout_height="wrap_content"
                 android:text="XY Scatter With Lines"
                 android:enabled="false"/>
+    <Button android:id="@+id/startXyRegionExampleButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="XYRegion Example"
+                android:enabled="true"/>
     <Button android:id="@+id/startXyListViewExButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

@@ -10,12 +10,12 @@ import com.androidplot.ui.layout.PositionMetric;
  */
 public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
 
-    public PositionMetricType getTextPosition() {
-        return textPosition;
+    public String getText() {
+        return text;
     }
 
-    public void setTextPosition(PositionMetricType textPosition) {
-        this.textPosition = textPosition;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public enum TextOrientation {
@@ -25,10 +25,11 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
     private Number value;
     private Paint linePaint;
     private Paint textPaint;
-    private Paint backgroundPaint;
+    //private Paint backgroundPaint;
     private TextOrientation textOrientation;
     private int textMargin = 2;
     private PositionMetricType textPosition;
+    private String text;
 
     {
         linePaint = new Paint();
@@ -38,22 +39,38 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
         textPaint = new Paint();
         textPaint.setAntiAlias(true);
         textPaint.setColor(Color.RED);
-        backgroundPaint = new Paint();
-        backgroundPaint.setColor(Color.argb(100, 100, 100, 100));
+        //backgroundPaint = new Paint();
+        //backgroundPaint.setColor(Color.argb(100, 100, 100, 100));
         //backgroundPaint.setColor(Color.DKGRAY);
 
     }
 
-    public ValueMarker(Number value, PositionMetricType textPosition) {
+    public ValueMarker(Number value, String text, PositionMetricType textPosition) {
         this.value = value;
         this.textPosition = textPosition;
+        this.text = text;
     }
 
-    public ValueMarker(Number value, PositionMetricType textPosition, Paint linePaint, Paint textPaint, Paint backgroundPaint) {
-        this(value, textPosition);
+    /**
+     *
+     * @param value
+     * @param text
+     * @param textPosition
+     * @param linePaint
+     * @param textPaint
+     */
+    public ValueMarker(Number value, String text, PositionMetricType textPosition, Paint linePaint, Paint textPaint) {
+        this(value, text, textPosition);
+
         this.linePaint = linePaint;
         this.textPaint = textPaint;
-        this.backgroundPaint = backgroundPaint;
+        //this.backgroundPaint = backgroundPaint;
+    }
+
+    public ValueMarker(Number value, String text, PositionMetricType textPosition, int linePaint, int textPaint) {
+        this(value, text, textPosition);
+        this.linePaint.setColor(linePaint);
+        this.textPaint.setColor(textPaint);
     }
 
     public Number getValue() {
@@ -80,13 +97,13 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
         this.textPaint = textPaint;
     }
 
-    public Paint getBackgroundPaint() {
+    /*public Paint getBackgroundPaint() {
         return backgroundPaint;
     }
 
     public void setBackgroundPaint(Paint backgroundPaint) {
         this.backgroundPaint = backgroundPaint;
-    }
+    }*/
 
     public TextOrientation getTextOrientation() {
         return textOrientation;
@@ -111,5 +128,13 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
 
     public void setTextMargin(int textMargin) {
         this.textMargin = textMargin;
+    }
+
+    public PositionMetricType getTextPosition() {
+        return textPosition;
+    }
+
+    public void setTextPosition(PositionMetricType textPosition) {
+        this.textPosition = textPosition;
     }
 }

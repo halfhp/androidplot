@@ -141,32 +141,26 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         double maxY = getPlot().getCalculatedMaxY().doubleValue();
 
         // TODO: move to class decl
-        Paint regionPaint = new Paint();
-        regionPaint.setStyle(Paint.Style.FILL);
-        //int saved = canvas.save();
+        //Paint regionPaint = new Paint();
+        //regionPaint.setStyle(Paint.Style.FILL);
+
+        // draw each region:
         for (XYRegion r : XYRegion.regionsWithin(formatter.getRegions().elements(), minX, maxX, minY, maxY)) {
             XYRegionFormatter f = formatter.getRegionFormatter(r);
             RectF regionRect = r.getRectF(plotArea, minX, maxX, minY, maxY);
             if (regionRect != null) {
                 canvas.save();
                 canvas.clipPath(path);
-                regionPaint.setColor(f.getColor());
-                canvas.drawRect(regionRect, regionPaint);
+                canvas.drawRect(regionRect, f.getPaint());
                 canvas.restore();
             }
         }
 
         // finally we draw the outline path on top of everything else:
-        //formatter.getLinePaint().setStrokeWidth(5);
         canvas.drawPath(outlinePath, formatter.getLinePaint());
 
         if (path != null) {
             path.rewind();
         }
     }
-
-    /*protected void drawLastPoint(Canvas canvas, RectF plotArea, LineAndPointFormatter format) throws PlotRenderException {
-        canvas.drawPoint(lastPoint.x, lastPoint.y, format.getVertexPaint());
-       
-    }*/
 }

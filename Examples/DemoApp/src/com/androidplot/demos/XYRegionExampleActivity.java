@@ -2,9 +2,10 @@ package com.androidplot.demos;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
-import com.androidplot.Region;
+import com.androidplot.Line;
 import com.androidplot.ui.layout.*;
 import com.androidplot.xy.*;
 
@@ -12,22 +13,57 @@ import java.util.Arrays;
 
 
 public class XYRegionExampleActivity extends Activity {
+    private static final int FONT_LABEL_SIZE = 13;
     private XYPlot plot;
-
     private final Number[] series1Numbers = {1, 4, 9, 9, 5, 2, 12};
     private final Number[] series2Numbers = {5, 2, 3, 2, 17, 9, 1};
     private final Number[] series3Numbers = {8, 9, 2, 1, 2, 1, 2};
     private final Number[] series4Numbers = {2, 1, 1, 11, 6, 5, 7};
+    private LineAndPointFormatter lpFormatter1;
+    private LineAndPointFormatter lpFormatter2;
+    private LineAndPointFormatter lpFormatter3;
+    private LineAndPointFormatter lpFormatter4;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xyregion_example);
+        plot = (XYPlot) findViewById(R.id.xyRegionExamplePlot);
+        seriesSetup();
+        markerSetup();
+        axisLabelSetup();
+        //regionSetup();
+        makePlotPretty();
+    }
 
-         plot = (XYPlot) findViewById(R.id.xyRegionExamplePlot);
+    private void axisLabelSetup() {
+        Line r1 = new Line(0, 10);
+        plot.getGraphWidget().addRangeLabelRegion(r1, new AxisValueLabelFormatter(Color.RED));
+    }
 
-        addNormal();
+    /**
+     * Add some markers to our plot.
+     */
+    private void markerSetup() {
 
-        // use a 2x2 grid:
+        // the easy way to add a marker (uses default font color and positioning):
+        plot.addMarker(new YValueMarker(3, "Marker #1"));
+
+        // the comprehensive way:
+        plot.addMarker(new YValueMarker(
+                7,                                          // y-val to mark
+                "Marker #2",                                // marker label
+                new XPositionMetric(                        // object instance to set text positioning on the marker
+                        3,                                  // 3 pixel positioning offset
+                        XLayoutStyle.ABSOLUTE_FROM_LEFT    // how/where the positioning offset is applied
+                ),
+                Color.BLUE,                                 // line paint color
+                Color.BLUE                                  // text paint color
+        ));
+    }
+
+
+    private void makePlotPretty() {
+        // use a 2x5 grid with room for 10 items:
         plot.getLegendWidget().setTableModel(new DynamicTableModel(2, 5));
 
         // add a semi-transparent black background to the legend
@@ -54,13 +90,38 @@ public class XYRegionExampleActivity extends Activity {
                 35,
                 YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
                 AnchorPosition.RIGHT_BOTTOM);
+
+        // make our domain and range labels invisible:
+        plot.getDomainLabelWidget().setVisible(false);
+        plot.getRangeLabelWidget().setVisible(false);
+
+        plot.getGraphWidget().setRangeLabelMargin(-1);
+        plot.getGraphWidget().setRangeLabelWidth(25);
+        plot.getGraphWidget().setDomainLabelWidth(10);
+        plot.getGraphWidget().setDomainLabelMargin(-6);
+        plot.setBackgroundPaint(null);
+        plot.getGraphWidget().setBackgroundPaint(null);
+        plot.setBorderPaint(null);
+        plot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
+        plot.getGraphWidget().getDomainLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        plot.getGraphWidget().getDomainOriginLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        plot.getGraphWidget().getRangeLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        plot.getGraphWidget().getRangeOriginLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        plot.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1, 2, 1, 2}, 0));
+        plot.getTitleWidget().getLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        plot.getTitleWidget().pack();
         plot.disableAllMarkup();
     }
 
-    protected void addNormal() {
+    /**
+     * Create 4 XYSeries from the values defined above add add them to the plot.
+     * Also add some arbitrary regions.
+     */
+    protected void seriesSetup() {
 
 
-        LineAndPointFormatter lpFormatter1 = new LineAndPointFormatter(
+        // SERIES #1:
+        lpFormatter1 = new LineAndPointFormatter(
                 Color.rgb(100, 25, 20),
                 Color.rgb(4, 100, 88),
                 Color.rgb(66, 100, 3));
@@ -68,62 +129,83 @@ public class XYRegionExampleActivity extends Activity {
         lpFormatter1.setVertexPaint(null);
         lpFormatter1.getLinePaint().setShadowLayer(0, 0, 0, 0);
 
-        XYRegionFormatter regionFormatter = new XYRegionFormatter(Color.RED);
-        lpFormatter1.addRegion(new XYRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 5, "R1"), regionFormatter);
 
-        XYRegionFormatter regionFormatter2 = new XYRegionFormatter(Color.BLUE);
-
-        lpFormatter1.addRegion(new XYRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 5, Double.POSITIVE_INFINITY, "R2"), regionFormatter2);
         plot.addSeries(new SimpleXYSeries(Arrays.asList(series1Numbers),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
                 "S1"), lpFormatter1);
 
-        LineAndPointFormatter lpFormatter2 = new LineAndPointFormatter(
+        // SERIES #2:
+        lpFormatter2 = new LineAndPointFormatter(
                 Color.rgb(100, 25, 200),
                 Color.rgb(114, 100, 88),
                 Color.rgb(66, 100, 200));
-        XYRegionFormatter regionFormatter3 = new XYRegionFormatter(Color.GREEN);
-        XYRegionFormatter regionFormatter4 = new XYRegionFormatter(Color.YELLOW);
-        XYRegionFormatter regionFormatter5 = new XYRegionFormatter(Color.MAGENTA);
-        lpFormatter2.addRegion(new XYRegion(0, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R3"), regionFormatter3);
-        lpFormatter2.addRegion(new XYRegion(2, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R4"), regionFormatter4);
-        lpFormatter2.addRegion(new XYRegion(4, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R5"), regionFormatter5);
 
         lpFormatter2.setFillPaint(null);
         lpFormatter2.setVertexPaint(null);
         lpFormatter2.getLinePaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter2.getVertexPaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter2.addRegion(new XYRegion(0, 5, 0, 5), regionFormatter);
         plot.addSeries(new SimpleXYSeries(Arrays.asList(series2Numbers),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
                 "S2"), lpFormatter2);
 
-        LineAndPointFormatter lpFormatter3 = new LineAndPointFormatter(
+        // SERIES #3:
+        lpFormatter3 = new LineAndPointFormatter(
                 Color.rgb(200, 25, 200),
                 Color.rgb(200, 100, 88),
                 Color.rgb(66, 100, 100));
         lpFormatter3.setFillPaint(null);
         lpFormatter3.setVertexPaint(null);
         lpFormatter3.getLinePaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter3.getVertexPaint().setShadowLayer(0, 0, 0, 0);
         plot.addSeries(new SimpleXYSeries(Arrays.asList(series3Numbers),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
                 "S3"), lpFormatter3);
 
-        LineAndPointFormatter lpFormatter4 = new LineAndPointFormatter(
+        // SERIES #4:
+        lpFormatter4 = new LineAndPointFormatter(
                 Color.rgb(220, 25, 20),
                 Color.rgb(4, 220, 88),
                 Color.rgb(1, 100, 225));
         lpFormatter4.setFillPaint(null);
         lpFormatter4.setVertexPaint(null);
         lpFormatter4.getLinePaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter4.getVertexPaint().setShadowLayer(0, 0, 0, 0);
         plot.addSeries(new SimpleXYSeries(Arrays.asList(series4Numbers),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
                 "S4"), lpFormatter4);
         plot.setTicksPerRangeLabel(3);
         plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
 
-        plot.getGraphWidget().addRangeLabelRegion(new Region(null, 5), new XYAxisRegionFormatter(Color.RED));
+        //plot.getGraphWidget().addRangeLabelRegion(new Line(Double.NEGATIVE_INFINITY, 5), new AxisValueLabelFormatter(Color.RED));
+    }
+
+    private void regionSetup() {
+        // create a new region:
+        XYRegionFormatter regionFormatter = new XYRegionFormatter(Color.RED);
+
+        // add some transparency:
+        regionFormatter.getPaint().setAlpha(150);
+
+        // add the new region to the formatter for this series:
+        // we want to create a vertical region so we set the minX/maxX values to
+        // negative and positive infinity repectively:
+        lpFormatter1.addRegion(new XYRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 5, "R1"), regionFormatter);
+
+        // and another region:
+        XYRegionFormatter regionFormatter2 = new XYRegionFormatter(Color.BLUE);
+        regionFormatter2.getPaint().setAlpha(150);
+
+        lpFormatter1.addRegion(new XYRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 5, Double.POSITIVE_INFINITY, "R2"), regionFormatter2);
+
+        XYRegionFormatter regionFormatter3 = new XYRegionFormatter(Color.GREEN);
+        regionFormatter3.getPaint().setAlpha(150);
+        XYRegionFormatter regionFormatter4 = new XYRegionFormatter(Color.YELLOW);
+        regionFormatter4.getPaint().setAlpha(150);
+        XYRegionFormatter regionFormatter5 = new XYRegionFormatter(Color.MAGENTA);
+        regionFormatter5.getPaint().setAlpha(150);
+
+        // the below three regions are horizontal regions so we set minY/maxY to
+        // negative and positive infinity respectively.
+        lpFormatter2.addRegion(new XYRegion(0, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R3"), regionFormatter3);
+        lpFormatter2.addRegion(new XYRegion(2, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R4"), regionFormatter4);
+        lpFormatter2.addRegion(new XYRegion(4, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R5"), regionFormatter5);
+
     }
 }

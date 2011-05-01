@@ -15,12 +15,12 @@ import com.androidplot.xy.XYRegionFormatter;
 
 public abstract class DataRenderer<PlotType extends Plot, SeriesFormatterType extends Formatter> {
     private PlotType plot;
-    private Paint regionPaint;
+    //private Paint regionPaint;
 
     {
-        regionPaint = new Paint();
-        regionPaint.setAntiAlias(true);
-        regionPaint.setStyle(Paint.Style.FILL);
+        //regionPaint = new Paint();
+        //regionPaint.setAntiAlias(true);
+        //regionPaint.setStyle(Paint.Style.FILL);
     }
 
     public DataRenderer(PlotType plot) {
@@ -67,8 +67,8 @@ public abstract class DataRenderer<PlotType extends Plot, SeriesFormatterType ex
         //canvas.save(Canvas.CLIP_SAVE_FLAG);
         //canvas.clipRect(rect);
         //canvas.restore();
-        regionPaint.setColor(formatter.getColor());
-        canvas.drawRect(rect, regionPaint);
+        //regionPaint.setColor(formatter.getColor());
+        canvas.drawRect(rect, formatter.getPaint());
     }
 
 }

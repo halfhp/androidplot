@@ -11,29 +11,6 @@ public class XPositionMetric extends PositionMetric<XLayoutStyle> {
         //this.layoutStyle = layoutStyle;
     }
 
-    /*
-    @Override
-    public void set(float value, XLayoutStyle layoutType) {
-        validatePair(value, layoutType);
-        super.set(value, layoutType);
-    }
-    */
-
-
-    /*
-    @Override
-    public void setLayoutType(XLayoutStyle layoutType) {
-        validatePair(getValue(), layoutType);
-        super.setLayoutType(layoutType);
-    }
-
-    @Override
-    public void setValue(float value) {
-        validatePair(value, getLayoutType());
-        super.setValue(value);
-    }
-    */
-
     /**
      * Throws IllegalArgumentException if there is a problem.
      * @param value

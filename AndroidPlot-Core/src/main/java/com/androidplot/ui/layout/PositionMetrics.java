@@ -7,12 +7,6 @@ public class PositionMetrics implements Comparable<PositionMetrics> {
     private AnchorPosition anchor;
     private float layerDepth;
 
-    /*
-    public PositionMetrics(float lastColumn, XLayoutStyle xLayoutType, float lastRow, YLayoutStyle yLayoutType) {
-        this(lastColumn, xLayoutType, lastRow, yLayoutType, AnchorPosition.LEFT_TOP);
-    }
-    */
-
     public PositionMetrics(float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle, AnchorPosition anchor) {
         setxPositionMetric(new XPositionMetric(x, xLayoutStyle));
         setyPositionMetric(new YPositionMetric(y, yLayoutStyle));

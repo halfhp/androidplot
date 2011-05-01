@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import com.androidplot.Region;
 import com.androidplot.series.XYSeries;
 import com.androidplot.ui.layout.*;
 import com.androidplot.xy.SimpleXYSeries;
@@ -259,7 +258,7 @@ public class MyActivity extends Activity implements View.OnTouchListener
         plot.setTicksPerRangeLabel(3);
         plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
 
-        plot.getGraphWidget().addRangeLabelRegion(new Region(null, 5), new XYAxisRegionFormatter(Color.RED));
+        plot.getGraphWidget().addRangeLabelRegion(new Region(null, 5), new AxisValueLabelFormatter(Color.RED));
     }
 
     public void addCustom() {

@@ -1,9 +1,10 @@
 package com.androidplot.xy;
 
+import com.androidplot.ui.widget.Formatter;
 import com.androidplot.util.ZHash;
 import com.androidplot.util.ZIndexable;
 
-public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFormatter> {
+public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFormatter> extends Formatter {
     ZHash<RectRegion, XYRegionFormatterType>  regions;
 
     {

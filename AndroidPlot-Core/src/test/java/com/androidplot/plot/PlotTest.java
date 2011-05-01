@@ -11,6 +11,7 @@ import com.androidplot.SeriesAndFormatterList;
 import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.DataRenderer;
+import com.androidplot.ui.widget.Formatter;
 import mockit.*;
 import org.junit.After;
 import org.junit.Before;

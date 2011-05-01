@@ -10,15 +10,14 @@ import com.androidplot.ui.widget.TextOrientationType;
 import com.androidplot.ui.widget.TitleWidget;
 import com.androidplot.ui.layout.*;
 import com.androidplot.ui.widget.Widget;
-import com.androidplot.ui.widget.formatter.Formatter;
-import com.androidplot.ui.widget.renderer.DataRenderer;
+import com.androidplot.ui.widget.DataRenderer;
 
 import java.util.*;
 
 /**
  * Base class for all other Plot implementations..
  */
-public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends DataRenderer> extends View {
+public abstract class Plot<SeriesType extends Series, FormatterType, RendererType extends DataRenderer> extends View {
 
     public enum BorderStyle {
         ROUNDED,
@@ -95,7 +94,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     private void postInit() {
         titleWidget = new TitleWidget(this, new SizeMetrics(25, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
-        //layoutManager = new LayoutManager(this);
         layoutManager = new LayoutManager();
         layoutManager.position(titleWidget, 0, XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
     }
@@ -209,13 +207,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         
         if(seriesRegistry.get(rendererClass).size() <= 0) {
             seriesRegistry.remove(rendererClass);
-            // find the renderer of type renderClass, but first need to get the instance.
-            /*for (RendererType rt : renderers) {
-            	if (rt.getClass() == rendererClass) {
-            		renderers.remove(rt);
-            		break;
-            	}
-            }*/
         }
         return result;
     }
@@ -224,16 +215,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
         for(Class rendererClass : seriesRegistry.keySet()) {
             seriesRegistry.get(rendererClass).remove(series);
-           /* if(seriesRegistry.get(rendererClass).size() <= 0) {
-                seriesRegistry.remove(rendererClass);
-                // find the renderer of type renderClass, but first need to get the instance.
-                for (RendererType rt : renderers) {
-                	if (rt.getClass() == rendererClass) {
-                		renderers.remove(rt);
-                		break;
-                	}
-                }
-            }*/
         }       
         
         for(Iterator<SeriesAndFormatterList<SeriesType,FormatterType>> it = seriesRegistry.values().iterator(); it.hasNext();) {
@@ -246,9 +227,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     public boolean isEmpty() {
         return seriesRegistry.isEmpty();
     }
-
-
-
 
     public FormatterType getFormatter(SeriesType series, Class rendererClass) {
         return seriesRegistry.get(rendererClass).getFormatter(series);
@@ -287,7 +265,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         } else {
             return lst.getSeriesList();
         }
-        //throw new UnsupportedOperationException();
     }
 
     public RendererType getRenderer(Class rendererClass) {
@@ -339,10 +316,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
     }
 
-
-
-    
-    
     protected abstract void doBeforeDraw();
     protected abstract void doAfterDraw();
 
@@ -368,7 +341,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 drawBorder(canvas, marginatedRect);
             }
         } catch (PlotRenderException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } finally {
             doAfterDraw();
             notifyListeners(new PlotEvent(this, PlotEvent.Type.PLOT_REDRAWN));
@@ -592,6 +565,5 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             this.borderPaint = new Paint(borderPaint);
             this.borderPaint.setStyle(Paint.Style.STROKE);
         }
-        //this.borderPaint = borderPaint;
     }
 }

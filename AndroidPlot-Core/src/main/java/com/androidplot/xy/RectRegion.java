@@ -2,16 +2,16 @@ package com.androidplot.xy;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
-import com.androidplot.Line;
+import com.androidplot.LineRegion;
 import com.androidplot.util.ValPixConverter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class XYRegion {
+public class RectRegion {
 
-    Line xLine;
-    Line yLine;
+    LineRegion xLineRegion;
+    LineRegion yLineRegion;
     private String label;
 
     /**
@@ -21,9 +21,9 @@ public class XYRegion {
      * @param minY
      * @param maxY
      */
-    public XYRegion(double minX, double maxX, double minY, double maxY, String label) {
-        xLine = new Line(minX, maxX);
-        yLine = new Line(minY, maxY);
+    public RectRegion(double minX, double maxX, double minY, double maxY, String label) {
+        xLineRegion = new LineRegion(minX, maxX);
+        yLineRegion = new LineRegion(minY, maxY);
         this.setLabel(label);
     }
 
@@ -36,16 +36,16 @@ public class XYRegion {
     }
 
     public boolean containsDomainValue(double value) {
-        //return XYRegion.isBetween(value, minX, maxX);
-        return xLine.contains(value);
+        //return RectRegion.isBetween(value, minX, maxX);
+        return xLineRegion.contains(value);
     }
 
     public boolean containsRangeValue(double value) {
-        //return XYRegion.isBetween(value, minY, maxY);
-        return yLine.contains(value);
+        //return RectRegion.isBetween(value, minY, maxY);
+        return yLineRegion.contains(value);
     }
 
-    public boolean intersects(XYRegion region) {
+    public boolean intersects(RectRegion region) {
         return intersects(region.getMinX(), region.getMaxX(), region.getMinY(), region.getMaxY());
     }
 
@@ -62,7 +62,7 @@ public class XYRegion {
      * @return
      */
     public boolean intersects(double minX, double maxX, double minY, double maxY) {
-        return xLine.intersects(minX, maxX) && yLine.intersects(minY, maxY);
+        return xLineRegion.intersects(minX, maxX) && yLineRegion.intersects(minY, maxY);
     }
 
     public boolean intersects(RectF region, double visMinX, double visMaxX, double visMinY, double visMaxY) {
@@ -73,9 +73,9 @@ public class XYRegion {
 
     public RectF getRectF(RectF plotRect, double visMinX, double visMaxX, double visMinY, double visMaxY) {
         PointF topLeftPoint = ValPixConverter.valToPix(
-                xLine.getMinVal() != Double.NEGATIVE_INFINITY ? xLine.getMinVal() : visMinX,
+                xLineRegion.getMinVal() != Double.NEGATIVE_INFINITY ? xLineRegion.getMinVal() : visMinX,
                 //this.minX,
-                yLine.getMaxVal() != Double.NEGATIVE_INFINITY ? yLine.getMaxVal() : visMaxY,
+                yLineRegion.getMaxVal() != Double.NEGATIVE_INFINITY ? yLineRegion.getMaxVal() : visMaxY,
                 //this.maxY,
                 plotRect,
                 visMinX,
@@ -83,9 +83,9 @@ public class XYRegion {
                 visMinY,
                 visMaxY);
         PointF bottomRightPoint = ValPixConverter.valToPix(
-                xLine.getMaxVal() != Double.POSITIVE_INFINITY ? xLine.getMaxVal() : visMaxX,
+                xLineRegion.getMaxVal() != Double.POSITIVE_INFINITY ? xLineRegion.getMaxVal() : visMaxX,
                 //this.maxX,
-                yLine.getMinVal() != Double.POSITIVE_INFINITY ? yLine.getMinVal() : visMinY,
+                yLineRegion.getMinVal() != Double.POSITIVE_INFINITY ? yLineRegion.getMinVal() : visMinY,
                 //this.minY,
                 plotRect,
                 visMinX,
@@ -106,9 +106,9 @@ public class XYRegion {
      * @param maxY
      * @return
      */
-    public static List<XYRegion> regionsWithin(List<XYRegion> regions, double minX, double maxX, double minY, double maxY) {
-        ArrayList<XYRegion> intersectingRegions = new ArrayList<XYRegion>();
-        for(XYRegion r : regions) {
+    public static List<RectRegion> regionsWithin(List<RectRegion> regions, double minX, double maxX, double minY, double maxY) {
+        ArrayList<RectRegion> intersectingRegions = new ArrayList<RectRegion>();
+        for(RectRegion r : regions) {
             if(r.intersects(minX, maxX, minY, maxY)) {
                 intersectingRegions.add(r);
             }
@@ -118,35 +118,35 @@ public class XYRegion {
 
 
     public double getMinX() {
-        return xLine.getMinVal();
+        return xLineRegion.getMinVal();
     }
 
     public void setMinX(double minX) {
-        xLine.setMinVal(minX);
+        xLineRegion.setMinVal(minX);
     }
 
     public double getMaxX() {
-        return xLine.getMaxVal();
+        return xLineRegion.getMaxVal();
     }
 
     public void setMaxX(double maxX) {
-        xLine.setMaxVal(maxX);
+        xLineRegion.setMaxVal(maxX);
     }
 
     public double getMinY() {
-        return yLine.getMinVal();
+        return yLineRegion.getMinVal();
     }
 
     public void setMinY(double minY) {
-        yLine.setMinVal(minY);
+        yLineRegion.setMinVal(minY);
     }
 
     public double getMaxY() {
-        return yLine.getMaxVal();
+        return yLineRegion.getMaxVal();
     }
 
     public void setMaxY(double maxY) {
-        yLine.setMaxVal(maxY);
+        yLineRegion.setMaxVal(maxY);
     }
 
     public String getLabel() {

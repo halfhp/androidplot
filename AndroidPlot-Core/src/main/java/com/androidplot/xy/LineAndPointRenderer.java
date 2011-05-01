@@ -145,7 +145,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         //regionPaint.setStyle(Paint.Style.FILL);
 
         // draw each region:
-        for (XYRegion r : XYRegion.regionsWithin(formatter.getRegions().elements(), minX, maxX, minY, maxY)) {
+        for (RectRegion r : RectRegion.regionsWithin(formatter.getRegions().elements(), minX, maxX, minY, maxY)) {
             XYRegionFormatter f = formatter.getRegionFormatter(r);
             RectF regionRect = r.getRectF(plotArea, minX, maxX, minY, maxY);
             if (regionRect != null) {

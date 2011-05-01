@@ -10,8 +10,7 @@ import com.androidplot.PlotListener;
 import com.androidplot.SeriesAndFormatterList;
 import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
-import com.androidplot.ui.widget.formatter.Formatter;
-import com.androidplot.ui.widget.renderer.DataRenderer;
+import com.androidplot.ui.widget.DataRenderer;
 import mockit.*;
 import org.junit.After;
 import org.junit.Before;
@@ -145,7 +144,7 @@ public class PlotTest {
         }
     }
 
-    static class MockFormatter extends Formatter {
+    static class MockFormatter {
 
     }
 

@@ -1,7 +1,7 @@
 package com.androidplot.xy;
 
 import android.graphics.*;
-import com.androidplot.Line;
+import com.androidplot.LineRegion;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.ui.layout.SizeMetrics;
@@ -63,8 +63,9 @@ public class XYGraphWidget extends Widget {
     private boolean drawMarkersEnabled = true;
 
     // TODO: consider typing this manager with a special axisLabelRegionFormatter
-    private ZHash<Line, AxisValueLabelFormatter> domainLabelRegions;
-    private ZHash<Line, AxisValueLabelFormatter> rangeLabelRegions;
+    //private ZHash<LineRegion, AxisValueLabelFormatter> domainLabelRegions;
+    //private ZHash<LineRegion, AxisValueLabelFormatter> rangeLabelRegions;
+    private ZHash<RectRegion, AxisValueLabelFormatter> axisValueLabelRegions;
 
     {
         gridBackgroundPaint = new Paint();
@@ -109,8 +110,9 @@ public class XYGraphWidget extends Widget {
         setMarginBottom(4);
         rangeValueFormat = new DecimalFormat("0.0");
         domainValueFormat = new DecimalFormat("0.0");
-        domainLabelRegions =  new ZHash<Line, AxisValueLabelFormatter>();
-        rangeLabelRegions =  new ZHash<Line, AxisValueLabelFormatter>();
+        //domainLabelRegions =  new ZHash<LineRegion, AxisValueLabelFormatter>();
+        //rangeLabelRegions =  new ZHash<LineRegion, AxisValueLabelFormatter>();
+        axisValueLabelRegions = new ZHash<RectRegion, AxisValueLabelFormatter>();
     }
 
     public XYGraphWidget(XYPlot plot, SizeMetrics sizeMetrics) {
@@ -118,58 +120,128 @@ public class XYGraphWidget extends Widget {
         this.plot = plot;
     }
 
-    public ZIndexable<Line> getDomainLabelRegions() {
+    public ZIndexable<RectRegion> getAxisValueLabelRegions() {
+        return axisValueLabelRegions;
+    }
+
+    /*public ZIndexable<LineRegion> getDomainLabelRegions() {
         return domainLabelRegions;
     }
 
-    public ZIndexable<Line> getRangeLabelRegions() {
+    public ZIndexable<LineRegion> getRangeLabelRegions() {
         return rangeLabelRegions;
-    }
+    }*/
 
     /**
-     * Add a new Region used for rendering range labels.  Note that it is possible
-     * to add multiple Region instances which overlap.  It is up to the developer to guard
-     * against this often undesireable situation.
+     * Add a new Region used for rendering axis valuelabels.  Note that it is possible
+     * to add multiple Region instances which overlap, in which cast the last region to
+     * be added will be used.  It is up to the developer to guard against this often
+     * undesireable situation.
      * @param region
      * @param formatter
      */
-    public void addRangeLabelRegion(Line region, AxisValueLabelFormatter formatter) {
+    public void addAxisValueLabelRegion(RectRegion region, AxisValueLabelFormatter formatter) {
+        axisValueLabelRegions.addToTop(region, formatter);
+    }
+
+    /**
+     * Convenience method - wraps addAxisValueLabelRegion, using Double.POSITIVE_INFINITY and
+     * Double.NEGATIVE_INFINITY to mask off range axis value labels.
+     * @param min
+     * @param max
+     * @param formatter
+     *
+     */
+    public void addDomainAxisValueLabelRegion( double min, double max, AxisValueLabelFormatter formatter){
+        addAxisValueLabelRegion(new RectRegion(min, max, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, null), formatter);
+    }
+
+    /**
+     * Convenience method - wraps addAxisValueLabelRegion, using Double.POSITIVE_INFINITY and
+     * Double.NEGATIVE_INFINITY to mask off domain axis value labels.
+     * @param min
+     * @param max
+     * @param formatter
+     */
+    public void addRangeAxisValueLabelRegion(double min, double max, AxisValueLabelFormatter formatter){
+        addAxisValueLabelRegion(new RectRegion(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, min, max, null), formatter);
+    }
+
+
+
+
+    /*public void addRangeLabelRegion(LineRegion region, AxisValueLabelFormatter formatter) {
         rangeLabelRegions.addToTop(region, formatter);
     }
 
-    public boolean removeRangeLabelRegion(Line region) {
+    public boolean removeRangeLabelRegion(LineRegion region) {
         return rangeLabelRegions.remove(region);
+    }*/
+
+    /**
+     * Returns the formatter associated with the first (bottom) Region containing x and y.
+     * @param x
+     * @param y
+     * @return the formatter associated with the first (bottom) region containing x and y.  null otherwise.
+     */
+    public AxisValueLabelFormatter getAxisValueLabelFormatterForVal(double x, double y) {
+        for(RectRegion r : axisValueLabelRegions.elements()) {
+            if(r.containsValue(x, y)) {
+                return axisValueLabelRegions.get(r);
+            }
+        }
+        return null;
     }
+
+    public AxisValueLabelFormatter getAxisValueLabelFormatterForDomainVal(double val) {
+        for(RectRegion r : axisValueLabelRegions.elements()) {
+            if(r.containsDomainValue(val)) {
+                return axisValueLabelRegions.get(r);
+            }
+        }
+        return null;
+    }
+
+    public AxisValueLabelFormatter getAxisValueLabelFormatterForRangeVal(double val) {
+        for(RectRegion r : axisValueLabelRegions.elements()) {
+            if(r.containsRangeValue(val)) {
+                return axisValueLabelRegions.get(r);
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Returns the formatter associated with the first (bottom-most) Region containing
      * value.
      * @param value
      * @return
-     */
+     *//*
     public AxisValueLabelFormatter getXYAxisFormatterForRangeVal(double value) {
         return getRegionContainingVal(rangeLabelRegions, value);
     }
 
-    /**
+    *//**
      * Returns the formatter associated with the first (bottom-most) Region containing
      * value.
      * @param value
      * @return
-     */
+     *//*
     public AxisValueLabelFormatter getXYAxisFormatterForDomainVal(double value) {
         return getRegionContainingVal(domainLabelRegions, value);
-    }
+    }*/
 
-    private AxisValueLabelFormatter getRegionContainingVal(ZHash<Line, AxisValueLabelFormatter> zhash, double val) {
-        for (Line r : zhash.elements()) {
+
+    /*private AxisValueLabelFormatter getRegionContainingVal(ZHash<LineRegion, AxisValueLabelFormatter> zhash, double val) {
+        for (LineRegion r : zhash.elements()) {
             if (r.contains(val)) {
                 return rangeLabelRegions.get(r);
             }
         }
         // nothing found
         return null;
-    }
+    }*/
 
     /**
      * Returns a RectF representing the grid area last drawn
@@ -262,11 +334,11 @@ public class XYGraphWidget extends Widget {
         String txt = null;
         switch(axis) {
             case DOMAIN:
-                rf = getXYAxisFormatterForDomainVal(value);
+                rf = getAxisValueLabelFormatterForDomainVal(value);
                 txt = getFormattedDomainValue(value);
                 break;
             case RANGE:
-                rf = getXYAxisFormatterForRangeVal(value);
+                rf = getAxisValueLabelFormatterForRangeVal(value);
                 txt = getFormattedRangeValue(value);
                 break;
         }

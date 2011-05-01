@@ -1,12 +1,11 @@
 package com.androidplot;
 
 import com.androidplot.series.Series;
-import com.androidplot.ui.widget.formatter.Formatter;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class SeriesAndFormatterList<SeriesType extends Series, FormatterType extends Formatter> {
+public class SeriesAndFormatterList<SeriesType extends Series, FormatterType> {
     private LinkedList<SeriesType> seriesList;
     private LinkedList<FormatterType> formatterList;
     {

@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
-import com.androidplot.Line;
+import com.androidplot.LineRegion;
 import com.androidplot.ui.layout.*;
 import com.androidplot.xy.*;
 
@@ -35,9 +35,12 @@ public class XYRegionExampleActivity extends Activity {
         makePlotPretty();
     }
 
+    /**
+     * Add some color coded regions to our axis labels.
+     */
     private void axisLabelSetup() {
-        Line r1 = new Line(0, 10);
-        plot.getGraphWidget().addRangeLabelRegion(r1, new AxisValueLabelFormatter(Color.RED));
+        plot.getGraphWidget().addRangeAxisValueLabelRegion(Double.NEGATIVE_INFINITY, 3, new AxisValueLabelFormatter(Color.RED));
+        plot.getGraphWidget().addRangeAxisValueLabelRegion(3, 7, new AxisValueLabelFormatter(Color.BLUE));
     }
 
     /**
@@ -117,7 +120,7 @@ public class XYRegionExampleActivity extends Activity {
      * Create 4 XYSeries from the values defined above add add them to the plot.
      * Also add some arbitrary regions.
      */
-    protected void seriesSetup() {
+    private void seriesSetup() {
 
 
         // SERIES #1:
@@ -173,7 +176,7 @@ public class XYRegionExampleActivity extends Activity {
         plot.setTicksPerRangeLabel(3);
         plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
 
-        //plot.getGraphWidget().addRangeLabelRegion(new Line(Double.NEGATIVE_INFINITY, 5), new AxisValueLabelFormatter(Color.RED));
+        //plot.getGraphWidget().addRangeLabelRegion(new LineRegion(Double.NEGATIVE_INFINITY, 5), new AxisValueLabelFormatter(Color.RED));
     }
 
     private void regionSetup() {
@@ -186,13 +189,13 @@ public class XYRegionExampleActivity extends Activity {
         // add the new region to the formatter for this series:
         // we want to create a vertical region so we set the minX/maxX values to
         // negative and positive infinity repectively:
-        lpFormatter1.addRegion(new XYRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 5, "R1"), regionFormatter);
+        lpFormatter1.addRegion(new RectRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 5, "R1"), regionFormatter);
 
         // and another region:
         XYRegionFormatter regionFormatter2 = new XYRegionFormatter(Color.BLUE);
         regionFormatter2.getPaint().setAlpha(150);
 
-        lpFormatter1.addRegion(new XYRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 5, Double.POSITIVE_INFINITY, "R2"), regionFormatter2);
+        lpFormatter1.addRegion(new RectRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 5, Double.POSITIVE_INFINITY, "R2"), regionFormatter2);
 
         XYRegionFormatter regionFormatter3 = new XYRegionFormatter(Color.GREEN);
         regionFormatter3.getPaint().setAlpha(150);
@@ -203,9 +206,9 @@ public class XYRegionExampleActivity extends Activity {
 
         // the below three regions are horizontal regions so we set minY/maxY to
         // negative and positive infinity respectively.
-        lpFormatter2.addRegion(new XYRegion(0, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R3"), regionFormatter3);
-        lpFormatter2.addRegion(new XYRegion(2, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R4"), regionFormatter4);
-        lpFormatter2.addRegion(new XYRegion(4, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R5"), regionFormatter5);
+        lpFormatter2.addRegion(new RectRegion(0, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R3"), regionFormatter3);
+        lpFormatter2.addRegion(new RectRegion(2, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R4"), regionFormatter4);
+        lpFormatter2.addRegion(new RectRegion(4, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R5"), regionFormatter5);
 
     }
 }

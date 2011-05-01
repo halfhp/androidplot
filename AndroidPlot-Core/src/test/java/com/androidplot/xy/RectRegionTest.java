@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class XYRegionTest {
+public class RectRegionTest {
     @Before
     public void setUp() throws Exception {
 
@@ -43,23 +43,23 @@ public class XYRegionTest {
     @Test
     public void testIsWithin() throws Exception {
 
-        XYRegion region1 = new XYRegion(0, 100, 0, 100, "");
+        RectRegion region1 = new RectRegion(0, 100, 0, 100, "");
 
-        XYRegion region2 = new XYRegion(5, 10, 5, 10, "");
+        RectRegion region2 = new RectRegion(5, 10, 5, 10, "");
 
         assertTrue(region1.intersects(region2));
         assertTrue(region2.intersects(region1));
 
-        XYRegion region3 = new XYRegion(101, 200, 101, 200, "");
+        RectRegion region3 = new RectRegion(101, 200, 101, 200, "");
         assertFalse(region1.intersects(region3));
         assertFalse(region3.intersects(region1));
 
-        XYRegion region4 = new XYRegion(99, 109, 99, 109, "");
+        RectRegion region4 = new RectRegion(99, 109, 99, 109, "");
         assertTrue(region1.intersects(region4));
         assertTrue(region4.intersects(region1));
 
         // negative numbers:
-        XYRegion region5 = new XYRegion(-100, 1, -100, 1, "");
+        RectRegion region5 = new RectRegion(-100, 1, -100, 1, "");
         assertTrue(region1.intersects(region5));
         assertTrue(region5.intersects(region1));
     }

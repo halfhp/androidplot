@@ -25,8 +25,8 @@ public class RegionTest {
 
     @Test
     public void testIntersects() throws Exception {
-        Line line1 = new Line(1, 10);
-        Line line2 = new Line(11, 20);
+        LineRegion line1 = new LineRegion(1, 10);
+        LineRegion line2 = new LineRegion(11, 20);
         assertFalse(line1.intersects(line2));
 
         line1.setMaxVal(15);

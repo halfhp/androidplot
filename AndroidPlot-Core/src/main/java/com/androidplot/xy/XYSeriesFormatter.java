@@ -1,21 +1,20 @@
 package com.androidplot.xy;
 
-import com.androidplot.ui.widget.formatter.Formatter;
 import com.androidplot.util.ZHash;
 import com.androidplot.util.ZIndexable;
 
-public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFormatter> extends Formatter {
-    ZHash<XYRegion, XYRegionFormatterType>  regions;
+public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFormatter> {
+    ZHash<RectRegion, XYRegionFormatterType>  regions;
 
     {
-        regions = new ZHash<XYRegion, XYRegionFormatterType>();
+        regions = new ZHash<RectRegion, XYRegionFormatterType>();
     }
 
-    public void addRegion(XYRegion region, XYRegionFormatterType regionFormatter) {
+    public void addRegion(RectRegion region, XYRegionFormatterType regionFormatter) {
         regions.addToBottom(region, regionFormatter);
     }
 
-    public void removeRegion(XYRegion region) {
+    public void removeRegion(RectRegion region) {
         regions.remove(region);
     }
 
@@ -23,7 +22,7 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
      * Can be used to access z-index manipulation methods of ZIndexable.
      * @return
      */
-    public ZIndexable<XYRegion> getRegions() {
+    public ZIndexable<RectRegion> getRegions() {
         return regions;
     }
 
@@ -31,7 +30,7 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
      * @param region
      * @return
      */
-    public XYRegionFormatterType getRegionFormatter(XYRegion region) {
+    public XYRegionFormatterType getRegionFormatter(RectRegion region) {
         return regions.get(region);
     }
 }

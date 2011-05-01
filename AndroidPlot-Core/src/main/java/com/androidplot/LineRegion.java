@@ -1,13 +1,13 @@
 package com.androidplot;
 
 /**
- * A one dimensional element with a start point and end point.
+ * A one dimensional region represented by a starting and ending value.
  */
-public class Line {
+public class LineRegion {
     private double minVal;
     private double maxVal;
 
-    public Line(double minVal, double maxVal) {
+    public LineRegion(double minVal, double maxVal) {
         this.setMinVal(minVal);
         this.setMaxVal(maxVal);
     }
@@ -21,8 +21,8 @@ public class Line {
         return value >= minVal && value <= maxVal;
     }
 
-    public boolean intersects(Line line) {
-        return intersects(line.getMinVal(), line.getMaxVal());
+    public boolean intersects(LineRegion lineRegion) {
+        return intersects(lineRegion.getMinVal(), lineRegion.getMaxVal());
     }
 
      /**

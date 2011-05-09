@@ -12,24 +12,48 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     private static final float DEFAULT_LINE_STROKE_WIDTH = 1.5f;
     private static final float DEFAULT_VERTEX_STROKE_WIDTH = 4.5f;
 
+    public FillDirection getFillDirection() {
+        return fillDirection;
+    }
+
+    public void setFillDirection(FillDirection fillDirection) {
+        this.fillDirection = fillDirection;
+    }
+
+    private FillDirection fillDirection;
+
     private Paint linePaint;
     private Paint vertexPaint;
     private Paint fillPaint;
 
-    protected LineAndPointFormatter() {        
+    protected LineAndPointFormatter() {
+        this(Color.RED, Color.GREEN, Color.BLUE);
     }
 
     /**
      * Set corresponding parameter to null to disable the drawing of lines, vertexes or fill.
+     * Uses a default of FillDirection.BOTTOM.
      * @param lineColor
      * @param vertexColor
      * @param fillColor
      */
     public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor) {
+         this(lineColor, vertexColor, fillColor, FillDirection.BOTTOM);
+    }
+
+    /**
+     *
+     * @param lineColor
+     * @param vertexColor
+     * @param fillColor
+     * @param fillDir Determines which edge or origin of the plot is used to close the path for filling.
+     */
+    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, FillDirection fillDir) {
         initLinePaint(lineColor);
         initVertexPaint(vertexColor);
         //this(lineColor, vertexColor);
         initFillPaint(fillColor);
+        setFillDirection(fillDir);
     }
 
     protected void initLinePaint(Integer lineColor) {

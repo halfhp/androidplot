@@ -13,7 +13,8 @@ import java.util.ArrayList;
  */
 public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> extends XYSeriesRenderer<FormatterType> {
 
-    private boolean fillToBottom = false;
+
+    //private boolean fillToBottom = false;
 
     public LineAndPointRenderer(XYPlot plot) {
         super(plot);
@@ -123,13 +124,21 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     protected void renderPath(Canvas canvas, RectF plotArea, Path path, PointF firstPoint, PointF lastPoint, LineAndPointFormatter formatter) {
         Path outlinePath = new Path(path);
 
-            if(fillToBottom) {
-            // create our last point at the bottom/x position so filling
-            // will look good
-            path.lineTo(lastPoint.x, plotArea.bottom);
-            path.lineTo(firstPoint.x, plotArea.bottom);
-            path.close();
-            } else {
+        // determine how to close the path for filling purposes:
+        // We always need to calculate this path because it is also used for
+        // masking off for region highlighting.
+        switch (formatter.getFillDirection()) {
+            case BOTTOM:
+                path.lineTo(lastPoint.x, plotArea.bottom);
+                path.lineTo(firstPoint.x, plotArea.bottom);
+                path.close();
+                break;
+            case TOP:
+                path.lineTo(lastPoint.x, plotArea.top);
+                path.lineTo(firstPoint.x, plotArea.top);
+                path.close();
+                break;
+            case RANGE_ORIGIN:
                 float originPix = ValPixConverter.valToPix(
                         getPlot().getRangeOrigin().doubleValue(),
                         getPlot().getCalculatedMinY().doubleValue(),
@@ -141,7 +150,11 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 path.lineTo(lastPoint.x, originPix);
                 path.lineTo(firstPoint.x, originPix);
                 path.close();
-            }
+                break;
+            default:
+                throw new UnsupportedOperationException("Fill direction not yet implemented: " + formatter.getFillDirection());
+        }
+
         if (formatter.getFillPaint() != null) {
             canvas.drawPath(path, formatter.getFillPaint());
         }
@@ -154,10 +167,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         double maxX = getPlot().getCalculatedMaxX().doubleValue();
         double minY = getPlot().getCalculatedMinY().doubleValue();
         double maxY = getPlot().getCalculatedMaxY().doubleValue();
-
-        // TODO: move to class decl
-        //Paint regionPaint = new Paint();
-        //regionPaint.setStyle(Paint.Style.FILL);
 
         // draw each region:
         for (RectRegion r : RectRegion.regionsWithin(formatter.getRegions().elements(), minX, maxX, minY, maxY)) {

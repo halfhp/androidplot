@@ -6,8 +6,7 @@ import android.os.Bundle;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.series.XYSeries;
 import com.androidplot.xy.*;
- 
-import java.text.DecimalFormat;
+
 import java.util.Arrays;
  
 public class MyActivity extends Activity
@@ -42,7 +41,8 @@ public class MyActivity extends Activity
         LineAndPointFormatter series1Format = new LineAndPointFormatter(
                 Color.rgb(0, 200, 0),                   // line color
                 null,                   // point color
-                Color.rgb(150, 190, 150));              // fill color (optional)
+                Color.rgb(150, 190, 150),
+                FillDirection.TOP);              // fill color (optional)
  
         // Add series1 to the xyplot:
         mySimpleXYPlot.addSeries(series1, series1Format);

@@ -1,4 +1,4 @@
-package com.androidplot.ui.layout;
+package com.androidplot.ui;
 
 import android.graphics.RectF;
 import com.androidplot.mock.MockRectF;

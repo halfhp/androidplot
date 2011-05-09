@@ -1,4 +1,4 @@
-package com.androidplot.plot;
+package com.androidplot;
 
 import android.content.Context;
 import android.graphics.*;
@@ -7,11 +7,11 @@ import android.view.View;
 import com.androidplot.Plot;
 import com.androidplot.PlotEvent;
 import com.androidplot.PlotListener;
-import com.androidplot.SeriesAndFormatterList;
+import com.androidplot.ui.SeriesAndFormatterList;
 import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
-import com.androidplot.ui.widget.DataRenderer;
-import com.androidplot.ui.widget.Formatter;
+import com.androidplot.ui.DataRenderer;
+import com.androidplot.ui.Formatter;
 import mockit.*;
 import org.junit.After;
 import org.junit.Before;

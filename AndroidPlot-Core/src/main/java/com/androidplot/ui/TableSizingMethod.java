@@ -1,4 +1,4 @@
-package com.androidplot.ui.layout;
+package com.androidplot.ui;
 
 /**
  * The sizing methods available to a table.

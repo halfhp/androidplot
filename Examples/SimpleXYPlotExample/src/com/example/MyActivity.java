@@ -5,13 +5,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import com.androidplot.series.XYSeries;
-import com.androidplot.ui.layout.AnchorPosition;
-import com.androidplot.ui.layout.XLayoutStyle;
-import com.androidplot.ui.layout.YLayoutStyle;
+import com.androidplot.ui.AnchorPosition;
+import com.androidplot.xy.XLayoutStyle;
+import com.androidplot.xy.YLayoutStyle;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.xy.*;
-
-import java.util.Arrays;
 
 
 public class MyActivity extends Activity

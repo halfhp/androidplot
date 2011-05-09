@@ -1,277 +1,64 @@
 package com.example;
-
+ 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import com.androidplot.series.XYSeries;
-import com.androidplot.ui.layout.*;
 import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.series.XYSeries;
 import com.androidplot.xy.*;
-
+ 
+import java.text.DecimalFormat;
 import java.util.Arrays;
-
-public class MyActivity extends Activity implements View.OnTouchListener
+ 
+public class MyActivity extends Activity
 {
-
-    private static final int FONT_LABEL_SIZE = 13;
-    private XYPlot plot;
-    private final Number[] series1Numbers = {1, 4, 9, 9, 5, 2, 12};
-    private final Number[] series2Numbers = {5, 2, 3, 2, 17, 9, 1};
-    private final Number[] series3Numbers = {8, 9, 2, 1, 2, 1, 2};
-    private final Number[] series4Numbers = {2, 1, 1, 11, 6, 5, 7};
-
+ 
+    private XYPlot mySimpleXYPlot;
+ 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+ 
+        // Initialize our XYPlot reference:
+        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+ 
+        // Create two arrays of y-values to plot:
+        Number[] series1Numbers = {1, 8, 5, 2, 7, 4};
+        Number[] series2Numbers = {4, 6, 3, 8, 2, 10};
+ 
+        // Turn the above arrays into XYSeries:
+        XYSeries series1 = new SimpleXYSeries(
+                Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
+                "Series1");                             // Set the display title of the series
+ 
+        // Same as above, for series2
+        XYSeries series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, 
+                "Series2");
+ 
+        // Create a formatter to use for drawing a series using LineAndPointRenderer:
+        LineAndPointFormatter series1Format = new LineAndPointFormatter(
+                Color.rgb(0, 200, 0),                   // line color
+                null,                   // point color
+                Color.rgb(150, 190, 150));              // fill color (optional)
+ 
+        // Add series1 to the xyplot:
+        mySimpleXYPlot.addSeries(series1, series1Format);
+ 
+        // Same as above, with series2:
+        mySimpleXYPlot.addSeries(series2, new LineAndPointFormatter(Color.rgb(0, 0, 200), null,
+                Color.rgb(150, 150, 190)));
+ 
+ 
+        // Reduce the number of range labels
+        mySimpleXYPlot.setTicksPerRangeLabel(3);
 
-        // initialize our XYPlot reference:
-        plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
-        plot.setTitle("Random Data");
-
-        //addBeziers();
-        addNormal();
-        //addCustom();
-
-        // use a 2x2 grid:
-        plot.getLegendWidget().setTableModel(new DynamicTableModel(2, 5));
-
-        // add a semi-transparent black background to the legend
-        // so it's easier to see overlaid on top of our plot:
-        Paint bgPaint = new Paint();
-        bgPaint.setColor(Color.BLACK);
-        bgPaint.setStyle(Paint.Style.FILL);
-        bgPaint.setAlpha(140);
-
-        plot.getLegendWidget().setBackgroundPaint(bgPaint);
-        // adjust the padding of the legend widget to look a little nicer:
-        plot.getLegendWidget().setPadding(10, 1, 1, 1);
-
-        // adjust the legend size so there is enough room
-        // to draw the new legend grid:
-        plot.getLegendWidget().setSize(new SizeMetrics(70, SizeLayoutType.ABSOLUTE, 80, SizeLayoutType.ABSOLUTE));
-
-        // reposition the grid so that it rests above the bottom-left
-        // edge of the graph widget:
-        plot.position(
-                plot.getLegendWidget(),
-                20,
-                XLayoutStyle.ABSOLUTE_FROM_RIGHT,
-                35,
-                YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
-                AnchorPosition.RIGHT_BOTTOM);
-
-        plot.getGraphWidget().setMarginBottom(10);
-
-        // reduce the number of range labels
-
-
-        plot.getGraphWidget().setRangeLabelMargin(-1);
-        plot.getGraphWidget().setRangeLabelWidth(25);
-        plot.getGraphWidget().setDomainLabelWidth(10);
-        plot.getGraphWidget().setDomainLabelMargin(-6);
-        //plot.getGraphWidget().setRangeLabelTickExtension(-15);
-        plot.position(
-                plot.getRangeLabelWidget(),
-                0,
-                XLayoutStyle.ABSOLUTE_FROM_RIGHT,
-                0,
-                YLayoutStyle.ABSOLUTE_FROM_CENTER,
-                AnchorPosition.RIGHT_MIDDLE);
-        plot.position(
-                plot.getDomainLabelWidget(),
-                0,
-                XLayoutStyle.ABSOLUTE_FROM_CENTER,
-                0,
-                YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
-                AnchorPosition.BOTTOM_MIDDLE);
-        
-        plot.position(
-                plot.getGraphWidget(),
-                0,
-                XLayoutStyle.ABSOLUTE_FROM_LEFT,
-                0,
-                YLayoutStyle.ABSOLUTE_FROM_CENTER,
-                AnchorPosition.LEFT_MIDDLE
-        );
-
-
-        // by default, AndroidPlot displays developer guides to aid in laying out your plot.
+        mySimpleXYPlot.setUserRangeOrigin(4);
+ 
+        // By default, AndroidPlot displays developer guides to aid in laying out your plot.
         // To get rid of them call disableAllMarkup():
-        plot.disableAllMarkup();
-        plot.setOnTouchListener(this);
-
-
-        plot.setBackgroundPaint(null);
-        plot.getGraphWidget().setBackgroundPaint(null);
-        //plot.getGraphWidget().getBackgroundPaint().setColor(Color.WHITE);
-        plot.setBorderPaint(null);
-        plot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
-        plot.getGraphWidget().getDomainLabelPaint().setTextSize(FONT_LABEL_SIZE);
-        plot.getGraphWidget().getDomainOriginLabelPaint().setTextSize(FONT_LABEL_SIZE);
-
-        plot.getGraphWidget().getRangeLabelPaint().setTextSize(FONT_LABEL_SIZE);
-        plot.getGraphWidget().getRangeOriginLabelPaint().setTextSize(FONT_LABEL_SIZE);
-
-        plot.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1, 2, 1, 2}, 0));
-
-                plot.getTitleWidget().getLabelPaint().setTextSize(FONT_LABEL_SIZE);
-        plot.getTitleWidget().pack();
-        
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        float x = motionEvent.getX();
-        float y = motionEvent.getY();
-       
-        if(plot.containsPoint(x, y)) {
-
-            plot.setCursorPosition(x, y);
-            plot.redraw();
-        }
-        return true;
-    }
-
-    protected void addBeziers() {
-        BezierLineAndPointFormatter lpFormatter1 = new BezierLineAndPointFormatter(
-                Color.rgb(100, 25, 20),
-                Color.rgb(4, 100, 88),
-                Color.rgb(66, 100, 3));
-        lpFormatter1.setFillPaint(null);
-        lpFormatter1.setVertexPaint(null);
-        lpFormatter1.getLinePaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter1.getVertexPaint().setShadowLayer(0, 0, 0, 0);
-        plot.addSeries(new SimpleXYSeries(Arrays.asList(series1Numbers),
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-                "BS1"), lpFormatter1);
-
-        BezierLineAndPointFormatter lpFormatter2 = new BezierLineAndPointFormatter(
-                Color.rgb(100, 25, 200),
-                Color.rgb(114, 100, 88),
-                Color.rgb(66, 100, 200));
-        lpFormatter2.setFillPaint(null);
-        lpFormatter2.setVertexPaint(null);
-        lpFormatter2.getLinePaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter2.getVertexPaint().setShadowLayer(0, 0, 0, 0);
-        plot.addSeries(new SimpleXYSeries(Arrays.asList(series2Numbers),
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-                "BS2"), lpFormatter2);
-
-        BezierLineAndPointFormatter lpFormatter3 = new BezierLineAndPointFormatter(
-                Color.rgb(200, 25, 200),
-                Color.rgb(200, 100, 88),
-                Color.rgb(66, 100, 100));
-        lpFormatter3.setFillPaint(null);
-        lpFormatter3.setVertexPaint(null);
-        lpFormatter3.getLinePaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter3.getVertexPaint().setShadowLayer(0, 0, 0, 0);
-        plot.addSeries(new SimpleXYSeries(Arrays.asList(series3Numbers),
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-                "BS3"), lpFormatter3);
-
-        BezierLineAndPointFormatter lpFormatter4 = new BezierLineAndPointFormatter(
-                Color.rgb(220, 25, 20),
-                Color.rgb(4, 220, 88),
-                Color.rgb(1, 100, 225));
-        lpFormatter4.setFillPaint(null);
-        lpFormatter4.setVertexPaint(null);
-        lpFormatter4.getLinePaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter4.getVertexPaint().setShadowLayer(0, 0, 0, 0);
-        plot.addSeries(new SimpleXYSeries(Arrays.asList(series4Numbers),
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-                "BS4"), lpFormatter4);
-
-    }
-
-    protected void addNormal() {
-
-
-        LineAndPointFormatter lpFormatter1 = new LineAndPointFormatter(
-                Color.rgb(100, 25, 20),
-                Color.rgb(4, 100, 88),
-                Color.rgb(66, 100, 3));
-        lpFormatter1.setFillPaint(null);
-        lpFormatter1.setVertexPaint(null);
-        lpFormatter1.getLinePaint().setShadowLayer(0, 0, 0, 0);
-
-        XYRegionFormatter regionFormatter = new XYRegionFormatter(Color.RED);
-        lpFormatter1.addRegion(new RectRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 5, "R1"), regionFormatter);
-
-        XYRegionFormatter regionFormatter2 = new XYRegionFormatter(Color.BLUE);
-
-        lpFormatter1.addRegion(new RectRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 5, Double.POSITIVE_INFINITY, "R2"), regionFormatter2);
-        //lpFormatter1.getVertexPaint().setShadowLayer(0, 0, 0, 0);
-        plot.addSeries(new SimpleXYSeries(Arrays.asList(series1Numbers),
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-                "S1"), lpFormatter1);
-
-        LineAndPointFormatter lpFormatter2 = new LineAndPointFormatter(
-                Color.rgb(100, 25, 200),
-                Color.rgb(114, 100, 88),
-                Color.rgb(66, 100, 200));
-        XYRegionFormatter regionFormatter3 = new XYRegionFormatter(Color.GREEN);
-        XYRegionFormatter regionFormatter4 = new XYRegionFormatter(Color.YELLOW);
-        XYRegionFormatter regionFormatter5 = new XYRegionFormatter(Color.MAGENTA);
-        lpFormatter2.addRegion(new RectRegion(0, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R3"), regionFormatter3);
-        lpFormatter2.addRegion(new RectRegion(2, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R4"), regionFormatter4);
-        lpFormatter2.addRegion(new RectRegion(4, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R5"), regionFormatter5);
-
-        lpFormatter2.setFillPaint(null);
-        lpFormatter2.setVertexPaint(null);
-        lpFormatter2.getLinePaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter2.getVertexPaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter2.addRegion(new RectRegion(0, 5, 0, 5), regionFormatter);
-        plot.addSeries(new SimpleXYSeries(Arrays.asList(series2Numbers),
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-                "S2"), lpFormatter2);
-
-        LineAndPointFormatter lpFormatter3 = new LineAndPointFormatter(
-                Color.rgb(200, 25, 200),
-                Color.rgb(200, 100, 88),
-                Color.rgb(66, 100, 100));
-        lpFormatter3.setFillPaint(null);
-        lpFormatter3.setVertexPaint(null);
-        lpFormatter3.getLinePaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter3.getVertexPaint().setShadowLayer(0, 0, 0, 0);
-        plot.addSeries(new SimpleXYSeries(Arrays.asList(series3Numbers),
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-                "S3"), lpFormatter3);
-
-        LineAndPointFormatter lpFormatter4 = new LineAndPointFormatter(
-                Color.rgb(220, 25, 20),
-                Color.rgb(4, 220, 88),
-                Color.rgb(1, 100, 225));
-        lpFormatter4.setFillPaint(null);
-        lpFormatter4.setVertexPaint(null);
-        lpFormatter4.getLinePaint().setShadowLayer(0, 0, 0, 0);
-        //lpFormatter4.getVertexPaint().setShadowLayer(0, 0, 0, 0);
-        plot.addSeries(new SimpleXYSeries(Arrays.asList(series4Numbers),
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-                "S4"), lpFormatter4);
-        plot.setTicksPerRangeLabel(3);
-        plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
-
-        plot.getGraphWidget().addRangeAxisValueLabelRegion(Double.NEGATIVE_INFINITY, 5, new AxisValueLabelFormatter(Color.RED));
-    }
-
-    public void addCustom() {
-        Number[] xvals = {100, 200, 300, 400, 500, 600};
-        Number[] yvals = {1, 1, 2, 3, 5, 8};
-        XYSeries data1 = new SimpleXYSeries(Arrays.asList(xvals), Arrays.asList(yvals), "Fibonacci Sequence");
-       // XYPlot plot = (XYPlot) findViewById(R.id.xyplot);
-        plot.addSeries(data1, BarRenderer.class, new BarFormatter(Color.rgb(0, 0, 200), Color.rgb(0, 0, 150)));
-        //plot.disableAllMarkup();
-
-        BarRenderer br = (BarRenderer) plot.getRenderer(BarRenderer.class);
-        if (br != null) {
-            br.setBarWidth(50);
-        }
+        mySimpleXYPlot.disableAllMarkup();
     }
 }

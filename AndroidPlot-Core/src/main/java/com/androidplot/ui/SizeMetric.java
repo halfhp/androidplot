@@ -1,4 +1,4 @@
-package com.androidplot.ui.layout;
+package com.androidplot.ui;
 
 /**
  * Encapsulates a sizing algorithm and an associated value.

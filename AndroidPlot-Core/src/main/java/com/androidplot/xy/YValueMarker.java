@@ -1,8 +1,6 @@
 package com.androidplot.xy;
 
 import android.graphics.Paint;
-import com.androidplot.ui.layout.XLayoutStyle;
-import com.androidplot.ui.layout.XPositionMetric;
 
 public class YValueMarker extends ValueMarker<XPositionMetric> {
 

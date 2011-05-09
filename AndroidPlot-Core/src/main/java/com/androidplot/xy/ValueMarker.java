@@ -2,7 +2,7 @@ package com.androidplot.xy;
 
 import android.graphics.Color;
 import android.graphics.Paint;
-import com.androidplot.ui.layout.PositionMetric;
+import com.androidplot.ui.PositionMetric;
 
 /**
  * Encapsulates a single axis line marker drawn onto an XYPlot at a specified value.

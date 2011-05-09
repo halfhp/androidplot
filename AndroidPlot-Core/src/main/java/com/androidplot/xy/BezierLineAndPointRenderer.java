@@ -20,7 +20,8 @@ public class BezierLineAndPointRenderer extends LineAndPointRenderer<BezierLineA
         PointF mid = new PointF();
         mid.set((lastPoint.x + thisPoint.x) / 2, (lastPoint.y + thisPoint.y) / 2);
         path.quadTo((lastPoint.x + mid.x) / 2, lastPoint.y, mid.x, mid.y);
-        path.quadTo((mid.x + thisPoint.x) / 2, thisPoint.y, thisPoint.x, thisPoint.y);
+        //path.quadTo((mid.x + thisPoint.x) / 2, thisPoint.y, thisPoint.x, thisPoint.y);
+        path.quadTo((mid.x + thisPoint.x) / 2, lastPoint.y, thisPoint.x, thisPoint.y);
 
     }
 }

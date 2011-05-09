@@ -1,4 +1,4 @@
-package com.androidplot.ui.layout;
+package com.androidplot.ui;
 
 import android.graphics.*;
 import android.view.MotionEvent;
@@ -7,6 +7,8 @@ import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.ZHash;
 import com.androidplot.util.PixelUtils;
+import com.androidplot.xy.XLayoutStyle;
+import com.androidplot.xy.YLayoutStyle;
 
 public class LayoutManager extends ZHash<Widget, PositionMetrics> implements View.OnTouchListener {
     private boolean drawAnchorsEnabled = true;

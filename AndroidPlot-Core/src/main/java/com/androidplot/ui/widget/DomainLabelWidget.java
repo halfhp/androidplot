@@ -1,6 +1,7 @@
 package com.androidplot.ui.widget;
 
-import com.androidplot.ui.layout.SizeMetrics;
+import com.androidplot.ui.SizeMetrics;
+import com.androidplot.ui.TextOrientationType;
 import com.androidplot.xy.XYPlot;
 
 public class DomainLabelWidget extends TextLabelWidget {

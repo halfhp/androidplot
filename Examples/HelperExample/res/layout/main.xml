@@ -13,7 +13,7 @@
     android:layout_marginLeft="0px"
     android:layout_marginRight="0px"
     android:layout_marginBottom="0px"
-    title="Another AndroidPlot Example"
+    title="Quickstart Example"
     />
 </LinearLayout>
 

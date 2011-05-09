@@ -1,5 +1,7 @@
-package com.androidplot.ui.layout;
+package com.androidplot.xy;
 
+
+import com.androidplot.ui.PositionMetric;
 
 public class XPositionMetric extends PositionMetric<XLayoutStyle> {
 
@@ -20,12 +22,12 @@ public class XPositionMetric extends PositionMetric<XLayoutStyle> {
             case ABSOLUTE_FROM_LEFT:
             case ABSOLUTE_FROM_RIGHT:
             case ABSOLUTE_FROM_CENTER:
-                PositionMetric.validateValue(value, PositionMetric.LayoutMode.ABSOLUTE);
+                validateValue(value, PositionMetric.LayoutMode.ABSOLUTE);
                 break;
             case RELATIVE_TO_LEFT:
             case RELATIVE_TO_RIGHT:
             case RELATIVE_TO_CENTER:
-                PositionMetric.validateValue(value, PositionMetric.LayoutMode.RELATIVE);
+                validateValue(value, PositionMetric.LayoutMode.RELATIVE);
         }
     }
 

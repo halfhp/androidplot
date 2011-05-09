@@ -1,4 +1,4 @@
-package com.androidplot.ui.layout;
+package com.androidplot.ui;
 
 /**
  * Enumeration of possible anchor positions that a {@link com.androidplot.ui.widget.Widget} can use.  There are a total

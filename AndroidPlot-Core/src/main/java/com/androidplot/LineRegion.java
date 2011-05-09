@@ -4,10 +4,10 @@ package com.androidplot;
  * A one dimensional region represented by a starting and ending value.
  */
 public class LineRegion {
-    private double minVal;
-    private double maxVal;
+    private Number minVal;
+    private Number maxVal;
 
-    public LineRegion(double minVal, double maxVal) {
+    public LineRegion(Number minVal, Number maxVal) {
         this.setMinVal(minVal);
         this.setMaxVal(maxVal);
     }
@@ -17,8 +17,8 @@ public class LineRegion {
      * @param value
      * @return
      */
-    public boolean contains(double value) {
-        return value >= minVal && value <= maxVal;
+    public boolean contains(Number value) {
+        return value.doubleValue() >= minVal.doubleValue() && value.doubleValue() <= maxVal.doubleValue();
     }
 
     public boolean intersects(LineRegion lineRegion) {
@@ -31,7 +31,7 @@ public class LineRegion {
      * @param line2Max
      * @return
      */
-    public  boolean intersects(double line2Min, double line2Max) {
+    public  boolean intersects(Number line2Min, Number line2Max) {
 
         //double l1min = getMinVal() == null ? Double.NEGATIVE_INFINITY : getMinVal().doubleValue();
         //double l1max = getMaxVal() == null ? Double.POSITIVE_INFINITY : getMaxVal().doubleValue();
@@ -39,26 +39,33 @@ public class LineRegion {
         //double l2min = line2Min == null ? Double.NEGATIVE_INFINITY : line2Min.doubleValue();
         //double l2max = line2Max == null ? Double.POSITIVE_INFINITY : line2Max.doubleValue();
 
+
         // is this line completely within line2?
-        if(line2Min <= this.minVal && line2Max >= this.maxVal) {
+        if(line2Min.doubleValue() <= this.minVal.doubleValue() && line2Max.doubleValue() >= this.maxVal.doubleValue()) {
             return true;
         // is line1 partially within line2
         } else return contains(line2Min) || contains(line2Max);
     }
 
-    public double getMinVal() {
+    public Number getMinVal() {
         return minVal;
     }
 
-    public void setMinVal(double minVal) {
+    public void setMinVal(Number minVal) {
+        if(minVal == null) {
+            throw new NullPointerException("Region values can never be null.");
+        }
         this.minVal = minVal;
     }
 
-    public double getMaxVal() {
+    public Number getMaxVal() {
         return maxVal;
     }
 
-    public void setMaxVal(double maxVal) {
+    public void setMaxVal(Number maxVal) {
+        if(maxVal == null) {
+            throw new NullPointerException("Region values can never be null.");
+        }
         this.maxVal = maxVal;
     }
 }

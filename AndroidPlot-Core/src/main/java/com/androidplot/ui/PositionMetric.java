@@ -1,4 +1,4 @@
-package com.androidplot.ui.layout;
+package com.androidplot.ui;
 
 public abstract class PositionMetric<LayoutType extends Enum> extends LayoutMetric<LayoutType> {
 

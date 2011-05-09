@@ -1,4 +1,6 @@
-package com.androidplot.ui.layout;
+package com.androidplot.xy;
+
+import com.androidplot.ui.PositionMetric;
 
 public class YPositionMetric extends PositionMetric<YLayoutStyle> {
     /*
@@ -50,12 +52,12 @@ public class YPositionMetric extends PositionMetric<YLayoutStyle> {
             case ABSOLUTE_FROM_TOP:
             case ABSOLUTE_FROM_BOTTOM:
             case ABSOLUTE_FROM_CENTER:
-                PositionMetric.validateValue(value, PositionMetric.LayoutMode.ABSOLUTE);
+                validateValue(value, PositionMetric.LayoutMode.ABSOLUTE);
                 break;
             case RELATIVE_TO_TOP:
             case RELATIVE_TO_BOTTOM:
             case RELATIVE_TO_CENTER:
-                PositionMetric.validateValue(value, PositionMetric.LayoutMode.RELATIVE);
+                validateValue(value, PositionMetric.LayoutMode.RELATIVE);
         }
     }
 

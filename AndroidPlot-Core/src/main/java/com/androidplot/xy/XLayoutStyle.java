@@ -1,4 +1,4 @@
-package com.androidplot.ui.layout;
+package com.androidplot.xy;
 
 public enum XLayoutStyle {
     ABSOLUTE_FROM_LEFT,

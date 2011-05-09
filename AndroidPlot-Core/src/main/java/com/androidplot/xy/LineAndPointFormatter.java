@@ -3,6 +3,10 @@ package com.androidplot.xy;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+/**
+ * Defines the visual aesthetics of an XYSeries; outline color and width, fill style,
+ * vertex size and color, shadowing, etc.
+ */
 public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> {
 
     private static final float DEFAULT_LINE_STROKE_WIDTH = 1.5f;
@@ -37,7 +41,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
             linePaint.setStrokeWidth(DEFAULT_LINE_STROKE_WIDTH);
             linePaint.setColor(lineColor);
             linePaint.setStyle(Paint.Style.STROKE);
-            linePaint.setShadowLayer(1, 3, 3, Color.BLACK);
+            //linePaint.setShadowLayer(1, 3, 3, Color.BLACK);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.androidplot.ui.widget;
+package com.androidplot.ui;
 
 import com.androidplot.series.Series;
 import com.androidplot.xy.XYSeriesFormatter;

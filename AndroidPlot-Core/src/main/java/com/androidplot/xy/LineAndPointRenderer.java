@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> extends XYSeriesRenderer<FormatterType> {
 
-    //private PointF lastPoint;
+    private boolean fillToBottom = false;
 
     public LineAndPointRenderer(XYPlot plot) {
         super(plot);
@@ -122,11 +122,26 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
 
     protected void renderPath(Canvas canvas, RectF plotArea, Path path, PointF firstPoint, PointF lastPoint, LineAndPointFormatter formatter) {
         Path outlinePath = new Path(path);
+
+            if(fillToBottom) {
             // create our last point at the bottom/x position so filling
             // will look good
             path.lineTo(lastPoint.x, plotArea.bottom);
             path.lineTo(firstPoint.x, plotArea.bottom);
             path.close();
+            } else {
+                float originPix = ValPixConverter.valToPix(
+                        getPlot().getRangeOrigin().doubleValue(),
+                        getPlot().getCalculatedMinY().doubleValue(),
+                        getPlot().getCalculatedMaxY().doubleValue(),
+                        plotArea.height(),
+                        true);
+                originPix += plotArea.top;
+
+                path.lineTo(lastPoint.x, originPix);
+                path.lineTo(firstPoint.x, originPix);
+                path.close();
+            }
         if (formatter.getFillPaint() != null) {
             canvas.drawPath(path, formatter.getFillPaint());
         }

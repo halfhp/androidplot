@@ -25,16 +25,32 @@ public class MyActivity extends Activity
 
         mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
         Number[] numSightings = {5, 8, 9, 2, 5};
-        Number[] years = {
+        /*Number[] timestamps = {
                 978307200,  // 2001
                 1009843200, // 2002
                 1041379200, // 2003
                 1072915200, // 2004
                 1104537600  // 2005
-        };
+        };*/
+        // 1301317768881
+        /*Number[] timestamps = {
+                1301317768881L, // 2001
+                1301317769998L, // 2002
+                1301317771007L, // 2003
+                1301317772886L, // 2004
+                1301317773885L  // 2005
+        };*/
+
+        // these values have already been divided by 1000:
+        Number[] timestamps = {
+                1291379847,  // t2 - t1:
+                1291995749,  // 615902
+                1291996112,  // 363
+                1294676052,  // 2679940
+                1299506213}; // 4830161
         // create our series from our array of nums:
         XYSeries series2 = new SimpleXYSeries(
-                Arrays.asList(years),
+                Arrays.asList(timestamps),
                 Arrays.asList(numSightings),
                 "Sightings in USA");
 
@@ -67,7 +83,7 @@ public class MyActivity extends Activity
         mySimpleXYPlot.addSeries(series2, formatter);
 
         // draw a domain tick for each year:
-        mySimpleXYPlot.setDomainStep(XYStepMode.SUBDIVIDE, years.length);
+        mySimpleXYPlot.setDomainStep(XYStepMode.SUBDIVIDE, timestamps.length);
 
         // customize our domain/range labels
         mySimpleXYPlot.setDomainLabel("Year");
@@ -76,12 +92,21 @@ public class MyActivity extends Activity
         // get rid of decimal points in our range labels:
         mySimpleXYPlot.setRangeValueFormat(new DecimalFormat("0"));
 
-        mySimpleXYPlot.setDomainValueFormat(new Format() {
+        mySimpleXYPlot.setDomainValueFormat(new MyDateFormat());
+
+        // by default, AndroidPlot displays developer guides to aid in laying out your plot.
+        // To get rid of them call disableAllMarkup():
+        mySimpleXYPlot.disableAllMarkup();
+    }
+
+    private class MyDateFormat extends Format {
+
 
             // create a simple date format that draws on the year portion of our timestamp.
             // see http://download.oracle.com/javase/1.4.2/docs/api/java/text/SimpleDateFormat.html
             // for a full description of SimpleDateFormat.
-            private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+            private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
+
 
             @Override
             public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
@@ -96,12 +121,8 @@ public class MyActivity extends Activity
             @Override
             public Object parseObject(String source, ParsePosition pos) {
                 return null;
-             
-            }
-        });
 
-        // by default, AndroidPlot displays developer guides to aid in laying out your plot.
-        // To get rid of them call disableAllMarkup():
-        mySimpleXYPlot.disableAllMarkup();
+            }
+
     }
 }

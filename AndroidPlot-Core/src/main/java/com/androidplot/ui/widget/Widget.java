@@ -2,7 +2,7 @@ package com.androidplot.ui.widget;
 
 import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
-import com.androidplot.ui.layout.*;
+import com.androidplot.ui.*;
 
 public abstract class Widget implements BoxModelable {
 

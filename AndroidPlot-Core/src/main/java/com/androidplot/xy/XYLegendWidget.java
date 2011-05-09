@@ -1,11 +1,11 @@
 package com.androidplot.xy;
 
 import android.graphics.*;
-import com.androidplot.SeriesAndFormatterList;
+import com.androidplot.ui.SeriesAndFormatterList;
 import com.androidplot.series.XYSeries;
-import com.androidplot.ui.layout.TableModel;
+import com.androidplot.ui.SizeMetrics;
+import com.androidplot.ui.TableModel;
 import com.androidplot.ui.widget.Widget;
-import com.androidplot.ui.layout.SizeMetrics;
 import com.androidplot.util.FontUtils;
 
 import java.util.*;

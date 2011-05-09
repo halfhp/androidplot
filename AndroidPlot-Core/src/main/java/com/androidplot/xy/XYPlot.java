@@ -37,10 +37,10 @@ import android.util.AttributeSet;
 import com.androidplot.Plot;
 import com.androidplot.series.XYSeries;
 //import com.androidplot.xy.ui.widget.renderer.XYRendererType;
+import com.androidplot.ui.*;
 import com.androidplot.ui.widget.RangeLabelWidget;
 import com.androidplot.ui.widget.DomainLabelWidget;
-import com.androidplot.ui.layout.*;
-import com.androidplot.ui.widget.TextOrientationType;
+import com.androidplot.ui.TextOrientationType;
 
 import java.text.Format;
 import java.util.ArrayList;
@@ -115,6 +115,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private ArrayList<YValueMarker> yValueMarkers;
     private ArrayList<XValueMarker> xValueMarkers;
 
+    private RectRegion defaultBounds;
+
     {
         legendWidget = new XYLegendWidget(
                 this,
@@ -185,6 +187,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
         xValueMarkers = new ArrayList<XValueMarker>();
         yValueMarkers = new ArrayList<YValueMarker>();
+
+        setDefaultBounds(new RectRegion(-1, 1, -1, 1));
     }
 
 
@@ -958,19 +962,19 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     public Number getCalculatedMinX() {
-        return calculatedMinX;
+        return calculatedMinX != null ? calculatedMinX : getDefaultBounds().getMinX();
     }
 
     public Number getCalculatedMaxX() {
-        return calculatedMaxX;
+        return calculatedMaxX != null ? calculatedMaxX : getDefaultBounds().getMaxX();
     }
 
     public Number getCalculatedMinY() {
-        return calculatedMinY;
+        return calculatedMinY != null ? calculatedMinY : getDefaultBounds().getMinY();
     }
 
     public Number getCalculatedMaxY() {
-        return calculatedMaxY;
+        return calculatedMaxY != null ? calculatedMaxY : getDefaultBounds().getMaxY();
     }
 
     public boolean isDrawDomainOriginEnabled() {
@@ -1075,5 +1079,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     protected List<XValueMarker> getXValueMarkers() {
         return xValueMarkers;
+    }
+
+    public RectRegion getDefaultBounds() {
+        return defaultBounds;
+    }
+
+    public void setDefaultBounds(RectRegion defaultBounds) {
+        this.defaultBounds = defaultBounds;
     }
 }

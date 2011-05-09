@@ -1,4 +1,4 @@
-package com.androidplot.ui.layout;
+package com.androidplot.xy;
 
 public enum YLayoutStyle {
     ABSOLUTE_FROM_TOP,

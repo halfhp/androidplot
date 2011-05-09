@@ -1,7 +1,8 @@
 package com.androidplot.ui.widget;
 
 import com.androidplot.Plot;
-import com.androidplot.ui.layout.SizeMetrics;
+import com.androidplot.ui.SizeMetrics;
+import com.androidplot.ui.TextOrientationType;
 
 public class TitleWidget extends TextLabelWidget {
 

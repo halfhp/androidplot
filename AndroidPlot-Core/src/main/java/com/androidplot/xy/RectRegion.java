@@ -8,6 +8,10 @@ import com.androidplot.util.ValPixConverter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * RectRegion is just a rectangle with additional methods for determining
+ * intersections with other RectRegion instances.
+ */
 public class RectRegion {
 
     LineRegion xLineRegion;
@@ -15,32 +19,36 @@ public class RectRegion {
     private String label;
 
     /**
-     * Null values are interpreted as infinity
+     *
      * @param minX
      * @param maxX
      * @param minY
      * @param maxY
      */
-    public RectRegion(double minX, double maxX, double minY, double maxY, String label) {
+    public RectRegion(Number minX, Number maxX, Number minY, Number maxY, String label) {
         xLineRegion = new LineRegion(minX, maxX);
         yLineRegion = new LineRegion(minY, maxY);
         this.setLabel(label);
+    }
+
+    public RectRegion(Number minX, Number maxX, Number minY, Number maxY) {
+        this(minX, maxX, minY, maxY, null);
     }
 
     public boolean containsPoint(PointF point) {
         throw new UnsupportedOperationException("Not yet implemented.");
     }
 
-    public boolean containsValue(double x, double y) {
+    public boolean containsValue(Number x, Number y) {
         throw new UnsupportedOperationException("Not yet implemented.");
     }
 
-    public boolean containsDomainValue(double value) {
+    public boolean containsDomainValue(Number value) {
         //return RectRegion.isBetween(value, minX, maxX);
         return xLineRegion.contains(value);
     }
 
-    public boolean containsRangeValue(double value) {
+    public boolean containsRangeValue(Number value) {
         //return RectRegion.isBetween(value, minY, maxY);
         return yLineRegion.contains(value);
     }
@@ -61,32 +69,29 @@ public class RectRegion {
      * @param maxY
      * @return
      */
-    public boolean intersects(double minX, double maxX, double minY, double maxY) {
+    public boolean intersects(Number minX, Number maxX, Number minY, Number maxY) {
         return xLineRegion.intersects(minX, maxX) && yLineRegion.intersects(minY, maxY);
     }
 
-    public boolean intersects(RectF region, double visMinX, double visMaxX, double visMinY, double visMaxY) {
+    public boolean intersects(RectF region, Number visMinX, Number visMaxX, Number visMinY, Number visMaxY) {
 
-        RectF thisRegion = getRectF(region, visMinX, visMaxX, visMinY, visMaxY);
+        RectF thisRegion = getRectF(region, visMinX.doubleValue(), visMaxX.doubleValue(),
+                visMinY.doubleValue(), visMaxY.doubleValue());
         return RectF.intersects(thisRegion, region);
     }
 
-    public RectF getRectF(RectF plotRect, double visMinX, double visMaxX, double visMinY, double visMaxY) {
+    public RectF getRectF(RectF plotRect, Number visMinX, Number visMaxX, Number visMinY, Number visMaxY) {
         PointF topLeftPoint = ValPixConverter.valToPix(
-                xLineRegion.getMinVal() != Double.NEGATIVE_INFINITY ? xLineRegion.getMinVal() : visMinX,
-                //this.minX,
-                yLineRegion.getMaxVal() != Double.NEGATIVE_INFINITY ? yLineRegion.getMaxVal() : visMaxY,
-                //this.maxY,
+                xLineRegion.getMinVal().doubleValue() != Double.NEGATIVE_INFINITY ? xLineRegion.getMinVal() : visMinX,
+                yLineRegion.getMaxVal().doubleValue() != Double.NEGATIVE_INFINITY ? yLineRegion.getMaxVal() : visMaxY,
                 plotRect,
                 visMinX,
                 visMaxX,
                 visMinY,
                 visMaxY);
         PointF bottomRightPoint = ValPixConverter.valToPix(
-                xLineRegion.getMaxVal() != Double.POSITIVE_INFINITY ? xLineRegion.getMaxVal() : visMaxX,
-                //this.maxX,
-                yLineRegion.getMinVal() != Double.POSITIVE_INFINITY ? yLineRegion.getMinVal() : visMinY,
-                //this.minY,
+                xLineRegion.getMaxVal().doubleValue() != Double.POSITIVE_INFINITY ? xLineRegion.getMaxVal() : visMaxX,
+                yLineRegion.getMinVal().doubleValue() != Double.POSITIVE_INFINITY ? yLineRegion.getMinVal() : visMinY,
                 plotRect,
                 visMinX,
                 visMaxX,
@@ -106,7 +111,7 @@ public class RectRegion {
      * @param maxY
      * @return
      */
-    public static List<RectRegion> regionsWithin(List<RectRegion> regions, double minX, double maxX, double minY, double maxY) {
+    public static List<RectRegion> regionsWithin(List<RectRegion> regions, Number minX, Number maxX, Number minY, Number maxY) {
         ArrayList<RectRegion> intersectingRegions = new ArrayList<RectRegion>();
         for(RectRegion r : regions) {
             if(r.intersects(minX, maxX, minY, maxY)) {
@@ -117,7 +122,7 @@ public class RectRegion {
     }
 
 
-    public double getMinX() {
+    public Number getMinX() {
         return xLineRegion.getMinVal();
     }
 
@@ -125,27 +130,27 @@ public class RectRegion {
         xLineRegion.setMinVal(minX);
     }
 
-    public double getMaxX() {
+    public Number getMaxX() {
         return xLineRegion.getMaxVal();
     }
 
-    public void setMaxX(double maxX) {
+    public void setMaxX(Number maxX) {
         xLineRegion.setMaxVal(maxX);
     }
 
-    public double getMinY() {
+    public Number getMinY() {
         return yLineRegion.getMinVal();
     }
 
-    public void setMinY(double minY) {
+    public void setMinY(Number minY) {
         yLineRegion.setMinVal(minY);
     }
 
-    public double getMaxY() {
+    public Number getMaxY() {
         return yLineRegion.getMaxVal();
     }
 
-    public void setMaxY(double maxY) {
+    public void setMaxY(Number maxY) {
         yLineRegion.setMaxVal(maxY);
     }
 

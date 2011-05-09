@@ -1,10 +1,15 @@
-package com.androidplot;
+package com.androidplot.ui;
 
 import com.androidplot.series.Series;
 
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Associates a Series with a Formatter.
+ * @param <SeriesType>
+ * @param <FormatterType>
+ */
 public class SeriesAndFormatterList<SeriesType extends Series, FormatterType> {
     private LinkedList<SeriesType> seriesList;
     private LinkedList<FormatterType> formatterList;

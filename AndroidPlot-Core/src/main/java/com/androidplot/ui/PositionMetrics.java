@@ -1,4 +1,9 @@
-package com.androidplot.ui.layout;
+package com.androidplot.ui;
+
+import com.androidplot.xy.XLayoutStyle;
+import com.androidplot.xy.XPositionMetric;
+import com.androidplot.xy.YLayoutStyle;
+import com.androidplot.xy.YPositionMetric;
 
 public class PositionMetrics implements Comparable<PositionMetrics> {
 

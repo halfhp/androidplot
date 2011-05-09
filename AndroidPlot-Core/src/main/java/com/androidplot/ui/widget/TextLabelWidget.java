@@ -1,7 +1,7 @@
 package com.androidplot.ui.widget;
 
 import android.graphics.*;
-import com.androidplot.ui.layout.*;
+import com.androidplot.ui.*;
 import com.androidplot.util.FontUtils;
 
 public abstract class TextLabelWidget extends Widget {

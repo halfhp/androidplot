@@ -1,4 +1,4 @@
-package com.androidplot.ui.widget;
+package com.androidplot.ui;
 
 /**
  * Base class of all Formatters.  Encapsulates visual elements of a series; line style, color etc.

@@ -1,8 +1,8 @@
 package com.androidplot.xy;
 
-import com.androidplot.SeriesAndFormatterList;
+import com.androidplot.ui.SeriesAndFormatterList;
 import com.androidplot.series.XYSeries;
-import com.androidplot.ui.widget.DataRenderer;
+import com.androidplot.ui.DataRenderer;
 import com.androidplot.util.ZIndexable;
 
 import java.util.Hashtable;

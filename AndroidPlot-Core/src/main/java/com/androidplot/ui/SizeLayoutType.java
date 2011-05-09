@@ -1,4 +1,4 @@
-package com.androidplot.ui.layout;
+package com.androidplot.ui;
 
 /**
  * SizeLayoutType is an enumeration of algorithms available for calculating an arbitrary dimension of a widget.

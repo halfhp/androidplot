@@ -1,10 +1,9 @@
 package com.androidplot.xy;
 
 import android.graphics.*;
-import com.androidplot.LineRegion;
 import com.androidplot.exception.PlotRenderException;
+import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.widget.Widget;
-import com.androidplot.ui.layout.SizeMetrics;
 import com.androidplot.util.FontUtils;
 import com.androidplot.util.ValPixConverter;
 import com.androidplot.util.ZHash;
@@ -123,14 +122,6 @@ public class XYGraphWidget extends Widget {
     public ZIndexable<RectRegion> getAxisValueLabelRegions() {
         return axisValueLabelRegions;
     }
-
-    /*public ZIndexable<LineRegion> getDomainLabelRegions() {
-        return domainLabelRegions;
-    }
-
-    public ZIndexable<LineRegion> getRangeLabelRegions() {
-        return rangeLabelRegions;
-    }*/
 
     /**
      * Add a new Region used for rendering axis valuelabels.  Note that it is possible
@@ -251,11 +242,11 @@ public class XYGraphWidget extends Widget {
     public RectF getGridRect() {
         return paddedGridRect;
     }
-    private String getFormattedRangeValue(double value) {
+    private String getFormattedRangeValue(Number value) {
         return rangeValueFormat.format(value);
     }
 
-    private String getFormattedDomainValue(double value) {
+    private String getFormattedDomainValue(Number value) {
         return domainValueFormat.format(value);
     }
 
@@ -305,7 +296,7 @@ public class XYGraphWidget extends Widget {
     protected void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
         gridRect = getGridRect(widgetRect); // used for drawing the background of the grid
         paddedGridRect = getPaddedGridRect(gridRect); // used for drawing lines etc.
-        if (!plot.isEmpty()) {
+        //if (!plot.isEmpty()) {
 
             if (plot.getCalculatedMinX() != null &&
                     plot.getCalculatedMaxX() != null &&
@@ -318,7 +309,7 @@ public class XYGraphWidget extends Widget {
                     drawMarkers(canvas);
                 }
             }
-        }
+        //}
     }
 
     private RectF getGridRect(RectF widgetRect) {
@@ -329,16 +320,17 @@ public class XYGraphWidget extends Widget {
         return new RectF(gridRect.left + gridPaddingLeft, gridRect.top + gridPaddingTop, gridRect.right - gridPaddingRight, gridRect.bottom - gridPaddingBottom);
     }
 
-    private void drawTickText(Canvas canvas, XYAxisType axis, double value, float xPix, float yPix, Paint labelPaint) {
+    private void drawTickText(Canvas canvas, XYAxisType axis, Number value, float xPix, float yPix, Paint labelPaint) {
         AxisValueLabelFormatter rf = null;
         String txt = null;
+        double v = value.doubleValue();
         switch(axis) {
             case DOMAIN:
-                rf = getAxisValueLabelFormatterForDomainVal(value);
+                rf = getAxisValueLabelFormatterForDomainVal(v);
                 txt = getFormattedDomainValue(value);
                 break;
             case RANGE:
-                rf = getAxisValueLabelFormatterForRangeVal(value);
+                rf = getAxisValueLabelFormatterForRangeVal(v);
                 txt = getFormattedRangeValue(value);
                 break;
         }
@@ -358,7 +350,7 @@ public class XYGraphWidget extends Widget {
         canvas.drawText(txt, xPix, yPix, p);
     }
 
-    private void drawDomainTick(Canvas canvas, float xPix, double xVal, Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
+    private void drawDomainTick(Canvas canvas, float xPix, Number xVal, Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         if (!drawLineOnly) {
             canvas.drawLine(xPix,
                     gridRect.top,
@@ -372,7 +364,7 @@ public class XYGraphWidget extends Widget {
         }
     }
 
-    public void drawRangeTick(Canvas canvas, float yPix, double yVal, Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
+    public void drawRangeTick(Canvas canvas, float yPix, Number yVal, Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         if (!drawLineOnly) {
             canvas.drawLine(
                     gridRect.left - rangeLabelTickExtension,
@@ -932,6 +924,13 @@ public class XYGraphWidget extends Widget {
 
     public void setDrawMarkersEnabled(boolean drawMarkersEnabled) {
         this.drawMarkersEnabled = drawMarkersEnabled;
+    }
+
+    private class TickLabelArea {
+        private float size; // size in pixels
+        protected void draw(Canvas canvas) {
+            // TODO
+        }
     }
 
 }

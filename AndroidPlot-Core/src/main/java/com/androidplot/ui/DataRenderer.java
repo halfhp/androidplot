@@ -1,9 +1,8 @@
-package com.androidplot.ui.widget;
+package com.androidplot.ui;
 
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.graphics.Region;
-import com.androidplot.SeriesAndFormatterList;
 import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.Plot;

@@ -6,11 +6,13 @@ import android.util.AttributeSet;
 import android.view.View;
 import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
-import com.androidplot.ui.widget.TextOrientationType;
+import com.androidplot.ui.*;
+import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TitleWidget;
-import com.androidplot.ui.layout.*;
 import com.androidplot.ui.widget.Widget;
-import com.androidplot.ui.widget.DataRenderer;
+import com.androidplot.ui.DataRenderer;
+import com.androidplot.xy.XLayoutStyle;
+import com.androidplot.xy.YLayoutStyle;
 
 import java.util.*;
 

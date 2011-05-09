@@ -1,4 +1,4 @@
-package com.androidplot.ui.widget;
+package com.androidplot.ui;
 
 public enum TextOrientationType {
     HORIZONTAL,

@@ -132,6 +132,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         backgroundPaint.setStyle(Paint.Style.FILL);
         graphWidget.setBackgroundPaint(backgroundPaint);
 
+
         domainLabelWidget = new DomainLabelWidget(
                 this,
                 new SizeMetrics(12, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE),

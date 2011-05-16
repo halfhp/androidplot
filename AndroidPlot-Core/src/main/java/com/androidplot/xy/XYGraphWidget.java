@@ -29,8 +29,8 @@ public class XYGraphWidget extends Widget {
     private static final int CURSOR_LABEL_SPACING = 2;  // space between cursor lines and label in pixels
     private float domainLabelWidth = 15;  // how many pixels is the area allocated for domain labels
     private float rangeLabelWidth = 41;  // ...
-    private float domainLabelMargin = 1;
-    private float rangeLabelMargin = 1;  // not currently used since this margin can be adjusted via rangeLabelWidth
+    private float domainLabelVerticalOffset = -5;
+    private float rangeLabelHorizontalOffset = 1;  // not currently used since this margin can be adjusted via rangeLabelWidth
     private int ticksPerRangeLabel = 1;
     private int ticksPerDomainLabel = 1;
     private float gridPaddingTop = 0;
@@ -357,7 +357,10 @@ public class XYGraphWidget extends Widget {
                     xPix, gridRect.bottom + domainLabelTickExtension,
                     linePaint);
             float fontHeight = FontUtils.getFontHeight(labelPaint);
-            float yPix = gridRect.bottom + rangeLabelTickExtension + domainLabelMargin + fontHeight;
+
+            float yPix = gridRect.bottom + rangeLabelTickExtension + domainLabelVerticalOffset + fontHeight;
+            //RectF fff = new RectF(gridRect.left, yPix-fontHeight, gridRect.right, yPix);
+            //canvas.drawRect(fff , labelPaint);
             drawTickText(canvas, XYAxisType.DOMAIN, xVal, xPix, yPix, labelPaint);
         } else {
             canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom, linePaint);
@@ -372,7 +375,7 @@ public class XYGraphWidget extends Widget {
                     gridRect.right,
                     yPix,
                     linePaint);
-            float xPix = gridRect.left - (rangeLabelTickExtension + rangeLabelMargin);
+            float xPix = gridRect.left - (rangeLabelTickExtension + rangeLabelHorizontalOffset);
             drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix, labelPaint);
         } else {
             canvas.drawLine(gridRect.left, yPix, gridRect.right, yPix, linePaint);
@@ -654,12 +657,17 @@ public class XYGraphWidget extends Widget {
     protected void drawData(Canvas canvas) throws PlotRenderException {
         // TODO: iterate through a XYSeriesRenderer list
 
-        int canvasState = canvas.save();
-        canvas.clipRect(gridRect, android.graphics.Region.Op.REPLACE);
-        for(XYSeriesRenderer renderer : plot.getRendererList()) {
-            renderer.render(canvas, paddedGridRect);
+        //int canvasState = canvas.save();
+        try {
+            canvas.save(Canvas.ALL_SAVE_FLAG);
+            canvas.clipRect(gridRect, android.graphics.Region.Op.INTERSECT);
+            for (XYSeriesRenderer renderer : plot.getRendererList()) {
+                renderer.render(canvas, paddedGridRect);
+            }
+            //canvas.restoreToCount(canvasState);
+        } finally {
+            canvas.restore();
         }
-        canvas.restoreToCount(canvasState);
     }
 
     protected void drawPoint(Canvas canvas, PointF point, Paint paint) {
@@ -682,20 +690,20 @@ public class XYGraphWidget extends Widget {
         this.rangeLabelWidth = rangeLabelWidth;
     }
 
-    public float getDomainLabelMargin() {
-        return domainLabelMargin;
+    public float getDomainLabelVerticalOffset() {
+        return domainLabelVerticalOffset;
     }
 
-    public void setDomainLabelMargin(float domainLabelMargin) {
-        this.domainLabelMargin = domainLabelMargin;
+    public void setDomainLabelVerticalOffset(float domainLabelVerticalOffset) {
+        this.domainLabelVerticalOffset = domainLabelVerticalOffset;
     }
 
-    public float getRangeLabelMargin() {
-        return rangeLabelMargin;
+    public float getRangeLabelHorizontalOffset() {
+        return rangeLabelHorizontalOffset;
     }
 
-    public void setRangeLabelMargin(float rangeLabelMargin) {
-        this.rangeLabelMargin = rangeLabelMargin;
+    public void setRangeLabelHorizontalOffset(float rangeLabelHorizontalOffset) {
+        this.rangeLabelHorizontalOffset = rangeLabelHorizontalOffset;
     }
 
     public Paint getGridBackgroundPaint() {

@@ -79,7 +79,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
             vertexPaint.setColor(vertexColor);
             vertexPaint.setStrokeCap(Paint.Cap.ROUND);
 
-            vertexPaint.setShadowLayer(1, 3, 3, Color.BLACK);
+            //vertexPaint.setShadowLayer(1, 3, 3, Color.BLACK);
         }
     }
 

@@ -13,6 +13,7 @@ public class FontUtils {
     public static float getFontHeight(Paint paint) {
         Paint.FontMetrics metrics = paint.getFontMetrics();
         return (-metrics.ascent) + metrics.descent;
+        //return (-metrics.top) + metrics.bottom;
     }
 
     /**

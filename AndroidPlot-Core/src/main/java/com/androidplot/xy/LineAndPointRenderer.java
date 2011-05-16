@@ -173,10 +173,13 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
             XYRegionFormatter f = formatter.getRegionFormatter(r);
             RectF regionRect = r.getRectF(plotArea, minX, maxX, minY, maxY);
             if (regionRect != null) {
-                canvas.save();
+                try {
+                canvas.save(Canvas.ALL_SAVE_FLAG);
                 canvas.clipPath(path);
                 canvas.drawRect(regionRect, f.getPaint());
-                canvas.restore();
+                } finally {
+                    canvas.restore();
+                }
             }
         }
 

@@ -70,10 +70,10 @@ public class XYRegionExampleActivity extends Activity {
         plot.getDomainLabelWidget().setVisible(false);
         plot.getRangeLabelWidget().setVisible(false);
 
-        plot.getGraphWidget().setRangeLabelMargin(-1);
+        plot.getGraphWidget().setRangeLabelHorizontalOffset(-1);
         plot.getGraphWidget().setRangeLabelWidth(25);
         plot.getGraphWidget().setDomainLabelWidth(10);
-        plot.getGraphWidget().setDomainLabelMargin(-6);
+        plot.getGraphWidget().setDomainLabelVerticalOffset(-6);
         plot.setBackgroundPaint(null);
         plot.getGraphWidget().setBackgroundPaint(null);
         plot.setBorderPaint(null);

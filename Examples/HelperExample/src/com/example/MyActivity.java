@@ -7,6 +7,10 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.series.XYSeries;
 import com.androidplot.xy.*;
 
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
 import java.util.Arrays;
  
 public class MyActivity extends Activity
@@ -42,23 +46,43 @@ public class MyActivity extends Activity
                 Color.rgb(0, 200, 0),                   // line color
                 null,                   // point color
                 Color.rgb(150, 190, 150),
-                FillDirection.TOP);              // fill color (optional)
+                FillDirection.RANGE_ORIGIN);              // fill color (optional)
  
         // Add series1 to the xyplot:
         mySimpleXYPlot.addSeries(series1, series1Format);
  
         // Same as above, with series2:
         mySimpleXYPlot.addSeries(series2, new LineAndPointFormatter(Color.rgb(0, 0, 200), null,
-                Color.rgb(150, 150, 190)));
+                Color.rgb(150, 150, 190), FillDirection.RANGE_ORIGIN));
  
  
         // Reduce the number of range labels
         mySimpleXYPlot.setTicksPerRangeLabel(3);
 
         mySimpleXYPlot.setUserRangeOrigin(4);
+        mySimpleXYPlot.setRangeValueFormat(new DecimalFormat("0"));
+        mySimpleXYPlot.setDomainValueFormat(new Format() {
+
+            @Override
+            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
+                int x = ((Number) obj).intValue() + 1;
+                return toAppendTo.append(x);
+            }
+
+            @Override
+            public Object parseObject(String source, ParsePosition pos) {
+                return null;
+            }
+        });
+
+
+        //mySimpleXYPlot.getGraphWidget().setDomainLabelWidth(30);
  
         // By default, AndroidPlot displays developer guides to aid in laying out your plot.
         // To get rid of them call disableAllMarkup():
         mySimpleXYPlot.disableAllMarkup();
+
+
     }
+
 }

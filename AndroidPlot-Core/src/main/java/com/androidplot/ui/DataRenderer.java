@@ -51,10 +51,15 @@ public abstract class DataRenderer<PlotType extends Plot, SeriesFormatterType ex
     protected abstract void doDrawLegendIcon(Canvas canvas, RectF rect, SeriesFormatterType formatter);
 
     public void drawSeriesLegendIcon(Canvas canvas, RectF rect, SeriesFormatterType formatter) {
-        int state = canvas.save(Canvas.CLIP_SAVE_FLAG);
-        canvas.clipRect(rect, Region.Op.INTERSECT);
-        doDrawLegendIcon(canvas, rect, formatter);
-        canvas.restoreToCount(state);
+        //int state = canvas.save(Canvas.CLIP_SAVE_FLAG);
+        try {
+            canvas.save(Canvas.ALL_SAVE_FLAG);
+            canvas.clipRect(rect, Region.Op.INTERSECT);
+            doDrawLegendIcon(canvas, rect, formatter);
+            //canvas.restoreToCount(state);
+        } finally {
+            canvas.restore();
+        }
     }
 
     public void drawRegionLegendIcon(Canvas canvas, RectF rect, XYRegionFormatter formatter) {

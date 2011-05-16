@@ -130,68 +130,82 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics> implements Vie
         if(isDrawMarginsEnabled()) {
             drawSpacing(canvas, canvasRect, marginRect, marginPaint);
         }
-        if(isDrawPaddingEnabled()) {
+        if (isDrawPaddingEnabled()) {
             drawSpacing(canvas, marginRect, paddingRect, paddingPaint);
         }
-        for(Widget widget : getKeysAsList()) {
-            int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG); // preserve clipping etc
+        for (Widget widget : getKeysAsList()) {
+            //int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG); // preserve clipping etc
             try {
-            PositionMetrics metrics = get(widget);
-            float elementWidth = widget.getWidthPix(paddingRect.width());
-            float elementHeight = widget.getHeightPix(paddingRect.height());
-            PointF coords = getElementCoordinates(elementHeight, elementWidth, paddingRect, metrics);
+                canvas.save(Canvas.ALL_SAVE_FLAG);
+                PositionMetrics metrics = get(widget);
+                float elementWidth = widget.getWidthPix(paddingRect.width());
+                float elementHeight = widget.getHeightPix(paddingRect.height());
+                PointF coords = getElementCoordinates(elementHeight, elementWidth, paddingRect, metrics);
 
-            // remove the floating point to allow clipping to work:
-            int t = (int)(coords.y + 0.5);
-            int b = (int)(coords.y + elementHeight + 0.5);
-            int l = (int)(coords.x + 0.5);
-            int r = (int)(coords.x + elementWidth + 0.5);
-            RectF widgetRect = new RectF(l, t, r, b);
+                // remove the floating point to allow clipping to work:
+               /* int t = (int) (coords.y + 0.5);
+                int b = (int) (coords.y + elementHeight + 0.5);
+                int l = (int) (coords.x + 0.5);
+                int r = (int) (coords.x + elementWidth + 0.5);*/
+                //int t = (int) (coords.y);
+                //int b = (int) (coords.y + elementHeight + 0.5);
+                //int l = (int) (coords.x);
+                //int r = (int) (coords.x + elementWidth + 0.5);
+                //RectF widgetRect = new RectF(l, t, r, b);
+                RectF widgetRect = new RectF(coords.x, coords.y, coords.x + elementWidth, coords.y + elementHeight);
 
-            if(drawOutlineShadowsEnabled) {
-                canvas.drawRect(widgetRect, outlineShadowPaint);
-            }
+                if (drawOutlineShadowsEnabled) {
+                    canvas.drawRect(widgetRect, outlineShadowPaint);
+                }
 
-            // not positive why this is, but the rect clipped by clipRect is 1 less than the one drawn by drawRect.
-            // so this is necessary to avoid clipping borders.  I suspect that its a floating point
-            // jitter issue.
-            if(widget.isClippingEnabled()) {
-                RectF clipRect = new RectF(l, t, r + 1, b + 1);
-                canvas.clipRect(clipRect, Region.Op.REPLACE);
-            }
-            widget.draw(canvas, widgetRect);
+                // not positive why this is, but the rect clipped by clipRect is 1 less than the one drawn by drawRect.
+                // so this is necessary to avoid clipping borders.  I suspect that its a floating point
+                // jitter issue.
+                if (widget.isClippingEnabled()) {
+                    //RectF clipRect = new RectF(l-1, t-1, r + 1, b + 1);
+                    //canvas.clipRect(clipRect, Region.Op.REPLACE);
+                    canvas.clipRect(widgetRect, Region.Op.INTERSECT);
+                }
+                widget.draw(canvas, widgetRect);
 
-            RectF marginatedWidgetRect = widget.getMarginatedRect(widgetRect);
-            RectF paddedWidgetRect = widget.getPaddedRect(marginatedWidgetRect);
+                RectF marginatedWidgetRect = widget.getMarginatedRect(widgetRect);
+                RectF paddedWidgetRect = widget.getPaddedRect(marginatedWidgetRect);
 
-            if(drawMarginsEnabled) {
-                drawSpacing(canvas, widgetRect, marginatedWidgetRect, getMarginPaint());
-            }
+                if (drawMarginsEnabled) {
+                    drawSpacing(canvas, widgetRect, marginatedWidgetRect, getMarginPaint());
+                }
 
-            if(drawPaddingEnabled) {
-                drawSpacing(canvas, marginatedWidgetRect, paddedWidgetRect, getPaddingPaint());
-            }
+                if (drawPaddingEnabled) {
+                    drawSpacing(canvas, marginatedWidgetRect, paddedWidgetRect, getPaddingPaint());
+                }
 
-            if(drawAnchorsEnabled) {
-                PointF anchorCoords = getAnchorCoordinates(coords.x, coords.y, elementWidth, elementHeight, metrics.getAnchor());
-                drawAnchor(canvas, anchorCoords);
-            }
+                if (drawAnchorsEnabled) {
+                    PointF anchorCoords = getAnchorCoordinates(coords.x, coords.y, elementWidth, elementHeight, metrics.getAnchor());
+                    drawAnchor(canvas, anchorCoords);
+                }
 
 
-            if(drawOutlinesEnabled) {
-                canvas.drawRect(widgetRect, outlinePaint);
-            }
+                if (drawOutlinesEnabled) {
+                    outlinePaint.setAntiAlias(true);
+                    canvas.drawRect(widgetRect, outlinePaint);
+                }
             } finally {
-                canvas.restoreToCount(canvasState);  // restore clipping etc.
+                //canvas.restoreToCount(canvasState);  // restore clipping etc.
+                canvas.restore();
             }
         }
     }
 
     private void drawSpacing(Canvas canvas, RectF outer, RectF inner, Paint paint) {
-        int saved = canvas.save(Canvas.ALL_SAVE_FLAG);
-        canvas.clipRect(inner, Region.Op.DIFFERENCE);
-        canvas.drawRect(outer, paint);
-        canvas.restoreToCount(saved);
+        //int saved = canvas.save(Canvas.ALL_SAVE_FLAG);
+        try {
+            canvas.save(Canvas.ALL_SAVE_FLAG);
+            canvas.clipRect(inner, Region.Op.DIFFERENCE);
+            canvas.drawRect(outer, paint);
+            //canvas.restoreToCount(saved);
+        } finally {
+            canvas.restore();
+        }
     }
 
     protected void drawAnchor(Canvas canvas, PointF coords) {

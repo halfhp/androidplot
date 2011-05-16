@@ -24,9 +24,9 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 public class ListViewActivity extends Activity {
-    private static final int NUM_PLOTS = 15;
+    private static final int NUM_PLOTS = 10;
     private static final int NUM_POINTS_PER_SERIES = 10;
-    private static final int NUM_SERIES_PER_PLOT = 11;
+    private static final int NUM_SERIES_PER_PLOT = 5;
     private ListView lv;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -54,9 +54,13 @@ public class ListViewActivity extends Activity {
                     nums.add(generator.nextFloat());
                 }
 
+                double f = Math.random();
+
 
                 XYSeries series = new SimpleXYSeries(nums, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1");
-                pl.addSeries(series, new LineAndPointFormatter(Color.rgb(0, 0, 200), Color.rgb(0, 0, 150), null));
+                pl.addSeries(series, new LineAndPointFormatter(
+                        Color.rgb(new Double(f*255).intValue(), new Double(f*255).intValue(), new Double(f*255).intValue()),
+                        Color.rgb(new Double(f*255).intValue(), new Double(f*255).intValue(), new Double(f*255).intValue()), null));
 
             }
 

@@ -69,37 +69,28 @@ public abstract class TextLabelWidget extends Widget {
         PointF start = LayoutManager.getAnchorCoordinates(widgetRect, AnchorPosition.CENTER);
 
         // BEGIN ROTATION CALCULATION
-        int canvasState = canvas.save();
+        //int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG);
+
         try {
-        canvas.translate(start.x, start.y);
-        switch(orientation) {
-            case HORIZONTAL:
-                //start = LayoutManager.getAnchorCoordinates(widgetRect, AnchorPosition.CENTER);
-                //start = LayoutManager.getAnchorCoordinates(widgetRect, AnchorPosition.LEFT_MIDDLE);
-                //end = LayoutManager.getAnchorCoordinates(widgetRect, AnchorPosition.RIGHT_MIDDLE);
-                //hOffset = ((widgetRect.width()-labelSize.width())/2);
+            canvas.save(Canvas.ALL_SAVE_FLAG);
+            canvas.translate(start.x, start.y);
+            switch (orientation) {
+                case HORIZONTAL:
+                    break;
+                case VERTICAL_ASCENDING:
+                    canvas.rotate(-90);
+                    break;
+                case VERTICAL_DESCENDING:
+                    canvas.rotate(90);
+                    break;
+                default:
 
-                break;
-            case VERTICAL_ASCENDING:
-                //canvas.translate(start.getX(), start.getY());
-                canvas.rotate(-90);
-                //start = LayoutManager.getAnchorCoordinates(widgetRect, AnchorPosition.BOTTOM_MIDDLE);
-                //end = LayoutManager.getAnchorCoordinates(widgetRect, AnchorPosition.TOP_MIDDLE);
-                //hOffset = (widgetRect.height()-labelSize.width())/2;
-                break;
-            case VERTICAL_DESCENDING:
-                canvas.rotate(90);
-                //start = LayoutManager.getAnchorCoordinates(widgetRect, AnchorPosition.TOP_MIDDLE);
-                //end = LayoutManager.getAnchorCoordinates(widgetRect, AnchorPosition.BOTTOM_MIDDLE);
-                //hOffset = (widgetRect.height()-labelSize.width())/2;
-                break;
-            default:
-
-                throw new UnsupportedOperationException("Orientation " + orientation + " not yet implemented for TextLabelWidget.");
-        }
-        canvas.drawText(label, 0, vOffset, labelPaint);
+                    throw new UnsupportedOperationException("Orientation " + orientation + " not yet implemented for TextLabelWidget.");
+            }
+            canvas.drawText(label, 0, vOffset, labelPaint);
         } finally {
-            canvas.restoreToCount(canvasState);
+            //canvas.restoreToCount(canvasState);
+            canvas.restore();
         }
 
         // END ROTATION CALCULATION

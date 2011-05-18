@@ -10,4 +10,8 @@ public class BezierLineAndPointFormatter extends LineAndPointFormatter {
     public BezierLineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor) {
         super(lineColor, vertexColor, fillColor);
     }
+
+    public BezierLineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, FillDirection fillDir) {
+        super(lineColor, vertexColor, fillColor, fillDir);
+    }
 }

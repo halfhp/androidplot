@@ -70,7 +70,6 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
             linePaint.setStrokeWidth(DEFAULT_LINE_STROKE_WIDTH);
             linePaint.setColor(lineColor);
             linePaint.setStyle(Paint.Style.STROKE);
-            //linePaint.setShadowLayer(1, 3, 3, Color.BLACK);
         }
     }
 
@@ -83,8 +82,6 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
             vertexPaint.setStrokeWidth(DEFAULT_VERTEX_STROKE_WIDTH);
             vertexPaint.setColor(vertexColor);
             vertexPaint.setStrokeCap(Paint.Cap.ROUND);
-
-            //vertexPaint.setShadowLayer(1, 3, 3, Color.BLACK);
         }
     }
 
@@ -96,6 +93,20 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
             fillPaint.setAntiAlias(true);
             fillPaint.setColor(fillColor);
         }
+    }
+
+    /**
+     * Enables the shadow layer on linePaint and shadowPaint by calling
+     * setShadowLayer() with preset values.
+     */
+    public void enableShadows() {
+        linePaint.setShadowLayer(1, 3, 3, Color.BLACK);
+        vertexPaint.setShadowLayer(1, 3, 3, Color.BLACK);
+    }
+
+    public void disableShadows() {
+        linePaint.setShadowLayer(0, 0, 0, Color.BLACK);
+        vertexPaint.setShadowLayer(0, 0, 0, Color.BLACK);
     }
 
     public Paint getLinePaint() {

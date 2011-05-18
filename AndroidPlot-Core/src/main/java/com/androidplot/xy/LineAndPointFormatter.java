@@ -16,6 +16,11 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         return fillDirection;
     }
 
+    /**
+     * Sets which edge to use to close the line's path for filling purposes.
+     * See {@link FillDirection}.
+     * @param fillDirection
+     */
     public void setFillDirection(FillDirection fillDirection) {
         this.fillDirection = fillDirection;
     }

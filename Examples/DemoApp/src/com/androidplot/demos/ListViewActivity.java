@@ -16,13 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Created by IntelliJ IDEA.
- * User: halfhp
- * Date: 4/14/11
- * Time: 8:32 AM
- * To change this template use File | Settings | File Templates.
- */
 public class ListViewActivity extends Activity {
     private static final int NUM_PLOTS = 10;
     private static final int NUM_POINTS_PER_SERIES = 10;
@@ -54,13 +47,19 @@ public class ListViewActivity extends Activity {
                     nums.add(generator.nextFloat());
                 }
 
-                double f = Math.random();
+                double rl = Math.random();
+                double gl = Math.random();
+                double bl = Math.random();
+
+                double rp = Math.random();
+                double gp = Math.random();
+                double bp = Math.random();
 
 
-                XYSeries series = new SimpleXYSeries(nums, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1");
+                XYSeries series = new SimpleXYSeries(nums, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "S" + k);
                 pl.addSeries(series, new LineAndPointFormatter(
-                        Color.rgb(new Double(f*255).intValue(), new Double(f*255).intValue(), new Double(f*255).intValue()),
-                        Color.rgb(new Double(f*255).intValue(), new Double(f*255).intValue(), new Double(f*255).intValue()), null));
+                        Color.rgb(new Double(rl*255).intValue(), new Double(gl*255).intValue(), new Double(bl*255).intValue()),
+                        Color.rgb(new Double(rp*255).intValue(), new Double(gp*255).intValue(), new Double(bp*255).intValue()), null));
 
             }
 

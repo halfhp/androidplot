@@ -194,6 +194,8 @@ public class XYRegionExampleActivity extends Activity {
         // and another region:
         XYRegionFormatter regionFormatter2 = new XYRegionFormatter(Color.BLUE);
         lpFormatter1.addRegion(new RectRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 3, 7, "R2"), regionFormatter2);
+        lpFormatter1.setFillDirection(FillDirection.RANGE_ORIGIN);
+        plot.setUserRangeOrigin(3);
 
         // the below three regions are horizontal regions so we set minY/maxY to
         // negative and positive infinity respectively.
@@ -203,6 +205,9 @@ public class XYRegionExampleActivity extends Activity {
         lpFormatter2.addRegion(new RectRegion(0, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R3"), regionFormatter3);
         lpFormatter2.addRegion(new RectRegion(2, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R4"), regionFormatter4);
         lpFormatter2.addRegion(new RectRegion(4, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R5"), regionFormatter5);
+
+        lpFormatter2.setFillDirection(FillDirection.RANGE_ORIGIN);
+        plot.setUserRangeOrigin(3);
 
 
     }

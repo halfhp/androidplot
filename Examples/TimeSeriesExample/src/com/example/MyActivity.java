@@ -15,7 +15,7 @@ import java.util.Date;
 public class MyActivity extends Activity
 {
 
-    private XYPlot mySimpleXYPlot;
+    private XYPlot plot;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -23,47 +23,33 @@ public class MyActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+        plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
         Number[] numSightings = {5, 8, 9, 2, 5};
-        /*Number[] timestamps = {
-                978307200,  // 2001
-                1009843200, // 2002
-                1041379200, // 2003
-                1072915200, // 2004
-                1104537600  // 2005
-        };*/
-        // 1301317768881
-        /*Number[] timestamps = {
-                1301317768881L, // 2001
-                1301317769998L, // 2002
-                1301317771007L, // 2003
-                1301317772886L, // 2004
-                1301317773885L  // 2005
-        };*/
 
-        // these values have already been divided by 1000:
         Number[] timestamps = {
-                1291379847,  // t2 - t1:
-                1291995749,  // 615902
-                1291996112,  // 363
-                1294676052,  // 2679940
-                1299506213}; // 4830161
+                978307200000L,  // 1/1/2001
+                1009843200000L, // 1/1/2002
+                1041379200000L, // 1/1/2003
+                1072915200000L, // 1/1/2004
+                1104537600000L  // 1/1/2005
+        };
+
         // create our series from our array of nums:
-        XYSeries series2 = new SimpleXYSeries(
+        XYSeries series = new SimpleXYSeries(
                 Arrays.asList(timestamps),
                 Arrays.asList(numSightings),
                 "Sightings in USA");
 
-        mySimpleXYPlot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
-        mySimpleXYPlot.getGraphWidget().getGridLinePaint().setColor(Color.BLACK);
-        mySimpleXYPlot.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1,1}, 1));
-        mySimpleXYPlot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
-        mySimpleXYPlot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
+        plot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
+        plot.getGraphWidget().getGridLinePaint().setColor(Color.BLACK);
+        plot.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1,1}, 1));
+        plot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
+        plot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
 
-        mySimpleXYPlot.setBorderStyle(Plot.BorderStyle.SQUARE, null, null);
-        mySimpleXYPlot.getBorderPaint().setStrokeWidth(1);
-        mySimpleXYPlot.getBorderPaint().setAntiAlias(false);
-        mySimpleXYPlot.getBorderPaint().setColor(Color.WHITE);
+        plot.setBorderStyle(Plot.BorderStyle.SQUARE, null, null);
+        plot.getBorderPaint().setStrokeWidth(1);
+        plot.getBorderPaint().setAntiAlias(false);
+        plot.getBorderPaint().setColor(Color.WHITE);
 
         // Create a formatter to use for drawing a series using LineAndPointRenderer:
         LineAndPointFormatter series1Format = new LineAndPointFormatter(
@@ -79,24 +65,42 @@ public class MyActivity extends Activity
 
         LineAndPointFormatter formatter  = new LineAndPointFormatter(Color.rgb(0, 0,0), Color.BLUE, Color.RED);
         formatter.setFillPaint(lineFill);
-        mySimpleXYPlot.getGraphWidget().setPaddingRight(2);
-        mySimpleXYPlot.addSeries(series2, formatter);
+        plot.getGraphWidget().setPaddingRight(2);
+        plot.addSeries(series, formatter);
 
         // draw a domain tick for each year:
-        mySimpleXYPlot.setDomainStep(XYStepMode.SUBDIVIDE, timestamps.length);
+        plot.setDomainStep(XYStepMode.SUBDIVIDE, timestamps.length);
 
         // customize our domain/range labels
-        mySimpleXYPlot.setDomainLabel("Year");
-        mySimpleXYPlot.setRangeLabel("# of Sightings");
+        plot.setDomainLabel("Year");
+        plot.setRangeLabel("# of Sightings");
 
         // get rid of decimal points in our range labels:
-        mySimpleXYPlot.setRangeValueFormat(new DecimalFormat("0"));
+        plot.setRangeValueFormat(new DecimalFormat("0"));
 
-        mySimpleXYPlot.setDomainValueFormat(new MyDateFormat());
+        plot.setDomainValueFormat(new MyDateFormat());
+
+
+        //plot.addMarker(new XValueMarker(1086048000000L, null));
+        plot.getGraphWidget().getDomainLabelPaint().setAlpha(0);
+        plot.getGraphWidget().getDomainOriginLabelPaint().setAlpha(0);
+        plot.getGraphWidget().getRangeLabelPaint().setAlpha(0);
+        plot.getGraphWidget().getRangeOriginLabelPaint().setAlpha(0);
+
+        if(plot.isEmpty()) {
+            throw new RuntimeException("SHOULD NOT BE EMPTY!");
+        }
+        plot.clear();
+
+        if(!plot.isEmpty()) {
+            throw new RuntimeException("SHOULD BE EMPTY!");
+        }
+
+
 
         // by default, AndroidPlot displays developer guides to aid in laying out your plot.
         // To get rid of them call disableAllMarkup():
-        mySimpleXYPlot.disableAllMarkup();
+        plot.disableAllMarkup();
     }
 
     private class MyDateFormat extends Format {
@@ -108,12 +112,10 @@ public class MyActivity extends Activity
             private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
 
 
+
             @Override
             public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
-
-                // because our timestamps are in seconds and SimpleDateFormat expects milliseconds
-                // we multiply our timestamp by 1000:
-                long timestamp = ((Number) obj).longValue() * 1000;
+                long timestamp = ((Number) obj).longValue();
                 Date date = new Date(timestamp);
                 return dateFormat.format(date, toAppendTo, pos);
             }

@@ -6,6 +6,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
 import com.androidplot.ui.*;
+import com.androidplot.util.PaintUtils;
 import com.androidplot.xy.*;
 
 import java.util.Arrays;
@@ -78,14 +79,26 @@ public class XYRegionExampleActivity extends Activity {
         plot.getGraphWidget().setBackgroundPaint(null);
         plot.setBorderPaint(null);
         plot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
-        plot.getGraphWidget().getDomainLabelPaint().setTextSize(FONT_LABEL_SIZE);
-        plot.getGraphWidget().getDomainOriginLabelPaint().setTextSize(FONT_LABEL_SIZE);
-        plot.getGraphWidget().getRangeLabelPaint().setTextSize(FONT_LABEL_SIZE);
-        plot.getGraphWidget().getRangeOriginLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        //plot.getGraphWidget().getDomainLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        PaintUtils.setFontSizeDp(getApplicationContext(), plot.getDomainLabelWidget().getLabelPaint(), GlobalDefs.PLOT_DOMAIN_LABEL_FONT_SIZE_DP);
+        //plot.getGraphWidget().getDomainOriginLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        //PaintUtils.setFontSizeDp(getApplicationContext(), plot.getGraphWidget().getDomainOriginLabelPaint(), GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
+        //plot.getGraphWidget().getRangeLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        PaintUtils.setFontSizeDp(getApplicationContext(), plot.getRangeLabelWidget().getLabelPaint(), GlobalDefs.PLOT_RANGE_LABEL_FONT_SIZE_DP);
+        //plot.getGraphWidget().getRangeOriginLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        PaintUtils.setFontSizeDp(getApplicationContext(), plot.getGraphWidget().getRangeOriginLabelPaint(), GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
+        PaintUtils.setFontSizeDp(getApplicationContext(), plot.getGraphWidget().getRangeLabelPaint(), GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
+        PaintUtils.setFontSizeDp(getApplicationContext(), plot.getGraphWidget().getDomainOriginLabelPaint(), GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
+        PaintUtils.setFontSizeDp(getApplicationContext(), plot.getGraphWidget().getDomainLabelPaint(), GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
         plot.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1, 2, 1, 2}, 0));
-        plot.getTitleWidget().getLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        //plot.getTitleWidget().getLabelPaint().setTextSize(FONT_LABEL_SIZE);
+        PaintUtils.setFontSizeDp(getApplicationContext(), plot.getTitleWidget().getLabelPaint(), GlobalDefs.PLOT_TITLE_FONT_SIZE_DP);
+
+        //plot.setBackgroundPaint(null);
+	    //plot.getGraphWidget().setBackgroundPaint(null);
+	    //plot.getGraphWidget().setGridBackgroundPaint(null);
         plot.getTitleWidget().pack();
-        plot.disableAllMarkup();
+        //plot.disableAllMarkup();
     }
 
     /**

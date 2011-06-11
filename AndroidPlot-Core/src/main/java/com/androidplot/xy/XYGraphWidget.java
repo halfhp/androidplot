@@ -352,32 +352,39 @@ public class XYGraphWidget extends Widget {
 
     private void drawDomainTick(Canvas canvas, float xPix, Number xVal, Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         if (!drawLineOnly) {
-            canvas.drawLine(xPix,
-                    gridRect.top,
-                    xPix, gridRect.bottom + domainLabelTickExtension,
-                    linePaint);
-            float fontHeight = FontUtils.getFontHeight(labelPaint);
+            if (linePaint != null) {
+                canvas.drawLine(xPix,
+                        gridRect.top,
+                        xPix, gridRect.bottom + domainLabelTickExtension,
+                        linePaint);
+            }
+            if (labelPaint != null) {
+                float fontHeight = FontUtils.getFontHeight(labelPaint);
+                float yPix = gridRect.bottom + rangeLabelTickExtension + domainLabelVerticalOffset + fontHeight;
+                drawTickText(canvas, XYAxisType.DOMAIN, xVal, xPix, yPix, labelPaint);
+            }
+        } else if (linePaint != null) {
 
-            float yPix = gridRect.bottom + rangeLabelTickExtension + domainLabelVerticalOffset + fontHeight;
-            //RectF fff = new RectF(gridRect.left, yPix-fontHeight, gridRect.right, yPix);
-            //canvas.drawRect(fff , labelPaint);
-            drawTickText(canvas, XYAxisType.DOMAIN, xVal, xPix, yPix, labelPaint);
-        } else {
             canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom, linePaint);
+
         }
     }
 
     public void drawRangeTick(Canvas canvas, float yPix, Number yVal, Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         if (!drawLineOnly) {
-            canvas.drawLine(
-                    gridRect.left - rangeLabelTickExtension,
-                    yPix,
-                    gridRect.right,
-                    yPix,
-                    linePaint);
-            float xPix = gridRect.left - (rangeLabelTickExtension + rangeLabelHorizontalOffset);
-            drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix, labelPaint);
-        } else {
+            if (linePaint != null) {
+                canvas.drawLine(
+                        gridRect.left - rangeLabelTickExtension,
+                        yPix,
+                        gridRect.right,
+                        yPix,
+                        linePaint);
+            }
+            if (labelPaint != null) {
+                float xPix = gridRect.left - (rangeLabelTickExtension + rangeLabelHorizontalOffset);
+                drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix, labelPaint);
+            }
+        } else if (linePaint != null) {
             canvas.drawLine(gridRect.left, yPix, gridRect.right, yPix, linePaint);
         }
     }
@@ -562,6 +569,8 @@ public class XYGraphWidget extends Widget {
 
                 if(marker.getText() != null) {
                     drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
+                } else {
+                   drawMarkerText(canvas, getFormattedRangeValue(marker.getValue()), marker, xPix, yPix);
                 }
             }
         }
@@ -574,7 +583,7 @@ public class XYGraphWidget extends Widget {
                         plot.getCalculatedMinX().doubleValue(),
                         plot.getCalculatedMaxX().doubleValue(),
                         paddedGridRect.width(),
-                        true);
+                        false);
                 xPix += paddedGridRect.left;
                 canvas.drawLine(xPix, paddedGridRect.top, xPix, paddedGridRect.bottom, marker.getLinePaint());
 
@@ -583,6 +592,8 @@ public class XYGraphWidget extends Widget {
                 yPix += paddedGridRect.top;
                 if(marker.getText() != null) {
                     drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
+                } else {
+                   drawMarkerText(canvas, getFormattedDomainValue(marker.getValue()), marker, xPix, yPix);
                 }
             }
         }
@@ -883,7 +894,7 @@ public class XYGraphWidget extends Widget {
     }
 
     public void setCursorPosition(PointF point) {
-        setCursorPosition(point.x,  point.y);
+        setCursorPosition(point.x, point.y);
     }
 
     public float getDomainCursorPosition() {

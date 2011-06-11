@@ -1,5 +1,6 @@
 package com.androidplot.util;
 
+import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -48,6 +49,17 @@ public class PixelUtils {
                 (int) (top + FLOAT_INT_AVG_NUDGE),
                 (int) (right + FLOAT_INT_AVG_NUDGE),
                 (int) (bottom + FLOAT_INT_AVG_NUDGE));
+    }
+
+    /**
+     * Converts a dp value to pixels.
+     * @param context
+     * @param dp
+     * @return
+     */
+    public static float dpToPix(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return scale * dp + 0.5f;
     }
 
 

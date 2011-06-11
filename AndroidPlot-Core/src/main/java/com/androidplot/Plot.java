@@ -37,7 +37,16 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
     private Paint backgroundPaint;
     private LayoutManager layoutManager;
     private TitleWidget titleWidget;
+
+    /**
+     * Used for caching renderer instances.  Note that once a renderer is initialized it remains initialized
+     * for the life of the application; does not and should not be destroyed until the application exits.
+     */
     private LinkedList<RendererType> renderers;
+
+    /**
+     * Associates lists series and formatter pairs with the class of the Renderer used to render them.
+     */
     private LinkedHashMap<Class, SeriesAndFormatterList<SeriesType,FormatterType>> seriesRegistry;
 
     private final ArrayList<PlotListener> listeners;
@@ -54,7 +63,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.DKGRAY);
         backgroundPaint.setStyle(Paint.Style.FILL);
-
     }
 
 
@@ -178,7 +186,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
      * @param series
      * @param rendererClass
      */
-    public boolean addSeries(SeriesType series, Class rendererClass, FormatterType formatter) {
+    public synchronized boolean addSeries(SeriesType series, Class rendererClass, FormatterType formatter) {
         RendererType rt = null;
         rendererClass.cast(rt);
         SeriesAndFormatterList<SeriesType, FormatterType> sfList = seriesRegistry.get(rendererClass);
@@ -203,7 +211,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
         }
     }
 
-    public boolean removeSeries(SeriesType series, Class rendererClass) {
+    public synchronized boolean removeSeries(SeriesType series, Class rendererClass) {
     	
         boolean result = seriesRegistry.get(rendererClass).remove(series);
         
@@ -213,16 +221,32 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
         return result;
     }
 
-    public void removeSeries(SeriesType series) {
+    /**
+     * Remove all occorrences of series from all renderers
+     * @param series
+     */
+    public synchronized void removeSeries(SeriesType series) {
 
+        // remove all occurrences of series from all renderers:
         for(Class rendererClass : seriesRegistry.keySet()) {
             seriesRegistry.get(rendererClass).remove(series);
         }       
-        
+
+        // remove empty SeriesAndFormatterList instances from the registry:
         for(Iterator<SeriesAndFormatterList<SeriesType,FormatterType>> it = seriesRegistry.values().iterator(); it.hasNext();) {
             if(it.next().size() <= 0) {
                 it.remove();
             }
+        }
+    }
+
+    /**
+     * Remove all series from all renderers
+     */
+    public void clear() {
+        for(Iterator<SeriesAndFormatterList<SeriesType,FormatterType>> it = seriesRegistry.values().iterator(); it.hasNext();) {
+            it.next();
+            it.remove();
         }
     }
 
@@ -253,8 +277,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
     public Set<SeriesType> getSeriesSet() {
         Set<SeriesType> seriesSet = new LinkedHashSet<SeriesType>();
         for (DataRenderer renderer : getRendererList()) {
-            for (SeriesType series : getSeriesListForRenderer(renderer.getClass())) {
-                seriesSet.add(series);
+            List<SeriesType> seriesList = getSeriesListForRenderer(renderer.getClass());
+            if (seriesList != null) {
+                for (SeriesType series : seriesList) {
+                    seriesSet.add(series);
+                }
             }
         }
         return seriesSet;

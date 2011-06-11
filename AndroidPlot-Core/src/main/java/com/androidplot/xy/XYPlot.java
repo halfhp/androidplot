@@ -1,31 +1,3 @@
-/*
-Copyright 2010 Nick Fellows. All rights reserved.
-
-Redistribution and use in source and binary forms, without modification, are
-permitted provided that the following conditions are met:
-
-   1. Redistributions of source code must retain the above copyright notice, this list of
-      conditions and the following disclaimer.
-
-   2. Redistributions in binary form must reproduce the above copyright notice, this list
-      of conditions and the following disclaimer in the documentation and/or other materials
-      provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY Nick Fellows ``AS IS'' AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NICK FELLOWS OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-The views and conclusions contained in the software and documentation are those of the
-authors and should not be interpreted as representing official policies, either expressed
-or implied, of Nick Fellows.
-*/
-
 package com.androidplot.xy;
 
 import android.content.Context;
@@ -41,6 +13,7 @@ import com.androidplot.ui.*;
 import com.androidplot.ui.widget.RangeLabelWidget;
 import com.androidplot.ui.widget.DomainLabelWidget;
 import com.androidplot.ui.TextOrientationType;
+import com.androidplot.util.PixelUtils;
 
 import java.text.Format;
 import java.util.ArrayList;
@@ -117,16 +90,72 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     private RectRegion defaultBounds;
 
+
+    private static final int DEFAULT_LEGEND_WIDGET_H_DP             = 10;
+    private static final int DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP     = 7;
+    private static final int DEFAULT_GRAPH_WIDGET_H_DP              = 18;
+    private static final int DEFAULT_GRAPH_WIDGET_W_DP              = 10;
+    private static final int DEFAULT_DOMAIN_LABEL_WIDGET_H_DP       = 10;
+    private static final int DEFAULT_DOMAIN_LABEL_WIDGET_W_DP       = 80;
+    private static final int DEFAULT_RANGE_LABEL_WIDGET_H_DP        = 50;
+    private static final int DEFAULT_RANGE_LABEL_WIDGET_W_DP        = 10;
+
+    private static final int DEFAULT_LEGEND_WIDGET_Y_OFFSET_DP       = 0;
+    private static final int DEFAULT_LEGEND_WIDGET_X_OFFSET_DP       = 40;
+    private static final int DEFAULT_GRAPH_WIDGET_Y_OFFSET_DP        = 0;
+    private static final int DEFAULT_GRAPH_WIDGET_X_OFFSET_DP        = 0;
+    private static final int DEFAULT_DOMAIN_LABEL_WIDGET_Y_OFFSET_DP = 0;
+    private static final int DEFAULT_DOMAIN_LABEL_WIDGET_X_OFFSET_DP = 20;
+    private static final int DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP  = 0;
+    private static final int DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP  = 0;
+
+    private static final int DEFAULT_GRAPH_WIDGET_TOP_MARGIN          = 3;
+    private static final int DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN        = 3;
+    private static final int DEFAULT_PLOT_LEFT_MARGIN                 = 2;
+    private static final int DEFAULT_PLOT_RIGHT_MARGIN                = 2;
+    private static final int DEFAULT_PLOT_BOTTOM_MARGIN               = 2;
+
     {
+
+    }
+
+
+    public XYPlot(Context context, String title) {
+        super(context, title);
+        postInit(context);
+    }
+
+    public XYPlot(Context context, AttributeSet attributes) {
+        super(context, attributes);
+        postInit(context);
+    }
+
+    public XYPlot(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        postInit(context);
+    }
+
+    private void postInit(Context context) {
         legendWidget = new XYLegendWidget(
                 this,
-                new SizeMetrics(14, SizeLayoutType.ABSOLUTE, 0.5f, SizeLayoutType.RELATIVE),
+                new SizeMetrics(
+                        PixelUtils.dpToPix(context, DEFAULT_LEGEND_WIDGET_H_DP),
+                        SizeLayoutType.ABSOLUTE, 0.5f, SizeLayoutType.RELATIVE),
                 new DynamicTableModel(0, 1),
-                new SizeMetrics(12, SizeLayoutType.ABSOLUTE, 12, SizeLayoutType.ABSOLUTE));
+                new SizeMetrics(
+                        PixelUtils.dpToPix(context, DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP),
+                        SizeLayoutType.ABSOLUTE,
+                        PixelUtils.dpToPix(context, DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP),
+                        SizeLayoutType.ABSOLUTE));
 
         graphWidget = new XYGraphWidget(
                 this,
-                new SizeMetrics(20, SizeLayoutType.FILL, 12, SizeLayoutType.FILL));
+                new SizeMetrics(
+                        PixelUtils.dpToPix(context, DEFAULT_GRAPH_WIDGET_H_DP),
+                        SizeLayoutType.FILL,
+                        PixelUtils.dpToPix(context, DEFAULT_GRAPH_WIDGET_W_DP),
+                        SizeLayoutType.FILL));
+
         Paint backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.DKGRAY);
         backgroundPaint.setStyle(Paint.Style.FILL);
@@ -135,56 +164,64 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
         domainLabelWidget = new DomainLabelWidget(
                 this,
-                new SizeMetrics(12, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE),
+                new SizeMetrics(
+                        PixelUtils.dpToPix(context, DEFAULT_DOMAIN_LABEL_WIDGET_H_DP),
+                        SizeLayoutType.ABSOLUTE,
+                        PixelUtils.dpToPix(context, DEFAULT_DOMAIN_LABEL_WIDGET_W_DP),
+                        SizeLayoutType.ABSOLUTE),
                 TextOrientationType.HORIZONTAL);
         rangeLabelWidget = new RangeLabelWidget(
                 this,
-                new SizeMetrics(60, SizeLayoutType.ABSOLUTE, 12, SizeLayoutType.ABSOLUTE),
+                new SizeMetrics(
+                        PixelUtils.dpToPix(context, DEFAULT_RANGE_LABEL_WIDGET_H_DP),
+                        SizeLayoutType.ABSOLUTE,
+                        PixelUtils.dpToPix(context, DEFAULT_RANGE_LABEL_WIDGET_W_DP),
+                        SizeLayoutType.ABSOLUTE),
                 TextOrientationType.VERTICAL_ASCENDING);
 
         getLayoutManager().position(
                 legendWidget,
-                40,
+                PixelUtils.dpToPix(context, DEFAULT_LEGEND_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_RIGHT,
-                0,
+                PixelUtils.dpToPix(context, DEFAULT_LEGEND_WIDGET_Y_OFFSET_DP),
                 YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
                 AnchorPosition.RIGHT_BOTTOM);
 
         getLayoutManager().position(
                 graphWidget,
-                3,
+                PixelUtils.dpToPix(context, DEFAULT_GRAPH_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_RIGHT,
-                0,
+                PixelUtils.dpToPix(context, DEFAULT_GRAPH_WIDGET_Y_OFFSET_DP),
                 YLayoutStyle.ABSOLUTE_FROM_CENTER,
                 AnchorPosition.RIGHT_MIDDLE);
 
         getLayoutManager().position(
                 domainLabelWidget,
-                25,
+                PixelUtils.dpToPix(context, DEFAULT_DOMAIN_LABEL_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_LEFT,
-                0,
+                PixelUtils.dpToPix(context, DEFAULT_DOMAIN_LABEL_WIDGET_Y_OFFSET_DP),
                 YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
                 AnchorPosition.LEFT_BOTTOM);
 
         getLayoutManager().position(
                 rangeLabelWidget,
-                0,
+                PixelUtils.dpToPix(context, DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_LEFT,
-                0,
+                PixelUtils.dpToPix(context, DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP),
                 YLayoutStyle.ABSOLUTE_FROM_CENTER,
                 AnchorPosition.LEFT_MIDDLE);
 
         getLayoutManager().moveToTop(getTitleWidget());
         getLayoutManager().moveToTop(getLegendWidget());
-        graphWidget.setMarginTop(10);
-        graphWidget.setMarginRight(10);
+        graphWidget.setMarginTop(PixelUtils.dpToPix(context, DEFAULT_GRAPH_WIDGET_TOP_MARGIN));
+        graphWidget.setMarginRight(PixelUtils.dpToPix(context, DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN));
 
         getTitleWidget().pack();
         getDomainLabelWidget().pack();
         getRangeLabelWidget().pack();
-        setPlotMarginLeft(2);
-        setPlotMarginRight(2);
-        setPlotMarginBottom(2);
+        setPlotMarginLeft(PixelUtils.dpToPix(context, DEFAULT_PLOT_LEFT_MARGIN));
+        setPlotMarginRight(PixelUtils.dpToPix(context, DEFAULT_PLOT_RIGHT_MARGIN));
+        setPlotMarginBottom(PixelUtils.dpToPix(context, DEFAULT_PLOT_BOTTOM_MARGIN));
 
         xValueMarkers = new ArrayList<XValueMarker>();
         yValueMarkers = new ArrayList<YValueMarker>();
@@ -192,18 +229,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         setDefaultBounds(new RectRegion(-1, 1, -1, 1));
     }
 
-
-    public XYPlot(Context context, String title) {
-        super(context, title);
-    }
-
-    public XYPlot(Context context, AttributeSet attributes) {
-        super(context, attributes);
-    }
-
-    public XYPlot(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
 
     public void setGridPadding(float left, float top, float right, float bottom) {
         getGraphWidget().setGridPaddingTop(top);

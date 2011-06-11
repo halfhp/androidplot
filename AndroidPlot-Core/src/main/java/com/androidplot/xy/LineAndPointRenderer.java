@@ -6,6 +6,7 @@ import com.androidplot.exception.PlotRenderException;
 import com.androidplot.util.ValPixConverter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Renders a point as a line with the vertices marked.  Requires 2 or more points to
@@ -24,10 +25,12 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     public void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException {
 
 
+        List<XYSeries> seriesList = getPlot().getSeriesListForRenderer(this.getClass());
+        if (seriesList != null) {
+            for (XYSeries series : seriesList) {
 
-        for(XYSeries series : getPlot().getSeriesListForRenderer(this.getClass())) {
-
-            drawSeries(canvas, plotArea, series, getFormatter(series));
+                drawSeries(canvas, plotArea, series, getFormatter(series));
+            }
         }
     }
 

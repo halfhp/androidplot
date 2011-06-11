@@ -21,7 +21,7 @@ public class PaintUtils {
      * @param lineSizeDp
      */
     public static void setLineSizeDp(Context context, Paint paint, float lineSizeDp){
-        paint.setStrokeWidth(dpToPix(context, lineSizeDp));
+        paint.setStrokeWidth(PixelUtils.dpToPix(context, lineSizeDp));
     }
 
     /**
@@ -31,7 +31,7 @@ public class PaintUtils {
      * @param fontSizeDp
      */
     public static void setFontSizeDp(Context context, Paint paint, float fontSizeDp){
-        paint.setTextSize(dpToPix(context, fontSizeDp));
+        paint.setTextSize(PixelUtils.dpToPix(context, fontSizeDp));
     }
 
     /**
@@ -44,20 +44,11 @@ public class PaintUtils {
      * @param color
      */
     public static void setShadowDp(Context context, Paint paint, float radiusDp, float dxDp, float dyDp, int color) {
-        float radius = dpToPix(context, radiusDp);
-        float dx = dpToPix(context, dxDp);
-        float dy = dpToPix(context, dyDp);
+        float radius = PixelUtils.dpToPix(context, radiusDp);
+        float dx = PixelUtils.dpToPix(context, dxDp);
+        float dy = PixelUtils.dpToPix(context, dyDp);
         paint.setShadowLayer(radius, dx, dy, color);
     }
 
-    /**
-     * Converts a dp value to pixels.
-     * @param context
-     * @param dp
-     * @return
-     */
-    public static float dpToPix(Context context, float dp) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return scale * dp + 0.5f;
-    }
+
 }

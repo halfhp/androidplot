@@ -1,10 +1,7 @@
 package com.androidplot.xy;
 
-import android.net.wifi.WifiConfiguration;
 import android.util.Pair;
 import com.androidplot.series.XYSeries;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -86,16 +83,9 @@ public class SimpleXYSeries implements XYSeries {
 
             // array containing only y-vals. assume x = index:
             case Y_VALS_ONLY:
-                // always need an x and y array so init them now:
-                //xVals = new Number[model.size()];
-                //yVals = new Number[model.size()];
-
                 for (int i = 0; i < model.size(); i++) {
                     xVals.add(i);
                     yVals.add(model.get(i));
-                    //xVals[i] = i;
-                    //yVals[i] = model.get(i);
-                    //checkMinMax(i);
                 }
                 break;
 
@@ -106,14 +96,9 @@ public class SimpleXYSeries implements XYSeries {
                 }
                 // always need an x and y array so init them now:
                 int sz = model.size()/2;
-                //xVals = new Number[sz];
-                //yVals = new Number[sz];
                 for (int i = 0, j = 0; i < sz; i++, j += 2) {
                     xVals.add(model.get(j));
                     yVals.add(model.get(j+1));
-                    //xVals[i] = model.get(j);
-                    //yVals[i] = model.get(j + 1);
-                    //checkMinMax(j);
                 }
                 break;
             default:
@@ -177,33 +162,6 @@ public class SimpleXYSeries implements XYSeries {
         return new Pair<Number, Number>(xVals.removeLast(), yVals.removeLast());
     }
 
-
-
-    /*private void resetMinMax() {
-        minX = null;
-        maxX = null;
-        minY = null;
-        maxY = null;
-    }*/
-
-    /*private void checkMinMax(int index) {
-        if (minX == null || xVals[index].doubleValue() < minX.doubleValue()) {
-            minX = xVals[index];
-        }
-
-        if (maxX == null || xVals[index].doubleValue() > maxX.doubleValue()) {
-            maxX = xVals[index];
-        }
-
-        if (minY == null || yVals[index].doubleValue() < minY.doubleValue()) {
-            minY = yVals[index];
-        }
-
-        if (maxY == null || yVals[index].doubleValue() > maxY.doubleValue()) {
-            maxY = yVals[index];
-        }
-    }*/
-
     @Override
     public String getTitle() {
         return title;
@@ -218,44 +176,13 @@ public class SimpleXYSeries implements XYSeries {
         }
     }
 
-
-    /*@Override
-    public void onReadBegin() {
-        // unused
-    }
-
-    @Override
-    public void onReadEnd() {
-        // unused
-    }*/
-
     @Override
     public Number getX(int index) {
         return xVals.get(index);
     }
 
-    /*@Override
-    public Number getMinX() {
-        return minX;
-    }
-
-    @Override
-    public Number getMaxX() {
-        return maxX;
-    }*/
-
     @Override
     public Number getY(int index) {
         return yVals.get(index);
     }
-
-    /*@Override
-    public Number getMinY() {
-        return minY;
-    }
-
-    @Override
-    public Number getMaxY() {
-        return maxY;
-    }*/
 }

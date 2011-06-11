@@ -1,5 +1,6 @@
 package com.androidplot.xy;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -7,6 +8,7 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.view.View;
 import com.androidplot.util.FontUtils;
+import com.androidplot.util.PixelUtils;
 import mockit.*;
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +20,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class, Rect.class, RectF.class, FontUtils.class})
+@UsingMocksAndStubs({View.class,Context.class,Handler.class,Paint.class,Color.class, Rect.class, RectF.class,FontUtils.class, PixelUtils.class})
 
 public class XYPlotTest {
 
@@ -27,21 +29,6 @@ public class XYPlotTest {
     List<Integer> numList1;
     List<Integer> numList2;
     SimpleXYSeries series1;
-    int x;
-
-
-    @MockClass(realClass=View.class)
-    public static class MockXYPlot {
-
-        @Mock
-        public int getWidth() { return 100;}
-    }
-
-    //@Mocked XYPlot plot;
-
-
-    //@MockClass(realClass = Context.class)
-    //public static class MockContext {}
 
     @Before
     public void setUp() throws Exception {
@@ -54,10 +41,7 @@ public class XYPlotTest {
         plot = new XYPlot(null, "test");
         numList1 = Arrays.asList(0, 1, 3, 5, 10, 15, 25, 50, 75, 100); // 10 elements
         numList2 = Arrays.asList(-100, 0, 1, 3, 5, 10, 15, 25, 50, 75, 100, 200); // 12 elements
-
         series1 = new SimpleXYSeries(numList1, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
-
-        //plot.addSeries(series1, new LineAndPointFormatter(null, null));
     }
 
     @After

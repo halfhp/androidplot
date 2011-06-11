@@ -1,5 +1,8 @@
 package com.androidplot.xy;
 
+import android.graphics.Canvas;
+import android.graphics.RectF;
+import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.SeriesAndFormatterList;
 import com.androidplot.series.XYSeries;
 import com.androidplot.ui.DataRenderer;
@@ -27,5 +30,13 @@ public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter
         }
 
         return found;
+    }
+
+    @Override
+    public void render(Canvas canvas, RectF plotArea) throws PlotRenderException {
+        super.render(canvas, plotArea);
+        //onRender(canvas, plotArea);
+        // TODO: draw point labels here
+
     }
 }

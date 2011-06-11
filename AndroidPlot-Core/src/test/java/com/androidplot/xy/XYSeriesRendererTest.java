@@ -8,6 +8,7 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.view.View;
 import com.androidplot.util.FontUtils;
+import com.androidplot.util.PixelUtils;
 import com.androidplot.util.ValPixConverter;
 import mockit.*;
 import org.junit.After;
@@ -16,23 +17,12 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class, Rect.class, RectF.class, FontUtils.class})
+@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class, Rect.class, RectF.class, FontUtils.class, PixelUtils.class})
 
 public class XYSeriesRendererTest {
 
     @MockClass(realClass = Context.class)
     public static class MockContext {}
-
-   /* @MockClass(realClass = RectF.class)
-    public static class MockRectF {
-        private static final float left = 0;
-        private static final float top = 0;
-        private static final float right = 100;
-        private static final float bottom = 100;
-
-        @Mock
-        public MockRectF() {}
-    }*/
 
     @Before
     public void setUp() throws Exception {

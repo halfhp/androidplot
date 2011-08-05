@@ -28,41 +28,22 @@
 
 package com.androidplot.xy;
 
-import android.graphics.Paint;
+import android.graphics.Canvas;
+import android.graphics.PointF;
 
-public class XValueMarker extends ValueMarker<YPositionMetric> {
-
-    /**
-     *
-     * @param value
-     * @param text Set to null to use the plot's default formatter.
-     */
-    public XValueMarker(Number value, String text) {
-        super(value, text, new YPositionMetric(3, YLayoutStyle.ABSOLUTE_FROM_TOP));
-    }
+/**
+ * Interface used by LineAndPointRenderer to draw a Point onto the display.  Those wishing to customize
+ * the graphics of points or how labels are rendered may implement this interface.
+ */
+public interface PointFormatter {
 
     /**
-     *
-     * @param value
-     * @param text Set to null to use the plot's default formatter.
-     * @param textPosition
-     * @param linePaint
-     * @param textPaint
+     * Draws the point specified onto the canvas.
+     * @param canvas
+     * @param value Actual value of the point.
+     * @param coords Screen coordinates of the point.
      */
-    public XValueMarker(Number value, String text, YPositionMetric textPosition, Paint linePaint, Paint textPaint) {
-        super(value, text, textPosition, linePaint, textPaint);
-    }
+    public void draw(Canvas canvas, Number value, PointF coords);
 
 
-    /**
-     *
-     * @param value
-     * @param text Set to null to use the plot's default formatter.
-     * @param textPosition
-     * @param linePaint
-     * @param textPaint
-     */
-    public XValueMarker(Number value, String text, YPositionMetric textPosition, int linePaint, int textPaint) {
-        super(value, text, textPosition, linePaint, textPaint);
-    }
 }

@@ -28,41 +28,16 @@
 
 package com.androidplot.xy;
 
-import android.graphics.Paint;
+import android.graphics.Canvas;
+import android.graphics.PointF;
 
-public class XValueMarker extends ValueMarker<YPositionMetric> {
+/**
+ * Default PointFormatter used by LineAndPointRenderer to draw a point's text label onto the display.
+ */
+public class PointLabelFormatter implements PointFormatter {
 
-    /**
-     *
-     * @param value
-     * @param text Set to null to use the plot's default formatter.
-     */
-    public XValueMarker(Number value, String text) {
-        super(value, text, new YPositionMetric(3, YLayoutStyle.ABSOLUTE_FROM_TOP));
-    }
-
-    /**
-     *
-     * @param value
-     * @param text Set to null to use the plot's default formatter.
-     * @param textPosition
-     * @param linePaint
-     * @param textPaint
-     */
-    public XValueMarker(Number value, String text, YPositionMetric textPosition, Paint linePaint, Paint textPaint) {
-        super(value, text, textPosition, linePaint, textPaint);
-    }
-
-
-    /**
-     *
-     * @param value
-     * @param text Set to null to use the plot's default formatter.
-     * @param textPosition
-     * @param linePaint
-     * @param textPaint
-     */
-    public XValueMarker(Number value, String text, YPositionMetric textPosition, int linePaint, int textPaint) {
-        super(value, text, textPosition, linePaint, textPaint);
+    @Override
+    public void draw(Canvas canvas, Number value, PointF coords) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

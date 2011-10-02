@@ -12,6 +12,29 @@
     <version>${applicationVersion}</version>
     <name>AndroidPlot-Core</name>
 
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <path.to.rt.jar>${java.home}/lib/rt.jar</path.to.rt.jar>
+            </properties>
+        </profile>
+        <profile>
+            <id>osx</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <path.to.rt.jar>${java.home}/../Classes/classes.jar</path.to.rt.jar>
+            </properties>
+        </profile>
+    </profiles>
+
     <repositories>
         <repository>
             <id>central</id>
@@ -99,7 +122,8 @@
                     <outjar>obfuscated/${project.build.finalName}-release.jar</outjar>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                     <libs>
-                        <lib>${java.home}/lib/rt.jar</lib>
+                        <!--<lib>${java.home}/lib/rt.jar</lib>-->
+                        <lib>${path.to.rt.jar}</lib>
                     </libs>
                     <addMavenDescriptor>false</addMavenDescriptor>
                 </configuration>

@@ -90,6 +90,28 @@ public class PixelUtils {
         return scale * dp + 0.5f;
     }
 
+    /**
+     *
+     * @param context
+     * @param fraction A float value between 0 and 1.
+     * @return Number of pixels fraction represents on the current device's display.
+     */
+    public static float fractionToPixH(Context context, float fraction) {
+        return context.getResources().getDisplayMetrics().heightPixels * fraction;
+
+    }
+
+    /**
+     *
+     * @param context
+     * @param fraction A float value between 0 and 1.
+     * @return Number of pixels fraction represents on the current device's display.
+     */
+    public static float fractionToPixW(Context context, float fraction) {
+        return context.getResources().getDisplayMetrics().widthPixels * fraction;
+    }
+
+
 
 }
 

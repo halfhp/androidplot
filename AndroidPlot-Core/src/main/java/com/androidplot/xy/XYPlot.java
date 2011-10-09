@@ -137,11 +137,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private static final int DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP  = 0;
     private static final int DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP  = 0;
 
-    private static final int DEFAULT_GRAPH_WIDGET_TOP_MARGIN          = 3;
-    private static final int DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN        = 3;
-    private static final int DEFAULT_PLOT_LEFT_MARGIN                 = 2;
-    private static final int DEFAULT_PLOT_RIGHT_MARGIN                = 2;
-    private static final int DEFAULT_PLOT_BOTTOM_MARGIN               = 2;
+    private static final int DEFAULT_GRAPH_WIDGET_TOP_MARGIN_DP = 3;
+    private static final int DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN_DP = 3;
+    private static final int DEFAULT_PLOT_LEFT_MARGIN_DP = 2;
+    private static final int DEFAULT_PLOT_RIGHT_MARGIN_DP = 2;
+    private static final int DEFAULT_PLOT_BOTTOM_MARGIN_DP = 2;
 
     {
 
@@ -241,15 +241,15 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
         getLayoutManager().moveToTop(getTitleWidget());
         getLayoutManager().moveToTop(getLegendWidget());
-        graphWidget.setMarginTop(PixelUtils.dpToPix(context, DEFAULT_GRAPH_WIDGET_TOP_MARGIN));
-        graphWidget.setMarginRight(PixelUtils.dpToPix(context, DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN));
+        graphWidget.setMarginTop(PixelUtils.dpToPix(context, DEFAULT_GRAPH_WIDGET_TOP_MARGIN_DP));
+        graphWidget.setMarginRight(PixelUtils.dpToPix(context, DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN_DP));
 
         getTitleWidget().pack();
         getDomainLabelWidget().pack();
         getRangeLabelWidget().pack();
-        setPlotMarginLeft(PixelUtils.dpToPix(context, DEFAULT_PLOT_LEFT_MARGIN));
-        setPlotMarginRight(PixelUtils.dpToPix(context, DEFAULT_PLOT_RIGHT_MARGIN));
-        setPlotMarginBottom(PixelUtils.dpToPix(context, DEFAULT_PLOT_BOTTOM_MARGIN));
+        setPlotMarginLeft(PixelUtils.dpToPix(context, DEFAULT_PLOT_LEFT_MARGIN_DP));
+        setPlotMarginRight(PixelUtils.dpToPix(context, DEFAULT_PLOT_RIGHT_MARGIN_DP));
+        setPlotMarginBottom(PixelUtils.dpToPix(context, DEFAULT_PLOT_BOTTOM_MARGIN_DP));
 
         xValueMarkers = new ArrayList<XValueMarker>();
         yValueMarkers = new ArrayList<YValueMarker>();

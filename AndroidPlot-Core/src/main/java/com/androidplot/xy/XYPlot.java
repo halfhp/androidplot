@@ -89,6 +89,17 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private Number prevMinY;
     private Number prevMaxY;
 
+    // uses set boundary min and max values
+    // should be null if not used.
+    private Number rangeTopMin = null;
+    private Number rangeTopMax = null;
+    private Number rangeBottomMin = null;
+    private Number rangeBottomMax = null;
+    private Number domainLeftMin = null;
+    private Number domainLeftMax = null;
+    private Number domainRightMin = null;
+    private Number domainRightMax = null;
+    
     // used for  calculating the domain/range extents that will be displayed on the plot.
     // using boundaries and origins are mutually exclusive.  because of this,
     // setting one will disable the other.  when only setting the FramingModel,
@@ -399,6 +410,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 break;
             case EDGE:
                 updateDomainMinMaxForEdgeModel();
+                calculatedMinX = ApplyUserMinMax(calculatedMinX, domainLeftMin,
+                        domainLeftMax);
+                calculatedMaxX = ApplyUserMinMax(calculatedMaxX,
+                        domainRightMin, domainRightMax);
                 break;
             default:
                 throw new UnsupportedOperationException("Domain Framing Model not yet supported: " + domainFramingModel);
@@ -410,6 +425,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 break;
             case EDGE:
                 updateRangeMinMaxForEdgeModel();
+                calculatedMinY = ApplyUserMinMax(calculatedMinY,
+                        rangeBottomMin, rangeBottomMax);
+                calculatedMaxY = ApplyUserMinMax(calculatedMaxY, rangeTopMin,
+                        rangeTopMax);
                 break;
             default:
                 throw new UnsupportedOperationException("Range Framing Model not yet supported: " + domainFramingModel);
@@ -503,6 +522,23 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         }
     }
 
+    /**
+     * Apply user supplied min and max to the calculated boundary value.
+     * 
+     * @param value
+     * @param min
+     * @param max
+     */
+    private Number ApplyUserMinMax(Number value, Number min, Number max) {
+        value = (((min == null) || (value.doubleValue() > min.doubleValue()))
+                ? value
+                : min);
+        value = (((max == null) || (value.doubleValue() < max.doubleValue()))
+                ? value
+                : max);
+        return value;
+    }
+    
     /**
      * Centers the domain axis on origin.
      * @param origin
@@ -856,38 +892,68 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         graphWidget.setDomainValueFormat(domainValueFormat);
     }
 
+    /**
+     * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     * @param lowerBoundary
+     * @param upperBoundary
+     * @param mode
+     */
     public synchronized void setDomainBoundaries(Number lowerBoundary, Number upperBoundary, BoundaryMode mode) {
         setDomainBoundaries(lowerBoundary, mode, upperBoundary, mode);
     }
 
+    /**
+     * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     * @param lowerBoundary
+     * @param lowerBoundaryMode
+     * @param upperBoundary
+     * @param upperBoundaryMode
+     */
     public synchronized void setDomainBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode, Number upperBoundary, BoundaryMode upperBoundaryMode) {
         setDomainLowerBoundary(lowerBoundary, lowerBoundaryMode);
         setDomainUpperBoundary(upperBoundary, upperBoundaryMode);
     }
-
+    /**
+     * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     * @param lowerBoundary
+     * @param upperBoundary
+     * @param mode
+     */
     public synchronized void setRangeBoundaries(Number lowerBoundary, Number upperBoundary, BoundaryMode mode) {
         setRangeBoundaries(lowerBoundary, mode, upperBoundary, mode);
     }
-
+    /**
+     * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     * @param lowerBoundary
+     * @param lowerBoundaryMode
+     * @param upperBoundary
+     * @param upperBoundaryMode
+     */
     public synchronized void setRangeBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode, Number upperBoundary, BoundaryMode upperBoundaryMode) {
         setRangeLowerBoundary(lowerBoundary, lowerBoundaryMode);
         setRangeUpperBoundary(upperBoundary, upperBoundaryMode);
     }
 
-    public synchronized void setDomainUpperBoundaryMode(BoundaryMode mode) {
+    protected synchronized void setDomainUpperBoundaryMode(BoundaryMode mode) {
         this.domainUpperBoundaryMode = mode;
     }
 
-    public synchronized void setUserMaxX(Number boundary) {
-        if(boundary == null) {
-            throw new NullPointerException("Boundary value cannot be null.");
-        }
+    protected synchronized void setUserMaxX(Number boundary) {
+        // Ifor 12/10/2011
+        // you want null for auto grow and shrink
+        //if(boundary == null) {
+        //    throw new NullPointerException("Boundary value cannot be null.");
+        //}
         this.userMaxX = boundary;
     }
-
+    /**
+     * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     * @param boundary
+     * @param mode
+     */
     public synchronized void setDomainUpperBoundary(Number boundary, BoundaryMode mode) {
+        setUserMaxX((mode == BoundaryMode.FIXED) ? boundary : null);
         setDomainUpperBoundaryMode(mode);
-        setUserMaxX(boundary);
         setDomainFramingModel(XYFramingModel.EDGE);
     }
 
@@ -896,15 +962,21 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     protected synchronized void setUserMinX(Number boundary) {
-        if(boundary == null) {
-            throw new NullPointerException("Boundary value cannot be null.");
-        }
+        // Ifor 12/10/2011
+        // you want null for auto grow and shrink
+        //if(boundary == null) {
+        //    throw new NullPointerException("Boundary value cannot be null.");
+        //}
         this.userMinX = boundary;
     }
-
+    /**
+     * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     * @param boundary
+     * @param mode
+     */
     public synchronized void setDomainLowerBoundary(Number boundary, BoundaryMode mode) {
+        setUserMinX((mode == BoundaryMode.FIXED) ? boundary : null);
         setDomainLowerBoundaryMode(mode);
-        setUserMinX(boundary);
         setDomainFramingModel(XYFramingModel.EDGE);
         //updateMinMaxVals();
     }
@@ -914,15 +986,21 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     protected synchronized void setUserMaxY(Number boundary) {
-        if(boundary == null) {
-            throw new NullPointerException("Boundary value cannot be null.");
-        }
+        // Ifor 12/10/2011
+        // you want null for auto grow and shrink
+        //if(boundary == null) {
+        //    throw new NullPointerException("Boundary value cannot be null.");
+        //}
         this.userMaxY = boundary;
     }
-
+    /**
+     * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     * @param boundary
+     * @param mode
+     */
     public synchronized void setRangeUpperBoundary(Number boundary, BoundaryMode mode) {
+        setUserMaxY((mode == BoundaryMode.FIXED) ? boundary : null);
         setRangeUpperBoundaryMode(mode);
-        setUserMaxY(boundary);
         setRangeFramingModel(XYFramingModel.EDGE);
         //updateMinMaxVals();
     }
@@ -932,15 +1010,21 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     protected synchronized void setUserMinY(Number boundary) {
-        if(boundary == null) {
-            throw new NullPointerException("Boundary value cannot be null.");
-        }
+        // Ifor 12/10/2011
+        // you want null for auto grow and shrink
+        //if(boundary == null) {
+        //    throw new NullPointerException("Boundary value cannot be null.");
+        //}
         this.userMinY = boundary;
     }
-
+    /**
+     * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     * @param boundary
+     * @param mode
+     */
     public synchronized void setRangeLowerBoundary(Number boundary, BoundaryMode mode) {
+        setUserMinY((mode == BoundaryMode.FIXED) ? boundary : null);
         setRangeLowerBoundaryMode(mode);
-        setUserMinY(boundary);
         setRangeFramingModel(XYFramingModel.EDGE);
     }
 
@@ -1014,19 +1098,34 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     protected void setRangeFramingModel(XYFramingModel rangeFramingModel) {
         this.rangeFramingModel = rangeFramingModel;
     }
-
+    /**
+     *  CalculatedMinX value after the the framing model has been applied.
+     * @return
+     */
     public Number getCalculatedMinX() {
         return calculatedMinX != null ? calculatedMinX : getDefaultBounds().getMinX();
     }
 
+    /**
+     *  CalculatedMaxX value after the the framing model has been applied.
+     * @return
+     */
     public Number getCalculatedMaxX() {
         return calculatedMaxX != null ? calculatedMaxX : getDefaultBounds().getMaxX();
     }
 
+    /**
+     *  CalculatedMinY value after the the framing model has been applied.
+     * @return
+     */
     public Number getCalculatedMinY() {
         return calculatedMinY != null ? calculatedMinY : getDefaultBounds().getMinY();
     }
 
+    /**
+     *  CalculatedMaxY value after the the framing model has been applied.
+     * @return
+     */
     public Number getCalculatedMaxY() {
         return calculatedMaxY != null ? calculatedMaxY : getDefaultBounds().getMaxY();
     }
@@ -1141,5 +1240,125 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public void setDefaultBounds(RectRegion defaultBounds) {
         this.defaultBounds = defaultBounds;
+    }
+
+    /**
+     * @return the rangeTopMin
+     */
+    public Number getRangeTopMin() {
+        return rangeTopMin;
+    }
+
+    /**
+     * @param rangeTopMin
+     *            the rangeTopMin to set
+     */
+    public synchronized void setRangeTopMin(Number rangeTopMin) {
+        this.rangeTopMin = rangeTopMin;
+    }
+
+    /**
+     * @return the rangeTopMax
+     */
+    public Number getRangeTopMax() {
+        return rangeTopMax;
+    }
+
+    /**
+     * @param rangeTopMax
+     *            the rangeTopMax to set
+     */
+    public synchronized void setRangeTopMax(Number rangeTopMax) {
+        this.rangeTopMax = rangeTopMax;
+    }
+
+    /**
+     * @return the rangeBottomMin
+     */
+    public Number getRangeBottomMin() {
+        return rangeBottomMin;
+    }
+
+    /**
+     * @param rangeBottomMin
+     *            the rangeBottomMin to set
+     */
+    public synchronized void setRangeBottomMin(Number rangeBottomMin) {
+        this.rangeBottomMin = rangeBottomMin;
+    }
+
+    /**
+     * @return the rangeBottomMax
+     */
+    public Number getRangeBottomMax() {
+        return rangeBottomMax;
+    }
+
+    /**
+     * @param rangeBottomMax
+     *            the rangeBottomMax to set
+     */
+    public synchronized void setRangeBottomMax(Number rangeBottomMax) {
+        this.rangeBottomMax = rangeBottomMax;
+    }
+
+    /**
+     * @return the domainLeftMin
+     */
+    public Number getDomainLeftMin() {
+        return domainLeftMin;
+    }
+
+    /**
+     * @param domainLeftMin
+     *            the domainLeftMin to set
+     */
+    public synchronized void setDomainLeftMin(Number domainLeftMin) {
+        this.domainLeftMin = domainLeftMin;
+    }
+
+    /**
+     * @return the domainLeftMax
+     */
+    public Number getDomainLeftMax() {
+        return domainLeftMax;
+    }
+
+    /**
+     * @param domainLeftMax
+     *            the domainLeftMax to set
+     */
+    public synchronized void setDomainLeftMax(Number domainLeftMax) {
+        this.domainLeftMax = domainLeftMax;
+    }
+
+    /**
+     * @return the domainRightMin
+     */
+    public Number getDomainRightMin() {
+        return domainRightMin;
+    }
+
+    /**
+     * @param domainRightMin
+     *            the domainRightMin to set
+     */
+    public synchronized void setDomainRightMin(Number domainRightMin) {
+        this.domainRightMin = domainRightMin;
+    }
+
+    /**
+     * @return the domainRightMax
+     */
+    public Number getDomainRightMax() {
+        return domainRightMax;
+    }
+
+    /**
+     * @param domainRightMax
+     *            the domainRightMax to set
+     */
+    public synchronized void setDomainRightMax(Number domainRightMax) {
+        this.domainRightMax = domainRightMax;
     }
 }

@@ -416,7 +416,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
      */
     public void setBorderStyle(BorderStyle style, Float radiusX, Float radiusY) {
         if (style == Plot.BorderStyle.ROUNDED) {
-            if (radiusX != null || radiusY != null){
+            if (radiusX == null || radiusY == null){
                 throw new IllegalArgumentException("radiusX and radiusY cannot be null when using BorderStyle.ROUNDED");
             }
             this.borderRadiusX = radiusX;

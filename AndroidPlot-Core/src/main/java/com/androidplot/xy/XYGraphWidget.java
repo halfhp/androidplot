@@ -325,7 +325,8 @@ public class XYGraphWidget extends Widget {
         gridRect = getGridRect(widgetRect); // used for drawing the background of the grid
         paddedGridRect = getPaddedGridRect(gridRect); // used for drawing lines etc.
         //if (!plot.isEmpty()) {
-
+        // don't draw if we have no space to draw into
+        if ((paddedGridRect.height() > 0.0f) && (paddedGridRect.width() > 0.0f)){
             if (plot.getCalculatedMinX() != null &&
                     plot.getCalculatedMaxX() != null &&
                     plot.getCalculatedMinY() != null &&
@@ -337,6 +338,7 @@ public class XYGraphWidget extends Widget {
                     drawMarkers(canvas);
                 }
             }
+        }
         //}
     }
 

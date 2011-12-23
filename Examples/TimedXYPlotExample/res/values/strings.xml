@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name"></string>
+    <string name="prefs">Setup</string>
+    <string name="fps">Fps :</string>
+    <string name="time">Time :</string>
+    
+    <string name="key_points">Points</string>
+    <string name="title_points">Points</string>
+    <string name="summary_points">Points per series</string>
+    
+    <string name="key_series">Series</string>
+    <string name="title_series">Series</string>
+    <string name="summary_series">Series count</string>
+    
+    <string name="key_sin_on">sin_on</string>
+    <string name="title_sin_on">Sin On</string>
+    <string name="summary_sin_on">Date is Sine wave, otherwise just a horizontal line.</string>
+    
+    <string name="key_key_on">key_on</string>
+    <string name="title_key_on">Key On</string>
+    <string name="summary_key_on">enable the key.</string>
+    
+    <string name="key_range_label_on">range_label</string>
+    <string name="title_range_label_on">Range Label</string>
+    <string name="summary_range_label_on">Enable range label.</string>
+    
+    <string name="key_range_axis_on">range_axis</string>
+    <string name="title_range_axis_on">Range Axis</string>
+    <string name="summary_range_axis_on">Enable range axis.</string>
+    
+    <string name="key_domain_label_on">domain_label</string>
+    <string name="title_domain_label_on">Domain Label</string>
+    <string name="summary_domain_label_on">Enable domain label.</string>
+    
+    <string name="key_domain_axis_on">domain_axis</string>
+    <string name="title_domain_axis_on">Domain Axis</string>
+    <string name="summary_domain_axis_on">Enable domain axis.</string>
+    
+    <string name="key_grid_on">grid</string>
+    <string name="title_grid_on">Grid on</string>
+    <string name="summary_grid_on">Enable grid.</string>
+    
+    <string name="key_boarder_on">boarder_on</string>
+    <string name="title_boarder_on">Boarder On</string>
+    <string name="summary_boarder_on">Enable Boarder.</string>
+    
+    <string name="key_fill_on">fill_On</string>
+    <string name="title_fill_on">Fill On</string>
+    <string name="summary_fill_on">Enable fill.</string>
+    
+    <string name="key_vertex_on">vertesis_on</string>
+    <string name="title_vertex_on">Vertex markers On</string>
+    <string name="summary_vertex_on">Enable vertex markers.</string>
+    
+    <string name="key_line_on">line_on</string>
+    <string name="title_line_on">Line On</string>
+    <string name="summary_line_on">Enable line.</string>
+    
+    <string name="key_title_on">title_on</string>
+    <string name="title_title_on">Title On</string>
+    <string name="summary_title_on">Enable title.</string>
+    
+    <string name="key_background_on">background_on</string>
+    <string name="title_background_on">Background On</string>
+    <string name="summary_background_on">Enable background.</string>
+    
+    <string name="key_range_axis_left">range_axis_left</string>
+    <string name="title_range_axis_left">Range Axis Left</string>
+    <string name="summary_range_axis_left">Range axis is on left of plot</string>
+    
+    <string name="key_range_axis_overlay">range_axis_overlay</string>
+    <string name="title_range_axis_overlay">Range Axis Overlay</string>
+    <string name="summary_range_axis_overlay">Range axis is overlayed on the plot</string>
+    
+    <string name="key_domain_axis_bottom">domain_axis_bottom</string>
+    <string name="title_domain_axis_bottom">Domain Axis Bottom</string>
+    <string name="summary_domain_axis_bottom">Domain axis is on bottom of plot</string>
+    
+    <string name="key_domain_axis_overlay">domain_axis_overlay</string>
+    <string name="title_domain_axis_overlay">Domain Axis Overlay</string>
+    <string name="summary_domain_axis_overlay">Domain axis is overlayed on the plot</string>
+</resources>

@@ -87,24 +87,28 @@
                                 <property environment="env"/>
                                 <property name="sdk.dir" value="${env.ANDROID_HOME}"/>
                                 <!--<property name="apkeystore" value="${env.AP_KEYSTORE}"/>-->
-
+                                
                                 <!-- DemoApp-->
-                                <ant antfile="build.xml" target="release" dir="DemoApp"/>
+                                <ant antfile="build.xml" target="debug" dir="DemoApp"/>
 
                                 <!-- DynamicXYPlotExample-->
-                                <ant antfile="build.xml" target="release" dir="DynamicXYPlotExample"/>
+                                <ant antfile="build.xml" target="debug" dir="DynamicXYPlotExample"/>
 
                                 <!-- HelperExample-->
-                                <ant antfile="build.xml" target="release" dir="HelperExample"/>
+                                <ant antfile="build.xml" target="debug" dir="HelperExample"/>
 
                                 <!-- OrientationSensorExample-->
-                                <ant antfile="build.xml" target="release" dir="OrientationSensorExample"/>
+                                <ant antfile="build.xml" target="debug" dir="OrientationSensorExample"/>
 
                                 <!-- SimpleXYPlotExample-->
-                                <ant antfile="build.xml" target="release" dir="SimpleXYPlotExample"/>
+                                <ant antfile="build.xml" target="debug" dir="SimpleXYPlotExample"/>
 
                                 <!-- StepChartExample-->
-                                <ant antfile="build.xml" target="release" dir="StepChartExample"/>
+                                <ant antfile="build.xml" target="debug" dir="StepChartExample"/>
+
+                                <!-- TimedXYPlotExample-->
+                                <ant antfile="build.xml" target="debug" dir="TimedXYPlotExample"/>
+                                
                             </target>
 
                         </configuration>
@@ -138,6 +142,9 @@
 
                                 <!-- StepChartExample-->
                                 <ant antfile="build.xml" target="clean" dir="StepChartExample"/>
+                                
+                                <!-- TimedXYPlotExample-->
+                                <ant antfile="build.xml" target="clean" dir="TimedXYPlotExample"/>
 
                             </tasks>
                         </configuration>

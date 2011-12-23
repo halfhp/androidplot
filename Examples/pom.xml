@@ -106,9 +106,9 @@
                                 <!-- StepChartExample-->
                                 <ant antfile="build.xml" target="debug" dir="StepChartExample"/>
 
-                                <!-- TimedXYPlotExample-->
+                                <!-- TimedXYPlotExample
                                 <ant antfile="build.xml" target="debug" dir="TimedXYPlotExample"/>
-                                
+                                -->
                             </target>
 
                         </configuration>
@@ -143,9 +143,9 @@
                                 <!-- StepChartExample-->
                                 <ant antfile="build.xml" target="clean" dir="StepChartExample"/>
                                 
-                                <!-- TimedXYPlotExample-->
+                                <!-- TimedXYPlotExample
                                 <ant antfile="build.xml" target="clean" dir="TimedXYPlotExample"/>
-
+-->
                             </tasks>
                         </configuration>
                     </execution>

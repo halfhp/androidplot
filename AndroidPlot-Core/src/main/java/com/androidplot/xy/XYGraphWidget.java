@@ -29,6 +29,8 @@
 package com.androidplot.xy;
 
 import android.graphics.*;
+import android.util.Log;
+
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.widget.Widget;
@@ -54,15 +56,17 @@ public class XYGraphWidget extends Widget {
 
     private static final int MARKER_LABEL_SPACING = 2;
     private static final int CURSOR_LABEL_SPACING = 2; // space between cursor
+    private static final String TAG = "AndroidPlot";
                                                        // lines and label in
                                                        // pixels
     private float domainLabelWidth = 15; // how many pixels is the area
                                          // allocated for domain labels
     private float rangeLabelWidth = 41; // ...
     private float domainLabelVerticalOffset = -5;
-    private float rangeLabelHorizontalOffset = 1; // not currently used since
-                                                  // this margin can be adjusted
-                                                  // via rangeLabelWidth
+    private float domainLabelHorizontalOffset = 0.0f;
+    private float rangeLabelHorizontalOffset = 1.0f;   // allows tweaking of text position
+    private float rangeLabelVerticalOffset = 0.0f;  // allows tweaking of text position
+    
     private int ticksPerRangeLabel = 1;
     private int ticksPerDomainLabel = 1;
     private float gridPaddingTop = 0;
@@ -92,6 +96,9 @@ public class XYGraphWidget extends Widget {
     private float rangeCursorPosition;
     private boolean drawCursorLabelEnabled = true;
     private boolean drawMarkersEnabled = true;
+    
+    private boolean rangeAxisLeft = true;
+    private boolean domainAxisBottom = true;
 
     // TODO: consider typing this manager with a special
     // axisLabelRegionFormatter
@@ -355,6 +362,8 @@ public class XYGraphWidget extends Widget {
                                             // of the grid
         paddedGridRect = getPaddedGridRect(gridRect); // used for drawing lines
                                                       // etc.
+        //Log.v(TAG, "gridRect :" + gridRect);
+        //Log.v(TAG, "paddedGridRect :" + paddedGridRect);
         // if (!plot.isEmpty()) {
         // don't draw if we have no space to draw into
         if ((paddedGridRect.height() > 0.0f) && (paddedGridRect.width() > 0.0f)) {
@@ -374,8 +383,10 @@ public class XYGraphWidget extends Widget {
     }
 
     private RectF getGridRect(RectF widgetRect) {
-        return new RectF(widgetRect.left + rangeLabelWidth, widgetRect.top,
-                widgetRect.right, widgetRect.bottom - domainLabelWidth);
+        return new RectF(widgetRect.left + ((rangeAxisLeft)?rangeLabelWidth:1),
+                widgetRect.top + ((domainAxisBottom)?1:domainLabelWidth),
+                widgetRect.right - ((rangeAxisLeft)?1:rangeLabelWidth),
+                widgetRect.bottom - ((domainAxisBottom)?domainLabelWidth:1));
     }
 
     private RectF getPaddedGridRect(RectF gridRect) {
@@ -419,14 +430,25 @@ public class XYGraphWidget extends Widget {
             Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         if (!drawLineOnly) {
             if (linePaint != null) {
+                if (domainAxisBottom){
                 canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom
                         + domainLabelTickExtension, linePaint);
+                } else {
+                    canvas.drawLine(xPix, gridRect.top - domainLabelTickExtension, xPix,
+                            gridRect.bottom , linePaint);
+                }
             }
             if (labelPaint != null) {
                 float fontHeight = FontUtils.getFontHeight(labelPaint);
-                float yPix = gridRect.bottom + rangeLabelTickExtension
-                        + domainLabelVerticalOffset + fontHeight;
-                drawTickText(canvas, XYAxisType.DOMAIN, xVal, xPix, yPix,
+                float yPix = 0.0f;
+                if (domainAxisBottom){
+                    yPix = gridRect.bottom + domainLabelTickExtension
+                            + domainLabelVerticalOffset + fontHeight;
+                } else {
+                    yPix = gridRect.top - domainLabelTickExtension
+                            - domainLabelVerticalOffset;
+                }
+                drawTickText(canvas, XYAxisType.DOMAIN, xVal, xPix + domainLabelHorizontalOffset, yPix,
                         labelPaint);
             }
         } else if (linePaint != null) {
@@ -441,13 +463,24 @@ public class XYGraphWidget extends Widget {
             Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         if (!drawLineOnly) {
             if (linePaint != null) {
+                if (rangeAxisLeft){
                 canvas.drawLine(gridRect.left - rangeLabelTickExtension, yPix,
                         gridRect.right, yPix, linePaint);
+                } else {
+                    canvas.drawLine(gridRect.left, yPix,
+                            gridRect.right + rangeLabelTickExtension, yPix, linePaint);
+                }
             }
             if (labelPaint != null) {
-                float xPix = gridRect.left
-                        - (rangeLabelTickExtension + rangeLabelHorizontalOffset);
-                drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix,
+                float xPix = 0.0f;
+                if (rangeAxisLeft){
+                    xPix = gridRect.left
+                            - (rangeLabelTickExtension + rangeLabelHorizontalOffset);
+                } else {
+                    xPix = gridRect.right
+                            + (rangeLabelTickExtension + rangeLabelHorizontalOffset);
+                }
+                drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix - rangeLabelVerticalOffset,
                         labelPaint);
             }
         } else if (linePaint != null) {
@@ -809,12 +842,28 @@ public class XYGraphWidget extends Widget {
         this.domainLabelVerticalOffset = domainLabelVerticalOffset;
     }
 
+    public float getDomainLabelHorizontalOffset() {
+        return domainLabelHorizontalOffset;
+    }
+
+    public void setDomainLabelHorizontalOffset(float domainLabelHorizontalOffset) {
+        this.domainLabelHorizontalOffset = domainLabelHorizontalOffset;
+    }
+
     public float getRangeLabelHorizontalOffset() {
         return rangeLabelHorizontalOffset;
     }
 
     public void setRangeLabelHorizontalOffset(float rangeLabelHorizontalOffset) {
         this.rangeLabelHorizontalOffset = rangeLabelHorizontalOffset;
+    }
+
+    public float getRangeLabelVerticalOffset() {
+        return rangeLabelVerticalOffset;
+    }
+
+    public void setRangeLabelVerticalOffset(float rangeLabelVerticalOffset) {
+        this.rangeLabelVerticalOffset = rangeLabelVerticalOffset;
     }
 
     public Paint getGridBackgroundPaint() {
@@ -1051,11 +1100,113 @@ public class XYGraphWidget extends Widget {
         this.drawMarkersEnabled = drawMarkersEnabled;
     }
 
+    public boolean isRangeAxisLeft() {
+        return rangeAxisLeft;
+    }
+
+    public void setRangeAxisLeft(boolean rangeAxisLeft) {
+        this.rangeAxisLeft = rangeAxisLeft;
+    }
+
+    public boolean isDomainAxisBottom() {
+        return domainAxisBottom;
+    }
+
+    public void setDomainAxisBottom(boolean domainAxisBottom) {
+        this.domainAxisBottom = domainAxisBottom;
+    }
+
     private class TickLabelArea {
         private float size; // size in pixels
         protected void draw(Canvas canvas) {
             // TODO
         }
     }
-
+    
+    /*
+     * set the position of the range axis labels.  Set the labelPaint textSizes before setting this.
+     * This call sets the various vertical and horizontal offsets and widths to good defaults.
+     * 
+     * @param rangeAxisLeft axis labels are on the left hand side not the right hand side.
+     * @param rangeAxisOverlay axis labels are overlaid on the plot, not external to it.
+     * @param tickSize the size of the tick extensions for none overlaid axis.
+     * @param maxLableString Sample label representing the biggest size space needs to be allocated for.
+     */
+    public void setRangeAxisPosition(boolean rangeAxisLeft, boolean rangeAxisOverlay, int tickSize, String maxLableString){
+        setRangeAxisLeft(rangeAxisLeft);
+        
+        if (rangeAxisOverlay) {
+            setRangeLabelWidth(1);    // needs to be at least 1 to display grid line.
+            setRangeLabelHorizontalOffset(-2.0f);
+            setRangeLabelVerticalOffset(2.0f);    // get above the line
+            Paint p = getRangeLabelPaint();
+            if (p != null) {
+                p.setTextAlign(((rangeAxisLeft)?Paint.Align.LEFT:Paint.Align.RIGHT));
+            }
+            Paint po = getRangeOriginLabelPaint();
+            if (po != null) {
+                po.setTextAlign(((rangeAxisLeft)?Paint.Align.LEFT:Paint.Align.RIGHT));
+            }
+            setRangeLabelTickExtension(0); 
+        } else {
+            setRangeLabelWidth(1);    // needs to be at least 1 to display grid line.
+                                      // if we have a paint this gets bigger.
+            setRangeLabelHorizontalOffset(1.0f);
+            setRangeLabelTickExtension(tickSize);
+            Paint p = getRangeLabelPaint();
+            if (p != null) {
+                p.setTextAlign(((!rangeAxisLeft)?Paint.Align.LEFT:Paint.Align.RIGHT));
+                Rect r = FontUtils.getPackedStringDimensions(maxLableString,p);
+                setRangeLabelVerticalOffset(r.top/2);
+                setRangeLabelWidth(r.right + getRangeLabelTickExtension());
+            }
+            Paint po = getRangeOriginLabelPaint();
+            if (po != null) {
+                po.setTextAlign(((!rangeAxisLeft)?Paint.Align.LEFT:Paint.Align.RIGHT));
+            }
+        }
+    }
+    
+    /*
+     * set the position of the domain axis labels.  Set the labelPaint textSizes before setting this.
+     * This call sets the various vertical and horizontal offsets and widths to good defaults.
+     * 
+     * @param domainAxisBottom axis labels are on the bottom not the top of the plot.
+     * @param domainAxisOverlay axis labels are overlaid on the plot, not external to it.
+     * @param tickSize the size of the tick extensions for none overlaid axis.
+     * @param maxLableString Sample label representing the biggest size space needs to be allocated for.
+     */
+    public void setDomainAxisPosition(boolean domainAxisBottom, boolean domainAxisOverlay, int tickSize, String maxLableString){
+        setDomainAxisBottom(domainAxisBottom);
+        if (domainAxisOverlay) {
+            setDomainLabelWidth(1);    // needs to be at least 1 to display grid line.
+            setDomainLabelVerticalOffset(2.0f);    // get above the line
+            setDomainLabelTickExtension(0);
+            Paint p = getDomainLabelPaint();
+            if (p != null) {
+                float fontHeight = FontUtils.getFontHeight(p);
+                Rect r = FontUtils.getPackedStringDimensions(maxLableString,p);
+                if (domainAxisBottom){
+                    setDomainLabelVerticalOffset(2 * r.top);
+                } else {
+                    setDomainLabelVerticalOffset(r.top - 1.0f);
+                }
+            }
+        } else {
+            setDomainLabelWidth(1);    // needs to be at least 1 to display grid line.
+                                                                    // if we have a paint this gets bigger.
+            setDomainLabelTickExtension(tickSize);
+            Paint p = getDomainLabelPaint();
+            if (p != null) {
+                float fontHeight = FontUtils.getFontHeight(p);
+                Rect r = FontUtils.getPackedStringDimensions(maxLableString,p);
+                if (domainAxisBottom){
+                    setDomainLabelVerticalOffset(-4.0f);
+                } else {
+                    setDomainLabelVerticalOffset(+1.0f);
+                }
+                setDomainLabelWidth(fontHeight + getDomainLabelTickExtension());
+            }
+        }
+    }
 }

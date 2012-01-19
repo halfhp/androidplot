@@ -77,6 +77,8 @@ public class XYGraphWidget extends Widget {
     private int rangeLabelTickExtension = 5;
     private Paint gridBackgroundPaint;
     private Paint gridLinePaint;
+    private Paint gridRangeLinePaint;
+    private Paint gridDomainLinePaint;
     private Paint domainLabelPaint;
     private Paint rangeLabelPaint;
     private Paint domainCursorPaint;
@@ -114,6 +116,8 @@ public class XYGraphWidget extends Widget {
         gridLinePaint.setColor(Color.rgb(180, 180, 180));
         gridLinePaint.setAntiAlias(true);
         gridLinePaint.setStyle(Paint.Style.STROKE);
+        gridRangeLinePaint = gridLinePaint;
+        gridDomainLinePaint = gridLinePaint;
         domainOriginLinePaint = new Paint();
         domainOriginLinePaint.setColor(Color.WHITE);
         domainOriginLinePaint.setAntiAlias(true);
@@ -541,10 +545,10 @@ public class XYGraphWidget extends Widget {
                 if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
                     if (i % getTicksPerDomainLabel() == 0) {
                         drawDomainTick(canvas, xPix, xVal, domainLabelPaint,
-                                gridLinePaint, false);
+                                gridDomainLinePaint, false);
                     } else {
                         drawDomainTick(canvas, xPix, xVal, domainLabelPaint,
-                                gridLinePaint, true);
+                                gridDomainLinePaint, true);
                     }
                 }
                 i++;
@@ -564,10 +568,10 @@ public class XYGraphWidget extends Widget {
 
                     if (i % getTicksPerDomainLabel() == 0) {
                         drawDomainTick(canvas, xPix, xVal, domainLabelPaint,
-                                gridLinePaint, false);
+                                gridDomainLinePaint, false);
                     } else {
                         drawDomainTick(canvas, xPix, xVal, domainLabelPaint,
-                                gridLinePaint, true);
+                                gridDomainLinePaint, true);
                     }
                 }
                 i++;
@@ -616,10 +620,10 @@ public class XYGraphWidget extends Widget {
                 if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
                     if (i % getTicksPerRangeLabel() == 0) {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint,
-                                gridLinePaint, false);
+                                gridRangeLinePaint, false);
                     } else {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint,
-                                gridLinePaint, true);
+                                gridRangeLinePaint, true);
                     }
                 }
                 i++;
@@ -638,10 +642,10 @@ public class XYGraphWidget extends Widget {
                 if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
                     if (i % getTicksPerRangeLabel() == 0) {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint,
-                                gridLinePaint, false);
+                                gridRangeLinePaint, false);
                     } else {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint,
-                                gridLinePaint, true);
+                                gridRangeLinePaint, true);
                     }
                 }
                 i++;
@@ -906,6 +910,69 @@ public class XYGraphWidget extends Widget {
         } else {
             this.gridLinePaint = new Paint(gridLinePaint);
             this.gridLinePaint.setStyle(Paint.Style.STROKE);
+        }
+        // make the same for domain and range
+        this.gridDomainLinePaint = this.gridLinePaint;
+        this.gridRangeLinePaint = this.gridLinePaint;
+    }
+
+    /**
+     * get the GridDomainLinePaint.
+     * 
+     * If the Domain and Range have the same paint then a copy is made to seperate them.
+     * 
+     */
+    public Paint getGridDomainLinePaint() {
+        if (gridDomainLinePaint == gridRangeLinePaint){
+            //need a copy as we look to be using them separately
+            this.gridDomainLinePaint = new Paint(gridRangeLinePaint);
+            this.gridDomainLinePaint.setStyle(Paint.Style.STROKE);
+        }
+        return gridDomainLinePaint;
+    }
+
+    /**
+     * Creates a copy of gridDomainLinePaint to be used for drawing grid lines. The
+     * copied instance will have it's style attribute set to Paint.Style.STROKE.
+     * 
+     * @param gridDomainLinePaint
+     */
+    public void setGridDomainLinePaint(Paint gridLinePaint) {
+        if (gridLinePaint == null) {
+            this.gridDomainLinePaint = null;
+        } else {
+            this.gridDomainLinePaint = new Paint(gridLinePaint);
+            this.gridDomainLinePaint.setStyle(Paint.Style.STROKE);
+        }
+    }
+
+    /**
+     * get the GridRangeLinePaint.
+     * 
+     * If the Domain and Range have the same paint then a copy is made to seperate them.
+     * 
+     */
+    public Paint getGridRangeLinePaint() {
+        if (gridDomainLinePaint == gridRangeLinePaint){
+            //need a copy as we look to be using them separately
+            this.gridDomainLinePaint = new Paint(gridRangeLinePaint);
+            this.gridDomainLinePaint.setStyle(Paint.Style.STROKE);
+        }
+        return gridRangeLinePaint;
+    }
+
+    /**
+     * Creates a copy of gridRangeLinePaint to be used for drawing grid lines. The
+     * copied instance will have it's style attribute set to Paint.Style.STROKE.
+     * 
+     * @param gridRangeLinePaint
+     */
+    public void setGridRangeLinePaint(Paint gridLinePaint) {
+        if (gridLinePaint == null) {
+            this.gridRangeLinePaint = null;
+        } else {
+            this.gridRangeLinePaint = new Paint(gridLinePaint);
+            this.gridRangeLinePaint.setStyle(Paint.Style.STROKE);
         }
     }
 

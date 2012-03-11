@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DependencyValidationManager">
-    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
-  </component>
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
@@ -48,7 +45,7 @@
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="Android 2.1-update1 Platform" project-jdk-type="Android SDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="SvnBranchConfigurationManager">
@@ -57,20 +54,6 @@
         <entry key="$PROJECT_DIR$">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches" />
@@ -84,20 +67,6 @@
         <entry key="$PROJECT_DIR$/AndroidPlot-Core">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches" />
@@ -111,20 +80,6 @@
         <entry key="$PROJECT_DIR$/Examples/OrientationSensorExample">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches" />

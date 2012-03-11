@@ -6,7 +6,6 @@
     <uses-sdk
         android:minSdkVersion="6"
         android:targetSdkVersion="8"
-        android:maxSdkVersion="14"
         />
     <application android:label="AndroidPlot API DemoApp" android:icon="@drawable/icon" android:debuggable="true">
         <activity android:name=".MainActivity"

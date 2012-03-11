@@ -11,7 +11,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <applicationVersion>0.4.4</applicationVersion>
+        <applicationVersion>0.5.0</applicationVersion>
         <examplesDir>Examples</examplesDir>
         <obfuscatedJarPath>${project.build.directory}/obfuscated</obfuscatedJarPath>
         <obfuscatedJarName>${project.build.finalName}-release.jar</obfuscatedJarName>

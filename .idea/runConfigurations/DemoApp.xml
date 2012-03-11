@@ -4,8 +4,8 @@
     <option name="ACTIVITY_CLASS" value="" />
     <option name="MODE" value="default_activity" />
     <option name="DEPLOY" value="true" />
-    <option name="CHOOSE_DEVICE_MANUALLY" value="false" />
-    <option name="PREFERRED_AVD" value="Android_2.3.3" />
+    <option name="TARGET_SELECTION_MODE" value="USB_DEVICE" />
+    <option name="PREFERRED_AVD" value="" />
     <option name="COMMAND_LINE" value="" />
     <option name="WIPE_USER_DATA" value="false" />
     <option name="DISABLE_BOOT_ANIMATION" value="false" />

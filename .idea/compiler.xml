@@ -10,9 +10,9 @@
       <directory url="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Examples/HelperExample/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Examples/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/AndroidPlot-Core/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Examples/DemoApp/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/AndroidPlot-Core/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />

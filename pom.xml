@@ -19,7 +19,8 @@
 
     <modules>
         <module>AndroidPlot-Core</module>
-        <module>Examples</module>
+        <!--<module>Examples</module>-->
+        <module>Examples/DemoApp</module>
     </modules>
 
     <repositories>

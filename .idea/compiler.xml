@@ -3,13 +3,16 @@
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
     <excludeFromCompile>
-      <directory url="file://$PROJECT_DIR$/Examples/DemoApp/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Examples/StepChartExample/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Examples/SimpleXYPlotExample/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Examples/TimeSeriesExample/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Examples/OrientationSensorExample/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Examples/HelperExample/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/Examples/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/AndroidPlot-Core/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/Examples/DemoApp/gen" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />

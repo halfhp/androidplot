@@ -3,18 +3,9 @@
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
-  <component name="FacetAutodetectingManager">
-    <autodetection-disabled>
-      <facet-type id="android">
-        <modules>
-          <module name="AndroidPlot-Core-UnitTests">
-            <files>
-              <file url="file://$PROJECT_DIR$/Tests/AndroidManifest.xml" />
-            </files>
-          </module>
-        </modules>
-      </facet-type>
-    </autodetection-disabled>
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="android" url="file://$PROJECT_DIR$/Examples/DemoApp" />
+    <file type="android" url="file://$PROJECT_DIR$/Tests/AndroidManifest.xml" />
   </component>
   <component name="IdProvider" IDEtalkID="96A70927FCB4C9DA89E754C51C667B37" />
   <component name="JavadocGenerationManager">
@@ -39,6 +30,7 @@
       <list>
         <option value="$PROJECT_DIR$/AndroidPlot-Lib/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/Examples/DemoApp/pom.xml" />
       </list>
     </option>
   </component>

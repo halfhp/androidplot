@@ -82,7 +82,7 @@
                                 <property name="sdk.dir" value="${env.ANDROID_HOME}"/>
                                 <!-- todo: include only the release jar, not everything inside
                                            the artifacts dir.-->
-                                <property name="jar.libs.dir" value="../../AndroidPlot-Core/target/obfuscated/"/>
+                                <!--<property name="jar.libs.dir" value="../../AndroidPlot-Core/target/obfuscated/"/>-->
                                 <property name="build.compiler" value="extJavac"/>
                                 <property environment="env"/>
                                 <property name="sdk.dir" value="${env.ANDROID_HOME}"/>

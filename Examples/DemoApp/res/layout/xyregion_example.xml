@@ -1,19 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+        >
 
     <com.androidplot.xy.XYPlot
-    android:id="@+id/xyRegionExamplePlot"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_marginTop="3px"
-    android:layout_marginLeft="3px"
-    android:layout_marginRight="3px"
-    android:layout_marginBottom="3px"
-    title="XYRegion Example"
-    />
+            android:id="@+id/xyRegionExamplePlot"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="0px"
+            title="XYRegion Example"
+            android:layout_weight="1"
+            />
+
+    <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+        <CheckBox android:id="@+id/s1CheckBox"
+                  android:text="S1"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/s2CheckBox"
+                  android:text="S2"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/s3CheckBox"
+                  android:text="S3"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/s4CheckBox"
+                  android:text="S4"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+        <CheckBox android:id="@+id/r1CheckBox"
+                  android:text="R1"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/r2CheckBox"
+                  android:text="R2"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/r3CheckBox"
+                  android:text="R3"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/r4CheckBox"
+                  android:text="R4"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/r5CheckBox"
+                  android:text="R5"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+    </LinearLayout>
+
 </LinearLayout>
 

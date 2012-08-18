@@ -74,6 +74,13 @@
             </SvnBranchConfiguration>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/Examples/DemoApp">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="trunkUrl" value="https://androidplot.jira.com/svn/ANDROIDPLOT/trunk/Examples/DemoApp" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/Examples/OrientationSensorExample">
           <value>
             <SvnBranchConfiguration>

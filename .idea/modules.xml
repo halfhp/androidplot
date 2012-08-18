@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" filepath="$PROJECT_DIR$/Examples/SimpleXYPlotExample/SimpleXYPlotExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" filepath="$PROJECT_DIR$/Examples/StepChartExample/StepChartExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/TimeSeriesExample/TimeSeriesExample.iml" filepath="$PROJECT_DIR$/Examples/TimeSeriesExample/TimeSeriesExample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Examples/TimedXYPlotExample/TimedXYPlotExample.iml" filepath="$PROJECT_DIR$/Examples/TimedXYPlotExample/TimedXYPlotExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/androidplot.iml" filepath="$PROJECT_DIR$/androidplot.iml" />
       <module fileurl="file://$PROJECT_DIR$/AndroidPlot-Core/androidplot-core.iml" filepath="$PROJECT_DIR$/AndroidPlot-Core/androidplot-core.iml" />
     </modules>

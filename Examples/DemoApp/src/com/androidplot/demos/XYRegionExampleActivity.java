@@ -1,29 +1,17 @@
 /*
- * Copyright (c) 2011 AndroidPlot.com. All rights reserved.
+ * Copyright 2012 AndroidPlot.com
  *
- * Redistribution and use of source without modification and derived binaries with or without modification,
- * are permitted provided that the following conditions are met:
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- *    1. Redistributions of source code must retain the above copyright notice, this list of
- *       conditions and the following disclaimer.
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- *    2. Redistributions in binary form must reproduce the above copyright notice, this list
- *       of conditions and the following disclaimer in the documentation and/or other materials
- *       provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY ANDROIDPLOT.COM ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ANDROIDPLOT.COM OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are those of the
- * authors and should not be interpreted as representing official policies, either expressed
- * or implied, of AndroidPlot.com.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 
 package com.androidplot.demos;
@@ -44,7 +32,7 @@ import com.androidplot.xy.*;
 import java.util.Arrays;
 
 /**
- * Demonstrates the usage of RectRegion.
+ * Demonstration of the usage of Marker and RectRegion.
  */
 public class XYRegionExampleActivity extends Activity {
     private static final int FONT_LABEL_SIZE = 13;
@@ -62,6 +50,18 @@ public class XYRegionExampleActivity extends Activity {
     private XYSeries s2;
     private XYSeries s3;
     private XYSeries s4;
+
+    private RectRegion rr1;
+    private RectRegion rr2;
+    private RectRegion rr3;
+    private RectRegion rr4;
+    private RectRegion rr5;
+
+    private XYRegionFormatter rf1;
+    private XYRegionFormatter rf2;
+    private XYRegionFormatter rf3;
+    private XYRegionFormatter rf4;
+    private XYRegionFormatter rf5;
 
     private CheckBox s1CheckBox;
     private CheckBox s2CheckBox;
@@ -111,10 +111,44 @@ public class XYRegionExampleActivity extends Activity {
         });
 
         r1CheckBox = (CheckBox) findViewById(R.id.r1CheckBox);
+        r1CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                onCheckBoxClicked(r1CheckBox, lpFormatter1, rf1, rr1);
+            }
+        });
+
         r2CheckBox = (CheckBox) findViewById(R.id.r2CheckBox);
+        r2CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                onCheckBoxClicked(r2CheckBox, lpFormatter1, rf2, rr2);
+            }
+        });
+
         r3CheckBox = (CheckBox) findViewById(R.id.r3CheckBox);
+        r3CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                onCheckBoxClicked(r3CheckBox, lpFormatter2, rf3, rr3);
+            }
+        });
+
         r4CheckBox = (CheckBox) findViewById(R.id.r4CheckBox);
+        r4CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                onCheckBoxClicked(r4CheckBox, lpFormatter2, rf4, rr4);
+            }
+        });
+
         r5CheckBox = (CheckBox) findViewById(R.id.r5CheckBox);
+        r5CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                onCheckBoxClicked(r5CheckBox, lpFormatter2, rf5, rr5);
+            }
+        });
 
         seriesSetup();
         markerSetup();
@@ -126,7 +160,7 @@ public class XYRegionExampleActivity extends Activity {
 
     private void onS1CheckBoxClicked() {
         if(s1CheckBox.isChecked()) {
-            showS1();
+            plot.addSeries(s1, lpFormatter1);
             r1CheckBox.setEnabled(true);
             r2CheckBox.setEnabled(true);
         } else {
@@ -139,7 +173,7 @@ public class XYRegionExampleActivity extends Activity {
 
     private void onS2CheckBoxClicked() {
         if(s2CheckBox.isChecked()) {
-            showS2();
+            plot.addSeries(s2, lpFormatter2);
             r3CheckBox.setEnabled(true);
             r4CheckBox.setEnabled(true);
             r5CheckBox.setEnabled(true);
@@ -154,7 +188,7 @@ public class XYRegionExampleActivity extends Activity {
 
     private void onS3CheckBoxClicked() {
         if(s3CheckBox.isChecked()) {
-            showS3();
+            plot.addSeries(s3, lpFormatter3);
         } else {
             plot.removeSeries(s3);
         }
@@ -163,11 +197,28 @@ public class XYRegionExampleActivity extends Activity {
 
     private void onS4CheckBoxClicked() {
         if(s4CheckBox.isChecked()) {
-            showS4();
+            plot.addSeries(s4, lpFormatter4);
         } else {
             plot.removeSeries(s4);
         }
         plot.redraw();
+    }
+
+    /**
+     * Processes a check box event
+     * @param cb The checkbox event origin
+     * @param lpf LineAndPointFormatter with which rr and rf are to be added/removed
+     * @param rf The XYRegionFormatter with which rr should be rendered
+     * @param rr The RectRegion to add/remove
+     */
+    private void onCheckBoxClicked(CheckBox cb, LineAndPointFormatter lpf,
+                                   XYRegionFormatter rf, RectRegion rr) {
+        if(cb.isChecked()) {
+            lpf.removeRegion(rr1);
+        } else {
+            lpf.addRegion(rr, rf);
+        }
+
     }
 
     /**
@@ -241,21 +292,21 @@ public class XYRegionExampleActivity extends Activity {
         plot.getTitleWidget().pack();
     }
 
-    private void showS1() {
+    /*private void showS1() {
         plot.addSeries(s1, lpFormatter1);
-    }
+    }*/
 
-    private void showS2() {
+    /*private void showS2() {
         plot.addSeries(s2, lpFormatter2);
-    }
+    }*/
 
-    private void showS3() {
+    /*private void showS3() {
         plot.addSeries(s3, lpFormatter3);
-    }
+    }*/
 
-    private void showS4() {
+    /*private void showS4() {
         plot.addSeries(s4, lpFormatter4);
-    }
+    }*/
 
     /**
      * Create 4 XYSeries from the values defined above add add them to the plot.
@@ -276,7 +327,7 @@ public class XYRegionExampleActivity extends Activity {
         s1 = new SimpleXYSeries(Arrays.asList(series1Numbers),
             SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "S1");
 
-        showS1();
+        plot.addSeries(s1, lpFormatter1);
 
         // SERIES #2:
         lpFormatter2 = new LineAndPointFormatter(
@@ -291,7 +342,7 @@ public class XYRegionExampleActivity extends Activity {
         s2 = new SimpleXYSeries(Arrays.asList(series2Numbers),
             SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "S2");
 
-        showS2();
+        plot.addSeries(s2, lpFormatter2);
 
         // SERIES #3:
         lpFormatter3 = new LineAndPointFormatter(
@@ -305,7 +356,7 @@ public class XYRegionExampleActivity extends Activity {
         s3 = new SimpleXYSeries(Arrays.asList(series3Numbers),
             SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "S3");
 
-        showS3();
+        plot.addSeries(s3, lpFormatter3);
 
         // SERIES #4:
         lpFormatter4 = new LineAndPointFormatter(
@@ -317,7 +368,7 @@ public class XYRegionExampleActivity extends Activity {
         lpFormatter4.getLinePaint().setShadowLayer(0, 0, 0, 0);
         s4 = new SimpleXYSeries(Arrays.asList(series4Numbers),
             SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,"S4");
-        showS4();
+        plot.addSeries(s4, lpFormatter4);
 
         plot.setTicksPerRangeLabel(3);
         plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
@@ -358,31 +409,38 @@ public class XYRegionExampleActivity extends Activity {
     private void regionSetup() {
 
         // create a new region:
-        XYRegionFormatter regionFormatter = new XYRegionFormatter(Color.RED);
+        rf1 = new XYRegionFormatter(Color.RED);
 
-        // add the new region to the formatter for this series:
         // we want to create a vertical region so we set the minX/maxX values to
         // negative and positive infinity repectively:
-        lpFormatter1.addRegion(new RectRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 3, "R1"), regionFormatter);
+        rr1 = new RectRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 3, "R1");
+
+        // add the new region to the formatter for this series:
+        lpFormatter1.addRegion(rr1, rf1);
 
         // and another region:
-        XYRegionFormatter regionFormatter2 = new XYRegionFormatter(Color.BLUE);
-        lpFormatter1.addRegion(new RectRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 3, 7, "R2"), regionFormatter2);
+        rf2 = new XYRegionFormatter(Color.BLUE);
+        rr2 = new RectRegion(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 3, 7, "R2");
+        lpFormatter1.addRegion(rr2, rf2);
         lpFormatter1.setFillDirection(FillDirection.RANGE_ORIGIN);
         plot.setUserRangeOrigin(3);
 
-        // the below three regions are horizontal regions so we set minY/maxY to
-        // negative and positive infinity respectively.
-        XYRegionFormatter regionFormatter3 = new XYRegionFormatter(Color.GREEN);
-        XYRegionFormatter regionFormatter4 = new XYRegionFormatter(Color.YELLOW);
-        XYRegionFormatter regionFormatter5 = new XYRegionFormatter(Color.MAGENTA);
-        lpFormatter2.addRegion(new RectRegion(0, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R3"), regionFormatter3);
-        lpFormatter2.addRegion(new RectRegion(2, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R4"), regionFormatter4);
-        lpFormatter2.addRegion(new RectRegion(4, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R5"), regionFormatter5);
+        // the next three regions are horizontal regions with minY/maxY
+        // set to negative and positive infinity respectively.
+        rf3 = new XYRegionFormatter(Color.GREEN);
+        rf4 = new XYRegionFormatter(Color.YELLOW);
+        rf5 = new XYRegionFormatter(Color.MAGENTA);
+
+        rr3 = new RectRegion(0, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R3");
+        lpFormatter2.addRegion(rr3, rf3);
+
+        rr4 = new RectRegion(2, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R4");
+        lpFormatter2.addRegion(rr4, rf4);
+
+        rr5 =new RectRegion(4, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R5");
+        lpFormatter2.addRegion(rr5, rf5);
 
         lpFormatter2.setFillDirection(FillDirection.RANGE_ORIGIN);
         plot.setUserRangeOrigin(3);
-
-
     }
 }

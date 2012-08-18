@@ -14,6 +14,7 @@
       <directory url="file://$PROJECT_DIR$/AndroidPlot-Core/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Examples/TimedXYPlotExample/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/Examples/Quickstart/gen" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />

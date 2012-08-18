@@ -22,13 +22,6 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-/**
- * Created by IntelliJ IDEA.
- * User: halfhp
- * Date: 11/6/10
- * Time: 12:19 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ValPixConverterTest {
     @org.junit.Before
     public void setUp() throws Exception {

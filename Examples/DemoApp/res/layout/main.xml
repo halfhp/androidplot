@@ -4,6 +4,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
+    <Button android:id="@+id/startSimpleXYExButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="A Simple XY Plot" />
     <Button android:id="@+id/startOrSensorExButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

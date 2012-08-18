@@ -31,13 +31,19 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        Button startSimpleXYExButton = (Button)findViewById(R.id.startSimpleXYExButton);
+        startSimpleXYExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SimpleXYPlotActivity.class));
+            }
+        });
+
         Button startOrSensorExButton = (Button)findViewById(R.id.startOrSensorExButton);
         startOrSensorExButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 startActivity(new Intent(MainActivity.this, OrientationSensorExampleActivity.class));
-                //setContentView(R.layout.orientation_sensor_example);
             }
         });
 
@@ -45,20 +51,15 @@ public class MainActivity extends Activity
         startStepChartExButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 startActivity(new Intent(MainActivity.this, StepChartExampleActivity.class));
-                //setContentView(R.layout.orientation_sensor_example);
             }
         });
 
-        //startXyRegionExampleButton
         Button startXyRegionExampleButton = (Button)findViewById(R.id.startXyRegionExampleButton);
         startXyRegionExampleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 startActivity(new Intent(MainActivity.this, XYRegionExampleActivity.class));
-                //setContentView(R.layout.orientation_sensor_example);
             }
         });
 
@@ -67,9 +68,7 @@ public class MainActivity extends Activity
         listViewExButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 startActivity(new Intent(MainActivity.this, ListViewActivity.class));
-                //setContentView(R.layout.orientation_sensor_example);
             }
         });
 

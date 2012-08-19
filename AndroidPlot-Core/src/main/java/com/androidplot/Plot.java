@@ -119,6 +119,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
     }
 
     private void postInit() {
+        // disable all hardware acceleration for the time being.
+        // extending classes can always re-enable if desired.
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         titleWidget = new TitleWidget(this, new SizeMetrics(25, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
         layoutManager = new LayoutManager();
         layoutManager.position(titleWidget, 0, XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);

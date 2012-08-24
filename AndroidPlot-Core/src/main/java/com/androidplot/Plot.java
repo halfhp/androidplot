@@ -17,6 +17,7 @@
 package com.androidplot;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.*;
 import android.util.AttributeSet;
 import android.view.View;
@@ -36,6 +37,8 @@ import java.util.*;
  * Base class for all other Plot implementations..
  */
 public abstract class Plot<SeriesType extends Series, FormatterType, RendererType extends DataRenderer> extends View {
+
+    private static final String ATTR_TITLE = "title";
 
     public enum BorderStyle {
         ROUNDED,
@@ -119,16 +122,34 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
     }
 
     private void postInit() {
-        // disable all hardware acceleration for the time being.
-        // extending classes can always re-enable if desired.
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
+        if(isHardwareAccelerated()) {
+            // TODO: either rewrite to fully support hardware acceleration
+            // TODO: or instantiate the appropriate renderer(s) alternate resources.
+            // TODO: for now, we disable all hardware acceleration for the time being.
+            // TODO: extending classes can always re-enable if desired.
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
         titleWidget = new TitleWidget(this, new SizeMetrics(25, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
         layoutManager = new LayoutManager();
         layoutManager.position(titleWidget, 0, XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
     }
 
     private void loadAttrs(Context context, AttributeSet attrs) {
-        this.title = attrs.getAttributeValue(null, "title");
+
+        String titleAttr = attrs.getAttributeValue(null, ATTR_TITLE);
+        String[] split = titleAttr.split("/");
+        String pack = split[0].replace("@", "");
+        String name = split[1];
+        int id = context.getResources().getIdentifier(name, pack, context.getPackageName());
+
+        try {
+            this.title = context.getResources().getString(id);
+        } catch (Exception ex) {
+            this.title = titleAttr;
+        }
+
+        //this.title = attrs.getAttributeValue(null, "title");
     }
 
     public boolean addListener(PlotListener listener) {

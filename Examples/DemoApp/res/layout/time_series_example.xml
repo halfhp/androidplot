@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright 2012 AndroidPlot.com
   ~
@@ -16,11 +17,12 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/sample_activity">
+              style="@style/sample_activity"
+              android:orientation="vertical">
 
     <com.androidplot.xy.XYPlot
-            android:id="@+id/mySimpleXYPlot"
+            android:id="@+id/plot1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            title="@string/sxy_title"/>
+            title="@string/ts_plot1_title"/>
 </LinearLayout>

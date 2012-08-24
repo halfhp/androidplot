@@ -47,6 +47,14 @@ public class MainActivity extends Activity
             }
         });
 
+        Button startTimeSeriesExButon = (Button)findViewById(R.id.startTimeSeriesExButton);
+        startTimeSeriesExButon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, TimeSeriesActivity.class));
+            }
+        });
+
         Button startStepChartExButton = (Button)findViewById(R.id.startStepChartExButton);
         startStepChartExButton.setOnClickListener(new View.OnClickListener() {
             @Override

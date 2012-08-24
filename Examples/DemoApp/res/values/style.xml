@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright 2012 AndroidPlot.com
   ~
@@ -15,12 +14,14 @@
   ~    limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/sample_activity">
+<resources>
+    <style name="sample_activity">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+    </style>
 
-    <com.androidplot.xy.XYPlot
-            android:id="@+id/mySimpleXYPlot"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            title="@string/sxy_title"/>
-</LinearLayout>
+    <style name="toc_button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>

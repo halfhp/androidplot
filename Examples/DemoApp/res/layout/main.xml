@@ -1,59 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-    <Button android:id="@+id/startSimpleXYExButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="A Simple XY Plot" />
-    <Button android:id="@+id/startOrSensorExButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Realtime Orientation Sensor Plot" />
-    <Button android:id="@+id/startDynamicXyExButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="A Dynamic XY Plot"
-                android:enabled="false"/>
-    <Button android:id="@+id/startStepChartExButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Step Chart"
-                />
-    <Button android:id="@+id/startBarPlotExButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Bar Plot"
-                android:enabled="false"/>
-    <Button android:id="@+id/startXyScatterExButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="XY Scatter"
-                android:enabled="false"/>
-    <Button android:id="@+id/startXyScatterLineExButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="XY Scatter With Lines"
-                android:enabled="false"/>
-    <Button android:id="@+id/startXyRegionExampleButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="XYRegion Example"
-                android:enabled="true"/>
-    <Button android:id="@+id/startXyListViewExButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="ListView of XYPlots"
-                android:enabled="true"/>
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
 
+    <ScrollView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:orientation="vertical"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content">
+            <Button android:id="@+id/startSimpleXYExButton"
+                    style="@style/toc_button"
+                    android:text="A Simple XY Plot"/>
+            <Button android:id="@+id/startOrSensorExButton"
+                    style="@style/toc_button"
+                    android:text="Realtime Orientation Sensor Plot"/>
+            <Button android:id="@+id/startTimeSeriesExButton"
+                    style="@style/toc_button"
+                    android:text="@string/ts_title"/>
+            <Button android:id="@+id/startStepChartExButton"
+                    style="@style/toc_button"
+                    android:text="Step Chart"
+                    />
+            <Button android:id="@+id/startBarPlotExButton"
+                    style="@style/toc_button"
+                    android:text="Bar Plot"
+                    android:enabled="false"/>
+            <Button android:id="@+id/startXyScatterExButton"
+                    style="@style/toc_button"
+                    android:text="XY Scatter"
+                    android:enabled="false"/>
+            <Button android:id="@+id/startXyScatterLineExButton"
+                    style="@style/toc_button"
+                    android:text="XY Scatter With Lines"
+                    android:enabled="false"/>
+            <Button android:id="@+id/startXyRegionExampleButton"
+                    style="@style/toc_button"
+                    android:text="XYRegion Example"
+                    android:enabled="true"/>
+            <Button android:id="@+id/startXyListViewExButton"
+                    style="@style/toc_button"
+                    android:text="ListView of XYPlots"
+                    android:enabled="true"/>
+        </LinearLayout>
+    </ScrollView>
     <TextView android:id="@+id/text"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:autoLink="web"
-                  android:gravity="right"
-                  android:text="http://androidplot.com" />
-
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:autoLink="web"
+              android:gravity="center"
+              android:text="http://androidplot.com"/>
 </LinearLayout>
 

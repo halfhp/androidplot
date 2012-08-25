@@ -19,15 +19,17 @@ package com.androidplot.ui.widget;
 import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
+import com.androidplot.util.DisplayDimensions;
 
-public abstract class Widget implements BoxModelable {
+public abstract class Widget implements BoxModelable, Resizable {
 
     private Paint borderPaint;
     private Paint backgroundPaint;
     private boolean clippingEnabled = true;
     private BoxModel boxModel = new BoxModel();
     private SizeMetrics sizeMetrics;
-    private RectF outlineRect;  // last known dimensions of this widget
+    //private RectF outlineRect;  // last known dimensions of this widget
+    private DisplayDimensions displayDimensions = new DisplayDimensions();
     private boolean isVisible = true;
 
     public Widget(SizeMetric heightMetric, SizeMetric widthMetric) {
@@ -43,9 +45,10 @@ public abstract class Widget implements BoxModelable {
      * @param point
      * @return
      */
-    public boolean containsPoint(PointF point){
-        return outlineRect != null && outlineRect.contains(point.x, point.y);
-        }
+    public boolean containsPoint(PointF point) {
+        //return outlineRect != null && outlineRect.contains(point.x, point.y);
+        return displayDimensions.canvasRect.contains(point.x, point.y);
+    }
 
     public void setSize(SizeMetrics sizeMetrics) {
         this.sizeMetrics = sizeMetrics;
@@ -170,11 +173,18 @@ public abstract class Widget implements BoxModelable {
         return boxModel.getMarginRight();
     }
 
+    @Override
+    public synchronized void layout(final DisplayDimensions dims) {
+        RectF mRect = boxModel.getMarginatedRect(dims.canvasRect);
+        RectF pRect = boxModel.getPaddedRect(mRect);
+        displayDimensions = new DisplayDimensions(dims.canvasRect, mRect, pRect);
+    }
+
     public void draw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
-        outlineRect = widgetRect;
+        //outlineRect = widgetRect;
         if (isVisible()) {
             if (backgroundPaint != null) {
-                drawBackground(canvas, outlineRect);
+                drawBackground(canvas, displayDimensions.canvasRect);
             }
 
             /* RectF marginatedRect = new RectF(outlineRect.left + marginLeft,
@@ -182,12 +192,12 @@ public abstract class Widget implements BoxModelable {
           outlineRect.right - marginRight,
           outlineRect.bottom - marginBottom);*/
 
-            RectF marginatedRect = boxModel.getMarginatedRect(widgetRect);
-            RectF paddedRect = boxModel.getPaddedRect(marginatedRect);
-            doOnDraw(canvas, paddedRect);
+            /*RectF marginatedRect = boxModel.getMarginatedRect(widgetRect);
+            RectF paddedRect = boxModel.getPaddedRect(marginatedRect);*/
+            doOnDraw(canvas, displayDimensions.paddedRect);
 
             if (borderPaint != null) {
-                drawBorder(canvas, paddedRect);
+                drawBorder(canvas, displayDimensions.paddedRect);
             }
         }
     }
@@ -247,9 +257,9 @@ public abstract class Widget implements BoxModelable {
         this.clippingEnabled = clippingEnabled;
     }
 
-    public RectF getOutlineRect() {
+    /*public RectF getOutlineRect() {
         return outlineRect;
-    }
+    }*/
 
     public boolean isVisible() {
         return isVisible;

@@ -21,12 +21,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
+import com.androidplot.util.DisplayDimensions;
 import com.androidplot.util.ZHash;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.XLayoutStyle;
 import com.androidplot.xy.YLayoutStyle;
 
-public class LayoutManager extends ZHash<Widget, PositionMetrics> implements View.OnTouchListener {
+import java.util.HashMap;
+
+public class LayoutManager extends ZHash<Widget, PositionMetrics>
+        implements View.OnTouchListener, Resizable {
     private boolean drawAnchorsEnabled = true;
     private Paint anchorPaint;
     private boolean drawOutlinesEnabled = true;
@@ -37,8 +41,13 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics> implements Vie
     private Paint marginPaint;
     private boolean drawPaddingEnabled = true;
     private Paint paddingPaint;
+    private DisplayDimensions displayDims = new DisplayDimensions();
+
+    // cache of widget rects
+    private HashMap<Widget, DisplayDimensions> widgetRects;
 
     {
+        widgetRects = new HashMap<Widget, DisplayDimensions>();
         anchorPaint = new Paint();
         anchorPaint.setStyle(Paint.Style.FILL);
         anchorPaint.setColor(Color.GREEN);
@@ -142,36 +151,29 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics> implements Vie
         return PixelUtils.sub(point, getAnchorOffset(width, height, metrics.getAnchor()));
     }
 
-    public synchronized void draw(Canvas canvas, RectF canvasRect, RectF marginRect, RectF paddingRect) throws PlotRenderException {
+    public synchronized void draw(Canvas canvas) throws PlotRenderException {
         if(isDrawMarginsEnabled()) {
-            drawSpacing(canvas, canvasRect, marginRect, marginPaint);
+            drawSpacing(canvas, displayDims.canvasRect, displayDims.marginatedRect, marginPaint);
         }
         if (isDrawPaddingEnabled()) {
-            drawSpacing(canvas, marginRect, paddingRect, paddingPaint);
+            drawSpacing(canvas, displayDims.marginatedRect, displayDims.paddedRect, paddingPaint);
         }
         for (Widget widget : getKeysAsList()) {
             //int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG); // preserve clipping etc
             try {
                 canvas.save(Canvas.ALL_SAVE_FLAG);
                 PositionMetrics metrics = get(widget);
-                float elementWidth = widget.getWidthPix(paddingRect.width());
-                float elementHeight = widget.getHeightPix(paddingRect.height());
-                PointF coords = getElementCoordinates(elementHeight, elementWidth, paddingRect, metrics);
+                float elementWidth = widget.getWidthPix(displayDims.paddedRect.width());
+                float elementHeight = widget.getHeightPix(displayDims.paddedRect.height());
+                PointF coords = getElementCoordinates(elementHeight,
+                        elementWidth, displayDims.paddedRect, metrics);
 
-                // remove the floating point to allow clipping to work:
-               /* int t = (int) (coords.y + 0.5);
-                int b = (int) (coords.y + elementHeight + 0.5);
-                int l = (int) (coords.x + 0.5);
-                int r = (int) (coords.x + elementWidth + 0.5);*/
-                //int t = (int) (coords.y);
-                //int b = (int) (coords.y + elementHeight + 0.5);
-                //int l = (int) (coords.x);
-                //int r = (int) (coords.x + elementWidth + 0.5);
-                //RectF widgetRect = new RectF(l, t, r, b);
-                RectF widgetRect = new RectF(coords.x, coords.y, coords.x + elementWidth, coords.y + elementHeight);
+                //RectF widgetRect = new RectF(coords.x, coords.y, coords.x + elementWidth, coords.y + elementHeight);
+                DisplayDimensions dims = widgetRects.get(widget);
+                //RectF widgetRect = widgetRects.get(widget);
 
                 if (drawOutlineShadowsEnabled) {
-                    canvas.drawRect(widgetRect, outlineShadowPaint);
+                    canvas.drawRect(dims.canvasRect, outlineShadowPaint);
                 }
 
                 // not positive why this is, but the rect clipped by clipRect is 1 less than the one drawn by drawRect.
@@ -180,19 +182,19 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics> implements Vie
                 if (widget.isClippingEnabled()) {
                     //RectF clipRect = new RectF(l-1, t-1, r + 1, b + 1);
                     //canvas.clipRect(clipRect, Region.Op.REPLACE);
-                    canvas.clipRect(widgetRect, Region.Op.INTERSECT);
+                    canvas.clipRect(dims.canvasRect, Region.Op.INTERSECT);
                 }
-                widget.draw(canvas, widgetRect);
+                widget.draw(canvas, dims.canvasRect);
 
-                RectF marginatedWidgetRect = widget.getMarginatedRect(widgetRect);
-                RectF paddedWidgetRect = widget.getPaddedRect(marginatedWidgetRect);
+                //RectF marginatedWidgetRect = widget.getMarginatedRect(dims.canvasRect);
+                //RectF paddedWidgetRect = widget.getPaddedRect(marginatedWidgetRect);
 
                 if (drawMarginsEnabled) {
-                    drawSpacing(canvas, widgetRect, marginatedWidgetRect, getMarginPaint());
+                    drawSpacing(canvas, dims.canvasRect, dims.marginatedRect, getMarginPaint());
                 }
 
                 if (drawPaddingEnabled) {
-                    drawSpacing(canvas, marginatedWidgetRect, paddedWidgetRect, getPaddingPaint());
+                    drawSpacing(canvas, dims.marginatedRect, dims.paddedRect, getPaddingPaint());
                 }
 
                 if (drawAnchorsEnabled) {
@@ -203,7 +205,7 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics> implements Vie
 
                 if (drawOutlinesEnabled) {
                     outlinePaint.setAntiAlias(true);
-                    canvas.drawRect(widgetRect, outlinePaint);
+                    canvas.drawRect(dims.canvasRect, outlinePaint);
                 }
             } finally {
                 //canvas.restoreToCount(canvasState);  // restore clipping etc.
@@ -325,5 +327,26 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics> implements Vie
 
     private void delegateOnTouchEvt(View v, MotionEvent event) {
 
+    }
+
+    @Override
+    public synchronized void layout(final DisplayDimensions dims) {
+        this.displayDims = dims;
+
+        widgetRects.clear();
+        for (Widget widget : getKeysAsList()) {
+            PositionMetrics metrics = get(widget);
+            float elementWidth = widget.getWidthPix(displayDims.paddedRect.width());
+            float elementHeight = widget.getHeightPix(displayDims.paddedRect.height());
+            PointF coords = getElementCoordinates(elementHeight,
+                    elementWidth, displayDims.paddedRect, metrics);
+
+            RectF canvasRect = new RectF(coords.x, coords.y, coords.x + elementWidth, coords.y + elementHeight);
+            RectF marginatedWidgetRect = widget.getMarginatedRect(canvasRect);
+            RectF paddedWidgetRect = widget.getPaddedRect(marginatedWidgetRect);
+            DisplayDimensions dd = new DisplayDimensions(canvasRect, marginatedWidgetRect, paddedWidgetRect);
+            widgetRects.put(widget, dd);
+            widget.layout(dd);
+        }
     }
 }

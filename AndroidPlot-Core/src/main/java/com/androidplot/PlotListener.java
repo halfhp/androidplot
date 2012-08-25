@@ -16,6 +16,20 @@
 
 package com.androidplot;
 
+import android.graphics.Canvas;
+
 public interface PlotListener {
+    /**
+     *
+     * @param event
+     * @deprecated Deprecated since 0.5.1 - Users of this method should
+     *             transition functionality into onAfterDraw(Plot).
+     *
+     */
+    @Deprecated
     public void onPlotUpdate(PlotEvent event);
+
+    public void onBeforeDraw(Plot source, Canvas canvas);
+
+    public void onAfterDraw(Plot source, Canvas canvas);
 }

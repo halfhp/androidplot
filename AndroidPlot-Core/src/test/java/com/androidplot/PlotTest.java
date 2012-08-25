@@ -56,9 +56,13 @@ public class PlotTest {
     static class MockPlotListener implements PlotListener {
 
         @Override
-        public void onPlotUpdate(PlotEvent event) {
+        public void onPlotUpdate(PlotEvent event) {}
 
-        }
+        @Override
+        public void onBeforeDraw(Plot source, Canvas canvas) {}
+
+        @Override
+        public void onAfterDraw(Plot source, Canvas canvas) {}
     }
 
     //@MockClass(realClass = Series.class)

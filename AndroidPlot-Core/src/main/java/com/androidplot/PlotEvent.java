@@ -16,6 +16,10 @@
 
 package com.androidplot;
 
+/**
+ * @deprecated Since 0.5.1 see {@link PlotListener} for details.
+ */
+@Deprecated
 public class PlotEvent {
     public enum Type {
         PLOT_REDRAWN

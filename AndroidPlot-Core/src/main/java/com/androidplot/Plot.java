@@ -17,7 +17,6 @@
 package com.androidplot;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.*;
 import android.util.AttributeSet;
 import android.view.View;
@@ -28,6 +27,7 @@ import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TitleWidget;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.ui.DataRenderer;
+import com.androidplot.util.DisplayDimensions;
 import com.androidplot.xy.XLayoutStyle;
 import com.androidplot.xy.YLayoutStyle;
 
@@ -36,9 +36,26 @@ import java.util.*;
 /**
  * Base class for all other Plot implementations..
  */
-public abstract class Plot<SeriesType extends Series, FormatterType, RendererType extends DataRenderer> extends View {
+public abstract class Plot<SeriesType extends Series, FormatterType, RendererType extends DataRenderer>
+        extends View implements Resizable{
 
     private static final String ATTR_TITLE = "title";
+
+    /*public RectF getCanvasRect() {
+        return canvasRect;
+    }
+
+    public RectF getMarginatedRect() {
+        return marginatedRect;
+    }
+
+    public RectF getPaddedRect() {
+        return paddedRect;
+    }*/
+
+    public DisplayDimensions getDisplayDimensions() {
+        return displayDims;
+    }
 
     public enum BorderStyle {
         ROUNDED,
@@ -56,6 +73,13 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
     private Paint backgroundPaint;
     private LayoutManager layoutManager;
     private TitleWidget titleWidget;
+
+
+    private DisplayDimensions displayDims = new DisplayDimensions();
+    /*// we initialize here to avoid null check in onDraw().
+    private RectF canvasRect = new RectF(0,0,0,0);
+    private RectF marginatedRect = new RectF(0,0,0,0);
+    private RectF paddedRect = new RectF(0,0,0,0);*/
 
     /**
      * Used for caching renderer instances.  Note that once a renderer is initialized it remains initialized
@@ -135,21 +159,25 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
         layoutManager.position(titleWidget, 0, XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
     }
 
+    /**
+     * Parse XML Attributes
+     * @param context
+     * @param attrs
+     */
     private void loadAttrs(Context context, AttributeSet attrs) {
 
         String titleAttr = attrs.getAttributeValue(null, ATTR_TITLE);
         String[] split = titleAttr.split("/");
-        String pack = split[0].replace("@", "");
-        String name = split[1];
-        int id = context.getResources().getIdentifier(name, pack, context.getPackageName());
 
-        try {
+        // is this a localized resource?
+        if (split[0].equalsIgnoreCase("@string")) {
+            String pack = split[0].replace("@", "");
+            String name = split[1];
+            int id = context.getResources().getIdentifier(name, pack, context.getPackageName());
             this.title = context.getResources().getString(id);
-        } catch (Exception ex) {
+        } else {
             this.title = titleAttr;
         }
-
-        //this.title = attrs.getAttributeValue(null, "title");
     }
 
     public boolean addListener(PlotListener listener) {
@@ -164,9 +192,18 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
         }
     }
 
-    protected void notifyListeners(PlotEvent event) {
+    protected void notifyListenersBeforeDraw(Canvas canvas) {
         synchronized (listeners) {
             for (PlotListener listener : listeners) {
+                listener.onBeforeDraw(this, canvas);
+            }
+        }
+    }
+
+    protected void notifyListenersAfterDraw(Canvas canvas, PlotEvent event) {
+        synchronized (listeners) {
+            for (PlotListener listener : listeners) {
+                listener.onAfterDraw(this, canvas);
                 listener.onPlotUpdate(event);
             }
         }
@@ -385,8 +422,48 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
         }
     }
 
+    /**
+     * @deprecated Since 0.5.1 - Users should transition to using {@link #addListener(PlotListener)}
+     */
+    @Deprecated
     protected abstract void doBeforeDraw();
+
+    /**
+     * @deprecated Since 0.5.1 - Users should transition to using {@link #addListener(PlotListener)}
+     */
+    @Deprecated
     protected abstract void doAfterDraw();
+
+    @Override
+    public synchronized void layout(final DisplayDimensions dims) {
+        displayDims = dims;
+        layoutManager.layout(displayDims);
+    }
+
+    @Override
+    protected synchronized void onSizeChanged (int w, int h, int oldw, int oldh) {
+        RectF cRect = new RectF(0, 0, getWidth(), getHeight());
+        RectF mRect = boxModel.getMarginatedRect(cRect);
+        RectF pRect = boxModel.getPaddedRect(mRect);
+
+        layout(new DisplayDimensions(cRect, mRect, pRect));
+        super.onSizeChanged(w, h, oldw, oldh);
+    }
+
+    // checks to see if this Plot's dimensions have changed,
+    // recalculating them if necessary.
+/*    private void validateDimensions(Canvas canvas) {
+        final int height = getHeight();
+        final int width = getWidth();
+        if(width != canvasRect.right || height != canvasRect.bottom) {
+            canvasRect = new RectF(0, 0, getWidth(), getHeight());
+            marginatedRect = boxModel.getMarginatedRect(canvasRect);
+            paddedRect = boxModel.getPaddedRect(marginatedRect);
+            layout(canvas, canvasRect, marginatedRect, paddedRect);
+        }
+    }*/
+
+
 
     /**
      * Called whenever the plot needs to be drawn via the Handler, which invokes invalidate().
@@ -396,24 +473,24 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
     protected void onDraw(Canvas canvas) {
 
         doBeforeDraw();
+        notifyListenersBeforeDraw(canvas);
         try {
-            RectF canvasRect = new RectF(0, 0, getWidth(), getHeight());
-            RectF marginatedRect = boxModel.getMarginatedRect(canvasRect);
-            RectF paddedRect = boxModel.getPaddedRect(marginatedRect);
+
+            //validateDimensions(canvas);
             if (backgroundPaint != null) {
-                drawBackground(canvas, marginatedRect);
+                drawBackground(canvas, displayDims.marginatedRect);
             }
             synchronized(this) {
-                layoutManager.draw(canvas, canvasRect, marginatedRect, paddedRect);
+                layoutManager.draw(canvas);
             }
             if (isDrawBorderEnabled() && getBorderPaint() != null) {
-                drawBorder(canvas, marginatedRect);
+                drawBorder(canvas, displayDims.marginatedRect);
             }
         } catch (PlotRenderException e) {
             e.printStackTrace();
         } finally {
             doAfterDraw();
-            notifyListeners(new PlotEvent(this, PlotEvent.Type.PLOT_REDRAWN));
+            notifyListenersAfterDraw(canvas, new PlotEvent(this, PlotEvent.Type.PLOT_REDRAWN));
             synchronized(this) {
                 notify();
             }

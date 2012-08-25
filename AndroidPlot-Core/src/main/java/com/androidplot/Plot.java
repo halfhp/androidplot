@@ -145,18 +145,37 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
         postInit();
     }
 
-    private void postInit() {
+    /**
+     * Can be overridden by derived classes to control hardware acceleration state.
+     * @return
+     */
+    protected boolean isHwAccelerationSupported() {
+        return false;
+    }
 
-        if(isHardwareAccelerated()) {
-            // TODO: either rewrite to fully support hardware acceleration
-            // TODO: or instantiate the appropriate renderer(s) alternate resources.
-            // TODO: for now, we disable all hardware acceleration for the time being.
-            // TODO: extending classes can always re-enable if desired.
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
+    private void postInit() {
+        //if(!isHwAccelerationSupported()) {
+           //if(getLayerType() != View.LAYER_TYPE_SOFTWARE)
+           // setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        //}
+
+
         titleWidget = new TitleWidget(this, new SizeMetrics(25, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
         layoutManager = new LayoutManager();
         layoutManager.position(titleWidget, 0, XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
+    }
+
+    @Override
+    public void onVisibilityChanged(View changedView, int visibility) {
+
+
+        boolean hwstat = isHardwareAccelerated();
+        if(!isHwAccelerationSupported()) {
+            /*if(getLayerType() != View.LAYER_TYPE_SOFTWARE) {
+                setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }*/
+        }
+        super.onVisibilityChanged(changedView, visibility);
     }
 
     /**
@@ -256,6 +275,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
      * @return
      */
     protected abstract RendererType doGetRendererInstance(Class clazz);
+
 
 
     /**
@@ -440,8 +460,26 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
         layoutManager.layout(displayDims);
     }
 
+    /*@Override
+    protected void onLayout (boolean changed, int left, int top, int right, int bottom) {
+        boolean hwstat = isHardwareAccelerated();
+        if(!isHwAccelerationSupported()) {
+            *//*if(getLayerType() != View.LAYER_TYPE_SOFTWARE) {
+                setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }*//*
+        }
+
+    }*/
+
     @Override
     protected synchronized void onSizeChanged (int w, int h, int oldw, int oldh) {
+
+        // disable hardware acceleration if it's not explicitly supported
+        // by the current Plot implementation.
+        if(!isHwAccelerationSupported() && isHardwareAccelerated()) {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
         RectF cRect = new RectF(0, 0, getWidth(), getHeight());
         RectF mRect = boxModel.getMarginatedRect(cRect);
         RectF pRect = boxModel.getPaddedRect(mRect);

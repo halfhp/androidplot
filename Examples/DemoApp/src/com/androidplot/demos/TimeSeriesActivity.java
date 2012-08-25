@@ -77,8 +77,11 @@ public class TimeSeriesActivity extends Activity
         // setup our line fill paint to be a slightly transparent gradient:
         Paint lineFill = new Paint();
         lineFill.setAlpha(200);
-        RectF gridRect = plot1.getGraphWidget().getGridRect();
-        lineFill.setShader(new LinearGradient(gridRect.left, gridRect.bottom, gridRect.top, gridRect.right, Color.WHITE, Color.GREEN, Shader.TileMode.CLAMP));
+
+        // ugly usage of LinearGradient. unfortunately there's no way to determine the actual size of
+        // a View from within onCreate.  one alternative is to specify a dimension in resources
+        // and use that accordingly.  at least then the values can be customized for the device type and orientation.
+        lineFill.setShader(new LinearGradient(0, 0, 200, 200, Color.WHITE, Color.GREEN, Shader.TileMode.CLAMP));
 
         LineAndPointFormatter formatter  = new LineAndPointFormatter(Color.rgb(0, 0,0), Color.BLUE, Color.RED);
         formatter.setFillPaint(lineFill);

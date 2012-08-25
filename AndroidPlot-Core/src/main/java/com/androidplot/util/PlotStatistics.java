@@ -66,6 +66,10 @@ public class PlotStatistics implements PlotListener {
         this.annotatePlotEnabled = annotatePlotEnabled;
     }
 
+    public void setAnnotatePlotEnabled(boolean enabled) {
+        this.annotatePlotEnabled = enabled;
+    }
+
     private void resetCounters() {
         longestRenderMs = 0;
         shortestRenderMs = 999999999;
@@ -88,7 +92,9 @@ public class PlotStatistics implements PlotListener {
             resetCounters();
         }
         RectF r = source.getDisplayDimensions().canvasRect;
-        canvas.drawText(annotationString, r.centerX(),  r.centerY(), paint);
+        if(annotatePlotEnabled) {
+            canvas.drawText(annotationString, r.centerX(),  r.centerY(), paint);
+        }
     }
 
     @Override

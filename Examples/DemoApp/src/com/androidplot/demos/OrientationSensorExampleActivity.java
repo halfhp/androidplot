@@ -24,6 +24,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import com.androidplot.util.PlotStatistics;
 import com.androidplot.xy.*;
 
 import java.text.FieldPosition;
@@ -75,6 +79,9 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
 
     private XYPlot aprLevelsPlot = null;
     private XYPlot aprHistoryPlot = null;
+
+    private CheckBox hwAcceleratedCb;
+    private CheckBox showFpsCb;
     private SimpleXYSeries aprLevelsSeries = null;
     private SimpleXYSeries azimuthHistorySeries = null;
     private SimpleXYSeries pitchHistorySeries = null;
@@ -122,6 +129,7 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         aprLevelsPlot.getRangeLabelWidget().pack();
 
         aprLevelsPlot.setGridPadding(15, 0, 15, 0);
+        //aprLevelsPlot.addListener(new PlotStatistics(1000, true));
         aprLevelsPlot.disableAllMarkup();
 
 
@@ -139,6 +147,38 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         aprHistoryPlot.setRangeLabel("Angle (Degs)");
         aprHistoryPlot.getRangeLabelWidget().pack();
         aprHistoryPlot.disableAllMarkup();
+
+        // setup checkboxes:
+        hwAcceleratedCb = (CheckBox) findViewById(R.id.hwAccelerationCb);
+        final PlotStatistics levelStats = new PlotStatistics(1000, false);
+        final PlotStatistics histStats = new PlotStatistics(1000, false);
+
+        aprLevelsPlot.addListener(levelStats);
+        aprHistoryPlot.addListener(histStats);
+        //if(aprLevelsPlot.isHardwareAccelerated() && aprHistoryPlot.isHardwareAccelerated()) {
+        hwAcceleratedCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b) {
+                    aprLevelsPlot.setLayerType(View.LAYER_TYPE_NONE, null);
+                    aprHistoryPlot.setLayerType(View.LAYER_TYPE_NONE, null);
+                } else {
+                    aprLevelsPlot.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                    aprHistoryPlot.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                }
+            }
+        });
+        /*} else {
+            hwAcceleratedCb.setEnabled(false);
+        }*/
+        showFpsCb = (CheckBox) findViewById(R.id.showFpsCb);
+        showFpsCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                levelStats.setAnnotatePlotEnabled(b);
+                histStats.setAnnotatePlotEnabled(b);
+            }
+        });
 
         // get a ref to the BarRenderer so we can make some changes to it:
         BarRenderer barRenderer = (BarRenderer) aprLevelsPlot.getRenderer(BarRenderer.class);

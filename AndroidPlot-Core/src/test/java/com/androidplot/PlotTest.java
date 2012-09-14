@@ -43,7 +43,7 @@ import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class})
+@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class,RectF.class})
 
 public class PlotTest {
 

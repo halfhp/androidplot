@@ -44,5 +44,19 @@
             </intent-filter>
         </activity>
         <activity android:name=".TimeSeriesActivity"/>
+
+        <!-- receiver for demo app widget -->
+        <receiver
+                android:icon="@drawable/icon"
+                android:label="Example Widget"
+                android:name="com.androidplot.demos.widget.DemoAppWidgetProvider" >
+            <intent-filter >
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                    android:name="android.appwidget.provider"
+                    android:resource="@xml/demo_app_widget_provider_info" />
+        </receiver>
     </application>
 </manifest> 

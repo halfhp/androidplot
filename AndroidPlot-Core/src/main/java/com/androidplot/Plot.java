@@ -24,6 +24,7 @@ import android.view.View;
 import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
+import com.androidplot.ui.Formatter;
 import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TitleWidget;
 import com.androidplot.ui.widget.Widget;
@@ -37,7 +38,7 @@ import java.util.*;
 /**
  * Base class for all other Plot implementations..
  */
-public abstract class Plot<SeriesType extends Series, FormatterType, RendererType extends DataRenderer>
+public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends DataRenderer>
         extends View implements Resizable{
 
     private static final String ATTR_TITLE = "title";
@@ -243,38 +244,22 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
     }
 
     /**
-     * Throw an instance of IllegalArgumentException if
-     * cl is not a recognized RendererType.
-     * @param cl
-     * @return
-     */
-    protected RendererType getRendererInstance(Class cl) {
-        RendererType rendererInstance = doGetRendererInstance(cl);
-        if(rendererInstance == null) {
-            throw new IllegalArgumentException("Unrecognized Renderer: " + cl.getCanonicalName());
-        } else {
-            return rendererInstance;
-        }
-    }
-
-    /**
      * Return null or throw instance of IllegalArgumentException if clazz is not recognized
      * as a RendererType.
      * @param clazz
      * @return
      */
-    protected abstract RendererType doGetRendererInstance(Class clazz);
+    //protected abstract RendererType doGetRendererInstance(Class clazz);
 
 
 
     /**
-     * Will *immediately* throw ClassCastException if rendererClass is not an instance of RendererType.
      * @param series
-     * @param rendererClass
      */
-    public synchronized boolean addSeries(SeriesType series, Class rendererClass, FormatterType formatter) {
-        RendererType rt = null;
-        rendererClass.cast(rt);
+    public synchronized boolean addSeries(SeriesType series, FormatterType formatter) {
+        //RendererType rt = null;
+        //rendererClass.cast(rt);
+        Class rendererClass = formatter.getRendererClass();
         SeriesAndFormatterList<SeriesType, FormatterType> sfList = seriesRegistry.get(rendererClass);
         
         // if there is no list for this renderer type, we need to getInstance one:
@@ -282,7 +267,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
             // if rendererClass is an invalid type, getInstance will throw an IllegalArgumentException:
             // make sure there is not already an instance of this renderer available:
             if(getRenderer(rendererClass) == null) {
-                renderers.add(getRendererInstance(rendererClass));
+                renderers.add((RendererType)formatter.getRendererInstance(this));
+                //renderers.add(getRendererInstance(rendererClass));
             }
             sfList = new SeriesAndFormatterList<SeriesType,FormatterType>();
             seriesRegistry.put(rendererClass, sfList);
@@ -449,17 +435,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
         layoutManager.layout(displayDims);
     }
 
-    /*@Override
-    protected void onLayout (boolean changed, int left, int top, int right, int bottom) {
-        boolean hwstat = isHardwareAccelerated();
-        if(!isHwAccelerationSupported()) {
-            *//*if(getLayerType() != View.LAYER_TYPE_SOFTWARE) {
-                setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            }*//*
-        }
-
-    }*/
-
     @Override
     protected synchronized void onSizeChanged (int w, int h, int oldw, int oldh) {
 
@@ -479,21 +454,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
         layout(new DisplayDimensions(cRect, mRect, pRect));
         super.onSizeChanged(w, h, oldw, oldh);
     }
-
-    // checks to see if this Plot's dimensions have changed,
-    // recalculating them if necessary.
-/*    private void validateDimensions(Canvas canvas) {
-        final int height = getHeight();
-        final int width = getWidth();
-        if(width != canvasRect.right || height != canvasRect.bottom) {
-            canvasRect = new RectF(0, 0, getWidth(), getHeight());
-            marginatedRect = boxModel.getMarginatedRect(canvasRect);
-            paddedRect = boxModel.getPaddedRect(marginatedRect);
-            layout(canvas, canvasRect, marginatedRect, paddedRect);
-        }
-    }*/
-
-
 
     /**
      * Called whenever the plot needs to be drawn via the Handler, which invokes invalidate().

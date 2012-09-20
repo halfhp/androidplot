@@ -18,6 +18,7 @@ package com.androidplot.xy;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import com.androidplot.ui.DataRenderer;
 
 /**
  * Defines the visual aesthetics of an XYSeries; outline color and width, fill style,
@@ -77,6 +78,16 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         //this(lineColor, vertexColor);
         initFillPaint(fillColor);
         setFillDirection(fillDir);
+    }
+
+    @Override
+    public Class<? extends DataRenderer> getRendererClass() {
+        return LineAndPointRenderer.class;
+    }
+
+    @Override
+    public DataRenderer getRendererInstance(XYPlot plot) {
+        return new LineAndPointRenderer(plot);
     }
 
     protected void initLinePaint(Integer lineColor) {

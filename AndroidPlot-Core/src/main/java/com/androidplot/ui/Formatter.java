@@ -16,8 +16,22 @@
 
 package com.androidplot.ui;
 
+import com.androidplot.Plot;
+
 /**
  * Base class of all Formatters.  Encapsulates visual elements of a series; line style, color etc.
  */
-public abstract class Formatter {
+public abstract class Formatter<PlotType extends Plot> {
+
+    /**
+     *
+     * @return The Class of DataRenderer that should be used.
+     */
+    public abstract Class<? extends DataRenderer> getRendererClass();
+
+    /**
+     *
+     * @return An instance of DataRenderer that took plot as an argument to its constructor.
+     */
+    public abstract DataRenderer getRendererInstance(PlotType plot);
 }

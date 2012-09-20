@@ -16,11 +16,12 @@
 
 package com.androidplot.xy;
 
+import com.androidplot.ui.DataRenderer;
 import com.androidplot.ui.Formatter;
 import com.androidplot.util.ZHash;
 import com.androidplot.util.ZIndexable;
 
-public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFormatter> extends Formatter {
+public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFormatter> extends Formatter<XYPlot> {
     ZHash<RectRegion, XYRegionFormatterType>  regions;
 
     {
@@ -50,4 +51,14 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
     public XYRegionFormatterType getRegionFormatter(RectRegion region) {
         return regions.get(region);
     }
+
+    /**
+     * Not completely sure why this is necessary, but if it's not here then
+     * subclasses are forced to take a Plot instead of an XYPlot as a parameter,
+     * which in turn breaks the pattern.
+     * @param plot
+     * @return
+     */
+    @Override
+    public abstract DataRenderer getRendererInstance(XYPlot plot);
 }

@@ -16,11 +16,23 @@
 
 package com.androidplot.xy;
 
+import com.androidplot.ui.DataRenderer;
+
 public class StepFormatter extends LineAndPointFormatter {
 
     public StepFormatter(Integer lineColor, Integer fillColor) {
         initLinePaint(lineColor);
         initFillPaint(fillColor);
+    }
+
+    @Override
+    public Class<? extends DataRenderer> getRendererClass() {
+        return StepRenderer.class;
+    }
+
+    @Override
+    public DataRenderer getRendererInstance(XYPlot plot) {
+        return new StepRenderer(plot);
     }
 
 }

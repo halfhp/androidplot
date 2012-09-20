@@ -264,10 +264,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         getGraphWidget().setGridPaddingRight(right);
     }
 
-    @Override
+    /*@Override
     protected XYSeriesRenderer doGetRendererInstance(Class clazz) {
         return XYRendererFactory.getInstance(this, clazz);
-    }
+    }*/
 
     @Override
     protected void doBeforeDraw() {
@@ -698,23 +698,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 throw new UnsupportedOperationException("Range Origin Boundary Mode not yet supported: " + rangeOriginBoundaryMode);
         }
     }
-
-    public boolean addSeries(XYSeries series, XYSeriesFormatter formatter) {
-        Class clazz = XYRendererFactory.getRendererClass(formatter);
-        return addSeries(series, clazz, formatter);
-    }
-
-    /*public boolean addSeries(XYSeries series, LineAndPointFormatter formatter) {
-        return addSeries(series, LineAndPointRenderer.class, formatter);
-    }
-
-    public boolean addSeries(XYSeries series, BarFormatter formatter) {
-        return addSeries(series, BarRenderer.class, formatter);
-    }
-
-    public boolean addSeries(XYSeries series, StepFormatter formatter) {
-        return addSeries(series, StepRenderer.class, formatter);
-    }*/
     
     /**
      * Convenience method - wraps XYGraphWidget.getTicksPerRangeLabel().

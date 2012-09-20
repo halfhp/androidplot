@@ -20,9 +20,6 @@ import android.content.Context;
 import android.graphics.*;
 import android.os.Handler;
 import android.view.View;
-import com.androidplot.Plot;
-import com.androidplot.PlotEvent;
-import com.androidplot.PlotListener;
 import com.androidplot.ui.SeriesAndFormatterList;
 import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
@@ -165,8 +162,30 @@ public class PlotTest {
         }
     }
 
-    static class MockFormatter {
+    static class MockFormatter1 extends Formatter<MockPlot> {
 
+        @Override
+        public Class<? extends DataRenderer> getRendererClass() {
+            return MockRenderer1.class;
+        }
+
+        @Override
+        public DataRenderer getRendererInstance(MockPlot plot) {
+            return new MockRenderer1(plot);
+        }
+    }
+
+    static class MockFormatter2 extends Formatter<MockPlot> {
+
+        @Override
+        public Class<? extends DataRenderer> getRendererClass() {
+            return MockRenderer2.class;
+        }
+
+        @Override
+        public DataRenderer getRendererInstance(MockPlot plot) {
+            return new MockRenderer2(plot);
+        }
     }
 
     //@MockClass(realClass = Plot.class)
@@ -175,7 +194,7 @@ public class PlotTest {
             super(context, title);
         }
 
-        @Override
+        /*@Override
         protected DataRenderer doGetRendererInstance(Class clazz) {
             if(clazz == MockRenderer1.class) {
                 return new MockRenderer1(this);
@@ -184,7 +203,7 @@ public class PlotTest {
             } else {
                 return null;
             }
-        }
+        }*/
 
         @Override
         protected void doBeforeDraw() {
@@ -220,13 +239,13 @@ public class PlotTest {
 
 
 
-        plot.addSeries(m1, cl, new MockFormatter());
+        plot.addSeries(m1, new MockFormatter1());
 
-        LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter>> registry = Deencapsulation.getField(plot, "seriesRegistry");
+        LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
         assertEquals(1, registry.size());
         assertEquals(1, registry.get(cl).size());
 
-        plot.addSeries(m1, cl, new MockFormatter());
+        plot.addSeries(m1, new MockFormatter1());
 
         // duplicate Renderer added, registry size should not grow:
         assertEquals(1, registry.size());
@@ -234,7 +253,7 @@ public class PlotTest {
 
         MockSeries m2 = new MockSeries();
 
-        plot.addSeries(m2, cl, new MockFormatter());
+        plot.addSeries(m2, new MockFormatter1());
 
         // still should only be one renderer type:
         assertEquals(1, registry.size());
@@ -242,11 +261,9 @@ public class PlotTest {
         // we added a new instance of cl to the renderer so there should be 2 in the subregistry:
         assertEquals(2, registry.get(cl).size());
 
-        // now let's introduce a new renderer:
-        Class cl2 = MockRenderer2.class;
 
-        // and add m1 to it:
-        plot.addSeries(m1, cl2, new MockFormatter());
+        // lets add another renderer:
+        plot.addSeries(m1, new MockFormatter2());
 
         assertEquals(2, registry.size());
     }
@@ -256,19 +273,19 @@ public class PlotTest {
 
         Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot(context, "MockPlot");
-        LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter>> registry = Deencapsulation.getField(plot, "seriesRegistry");
+        LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
         MockSeries m1 = new MockSeries();
         MockSeries m2 = new MockSeries();
         MockSeries m3 = new MockSeries();
 
-        plot.addSeries(m1, MockRenderer1.class, new MockFormatter());
-        plot.addSeries(m2, MockRenderer1.class, new MockFormatter());
-        plot.addSeries(m3, MockRenderer1.class, new MockFormatter());
+        plot.addSeries(m1, new MockFormatter1());
+        plot.addSeries(m2, new MockFormatter1());
+        plot.addSeries(m3, new MockFormatter1());
 
-        plot.addSeries(m1, MockRenderer2.class, new MockFormatter());
-        plot.addSeries(m2, MockRenderer2.class, new MockFormatter());
-        plot.addSeries(m3, MockRenderer2.class, new MockFormatter());
+        plot.addSeries(m1, new MockFormatter2());
+        plot.addSeries(m2, new MockFormatter2());
+        plot.addSeries(m3, new MockFormatter2());
 
 
         // a quick sanity check:
@@ -293,13 +310,13 @@ public class PlotTest {
 
 
         // add em all back
-        plot.addSeries(m1, MockRenderer1.class, new MockFormatter());
-        plot.addSeries(m2, MockRenderer1.class, new MockFormatter());
-        plot.addSeries(m3, MockRenderer1.class, new MockFormatter());
+        plot.addSeries(m1, new MockFormatter1());
+        plot.addSeries(m2, new MockFormatter1());
+        plot.addSeries(m3, new MockFormatter1());
 
-        plot.addSeries(m1, MockRenderer2.class, new MockFormatter());
-        plot.addSeries(m2, MockRenderer2.class, new MockFormatter());
-        plot.addSeries(m3, MockRenderer2.class, new MockFormatter());
+        plot.addSeries(m1, new MockFormatter1());
+        plot.addSeries(m2, new MockFormatter1());
+        plot.addSeries(m3, new MockFormatter1());
 
 
         // a quick sanity check:
@@ -326,23 +343,23 @@ public class PlotTest {
     public void testGetFormatter() throws Exception {
         Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot(context, "MockPlot");
-        LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter>> registry = Deencapsulation.getField(plot, "seriesRegistry");
+        LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
         MockSeries m1 = new MockSeries();
         MockSeries m2 = new MockSeries();
         MockSeries m3 = new MockSeries();
 
-        MockFormatter f1 = new MockFormatter();
-        MockFormatter f2 = new MockFormatter();
-        MockFormatter f3 = new MockFormatter();
+        MockFormatter1 f1 = new MockFormatter1();
+        MockFormatter1 f2 = new MockFormatter1();
+        MockFormatter2 f3 = new MockFormatter2();
 
-        plot.addSeries(m1, MockRenderer1.class, f1);
-        plot.addSeries(m2, MockRenderer1.class, f2);
-        plot.addSeries(m3, MockRenderer1.class, new MockFormatter());
+        plot.addSeries(m1, f1);
+        plot.addSeries(m2, f2);
+        plot.addSeries(m3, new MockFormatter1());
 
-        plot.addSeries(m1, MockRenderer2.class, new MockFormatter());
-        plot.addSeries(m2, MockRenderer2.class, f3);
-        plot.addSeries(m3, MockRenderer2.class, new MockFormatter());
+        plot.addSeries(m1, new MockFormatter1());
+        plot.addSeries(m2, f3);
+        plot.addSeries(m3, new MockFormatter1());
 
         assertEquals(registry.get(MockRenderer1.class).getFormatter(m1), f1);
         assertEquals(registry.get(MockRenderer1.class).getFormatter(m2), f2);
@@ -357,19 +374,19 @@ public class PlotTest {
 
         Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot(context, "MockPlot");
-        //LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter>> registry = Deencapsulation.getField(plot, "seriesRegistry");
+        //LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
         MockSeries m1 = new MockSeries();
         MockSeries m2 = new MockSeries();
         MockSeries m3 = new MockSeries();
 
-        plot.addSeries(m1, MockRenderer1.class, new MockFormatter());
-        plot.addSeries(m2, MockRenderer1.class, new MockFormatter());
-        plot.addSeries(m3, MockRenderer1.class, new MockFormatter());
+        plot.addSeries(m1, new MockFormatter1());
+        plot.addSeries(m2, new MockFormatter1());
+        plot.addSeries(m3, new MockFormatter1());
 
-        plot.addSeries(m1, MockRenderer2.class, new MockFormatter());
-        plot.addSeries(m2, MockRenderer2.class, new MockFormatter());
-        plot.addSeries(m3, MockRenderer2.class, new MockFormatter());
+        plot.addSeries(m1, new MockFormatter1());
+        plot.addSeries(m2, new MockFormatter1());
+        plot.addSeries(m3, new MockFormatter1());
 
         List<MockSeries> m1List = plot.getSeriesListForRenderer(MockRenderer1.class);
         assertEquals(3, m1List.size());
@@ -384,19 +401,19 @@ public class PlotTest {
 
         Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot(context, "MockPlot");
-        //LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter>> registry = Deencapsulation.getField(plot, "seriesRegistry");
+        //LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
         MockSeries m1 = new MockSeries();
         MockSeries m2 = new MockSeries();
         MockSeries m3 = new MockSeries();
 
-        plot.addSeries(m1, MockRenderer1.class, new MockFormatter());
-        plot.addSeries(m2, MockRenderer1.class, new MockFormatter());
-        plot.addSeries(m3, MockRenderer1.class, new MockFormatter());
+        plot.addSeries(m1, new MockFormatter1());
+        plot.addSeries(m2, new MockFormatter1());
+        plot.addSeries(m3, new MockFormatter1());
 
-        plot.addSeries(m1, MockRenderer2.class, new MockFormatter());
-        plot.addSeries(m2, MockRenderer2.class, new MockFormatter());
-        plot.addSeries(m3, MockRenderer2.class, new MockFormatter());
+        plot.addSeries(m1, new MockFormatter2());
+        plot.addSeries(m2, new MockFormatter2());
+        plot.addSeries(m3, new MockFormatter2());
 
         List<DataRenderer> rList = plot.getRendererList();
         assertEquals(2, rList.size());
@@ -410,7 +427,7 @@ public class PlotTest {
         Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot(context, "MockPlot");
         ArrayList<PlotListener> listeners = Deencapsulation.getField(plot, "listeners");
-        //LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter>> registry = Deencapsulation.getField(plot, "seriesRegistry");
+        //LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
         assertEquals(0, listeners.size());
 
@@ -438,7 +455,7 @@ public class PlotTest {
         Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot(context, "MockPlot");
         ArrayList<PlotListener> listeners = Deencapsulation.getField(plot, "listeners");
-        //LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter>> registry = Deencapsulation.getField(plot, "seriesRegistry");
+        //LinkedHashMap<Class<DataRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
         assertEquals(0, listeners.size());
 

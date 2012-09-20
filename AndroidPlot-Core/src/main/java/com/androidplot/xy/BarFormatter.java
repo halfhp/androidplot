@@ -18,6 +18,8 @@ package com.androidplot.xy;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import com.androidplot.Plot;
+import com.androidplot.ui.DataRenderer;
 
 public class BarFormatter extends XYSeriesFormatter {
     public Paint getFillPaint() {
@@ -44,9 +46,7 @@ public class BarFormatter extends XYSeriesFormatter {
         //fillPaint.setColor(Color.RED);
         fillPaint.setStyle(Paint.Style.FILL);
         fillPaint.setAlpha(100);
-
         borderPaint = new Paint();
-        //borderPaint.setColor(Color.WHITE);
         borderPaint.setStyle(Paint.Style.STROKE);
         borderPaint.setAlpha(100);
     }
@@ -54,5 +54,15 @@ public class BarFormatter extends XYSeriesFormatter {
     public BarFormatter(int fillColor, int borderColor) {
         fillPaint.setColor(fillColor);
         borderPaint.setColor(borderColor);
+    }
+
+    @Override
+    public Class<? extends DataRenderer> getRendererClass() {
+        return BarRenderer.class;
+    }
+
+    @Override
+    public DataRenderer getRendererInstance(XYPlot plot) {
+        return new BarRenderer(plot);
     }
 }

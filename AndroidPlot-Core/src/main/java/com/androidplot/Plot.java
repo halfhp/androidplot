@@ -18,6 +18,7 @@ package com.androidplot;
 
 import android.content.Context;
 import android.graphics.*;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import com.androidplot.series.Series;
@@ -147,7 +148,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
 
     /**
      * Can be overridden by derived classes to control hardware acceleration state.
-     * @return
+     * Note that this setting is only used on Honeycomb and later environments.
+     * @return True if hardware acceleration is allowed, false otherwise.
      */
     protected boolean isHwAccelerationSupported() {
         return false;
@@ -163,19 +165,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
         titleWidget = new TitleWidget(this, new SizeMetrics(25, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
         layoutManager = new LayoutManager();
         layoutManager.position(titleWidget, 0, XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
-    }
-
-    @Override
-    public void onVisibilityChanged(View changedView, int visibility) {
-
-
-        boolean hwstat = isHardwareAccelerated();
-        if(!isHwAccelerationSupported()) {
-            /*if(getLayerType() != View.LAYER_TYPE_SOFTWARE) {
-                setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            }*/
-        }
-        super.onVisibilityChanged(changedView, visibility);
     }
 
     /**
@@ -475,9 +464,12 @@ public abstract class Plot<SeriesType extends Series, FormatterType, RendererTyp
     protected synchronized void onSizeChanged (int w, int h, int oldw, int oldh) {
 
         // disable hardware acceleration if it's not explicitly supported
-        // by the current Plot implementation.
-        if(!isHwAccelerationSupported() && isHardwareAccelerated()) {
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        // by the current Plot implementation. this check only applies to
+        // honeycomb and later environments.
+        if (Build.VERSION.SDK_INT >= 11) {
+            if (!isHwAccelerationSupported() && isHardwareAccelerated()) {
+                setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
         }
 
         RectF cRect = new RectF(0, 0, getWidth(), getHeight());

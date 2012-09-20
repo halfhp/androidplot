@@ -160,7 +160,8 @@ public class XYLegendWidget extends Widget {
             for(XYRegionFormatter xyf : urf.keySet()) {
                 regionRendererLookup.put(xyf, renderer);
             }
-            sortedRegions.addAll(renderer.getUniqueRegionFormatters().entrySet());
+            sortedRegions.addAll(urf.entrySet());
+            //sortedRegions.addAll(renderer.getUniqueRegionFormatters().entrySet());
         }
         seriesCount += sortedRegions.size();
 

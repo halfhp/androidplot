@@ -18,9 +18,11 @@ package com.example;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.series.XYSeries;
-import com.androidplot.xy.*;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYPlot;
+
 import java.util.Arrays;
 
 /**

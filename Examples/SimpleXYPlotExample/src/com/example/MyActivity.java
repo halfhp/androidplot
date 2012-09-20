@@ -68,9 +68,9 @@ public class MyActivity extends Activity
         
         // add a new series
         XYSeries mySeries = new MyXYSeries();
-        plot.addSeries(mySeries, LineAndPointRenderer.class, new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(200, 0, 0), null));
+        plot.addSeries(mySeries, new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(200, 0, 0), null));
         plot.removeSeries(mySeries);
-        plot.addSeries(mySeries, LineAndPointRenderer.class, new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(200, 0, 0), null));
+        plot.addSeries(mySeries, new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(200, 0, 0), null));
 
         //plot.addSeries(new MyXYSeries(), BarRenderer.class, new BarFormatter(Color.RED, Color.WHITE));
 

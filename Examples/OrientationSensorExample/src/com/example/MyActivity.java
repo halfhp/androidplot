@@ -102,7 +102,7 @@ public class MyActivity extends Activity implements SensorEventListener
 
         // setup the APR Levels plot:
         aprLevelsPlot = (XYPlot) findViewById(R.id.aprLevelsPlot);
-        aprLevelsPlot.addSeries(aprLevelsSeries, BarRenderer.class, new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0)));
+        aprLevelsPlot.addSeries(aprLevelsSeries, new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0)));
         aprLevelsPlot.setDomainStepValue(3);
         aprLevelsPlot.setTicksPerRangeLabel(3);
 
@@ -129,9 +129,9 @@ public class MyActivity extends Activity implements SensorEventListener
         aprHistoryPlot = (XYPlot) findViewById(R.id.aprHistoryPlot);
         aprHistoryPlot.setRangeBoundaries(-180, 359, BoundaryMode.FIXED);
         aprHistoryPlot.setDomainBoundaries(0, 30, BoundaryMode.FIXED);
-        aprHistoryPlot.addSeries(azimuthHistorySeries, LineAndPointRenderer.class, new LineAndPointFormatter(Color.rgb(100, 100, 200), Color.BLACK, null));
-        aprHistoryPlot.addSeries(pitchHistorySeries, LineAndPointRenderer.class, new LineAndPointFormatter(Color.rgb(100, 200, 100), Color.BLACK, null));
-        aprHistoryPlot.addSeries(rollHistorySeries, LineAndPointRenderer.class, new LineAndPointFormatter(Color.rgb(200, 100, 100), Color.BLACK, null));
+        aprHistoryPlot.addSeries(azimuthHistorySeries, new LineAndPointFormatter(Color.rgb(100, 100, 200), Color.BLACK, null));
+        aprHistoryPlot.addSeries(pitchHistorySeries, new LineAndPointFormatter(Color.rgb(100, 200, 100), Color.BLACK, null));
+        aprHistoryPlot.addSeries(rollHistorySeries, new LineAndPointFormatter(Color.rgb(200, 100, 100), Color.BLACK, null));
         aprHistoryPlot.setDomainStepValue(5);
         aprHistoryPlot.setTicksPerRangeLabel(3);
         aprHistoryPlot.setDomainLabel("Sample Index");

@@ -28,6 +28,12 @@ public interface Series {
     public String getTitle();
 
     /**
+     * Set the title of this Series.
+     * @param title The new title of this Series.
+     */
+    public void setTitle(String title);
+
+    /**
      *
      * @return Number of elements in this Series.
      */

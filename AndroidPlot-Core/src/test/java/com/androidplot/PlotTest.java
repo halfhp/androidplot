@@ -69,6 +69,8 @@ public class PlotTest {
             return null;
         }
 
+        @Override public void setTitle(String title) {}
+
         @Override
         public int size() {
             return 0;
@@ -91,6 +93,8 @@ public class PlotTest {
             return null;
         }
 
+        @Override public void setTitle(String title) {}
+
         @Override
         public int size() {
             return 0;
@@ -112,6 +116,8 @@ public class PlotTest {
         public String getTitle() {
             return null;
         }
+
+        @Override public void setTitle(String title) {}
 
         @Override
         public int size() {

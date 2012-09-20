@@ -184,6 +184,11 @@ public class SimpleXYSeries implements XYSeries {
     }
 
     @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
     public int size() {
         if(xVals != null) {
             return xVals.size();

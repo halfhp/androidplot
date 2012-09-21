@@ -36,17 +36,20 @@ public class MyActivity extends Activity {
         }
         @Override
         public void update(Observable o, Object arg) {
-            try {
-                plot.postRedraw();
-            } catch (InterruptedException e) {
+            //try {
+                //plot.postRedraw();
+                plot.redraw();
+            /*} catch (InterruptedException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
+            }*/
         }
     }
 
     private XYPlot dynamicPlot;
     private XYPlot staticPlot;
     private MyPlotUpdater plotUpdater;
+    SampleDynamicXYDatasource data;
+    private Thread myThread;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,7 @@ public class MyActivity extends Activity {
         dynamicPlot.getGraphWidget().setDomainValueFormat(new DecimalFormat("0"));
 
         // getInstance and position datasets:
-        SampleDynamicXYDatasource data = new SampleDynamicXYDatasource();
+        data = new SampleDynamicXYDatasource();
         SampleDynamicSeries sine1Series = new SampleDynamicSeries(data, 0, "Sine 1");
         SampleDynamicSeries sine2Series = new SampleDynamicSeries(data, 1, "Sine 2");
 
@@ -97,8 +100,20 @@ public class MyActivity extends Activity {
         // the x/y values to move the view left or right.
         //dynamicPlot.setDomainBoundaries(5,10, BoundaryMode.FIXED);
 
+    }
+
+    @Override
+    public void onResume() {
         // kick off the data generating thread:
-        new Thread(data).start();
+        myThread = new Thread(data);
+        myThread.start();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        data.stopThread();
+        super.onPause();
     }
 
 }

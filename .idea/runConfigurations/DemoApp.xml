@@ -11,7 +11,7 @@
     <option name="DISABLE_BOOT_ANIMATION" value="false" />
     <option name="NETWORK_SPEED" value="full" />
     <option name="NETWORK_LATENCY" value="none" />
-    <option name="CLEAR_LOGCAT" value="false" />
+    <option name="CLEAR_LOGCAT" value="true" />
     <RunnerSettings RunnerId="AndroidDebugRunner" />
     <RunnerSettings RunnerId="Run" />
     <ConfigurationWrapper RunnerId="AndroidDebugRunner" />

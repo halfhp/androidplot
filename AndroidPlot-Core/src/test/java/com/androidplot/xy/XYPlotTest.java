@@ -17,10 +17,7 @@
 package com.androidplot.xy;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.os.Handler;
 import android.view.View;
 import com.androidplot.util.FontUtils;
@@ -36,7 +33,8 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-@UsingMocksAndStubs({View.class,Context.class,Handler.class,Paint.class,Color.class, Rect.class, RectF.class,FontUtils.class, PixelUtils.class})
+@UsingMocksAndStubs({View.class,Context.class,Handler.class,Paint.class,Color.class,
+        Rect.class, RectF.class,FontUtils.class, PixelUtils.class, Canvas.class})
 
 public class XYPlotTest {
 

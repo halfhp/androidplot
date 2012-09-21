@@ -25,7 +25,11 @@ import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.DataRenderer;
 import com.androidplot.ui.Formatter;
-import mockit.*;
+//import mockit.*;
+import mockit.Deencapsulation;
+import mockit.MockClass;
+import mockit.Mockit;
+import mockit.UsingMocksAndStubs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +44,7 @@ import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class,RectF.class})
+@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class,RectF.class,Canvas.class})
 
 public class PlotTest {
 
@@ -69,8 +73,6 @@ public class PlotTest {
             return null;
         }
 
-        @Override public void setTitle(String title) {}
-
         @Override
         public int size() {
             return 0;
@@ -93,8 +95,6 @@ public class PlotTest {
             return null;
         }
 
-        @Override public void setTitle(String title) {}
-
         @Override
         public int size() {
             return 0;
@@ -116,8 +116,6 @@ public class PlotTest {
         public String getTitle() {
             return null;
         }
-
-        @Override public void setTitle(String title) {}
 
         @Override
         public int size() {

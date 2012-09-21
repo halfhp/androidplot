@@ -43,18 +43,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     private static final String ATTR_TITLE = "title";
 
-    /*public RectF getCanvasRect() {
-        return canvasRect;
-    }
-
-    public RectF getMarginatedRect() {
-        return marginatedRect;
-    }
-
-    public RectF getPaddedRect() {
-        return paddedRect;
-    }*/
-
     public DisplayDimensions getDisplayDimensions() {
         return displayDims;
     }
@@ -71,17 +59,15 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private float borderRadiusY = 15;
     private boolean drawBorderEnabled = true;
     private Paint borderPaint;
-
     private Paint backgroundPaint;
     private LayoutManager layoutManager;
     private TitleWidget titleWidget;
-
-
     private DisplayDimensions displayDims = new DisplayDimensions();
-    /*// we initialize here to avoid null check in onDraw().
-    private RectF canvasRect = new RectF(0,0,0,0);
-    private RectF marginatedRect = new RectF(0,0,0,0);
-    private RectF paddedRect = new RectF(0,0,0,0);*/
+    private Bitmap offScreenBitmap;
+    private Canvas offScreenCanvas = new Canvas();
+
+    // used to get rid of flickering when drawing offScreenBitmap to the visible Canvas.
+    private Object renderSynch = new Object();
 
     /**
      * Used for caching renderer instances.  Note that once a renderer is initialized it remains initialized
@@ -96,6 +82,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     private final ArrayList<PlotListener> listeners;
 
+    private Thread renderThread;
+    private boolean keepRunning = false;
+    private boolean isIdle = true;
+
     {
         listeners = new ArrayList<PlotListener>();
         seriesRegistry = new LinkedHashMap<Class, SeriesAndFormatterList<SeriesType,FormatterType>>();
@@ -109,8 +99,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         backgroundPaint.setColor(Color.DKGRAY);
         backgroundPaint.setStyle(Paint.Style.FILL);
     }
-
-
 
     /**
      * Required by super-class. See android.view.View.
@@ -157,15 +145,40 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     private void postInit() {
-        //if(!isHwAccelerationSupported()) {
-           //if(getLayerType() != View.LAYER_TYPE_SOFTWARE)
-           // setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        //}
-
-
         titleWidget = new TitleWidget(this, new SizeMetrics(25, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
         layoutManager = new LayoutManager();
         layoutManager.position(titleWidget, 0, XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
+        //surfaceHolder = getHolder();
+        //surfaceHolder.addCallback(this);
+        renderThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                keepRunning = true;
+                while(keepRunning) {
+                    isIdle = false;
+                    synchronized(Plot.this) {
+                        if(offScreenBitmap != null) {
+                            doBackgroundDrawing(offScreenCanvas);
+                            synchronized(renderSynch) {
+                                postInvalidate();
+                                try {
+                                    renderSynch.wait();
+                                } catch (InterruptedException e) {
+                                    keepRunning = false;
+                                }
+                            }
+                        }
+                        try {
+                            isIdle = true;
+                            Plot.this.wait();
+                        } catch (InterruptedException e) {
+                            keepRunning = false;
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -244,31 +257,17 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     /**
-     * Return null or throw instance of IllegalArgumentException if clazz is not recognized
-     * as a RendererType.
-     * @param clazz
-     * @return
-     */
-    //protected abstract RendererType doGetRendererInstance(Class clazz);
-
-
-
-    /**
      * @param series
      */
     public synchronized boolean addSeries(SeriesType series, FormatterType formatter) {
-        //RendererType rt = null;
-        //rendererClass.cast(rt);
         Class rendererClass = formatter.getRendererClass();
         SeriesAndFormatterList<SeriesType, FormatterType> sfList = seriesRegistry.get(rendererClass);
         
         // if there is no list for this renderer type, we need to getInstance one:
         if(sfList == null) {
-            // if rendererClass is an invalid type, getInstance will throw an IllegalArgumentException:
             // make sure there is not already an instance of this renderer available:
             if(getRenderer(rendererClass) == null) {
-                renderers.add((RendererType)formatter.getRendererInstance(this));
-                //renderers.add(getRendererInstance(rendererClass));
+                renderers.add((RendererType) formatter.getRendererInstance(this));
             }
             sfList = new SeriesAndFormatterList<SeriesType,FormatterType>();
             seriesRegistry.put(rendererClass, sfList);
@@ -284,9 +283,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     public synchronized boolean removeSeries(SeriesType series, Class rendererClass) {
-    	
         boolean result = seriesRegistry.get(rendererClass).remove(series);
-        
         if(seriesRegistry.get(rendererClass).size() <= 0) {
             seriesRegistry.remove(rendererClass);
         }
@@ -335,8 +332,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         throw new UnsupportedOperationException();
     }
 
-  
-
     public SeriesAndFormatterList<SeriesType,FormatterType> getSeriesAndFormatterListForRenderer(Class rendererClass) {
         return seriesRegistry.get(rendererClass);
     }
@@ -379,7 +374,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     public List<RendererType> getRendererList() {
         return renderers;
-        //throw new UnsupportedOperationException();
     }
 
     public void disableAllMarkup() {
@@ -387,32 +381,20 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     /**
-     * Causes the plot to be redrawn.  Should only be called by the main (UI) thead.
-     * Non-UI threads should call postRedraw().
-     * @throws InterruptedException
+     * Causes the plot to be redrawn.
+     * @since 0.5.1
      */
     public void redraw() {
-        //redraw(true);
-        invalidate();
-    }
+        // only enter synchronized block if the call is expected to block OR
+        // if the render thread is idle, so we know that we won't have to wait to
+        // obtain a lock.
 
-    /**
-     * Invalidates the Plot's underlying View and blocks until it is redrawn.
-     * For a non-blocking version of this method use postRedraw(false).
-     * This method should only be called from threads that are not the primary (UI) thread.
-     * Use redraw() instead for calls made from the primary thread.
-     * @throws InterruptedException
-     */
-    public void postRedraw() throws InterruptedException {
-        postRedraw(true);
-    }
+        if (renderThread != null && renderThread.isAlive()) {
+            if (isIdle) {
+                synchronized(this) {
+                    notify();
 
-    public void postRedraw(boolean isBlocking) throws InterruptedException {
-        synchronized (this) {
-            //handler.sendMessage(handler.obtainMessage());
-            postInvalidate();
-            if (isBlocking) {
-                wait();
+                }
             }
         }
     }
@@ -435,6 +417,29 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         layoutManager.layout(displayDims);
     }
 
+    /**
+     * Always use this method to regenerate the offscreen bitmap buffer, for consistency.
+     * @param w
+     * @param h
+     * @return
+     */
+    private static Bitmap createBitmapBuffer(int w, int h) {
+        if(w <= 0 || h <= 0) {
+            return null;
+        } else {
+            return Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        // Due to the nasty way Bitmaps are implemented on Android, we must recycle bitmaps before
+        // this Plot instance is garbage collected, otherwise we have a memory leak.
+        if(offScreenBitmap != null) {
+            offScreenBitmap.recycle();
+        }
+    }
+
     @Override
     protected synchronized void onSizeChanged (int w, int h, int oldw, int oldh) {
 
@@ -447,12 +452,34 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             }
         }
 
-        RectF cRect = new RectF(0, 0, getWidth(), getHeight());
+        if(offScreenBitmap != null) {
+            offScreenBitmap.recycle();
+        }
+        offScreenBitmap = createBitmapBuffer(w, h);
+        offScreenCanvas.setBitmap(offScreenBitmap);
+
+        RectF cRect = new RectF(0, 0, w, h);
         RectF mRect = boxModel.getMarginatedRect(cRect);
         RectF pRect = boxModel.getPaddedRect(mRect);
 
         layout(new DisplayDimensions(cRect, mRect, pRect));
         super.onSizeChanged(w, h, oldw, oldh);
+        renderThread.start();
+    }
+
+    /**
+     * Called whenever the plot needs to be drawn via the Handler, which invokes invalidate().
+     * Should never be called directly; use {@link #redraw()} instead.
+     * @param canvas
+     */
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (offScreenBitmap != null) {
+            canvas.drawBitmap(offScreenBitmap, 0, 0, null);
+        }
+        synchronized(renderSynch) {
+            renderSynch.notify();
+        }
     }
 
     /**
@@ -460,19 +487,18 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * Should never be called directly.
      * @param canvas
      */
-    protected void onDraw(Canvas canvas) {
+
+    protected void doBackgroundDrawing(Canvas canvas) {
 
         doBeforeDraw();
         notifyListenersBeforeDraw(canvas);
         try {
-
-            //validateDimensions(canvas);
             if (backgroundPaint != null) {
                 drawBackground(canvas, displayDims.marginatedRect);
             }
-            synchronized(this) {
-                layoutManager.draw(canvas);
-            }
+
+            layoutManager.draw(canvas);
+
             if (isDrawBorderEnabled() && getBorderPaint() != null) {
                 drawBorder(canvas, displayDims.marginatedRect);
             }
@@ -481,9 +507,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         } finally {
             doAfterDraw();
             notifyListenersAfterDraw(canvas, new PlotEvent(this, PlotEvent.Type.PLOT_REDRAWN));
-            synchronized(this) {
-                notify();
-            }
         }
     }
 

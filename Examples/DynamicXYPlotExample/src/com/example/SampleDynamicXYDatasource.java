@@ -42,16 +42,22 @@ public class SampleDynamicXYDatasource implements Runnable {
     private int phase = 0;
     private int sinAmp = 20;
     private MyObservable notifier;
+    private boolean keepRunning = false;
 
     {
         notifier = new MyObservable();
     }
 
+    public void stopThread() {
+        keepRunning = false;
+    }
+
     //@Override
     public void run() {
         try {
+            keepRunning = true;
             boolean isRising = true;
-            while (true) {
+            while (keepRunning) {
 
                 Thread.sleep(50); // decrease or remove to speed up the refresh rate.
                 phase++;

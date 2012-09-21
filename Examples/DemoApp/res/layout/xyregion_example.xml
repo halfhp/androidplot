@@ -12,6 +12,7 @@
             android:layout_margin="0px"
             title="XYRegion Example"
             android:layout_weight="1"
+            renderMode="use_main_thread"
             />
 
     <LinearLayout

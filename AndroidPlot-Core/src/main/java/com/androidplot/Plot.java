@@ -19,6 +19,7 @@ package com.androidplot;
 import android.content.Context;
 import android.graphics.*;
 import android.os.Build;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 import com.androidplot.series.Series;
@@ -41,7 +42,8 @@ import java.util.*;
 public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends DataRenderer>
         extends View implements Resizable{
 
-    private static final String ATTR_TITLE = "title";
+    private static final String ATTR_TITLE                            = "title";
+    private static final String ATTR_RENDER_MODE                      = "renderMode";
 
     public DisplayDimensions getDisplayDimensions() {
         return displayDims;
@@ -52,6 +54,54 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         SQUARE,
         NONE
     }
+
+    /**
+     * The RenderMode used by a Plot to draw it's self onto the screen.  The RenderMode can be set
+     * in two ways.
+     *
+     * In an xml layout:
+     *
+     * <code>
+     * <com.androidplot.xy.XYPlot
+     * android:id="@+id/mySimpleXYPlot"
+     * android:layout_width="fill_parent"
+     * android:layout_height="fill_parent"
+     * title="@string/sxy_title"
+     * renderMode="useBackgroundThread"/>
+     * </code>
+     *
+     * Programatically:
+     *
+     * <code>
+     * XYPlot myPlot = new XYPlot(context "MyPlot", Plot.RenderMode.USE_MAIN_THREAD);
+     * </code>
+     *
+     * A Plot's  RenderMode cannot be changed after the plot has been initialized.
+     * @since 0.5.1
+     */
+    public enum RenderMode {
+        /**
+         * Use a second thread and an off-screen buffer to do drawing.  This is the preferred method
+         * of drawing dynamic data and static data that consists of a large number of points.  This mode
+         * provides more efficient CPU utilization at the cost of increased memory usage.  As of
+         * version 0.5.1 this is the default RenderMode.
+         *
+         * XML value: use_background_thread
+         * @since 0.5.1
+         */
+        USE_BACKGROUND_THREAD,
+
+        /**
+         * Do everything in the primary thread.  This is the preferred method of drawing static charts
+         * and dynamic data that consists of a small number of points. This mode uses less memory at
+         * the cost of poor CPU utilization.
+         *
+         * XML value: use_main_thread
+         * @since 0.5.1
+         */
+        USE_MAIN_THREAD
+    }
+
     protected String title;
     private BoxModel boxModel = new BoxModel(3, 3, 3, 3, 3, 3, 3, 3);
     private BorderStyle borderStyle = Plot.BorderStyle.ROUNDED;
@@ -63,6 +113,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private LayoutManager layoutManager;
     private TitleWidget titleWidget;
     private DisplayDimensions displayDims = new DisplayDimensions();
+    private RenderMode renderMode = RenderMode.USE_BACKGROUND_THREAD;
     private Bitmap offScreenBitmap;
     private Canvas offScreenCanvas = new Canvas();
 
@@ -102,12 +153,12 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     /**
      * Required by super-class. See android.view.View.
-     * @param context Android Context used to doBeforeDraw this Plot.
+     * @param context
      */
     public Plot(Context context, String title) {
         super(context);       
         this.title = title;
-        postInit();
+        postInit(context, null);
     }
 
     /**
@@ -117,8 +168,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Plot(Context context, AttributeSet attrs) {
         super(context, attrs);
-        loadAttrs(context, attrs);
-        postInit();
+        postInit(context, attrs);
         //context.o
     }
 
@@ -131,54 +181,58 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     public Plot(Context context, AttributeSet attrs, int
             defStyle) {
         super(context, attrs, defStyle);
-        loadAttrs(context, attrs);
-        postInit();
+        postInit(context, attrs);
     }
 
     /**
      * Can be overridden by derived classes to control hardware acceleration state.
      * Note that this setting is only used on Honeycomb and later environments.
      * @return True if hardware acceleration is allowed, false otherwise.
+     * @since 0.5.1
      */
     protected boolean isHwAccelerationSupported() {
         return false;
     }
 
-    private void postInit() {
+    private void postInit(Context ctx, AttributeSet attrs) {
+        if(attrs != null) {
+            loadAttrs(ctx, attrs);
+        }
         titleWidget = new TitleWidget(this, new SizeMetrics(25, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
         layoutManager = new LayoutManager();
         layoutManager.position(titleWidget, 0, XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
-        //surfaceHolder = getHolder();
-        //surfaceHolder.addCallback(this);
-        renderThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
 
-                keepRunning = true;
-                while(keepRunning) {
-                    isIdle = false;
-                    synchronized(Plot.this) {
-                        if(offScreenBitmap != null) {
-                            doBackgroundDrawing(offScreenCanvas);
-                            synchronized(renderSynch) {
-                                postInvalidate();
-                                try {
-                                    renderSynch.wait();
-                                } catch (InterruptedException e) {
-                                    keepRunning = false;
+        if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
+            renderThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    keepRunning = true;
+                    while (keepRunning) {
+                        isIdle = false;
+                        synchronized (Plot.this) {
+                            if (offScreenBitmap != null) {
+                                renderOnCanvas(offScreenCanvas);
+                                synchronized (renderSynch) {
+                                    postInvalidate();
+                                    try {
+                                        renderSynch.wait();
+                                    } catch (InterruptedException e) {
+                                        keepRunning = false;
+                                    }
                                 }
                             }
-                        }
-                        try {
-                            isIdle = true;
-                            Plot.this.wait();
-                        } catch (InterruptedException e) {
-                            keepRunning = false;
+                            try {
+                                isIdle = true;
+                                Plot.this.wait();
+                            } catch (InterruptedException e) {
+                                keepRunning = false;
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
@@ -188,7 +242,15 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     private void loadAttrs(Context context, AttributeSet attrs) {
 
-        String titleAttr = attrs.getAttributeValue(null, ATTR_TITLE);
+        title = getStringAttr(context, attrs, ATTR_TITLE);
+        String renderModeStr = getStringAttr(context, attrs, ATTR_RENDER_MODE);
+        if(renderModeStr != null) {
+            renderMode = getRenderMode(renderModeStr);
+            if(renderMode == null) {
+                throw new IllegalArgumentException("Unknown Render Mode specified in XML: " + renderModeStr);
+            }
+        }
+        /*String titleAttr = attrs.getAttributeValue(null, ATTR_TITLE);
         String[] split = titleAttr.split("/");
 
         // is this a localized resource?
@@ -199,6 +261,34 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             this.title = context.getResources().getString(id);
         } else {
             this.title = titleAttr;
+        }*/
+    }
+
+    private String getStringAttr(Context ctx, AttributeSet attrs, String attrName) {
+        String attr = attrs.getAttributeValue(null, attrName);
+        if (attr != null) {
+            String[] split = attr.split("/");
+            // is this a localized resource?
+            if (split[0].equalsIgnoreCase("@string")) {
+                String pack = split[0].replace("@", "");
+                String name = split[1];
+                int id = ctx.getResources().getIdentifier(name, pack, ctx.getPackageName());
+                return ctx.getResources().getString(id);
+            } else {
+                return attr;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    private RenderMode getRenderMode(String renderModeStr) {
+        if(renderModeStr.equalsIgnoreCase(RenderMode.USE_BACKGROUND_THREAD.toString())) {
+            return RenderMode.USE_BACKGROUND_THREAD;
+        } else if(renderModeStr.equalsIgnoreCase(RenderMode.USE_MAIN_THREAD.toString())) {
+            return RenderMode.USE_MAIN_THREAD;
+        } else {
+            return null;
         }
     }
 
@@ -385,17 +475,30 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @since 0.5.1
      */
     public void redraw() {
-        // only enter synchronized block if the call is expected to block OR
-        // if the render thread is idle, so we know that we won't have to wait to
-        // obtain a lock.
 
-        if (renderThread != null && renderThread.isAlive()) {
-            if (isIdle) {
-                synchronized(this) {
-                    notify();
+        if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
 
+            // only enter synchronized block if the call is expected to block OR
+            // if the render thread is idle, so we know that we won't have to wait to
+            // obtain a lock.
+            if (renderThread != null && renderThread.isAlive()) {
+                if (isIdle) {
+                    synchronized (this) {
+                        notify();
+
+                    }
                 }
             }
+        } else if(renderMode == RenderMode.USE_MAIN_THREAD) {
+
+            // are we on the UI thread?
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                invalidate();
+            } else {
+                postInvalidate();
+            }
+        } else {
+            throw new IllegalArgumentException("Unsupported Render Mode: " + renderMode);
         }
     }
 
@@ -464,7 +567,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
         layout(new DisplayDimensions(cRect, mRect, pRect));
         super.onSizeChanged(w, h, oldw, oldh);
-        renderThread.start();
+        if(renderThread != null) {
+            renderThread.start();
+        }
     }
 
     /**
@@ -474,11 +579,17 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     @Override
     protected void onDraw(Canvas canvas) {
-        if (offScreenBitmap != null) {
-            canvas.drawBitmap(offScreenBitmap, 0, 0, null);
-        }
-        synchronized(renderSynch) {
-            renderSynch.notify();
+        if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
+            if (offScreenBitmap != null) {
+                canvas.drawBitmap(offScreenBitmap, 0, 0, null);
+            }
+            synchronized (renderSynch) {
+                renderSynch.notify();
+            }
+        } else if (renderMode == RenderMode.USE_MAIN_THREAD) {
+            renderOnCanvas(canvas);
+        } else {
+            throw new IllegalArgumentException("Unsupported Render Mode: " + renderMode);
         }
     }
 
@@ -488,7 +599,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param canvas
      */
 
-    protected void doBackgroundDrawing(Canvas canvas) {
+    protected synchronized void renderOnCanvas(Canvas canvas) {
 
         doBeforeDraw();
         notifyListenersBeforeDraw(canvas);

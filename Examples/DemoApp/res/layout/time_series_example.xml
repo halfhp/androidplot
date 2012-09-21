@@ -24,5 +24,6 @@
             android:id="@+id/plot1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            title="@string/ts_plot1_title"/>
+            title="@string/ts_plot1_title"
+            renderMode="use_main_thread"/>
 </LinearLayout>

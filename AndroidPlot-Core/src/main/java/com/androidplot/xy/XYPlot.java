@@ -152,6 +152,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         postInit(context);
     }
 
+    public XYPlot(Context context, String title, RenderMode mode) {
+        super(context, title, mode);
+    }
+
     public XYPlot(Context context, AttributeSet attributes) {
         super(context, attributes);
         postInit(context);

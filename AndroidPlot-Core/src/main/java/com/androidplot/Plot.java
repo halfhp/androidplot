@@ -152,14 +152,27 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     /**
-     * Required by super-class. See android.view.View.
+     * Convenience constructor - wraps {@link #Plot(android.content.Context, String, com.androidplot.Plot.RenderMode)}.
+     * RenderMode is set to {@link RenderMode#USE_BACKGROUND_THREAD}.
      * @param context
+     * @param title The display title of this Plot.
      */
     public Plot(Context context, String title) {
-        super(context);       
+        this(context, title, RenderMode.USE_BACKGROUND_THREAD);
+    }
+
+    /**
+     * Used for programmatic instantiation.
+     * @param context
+     * @param title The display title of this Plot.
+     */
+    public Plot(Context context, String title, RenderMode mode) {
+        super(context);
         this.title = title;
+        this.renderMode = mode;
         postInit(context, null);
     }
+
 
     /**
      * Required by super-class. See android.view.View.

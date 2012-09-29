@@ -24,6 +24,10 @@
                     style="@style/toc_button"
                     android:text="Step Chart"
                     />
+            <Button android:id="@+id/startScrollZoomButton"
+                    style="@style/toc_button"
+                    android:text="Scroll and Zoom"
+                    />
             <Button android:id="@+id/startBarPlotExButton"
                     style="@style/toc_button"
                     android:text="Bar Plot"

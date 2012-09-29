@@ -37,6 +37,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".TouchZoomExampleActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ListViewActivity" android:label="ListView Example"/>
         <activity android:name=".XYRegionExampleActivity" android:label="XYRegion Example">
             <intent-filter>

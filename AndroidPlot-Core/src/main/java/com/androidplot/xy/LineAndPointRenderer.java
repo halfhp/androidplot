@@ -44,8 +44,9 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         List<XYSeries> seriesList = getPlot().getSeriesListForRenderer(this.getClass());
         if (seriesList != null) {
             for (XYSeries series : seriesList) {
-
-                drawSeries(canvas, plotArea, series, getFormatter(series));
+                //synchronized(series) {
+                    drawSeries(canvas, plotArea, series, getFormatter(series));
+                //}
             }
         }
     }

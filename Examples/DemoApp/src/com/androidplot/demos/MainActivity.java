@@ -63,6 +63,14 @@ public class MainActivity extends Activity
             }
         });
 
+        Button startScrollZoomExButton = (Button)findViewById(R.id.startScrollZoomButton);
+        startScrollZoomExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, TouchZoomExampleActivity.class));
+            }
+        });
+
         Button startXyRegionExampleButton = (Button)findViewById(R.id.startXyRegionExampleButton);
         startXyRegionExampleButton.setOnClickListener(new View.OnClickListener() {
             @Override

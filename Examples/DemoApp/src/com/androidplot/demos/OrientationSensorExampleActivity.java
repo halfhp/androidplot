@@ -34,7 +34,6 @@ import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 // Monitor the phone's orientation sensor and plot the resulting azimuth pitch and roll values.
 // See: http://developer.android.com/reference/android/hardware/SensorEvent.html
@@ -86,20 +85,15 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
     private SimpleXYSeries azimuthHistorySeries = null;
     private SimpleXYSeries pitchHistorySeries = null;
     private SimpleXYSeries rollHistorySeries = null;
-    private LinkedList<Number> azimuthHistory;
-    private LinkedList<Number> pitchHistory;
-    private LinkedList<Number> rollHistory;
+    //private LinkedList<Number> azimuthHistory;
+    //private LinkedList<Number> pitchHistory;
+    //private LinkedList<Number> rollHistory;
 
-    {
+    /*{
         azimuthHistory = new LinkedList<Number>();
         pitchHistory = new LinkedList<Number>();
         rollHistory = new LinkedList<Number>();
-
-        aprLevelsSeries = new SimpleXYSeries("APR Levels");
-        azimuthHistorySeries = new SimpleXYSeries("Azimuth");
-        pitchHistorySeries = new SimpleXYSeries("Pitch");
-        rollHistorySeries = new SimpleXYSeries("Roll");
-    }
+    }*/
 
     /** Called when the activity is first created. */
     @Override
@@ -109,6 +103,9 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
 
         // setup the APR Levels plot:
         aprLevelsPlot = (XYPlot) findViewById(R.id.aprLevelsPlot);
+
+        aprLevelsSeries = new SimpleXYSeries("APR Levels");
+        aprLevelsSeries.useImplicitXVals();
         aprLevelsPlot.addSeries(aprLevelsSeries, new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0)));
         aprLevelsPlot.setDomainStepValue(3);
         aprLevelsPlot.setTicksPerRangeLabel(3);
@@ -135,6 +132,14 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
 
         // setup the APR History plot:
         aprHistoryPlot = (XYPlot) findViewById(R.id.aprHistoryPlot);
+
+        azimuthHistorySeries = new SimpleXYSeries("Azimuth");
+        azimuthHistorySeries.useImplicitXVals();
+        pitchHistorySeries = new SimpleXYSeries("Pitch");
+        pitchHistorySeries.useImplicitXVals();
+        rollHistorySeries = new SimpleXYSeries("Roll");
+        rollHistorySeries.useImplicitXVals();
+
         aprHistoryPlot.setRangeBoundaries(-180, 359, BoundaryMode.FIXED);
         aprHistoryPlot.setDomainBoundaries(0, 30, BoundaryMode.FIXED);
         aprHistoryPlot.addSeries(azimuthHistorySeries, new LineAndPointFormatter(Color.rgb(100, 100, 200), Color.BLACK, null));
@@ -221,21 +226,21 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         aprLevelsSeries.setModel(Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 
         // get rid the oldest sample in history:
-        if (rollHistory.size() > HISTORY_SIZE) {
-            rollHistory.removeFirst();
-            pitchHistory.removeFirst();
-            azimuthHistory.removeFirst();
+        if (rollHistorySeries.size() > HISTORY_SIZE) {
+            rollHistorySeries.removeFirst();
+            pitchHistorySeries.removeFirst();
+            azimuthHistorySeries.removeFirst();
         }
 
         // add the latest history sample:
-        azimuthHistory.addLast(sensorEvent.values[0]);
-        pitchHistory.addLast(sensorEvent.values[1]);
-        rollHistory.addLast(sensorEvent.values[2]);
+        azimuthHistorySeries.addLast(null, sensorEvent.values[0]);
+        pitchHistorySeries.addLast(null, sensorEvent.values[1]);
+        rollHistorySeries.addLast(null, sensorEvent.values[2]);
 
-        // update the plot with the updated history Lists:
+        /*// update the plot with the updated history Lists:
         azimuthHistorySeries.setModel(azimuthHistory, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         pitchHistorySeries.setModel(pitchHistory, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-        rollHistorySeries.setModel(rollHistory, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+        rollHistorySeries.setModel(rollHistory, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);*/
 
         // redraw the Plots:
         aprLevelsPlot.redraw();

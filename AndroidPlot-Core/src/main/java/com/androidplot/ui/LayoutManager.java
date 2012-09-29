@@ -151,7 +151,7 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         return PixelUtils.sub(point, getAnchorOffset(width, height, metrics.getAnchor()));
     }
 
-    public synchronized void draw(Canvas canvas) throws PlotRenderException {
+    public void draw(Canvas canvas) throws PlotRenderException {
         if(isDrawMarginsEnabled()) {
             drawSpacing(canvas, displayDims.canvasRect, displayDims.marginatedRect, marginPaint);
         }
@@ -330,7 +330,7 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
     }
 
     @Override
-    public synchronized void layout(final DisplayDimensions dims) {
+    public void layout(final DisplayDimensions dims) {
         this.displayDims = dims;
 
         widgetRects.clear();

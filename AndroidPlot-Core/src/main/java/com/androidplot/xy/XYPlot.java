@@ -87,7 +87,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private Number domainLeftMax = null;
     private Number domainRightMin = null;
     private Number domainRightMax = null;
-    
+
     // used for  calculating the domain/range extents that will be displayed on the plot.
     // using boundaries and origins are mutually exclusive.  because of this,
     // setting one will disable the other.  when only setting the FramingModel,
@@ -118,34 +118,29 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private RectRegion defaultBounds;
 
 
-    private static final int DEFAULT_LEGEND_WIDGET_H_DP             = 10;
-    private static final int DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP     = 7;
-    private static final int DEFAULT_GRAPH_WIDGET_H_DP              = 18;
-    private static final int DEFAULT_GRAPH_WIDGET_W_DP              = 10;
-    private static final int DEFAULT_DOMAIN_LABEL_WIDGET_H_DP       = 10;
-    private static final int DEFAULT_DOMAIN_LABEL_WIDGET_W_DP       = 80;
-    private static final int DEFAULT_RANGE_LABEL_WIDGET_H_DP        = 50;
-    private static final int DEFAULT_RANGE_LABEL_WIDGET_W_DP        = 10;
+    private static final int DEFAULT_LEGEND_WIDGET_H_DP = 10;
+    private static final int DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP = 7;
+    private static final int DEFAULT_GRAPH_WIDGET_H_DP = 18;
+    private static final int DEFAULT_GRAPH_WIDGET_W_DP = 10;
+    private static final int DEFAULT_DOMAIN_LABEL_WIDGET_H_DP = 10;
+    private static final int DEFAULT_DOMAIN_LABEL_WIDGET_W_DP = 80;
+    private static final int DEFAULT_RANGE_LABEL_WIDGET_H_DP = 50;
+    private static final int DEFAULT_RANGE_LABEL_WIDGET_W_DP = 10;
 
-    private static final int DEFAULT_LEGEND_WIDGET_Y_OFFSET_DP       = 0;
-    private static final int DEFAULT_LEGEND_WIDGET_X_OFFSET_DP       = 40;
-    private static final int DEFAULT_GRAPH_WIDGET_Y_OFFSET_DP        = 0;
-    private static final int DEFAULT_GRAPH_WIDGET_X_OFFSET_DP        = 0;
+    private static final int DEFAULT_LEGEND_WIDGET_Y_OFFSET_DP = 0;
+    private static final int DEFAULT_LEGEND_WIDGET_X_OFFSET_DP = 40;
+    private static final int DEFAULT_GRAPH_WIDGET_Y_OFFSET_DP = 0;
+    private static final int DEFAULT_GRAPH_WIDGET_X_OFFSET_DP = 0;
     private static final int DEFAULT_DOMAIN_LABEL_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_DOMAIN_LABEL_WIDGET_X_OFFSET_DP = 20;
-    private static final int DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP  = 0;
-    private static final int DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP  = 0;
+    private static final int DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP = 0;
+    private static final int DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP = 0;
 
     private static final int DEFAULT_GRAPH_WIDGET_TOP_MARGIN_DP = 3;
     private static final int DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN_DP = 3;
     private static final int DEFAULT_PLOT_LEFT_MARGIN_DP = 2;
     private static final int DEFAULT_PLOT_RIGHT_MARGIN_DP = 2;
     private static final int DEFAULT_PLOT_BOTTOM_MARGIN_DP = 2;
-
-    {
-
-    }
-
 
     public XYPlot(Context context, String title) {
         super(context, title);
@@ -285,12 +280,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Checks whether the point is within the plot's graph area.
+     *
      * @param x
      * @param y
      * @return
      */
     public boolean containsPoint(float x, float y) {
-        if(getGraphWidget().getGridRect() != null) {
+        if (getGraphWidget().getGridRect() != null) {
             return getGraphWidget().getGridRect().contains(x, y);
         }
         return false;
@@ -299,6 +295,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Convenience method - wraps containsPoint(PointF).
+     *
      * @param point
      * @return
      */
@@ -330,7 +327,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     private boolean isPointVisible(Number x, Number y) {
         // values without both an x and y val arent visible
-        if( x == null || y == null) {
+        if (x == null || y == null) {
             return false;
         }
         return isValWithinRange(y.doubleValue(), userMinY, userMaxY) &&
@@ -358,35 +355,37 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         // next we go through each series to update our min/max values:
         for (XYSeries series : getSeriesSet()) {
             // step through each point in each series:
-            for (int i = 0; i < series.size(); i++) {
-                Number thisX = series.getX(i);
-                Number thisY = series.getY(i);
-                if (isPointVisible(thisX, thisY)) {
-                    // only calculate if a static value has not been set:
-                    if (userMinX == null) {
-                        if (thisX != null && (calculatedMinX == null || thisX.doubleValue() < calculatedMinX.doubleValue())) {
-                            calculatedMinX = thisX;
+            synchronized (series) {
+                for (int i = 0; i < series.size(); i++) {
+                    Number thisX = series.getX(i);
+                    Number thisY = series.getY(i);
+                    if (isPointVisible(thisX, thisY)) {
+                        // only calculate if a static value has not been set:
+                        if (userMinX == null) {
+                            if (thisX != null && (calculatedMinX == null || thisX.doubleValue() < calculatedMinX.doubleValue())) {
+                                calculatedMinX = thisX;
+                            }
                         }
-                    }
 
-                    if (userMaxX == null) {
-                        //Number thisMaxX = series.getMaxX();
-                        if (thisX != null && (calculatedMaxX == null || thisX.doubleValue() > calculatedMaxX.doubleValue())) {
-                            calculatedMaxX = thisX;
+                        if (userMaxX == null) {
+                            //Number thisMaxX = series.getMaxX();
+                            if (thisX != null && (calculatedMaxX == null || thisX.doubleValue() > calculatedMaxX.doubleValue())) {
+                                calculatedMaxX = thisX;
+                            }
                         }
-                    }
 
-                    if (userMinY == null) {
-                        //Number thisMinY = series.getMinY();
-                        if (thisY != null && (calculatedMinY == null || thisY.doubleValue() < calculatedMinY.doubleValue())) {
-                            calculatedMinY = thisY;
+                        if (userMinY == null) {
+                            //Number thisMinY = series.getMinY();
+                            if (thisY != null && (calculatedMinY == null || thisY.doubleValue() < calculatedMinY.doubleValue())) {
+                                calculatedMinY = thisY;
+                            }
                         }
-                    }
 
-                    if (userMaxY == null) {
-                        //Number thisMaxY = series.getMaxY();
-                        if (thisY != null && (calculatedMaxY == null || thisY.doubleValue() > calculatedMaxY.doubleValue())) {
-                            calculatedMaxY = thisY;
+                        if (userMaxY == null) {
+                            //Number thisMaxY = series.getMaxY();
+                            if (thisY != null && (calculatedMaxY == null || thisY.doubleValue() > calculatedMaxY.doubleValue())) {
+                                calculatedMaxY = thisY;
+                            }
                         }
                     }
                 }
@@ -396,7 +395,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         // at this point we now know what points are going to be visible on our
         // plot, but we still need to make corrections based on modes being used:
         // (grow, shrink etc.)
-        switch(domainFramingModel) {
+        switch (domainFramingModel) {
             case ORIGIN:
                 updateDomainMinMaxForOriginModel();
                 break;
@@ -411,7 +410,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 throw new UnsupportedOperationException("Domain Framing Model not yet supported: " + domainFramingModel);
         }
 
-        switch(rangeFramingModel) {
+        switch (rangeFramingModel) {
             case ORIGIN:
                 updateRangeMinMaxForOriginModel();
                 break;
@@ -435,18 +434,18 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * Results are undefined otherwise.
      */
     private void updateDomainMinMaxForEdgeModel() {
-        switch(domainUpperBoundaryMode) {
+        switch (domainUpperBoundaryMode) {
             case FIXED:
                 break;
             case AUTO:
                 break;
             case GROW:
-                if(!(prevMaxX == null || (calculatedMaxX.doubleValue() > prevMaxX.doubleValue()))) {
+                if (!(prevMaxX == null || (calculatedMaxX.doubleValue() > prevMaxX.doubleValue()))) {
                     calculatedMaxX = prevMaxX;
                 }
                 break;
             case SHRINNK:
-                if(!(prevMaxX == null || calculatedMaxX.doubleValue() < prevMaxX.doubleValue())) {
+                if (!(prevMaxX == null || calculatedMaxX.doubleValue() < prevMaxX.doubleValue())) {
                     calculatedMaxX = prevMaxX;
                 }
                 break;
@@ -460,12 +459,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             case AUTO:
                 break;
             case GROW:
-                if(!(prevMinX == null || calculatedMinX.doubleValue() < prevMinX.doubleValue())) {
+                if (!(prevMinX == null || calculatedMinX.doubleValue() < prevMinX.doubleValue())) {
                     calculatedMinX = prevMinX;
                 }
                 break;
             case SHRINNK:
-                if(!(prevMinX == null || calculatedMinX.doubleValue() > prevMinX.doubleValue())) {
+                if (!(prevMinX == null || calculatedMinX.doubleValue() > prevMinX.doubleValue())) {
                     calculatedMinX = prevMinX;
                 }
                 break;
@@ -481,13 +480,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             case AUTO:
                 break;
             case GROW:
-                if(!(prevMaxY == null || calculatedMaxY.doubleValue() > prevMaxY.doubleValue())) {
+                if (!(prevMaxY == null || calculatedMaxY.doubleValue() > prevMaxY.doubleValue())) {
                     calculatedMaxY = prevMaxY;
                 }
                 break;
             case SHRINNK:
-                if(!(prevMaxY == null || calculatedMaxY.doubleValue() < prevMaxY.doubleValue())) {
-                   calculatedMaxY = prevMaxY;
+                if (!(prevMaxY == null || calculatedMaxY.doubleValue() < prevMaxY.doubleValue())) {
+                    calculatedMaxY = prevMaxY;
                 }
                 break;
             default:
@@ -500,12 +499,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             case AUTO:
                 break;
             case GROW:
-                if(!(prevMinY == null || calculatedMinY.doubleValue() < prevMinY.doubleValue())) {
+                if (!(prevMinY == null || calculatedMinY.doubleValue() < prevMinY.doubleValue())) {
                     calculatedMinY = prevMinY;
                 }
                 break;
             case SHRINNK:
-                if(!(prevMinY == null || calculatedMinY.doubleValue() > prevMinY.doubleValue())) {
+                if (!(prevMinY == null || calculatedMinY.doubleValue() > prevMinY.doubleValue())) {
                     calculatedMinY = prevMinY;
                 }
                 break;
@@ -516,7 +515,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Apply user supplied min and max to the calculated boundary value.
-     * 
+     *
      * @param value
      * @param min
      * @param max
@@ -530,9 +529,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 : max);
         return value;
     }
-    
+
     /**
      * Centers the domain axis on origin.
+     *
      * @param origin
      */
     public void centerOnDomainOrigin(Number origin) {
@@ -542,6 +542,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     /**
      * Centers the domain on origin, calculating the upper and lower boundaries of the axis
      * using mode and extent.
+     *
      * @param origin
      * @param extent
      * @param mode
@@ -568,6 +569,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Centers the range axis on origin.
+     *
      * @param origin
      */
     public void centerOnRangeOrigin(Number origin) {
@@ -577,6 +579,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     /**
      * Centers the domain on origin, calculating the upper and lower boundaries of the axis
      * using mode and extent.
+     *
      * @param origin
      * @param extent
      * @param mode
@@ -604,12 +607,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     /**
      * Returns the distance between x and y.
      * Result is never a negative number.
+     *
      * @param x
      * @param y
      * @return
      */
     private double distance(double x, double y) {
-        if(x > y) {
+        if (x > y) {
             return x - y;
         } else {
             return y - x;
@@ -687,7 +691,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 double origin = userRangeOrigin.doubleValue();
                 double maxYDelta = distance(calculatedMaxY.doubleValue(), origin);
                 double minYDelta = distance(calculatedMinY.doubleValue(), origin);
-                if(maxYDelta > minYDelta) {
+                if (maxYDelta > minYDelta) {
                     calculatedMinY = origin - maxYDelta;
                     calculatedMaxY = origin + maxYDelta;
                 } else {
@@ -702,10 +706,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 throw new UnsupportedOperationException("Range Origin Boundary Mode not yet supported: " + rangeOriginBoundaryMode);
         }
     }
-    
+
     /**
      * Convenience method - wraps XYGraphWidget.getTicksPerRangeLabel().
      * Equivalent to getGraphWidget().getTicksPerRangeLabel().
+     *
      * @return
      */
     public int getTicksPerRangeLabel() {
@@ -715,15 +720,17 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     /**
      * Convenience method - wraps XYGraphWidget.setTicksPerRangeLabel().
      * Equivalent to getGraphWidget().setTicksPerRangeLabel().
+     *
      * @param ticksPerRangeLabel
      */
     public void setTicksPerRangeLabel(int ticksPerRangeLabel) {
-       graphWidget.setTicksPerRangeLabel(ticksPerRangeLabel);
+        graphWidget.setTicksPerRangeLabel(ticksPerRangeLabel);
     }
 
     /**
      * Convenience method - wraps XYGraphWidget.getTicksPerDomainLabel().
      * Equivalent to getGraphWidget().getTicksPerDomainLabel().
+     *
      * @return
      */
     public int getTicksPerDomainLabel() {
@@ -733,6 +740,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     /**
      * Convenience method - wraps XYGraphWidget.setTicksPerDomainLabel().
      * Equivalent to getGraphWidget().setTicksPerDomainLabel().
+     *
      * @param ticksPerDomainLabel
      */
     public void setTicksPerDomainLabel(int ticksPerDomainLabel) {
@@ -787,7 +795,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public void setDomainLabel(String domainLabel) {
         this.domainLabel = domainLabel;
-        if(getDomainLabelWidget() != null) {
+        if (getDomainLabelWidget() != null) {
             getDomainLabelWidget().pack();
         }
     }
@@ -798,7 +806,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public void setRangeLabel(String rangeLabel) {
         this.rangeLabel = rangeLabel;
-        if(getRangeLabelWidget() != null) {
+        if (getRangeLabelWidget() != null) {
             getRangeLabelWidget().pack();
         }
     }
@@ -837,6 +845,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Convenience method - wraps XYGraphWidget.getRangeValueFormat().
+     *
      * @return
      */
     public Format getRangeValueFormat() {
@@ -845,6 +854,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Convenience method - wraps XYGraphWidget.setRangeValueFormat().
+     *
      * @param rangeValueFormat
      */
     public void setRangeValueFormat(Format rangeValueFormat) {
@@ -853,6 +863,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Convenience method - wraps XYGraphWidget.getDomainValueFormat().
+     *
      * @return
      */
     public Format getDomainValueFormat() {
@@ -861,6 +872,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Convenience method - wraps XYGraphWidget.setDomainValueFormat().
+     *
      * @param domainValueFormat
      */
     public void setDomainValueFormat(Format domainValueFormat) {
@@ -869,6 +881,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     *
      * @param lowerBoundary
      * @param upperBoundary
      * @param mode
@@ -879,6 +892,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     *
      * @param lowerBoundary
      * @param lowerBoundaryMode
      * @param upperBoundary
@@ -888,8 +902,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         setDomainLowerBoundary(lowerBoundary, lowerBoundaryMode);
         setDomainUpperBoundary(upperBoundary, upperBoundaryMode);
     }
+
     /**
      * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     *
      * @param lowerBoundary
      * @param upperBoundary
      * @param mode
@@ -897,8 +913,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     public synchronized void setRangeBoundaries(Number lowerBoundary, Number upperBoundary, BoundaryMode mode) {
         setRangeBoundaries(lowerBoundary, mode, upperBoundary, mode);
     }
+
     /**
      * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     *
      * @param lowerBoundary
      * @param lowerBoundaryMode
      * @param upperBoundary
@@ -921,8 +939,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         //}
         this.userMaxX = boundary;
     }
+
     /**
      * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     *
      * @param boundary
      * @param mode
      */
@@ -944,8 +964,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         //}
         this.userMinX = boundary;
     }
+
     /**
      * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     *
      * @param boundary
      * @param mode
      */
@@ -968,8 +990,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         //}
         this.userMaxY = boundary;
     }
+
     /**
      * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     *
      * @param boundary
      * @param mode
      */
@@ -992,8 +1016,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         //}
         this.userMinY = boundary;
     }
+
     /**
      * Setup the boundary mode, boundary values only applicable in FIXED mode.
+     *
      * @param boundary
      * @param mode
      */
@@ -1044,14 +1070,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     public synchronized void setUserDomainOrigin(Number origin) {
-        if(origin == null) {
+        if (origin == null) {
             throw new NullPointerException("Origin value cannot be null.");
         }
         this.userDomainOrigin = origin;
     }
 
     public synchronized void setUserRangeOrigin(Number origin) {
-        if(origin == null) {
+        if (origin == null) {
             throw new NullPointerException("Origin value cannot be null.");
         }
         this.userRangeOrigin = origin;
@@ -1073,8 +1099,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     protected void setRangeFramingModel(XYFramingModel rangeFramingModel) {
         this.rangeFramingModel = rangeFramingModel;
     }
+
     /**
-     *  CalculatedMinX value after the the framing model has been applied.
+     * CalculatedMinX value after the the framing model has been applied.
+     *
      * @return
      */
     public Number getCalculatedMinX() {
@@ -1082,7 +1110,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     *  CalculatedMaxX value after the the framing model has been applied.
+     * CalculatedMaxX value after the the framing model has been applied.
+     *
      * @return
      */
     public Number getCalculatedMaxX() {
@@ -1090,7 +1119,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     *  CalculatedMinY value after the the framing model has been applied.
+     * CalculatedMinY value after the the framing model has been applied.
+     *
      * @return
      */
     public Number getCalculatedMinY() {
@@ -1098,7 +1128,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     *  CalculatedMaxY value after the the framing model has been applied.
+     * CalculatedMaxY value after the the framing model has been applied.
+     *
      * @return
      */
     public Number getCalculatedMaxY() {
@@ -1123,11 +1154,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Appends the specified marker to the end of plot's yValueMarkers list.
+     *
      * @param marker The YValueMarker to be added.
      * @return true if the object was successfully added, false otherwise.
      */
     public boolean addMarker(YValueMarker marker) {
-        if(yValueMarkers.contains(marker)) {
+        if (yValueMarkers.contains(marker)) {
             return false;
         } else {
             return yValueMarkers.add(marker);
@@ -1136,12 +1168,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Removes the specified marker from the plot.
+     *
      * @param marker
      * @return The YValueMarker removed if successfull,  null otherwise.
      */
     public YValueMarker removeMarker(YValueMarker marker) {
         int markerIndex = yValueMarkers.indexOf(marker);
-        if(markerIndex == -1) {
+        if (markerIndex == -1) {
             return null;
         } else {
             return yValueMarkers.remove(markerIndex);
@@ -1150,6 +1183,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Convenience method - combines removeYMarkers() and removeXMarkers().
+     *
      * @return
      */
     public int removeMarkers() {
@@ -1160,6 +1194,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Removes all YValueMarker instances from the plot.
+     *
      * @return
      */
     public int removeYMarkers() {
@@ -1170,6 +1205,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Appends the specified marker to the end of plot's xValueMarkers list.
+     *
      * @param marker The XValueMarker to be added.
      * @return true if the object was successfully added, false otherwise.
      */
@@ -1179,12 +1215,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Removes the specified marker from the plot.
+     *
      * @param marker
      * @return The XValueMarker removed if successfull,  null otherwise.
      */
     public XValueMarker removeMarker(XValueMarker marker) {
         int markerIndex = xValueMarkers.indexOf(marker);
-        if(markerIndex == -1) {
+        if (markerIndex == -1) {
             return null;
         } else {
             return xValueMarkers.remove(markerIndex);
@@ -1193,6 +1230,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     /**
      * Removes all XValueMarker instances from the plot.
+     *
      * @return
      */
     public int removeXMarkers() {
@@ -1225,8 +1263,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     * @param rangeTopMin
-     *            the rangeTopMin to set
+     * @param rangeTopMin the rangeTopMin to set
      */
     public synchronized void setRangeTopMin(Number rangeTopMin) {
         this.rangeTopMin = rangeTopMin;
@@ -1240,8 +1277,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     * @param rangeTopMax
-     *            the rangeTopMax to set
+     * @param rangeTopMax the rangeTopMax to set
      */
     public synchronized void setRangeTopMax(Number rangeTopMax) {
         this.rangeTopMax = rangeTopMax;
@@ -1255,8 +1291,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     * @param rangeBottomMin
-     *            the rangeBottomMin to set
+     * @param rangeBottomMin the rangeBottomMin to set
      */
     public synchronized void setRangeBottomMin(Number rangeBottomMin) {
         this.rangeBottomMin = rangeBottomMin;
@@ -1270,8 +1305,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     * @param rangeBottomMax
-     *            the rangeBottomMax to set
+     * @param rangeBottomMax the rangeBottomMax to set
      */
     public synchronized void setRangeBottomMax(Number rangeBottomMax) {
         this.rangeBottomMax = rangeBottomMax;
@@ -1285,8 +1319,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     * @param domainLeftMin
-     *            the domainLeftMin to set
+     * @param domainLeftMin the domainLeftMin to set
      */
     public synchronized void setDomainLeftMin(Number domainLeftMin) {
         this.domainLeftMin = domainLeftMin;
@@ -1300,8 +1333,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     * @param domainLeftMax
-     *            the domainLeftMax to set
+     * @param domainLeftMax the domainLeftMax to set
      */
     public synchronized void setDomainLeftMax(Number domainLeftMax) {
         this.domainLeftMax = domainLeftMax;
@@ -1315,8 +1347,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     * @param domainRightMin
-     *            the domainRightMin to set
+     * @param domainRightMin the domainRightMin to set
      */
     public synchronized void setDomainRightMin(Number domainRightMin) {
         this.domainRightMin = domainRightMin;
@@ -1330,8 +1361,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     * @param domainRightMax
-     *            the domainRightMax to set
+     * @param domainRightMax the domainRightMax to set
      */
     public synchronized void setDomainRightMax(Number domainRightMax) {
         this.domainRightMax = domainRightMax;

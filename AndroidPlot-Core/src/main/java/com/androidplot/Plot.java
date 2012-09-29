@@ -114,8 +114,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private TitleWidget titleWidget;
     private DisplayDimensions displayDims = new DisplayDimensions();
     private RenderMode renderMode = RenderMode.USE_BACKGROUND_THREAD;
-    private Bitmap offScreenBitmap;
+    //private volatile Bitmap offScreenBitmap;
     private Canvas offScreenCanvas = new Canvas();
+    private BufferedCanvas pingPong = new BufferedCanvas();
 
     // used to get rid of flickering when drawing offScreenBitmap to the visible Canvas.
     private Object renderSynch = new Object();
@@ -149,6 +150,64 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.DKGRAY);
         backgroundPaint.setStyle(Paint.Style.FILL);
+    }
+
+
+    /**
+     *  Any rendering that utilizes a buffer from this class should synchronize rendering on the instance of this class
+     *  that is being used.
+     */
+    private class BufferedCanvas {
+        private volatile Bitmap bgBuffer;  // all drawing is done on this buffer.
+        private volatile Bitmap fgBuffer;
+        private Canvas canvas = new Canvas();
+
+        /**
+         * Call this method once drawing on a Canvas retrieved by {@link #getCanvas()} to mark
+         * the buffer as fully rendered.  Failure to call this method will result in nothing being drawn.
+         */
+        public synchronized void swap() {
+            Bitmap tmp = bgBuffer;
+            bgBuffer = fgBuffer;
+            fgBuffer = tmp;
+        }
+
+        public synchronized void resize(int h, int w) {
+            if (w <= 0 || h <= 0) {
+                bgBuffer = null;
+                fgBuffer = null;
+            } else {
+                bgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
+                fgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
+            }
+        }
+
+
+        /**
+         * Get a Canvas for drawing.  Actual drawing should be synchronized on the instance
+         * of BufferedCanvas being used.
+         * @return The Canvas instance to draw onto.  Returns null if drawing buffers have not
+         *         been initialized a la {@link #resize(int, int)}.
+         */
+        public synchronized Canvas getCanvas() {
+            if(bgBuffer != null) {
+                canvas.setBitmap(bgBuffer);
+                return canvas;
+            } else {
+                return null;
+            }
+        }
+
+        /**
+         * @return The most recent fully rendered Bitmsp
+         */
+        public Bitmap getBitmap() {
+            return fgBuffer;
+        }
+
+        /*public Bitmap getForegroundBuffer() {
+            return fgBuffer;
+        }*/
     }
 
     /**
@@ -223,26 +282,35 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                     keepRunning = true;
                     while (keepRunning) {
                         isIdle = false;
-                        synchronized (Plot.this) {
-                            if (offScreenBitmap != null) {
-                                renderOnCanvas(offScreenCanvas);
+                        //synchronized (Plot.this) {
+                            //if (offScreenBitmap != null) {
+                        synchronized(pingPong) {
+                            Canvas c = pingPong.getCanvas();
+                                renderOnCanvas(c);
+                            pingPong.swap();
+                        }
                                 synchronized (renderSynch) {
                                     postInvalidate();
-                                    try {
-                                        renderSynch.wait();
-                                    } catch (InterruptedException e) {
-                                        keepRunning = false;
+                                    // prevent this thread from becoming an orphan
+                                    // after the view is destroyed
+                                    if (keepRunning) {
+                                        try {
+                                            renderSynch.wait();
+                                        } catch (InterruptedException e) {
+                                            keepRunning = false;
+                                        }
                                     }
                                 }
-                            }
-                            try {
+                            //}
+                            /*try {
                                 isIdle = true;
                                 Plot.this.wait();
                             } catch (InterruptedException e) {
                                 keepRunning = false;
-                            }
-                        }
+                            }*/
+                        //}
                     }
+                    System.out.println("AndroidPlot render thread finished.");
                 }
             });
         }
@@ -494,13 +562,16 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             // only enter synchronized block if the call is expected to block OR
             // if the render thread is idle, so we know that we won't have to wait to
             // obtain a lock.
-            if (renderThread != null && renderThread.isAlive()) {
-                if (isIdle) {
-                    synchronized (this) {
-                        notify();
-
-                    }
+            if (isIdle) {
+                //if (renderThread != null && renderThread.isAlive() && isIdle) {
+                //if (isIdle) {
+                /*synchronized (this) {
+                    notify();
+                }*/
+                synchronized (renderSynch) {
+                    renderSynch.notify();
                 }
+                //}
             }
         } else if(renderMode == RenderMode.USE_MAIN_THREAD) {
 
@@ -551,10 +622,25 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     protected void onDetachedFromWindow() {
         // Due to the nasty way Bitmaps are implemented on Android, we must recycle bitmaps before
         // this Plot instance is garbage collected, otherwise we have a memory leak.
-        if(offScreenBitmap != null) {
+        //offScreenCanvas = null;
+        /*if(offScreenBitmap != null) {
+
             offScreenBitmap.recycle();
+            offScreenBitmap = null;
+        }
+        synchronized(renderSynch) {
+            keepRunning = false;
+            renderSynch.notify();
+        }
+        System.gc();
+        System.runFinalization();*/
+
+        synchronized(renderSynch) {
+            keepRunning = false;
+            renderSynch.notify();
         }
     }
+
 
     @Override
     protected synchronized void onSizeChanged (int w, int h, int oldw, int oldh) {
@@ -568,11 +654,13 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             }
         }
 
-        if(offScreenBitmap != null) {
+        /*if(offScreenBitmap != null) {
             offScreenBitmap.recycle();
         }
         offScreenBitmap = createBitmapBuffer(w, h);
         offScreenCanvas.setBitmap(offScreenBitmap);
+*/
+        pingPong.resize(h, w);
 
         RectF cRect = new RectF(0, 0, w, h);
         RectF mRect = boxModel.getMarginatedRect(cRect);
@@ -593,12 +681,18 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     @Override
     protected void onDraw(Canvas canvas) {
         if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
-            if (offScreenBitmap != null) {
+            synchronized(pingPong) {
+                Bitmap bmp = pingPong.getBitmap();
+                if(bmp != null) {
+                    canvas.drawBitmap(bmp, 0, 0, null);
+                }
+            }
+            /*if (offScreenBitmap != null) {
                 canvas.drawBitmap(offScreenBitmap, 0, 0, null);
-            }
-            synchronized (renderSynch) {
+            }*/
+            /*synchronized (renderSynch) {
                 renderSynch.notify();
-            }
+            }*/
         } else if (renderMode == RenderMode.USE_MAIN_THREAD) {
             renderOnCanvas(canvas);
         } else {
@@ -617,6 +711,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         doBeforeDraw();
         notifyListenersBeforeDraw(canvas);
         try {
+            // need to completely erase what was on the canvas before redrawing, otherwise
+            // some odd aliasing artifacts begin to build up around the edges of aa'd entities
+            // over time.
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             if (backgroundPaint != null) {
                 drawBackground(canvas, displayDims.marginatedRect);
             }
@@ -629,6 +727,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         } catch (PlotRenderException e) {
             e.printStackTrace();
         } finally {
+            isIdle = true;
             doAfterDraw();
             notifyListenersAfterDraw(canvas, new PlotEvent(this, PlotEvent.Type.PLOT_REDRAWN));
         }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright 2012 AndroidPlot.com
   ~
@@ -15,21 +16,6 @@
   ~    limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-
-    <com.androidplot.xy.XYPlot
-    android:id="@+id/dynamicPlot"
-    android:layout_width="fill_parent"
-    android:layout_height="100px"
-    android:layout_marginTop="10px"
-    android:layout_marginLeft="10px"
-    android:layout_marginRight="10px"
-    androidplot.title="Dynamic Plot Example"
-    androidplot.titleWidget.labelPaint.color="green"
-    androidplot.domainLabel="domain"
-    androidplot.rangeLabel="range"/>
-
-</LinearLayout>
+<config vertexPaint.color="#FF0000"
+        linePaint.color="#FF0000"
+        linePaint.strokeWidth="2dp"/>

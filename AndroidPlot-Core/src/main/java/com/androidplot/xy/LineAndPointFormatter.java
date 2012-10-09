@@ -46,11 +46,15 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         this.fillDirection = fillDirection;
     }
 
-    private FillDirection fillDirection;
+    private FillDirection fillDirection = FillDirection.BOTTOM;
 
     private Paint linePaint;
     private Paint vertexPaint;
     private Paint fillPaint;
+
+    {
+        initLinePaint(Color.BLACK);
+    }
 
     protected LineAndPointFormatter() {
         this(Color.RED, Color.GREEN, Color.BLUE);

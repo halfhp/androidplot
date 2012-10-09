@@ -28,7 +28,10 @@
     android:layout_marginTop="10px"
     android:layout_marginLeft="10px"
     android:layout_marginRight="10px"
-    title="A Simple XYPlot Example"
+    andsroidplot.title="A Simple XYPlot Example"
+    androidplot.ticksPerRangeLabel="4"
+    androidplot.ticksPerDomainLabel="2"
+    androidplot.gridPadding="4dp|4dp|4dp|4dp"
     />
 </LinearLayout>
 

@@ -204,7 +204,9 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
 
         // finally we draw the outline path on top of everything else:
-        canvas.drawPath(outlinePath, formatter.getLinePaint());
+        if(formatter.getLinePaint() != null) {
+            canvas.drawPath(outlinePath, formatter.getLinePaint());
+        }
 
         if (path != null) {
             path.rewind();

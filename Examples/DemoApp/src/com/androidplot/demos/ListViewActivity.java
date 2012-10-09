@@ -90,7 +90,7 @@ public class ListViewActivity extends Activity {
                         Color.rgb(new Double(rl * 255).intValue(), new Double(gl * 255).intValue(), new Double(bl * 255).intValue()),
                         Color.rgb(new Double(rp * 255).intValue(), new Double(gp * 255).intValue(), new Double(bp * 255).intValue()), null));
             }
-            p.disableAllMarkup();
+            //p.disableAllMarkup();
             return v;
         }
     }

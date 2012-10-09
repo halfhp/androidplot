@@ -155,7 +155,7 @@ public class XYRegionExampleActivity extends Activity {
         axisLabelSetup();
         regionSetup();
         makePlotPretty();
-        plot.disableAllMarkup();
+        //plot.disableAllMarkup();
     }
 
     private void onS1CheckBoxClicked() {
@@ -429,7 +429,7 @@ public class XYRegionExampleActivity extends Activity {
         // set to negative and positive infinity respectively.
         rf3 = new XYRegionFormatter(Color.GREEN);
         rf4 = new XYRegionFormatter(Color.YELLOW);
-        rf5 = new XYRegionFormatter(Color.MAGENTA);
+        rf5 = new XYRegionFormatter(Color.argb(130,255,0,0));
 
         rr3 = new RectRegion(0, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "R3");
         lpFormatter2.addRegion(rr3, rf3);

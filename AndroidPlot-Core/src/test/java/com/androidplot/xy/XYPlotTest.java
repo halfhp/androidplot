@@ -20,6 +20,13 @@ import android.content.Context;
 import android.graphics.*;
 import android.os.Handler;
 import android.view.View;
+import com.androidplot.Plot;
+import com.androidplot.PlotTest;
+import com.androidplot.mock.MockContext;
+import com.androidplot.mock.MockPaint;
+import com.androidplot.ui.widget.TextLabelWidget;
+import com.androidplot.ui.widget.TitleWidget;
+import com.androidplot.util.Configurator;
 import com.androidplot.util.FontUtils;
 import com.androidplot.util.PixelUtils;
 import mockit.*;
@@ -28,13 +35,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
 @UsingMocksAndStubs({View.class,Context.class,Handler.class,Paint.class,Color.class,
-        Rect.class, RectF.class,FontUtils.class, PixelUtils.class, Canvas.class})
+        Rect.class, RectF.class,FontUtils.class, PixelUtils.class, Canvas.class,
+        TextLabelWidget.class, TitleWidget.class})
 
 public class XYPlotTest {
 
@@ -46,6 +56,7 @@ public class XYPlotTest {
 
     @Before
     public void setUp() throws Exception {
+        Mockit.setUpMocks(MockPaint.class,MockContext.class);
         new MockUp<View>() {
             @Mock int getWidth() { return 100;}
             @Mock int getHeight() { return 100;}
@@ -444,5 +455,25 @@ public class XYPlotTest {
     @Test
     public void testSetRangeOrigin() throws Exception {
 
+    }
+
+    @Test
+    public void testConfigure() throws Exception {
+        //Context context = Mockit.setUpMock(new MockContext());
+        Context context = new MockContext.MockContext2();
+        HashMap<String, String> params = new HashMap<String, String>();
+        String param1 = "this is a test.";
+        String param2 = Plot.RenderMode.USE_BACKGROUND_THREAD.toString();
+        String param3 = "#FF0000";
+        params.put("title", param1);
+        params.put("renderMode", param2);
+        params.put("backgroundPaint.color", param3);
+        params.put("graphWidget.domainLabelPaint.color", param3);
+
+        Configurator.configure(context, plot, params);
+        assertEquals(param1, plot.getTitle());
+        assertEquals(Plot.RenderMode.USE_BACKGROUND_THREAD, plot.getRenderMode());
+        assertEquals(Color.parseColor(param3), plot.getBackgroundPaint().getColor());
+        assertEquals(Color.parseColor(param3), plot.getGraphWidget().getDomainLabelPaint().getColor());
     }
 }

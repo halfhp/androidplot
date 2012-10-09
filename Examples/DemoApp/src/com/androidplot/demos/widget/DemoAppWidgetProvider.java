@@ -74,7 +74,7 @@ public class DemoAppWidgetProvider extends AppWidgetProvider {
 
             // by default, AndroidPlot displays developer guides to aid in laying out your plot.
             // To get rid of them call disableAllMarkup():
-            plot.disableAllMarkup();
+            //plot.disableAllMarkup();
 
             Bitmap bmp = plot.getDrawingCache();
 

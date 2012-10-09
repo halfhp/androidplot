@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import com.androidplot.Plot;
+import com.androidplot.util.Configurator;
 import com.androidplot.xy.*;
 
 import java.text.DecimalFormat;
@@ -38,7 +39,14 @@ public class MyActivity extends Activity {
         public void update(Observable o, Object arg) {
             //try {
                 //plot.postRedraw();
-                plot.redraw();
+            /*MyActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((XYPlot) plot).setDomainBoundaries(0,100, BoundaryMode.FIXED);
+                    plot.redraw();
+                }
+            });*/
+            plot.redraw();
             /*} catch (InterruptedException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }*/
@@ -74,32 +82,24 @@ public class MyActivity extends Activity {
         dynamicPlot.addSeries(sine1Series, new LineAndPointFormatter(Color.rgb(0, 0, 0), null, Color.rgb(0, 80, 0)));
 
         // create a series using a formatter with some transparency applied:
-        LineAndPointFormatter f1 = new LineAndPointFormatter(Color.rgb(0, 0, 200), null, Color.rgb(0, 0, 80));
+        //LineAndPointFormatter f1 = new LineAndPointFormatter(Color.rgb(0, 0, 200), null, Color.rgb(0, 0, 80));
+        LineAndPointFormatter f1 = new LineAndPointFormatter();
+        Configurator.configure(getApplicationContext(), f1, R.xml.formatter1);
         f1.getFillPaint().setAlpha(220);
         dynamicPlot.addSeries(sine2Series, f1);
-        //dynamicPlot.setGridPadding(5, 0, 5, 0);
-
-        //dynamicPlot.addSeries(sine1Series, new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0)));
-        //dynamicPlot.addSeries(sine2Series, new BarFormatter(Color.argb(100, 0, 0, 200), Color.rgb(0, 0, 80)));
 
         // hook up the plotUpdater to the data model:
         data.addObserver(plotUpdater);
 
         dynamicPlot.setDomainStepMode(XYStepMode.SUBDIVIDE);
         dynamicPlot.setDomainStepValue(sine1Series.size());
+
         // thin out domain/range tick labels so they dont overlap each other:
         dynamicPlot.setTicksPerDomainLabel(5);
         dynamicPlot.setTicksPerRangeLabel(3);
-        //dynamicPlot.getGraphWidget().setTicksPerRangeLabel(3);
-        //dynamicPlot.disableAllMarkup();
 
         // uncomment this line to freeze the range boundaries:
         dynamicPlot.setRangeBoundaries(-100, 100, BoundaryMode.FIXED);
-
-        // comment this line to get rid of "panning" or modify
-        // the x/y values to move the view left or right.
-        //dynamicPlot.setDomainBoundaries(5,10, BoundaryMode.FIXED);
-
     }
 
     @Override

@@ -30,10 +30,14 @@ import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TitleWidget;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.ui.DataRenderer;
+import com.androidplot.util.Configurator;
 import com.androidplot.util.DisplayDimensions;
+import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.XLayoutStyle;
 import com.androidplot.xy.YLayoutStyle;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -41,9 +45,10 @@ import java.util.*;
  */
 public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends DataRenderer>
         extends View implements Resizable{
+    private static final String XML_ATTR_PREFIX      = "androidplot";
 
-    private static final String ATTR_TITLE                            = "title";
-    private static final String ATTR_RENDER_MODE                      = "renderMode";
+    private static final String ATTR_TITLE           = "title";
+    private static final String ATTR_RENDER_MODE     = "renderMode";
 
     public DisplayDimensions getDisplayDimensions() {
         return displayDims;
@@ -102,7 +107,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         USE_MAIN_THREAD
     }
 
-    protected String title;
+    protected String title = "My Plot";
     private BoxModel boxModel = new BoxModel(3, 3, 3, 3, 3, 3, 3, 3);
     private BorderStyle borderStyle = Plot.BorderStyle.ROUNDED;
     private float borderRadiusX = 15;
@@ -113,7 +118,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private LayoutManager layoutManager;
     private TitleWidget titleWidget;
     private DisplayDimensions displayDims = new DisplayDimensions();
-    private RenderMode renderMode = RenderMode.USE_BACKGROUND_THREAD;
+    private RenderMode renderMode = RenderMode.USE_MAIN_THREAD;
     //private volatile Bitmap offScreenBitmap;
     private Canvas offScreenCanvas = new Canvas();
     private BufferedCanvas pingPong = new BufferedCanvas();
@@ -204,10 +209,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         public Bitmap getBitmap() {
             return fgBuffer;
         }
-
-        /*public Bitmap getForegroundBuffer() {
-            return fgBuffer;
-        }*/
     }
 
     /**
@@ -229,31 +230,49 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         super(context);
         this.title = title;
         this.renderMode = mode;
-        postInit(context, null);
+        postInit();
     }
 
 
     /**
-     * Required by super-class. See android.view.View.
+     * Required by super-class. Extending class' implementations should add
+     * the following code immediately before exiting to ensure that loadAttrs
+     * is called only once by the derived class:
+     * <code>
+     * if(getClass().equals(DerivedPlot.class) {
+     *     loadAttrs(context, attrs);
+     * }
+     * </code>
+     *
+     * See {@link com.androidplot.xy.XYPlot#XYPlot(android.content.Context, android.util.AttributeSet)}
+     * for an example.
      * @param context
      * @param attrs
      */
     public Plot(Context context, AttributeSet attrs) {
         super(context, attrs);
-        postInit(context, attrs);
-        //context.o
+        postInit();
     }
 
     /**
-     * Required by super-class. See android.view.View.
+     * Required by super-class. Extending class' implementations should add
+     * the following code immediately before exiting to ensure that loadAttrs
+     * is called only once by the derived class:
+     * <code>
+     * if(getClass().equals(DerivedPlot.class) {
+     *     loadAttrs(context, attrs);
+     * }
+     * </code>
+     *
+     * See {@link com.androidplot.xy.XYPlot#XYPlot(android.content.Context, android.util.AttributeSet, int)}
+     * for an example.
      * @param context
      * @param attrs
      * @param defStyle
      */
-    public Plot(Context context, AttributeSet attrs, int
-            defStyle) {
+    public Plot(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        postInit(context, attrs);
+        postInit();
     }
 
     /**
@@ -266,13 +285,18 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         return false;
     }
 
-    private void postInit(Context ctx, AttributeSet attrs) {
-        if(attrs != null) {
-            loadAttrs(ctx, attrs);
-        }
-        titleWidget = new TitleWidget(this, new SizeMetrics(25, SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
+    public void setRenderMode(RenderMode mode) {
+        // TODO
+    }
+
+
+    private void postInit() {
+        PixelUtils.init(getContext());
+        titleWidget = new TitleWidget(this, new SizeMetrics(25,
+                SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
         layoutManager = new LayoutManager();
-        layoutManager.position(titleWidget, 0, XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
+        layoutManager.position(titleWidget, 0,
+                XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
 
         if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
             renderThread = new Thread(new Runnable() {
@@ -282,33 +306,23 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                     keepRunning = true;
                     while (keepRunning) {
                         isIdle = false;
-                        //synchronized (Plot.this) {
-                            //if (offScreenBitmap != null) {
-                        synchronized(pingPong) {
+                        synchronized (pingPong) {
                             Canvas c = pingPong.getCanvas();
-                                renderOnCanvas(c);
+                            renderOnCanvas(c);
                             pingPong.swap();
                         }
-                                synchronized (renderSynch) {
-                                    postInvalidate();
-                                    // prevent this thread from becoming an orphan
-                                    // after the view is destroyed
-                                    if (keepRunning) {
-                                        try {
-                                            renderSynch.wait();
-                                        } catch (InterruptedException e) {
-                                            keepRunning = false;
-                                        }
-                                    }
+                        synchronized (renderSynch) {
+                            postInvalidate();
+                            // prevent this thread from becoming an orphan
+                            // after the view is destroyed
+                            if (keepRunning) {
+                                try {
+                                    renderSynch.wait();
+                                } catch (InterruptedException e) {
+                                    keepRunning = false;
                                 }
-                            //}
-                            /*try {
-                                isIdle = true;
-                                Plot.this.wait();
-                            } catch (InterruptedException e) {
-                                keepRunning = false;
-                            }*/
-                        //}
+                            }
+                        }
                     }
                     System.out.println("AndroidPlot render thread finished.");
                 }
@@ -317,52 +331,53 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     /**
-     * Parse XML Attributes
+     * Parse XML Attributes.  Should only be called once and at the end of the base class constructor.
+     *
      * @param context
      * @param attrs
      */
-    private void loadAttrs(Context context, AttributeSet attrs) {
+    protected void loadAttrs(Context context, AttributeSet attrs) {
 
-        title = getStringAttr(context, attrs, ATTR_TITLE);
-        String renderModeStr = getStringAttr(context, attrs, ATTR_RENDER_MODE);
-        if(renderModeStr != null) {
-            renderMode = getRenderMode(renderModeStr);
-            if(renderMode == null) {
-                throw new IllegalArgumentException("Unknown Render Mode specified in XML: " + renderModeStr);
+        if (attrs != null) {
+            // filter out androidplot prefixed attrs:
+            HashMap<String, String> attrHash = new HashMap<String, String>();
+            for (int i = 0; i < attrs.getAttributeCount(); i++) {
+                String attrName = attrs.getAttributeName(i);
+
+                // case insensitive check to see if this attr begins with our prefix:
+                if (attrName.toUpperCase().startsWith(XML_ATTR_PREFIX.toUpperCase())) {
+                    attrHash.put(attrName.substring(XML_ATTR_PREFIX.length() + 1), attrs.getAttributeValue(i));
+                }
             }
+            Configurator.configure(getContext(), this, attrHash);
+            //configure(attrHash);
+            /*//title = getStringAttr(context, attrs, ATTR_TITLE);
+            String renderModeStr = getStringAttr(context, attrs, ATTR_RENDER_MODE);
+            if (renderModeStr != null) {
+                renderMode = getRenderMode(renderModeStr);
+                if (renderMode == null) {
+                    throw new IllegalArgumentException("Unknown Render Mode specified in XML: " + renderModeStr);
+                }
+            }*/
         }
-        /*String titleAttr = attrs.getAttributeValue(null, ATTR_TITLE);
-        String[] split = titleAttr.split("/");
 
-        // is this a localized resource?
-        if (split[0].equalsIgnoreCase("@string")) {
-            String pack = split[0].replace("@", "");
-            String name = split[1];
-            int id = context.getResources().getIdentifier(name, pack, context.getPackageName());
-            this.title = context.getResources().getString(id);
-        } else {
-            this.title = titleAttr;
-        }*/
     }
 
+    /*@Deprecated
     private String getStringAttr(Context ctx, AttributeSet attrs, String attrName) {
         String attr = attrs.getAttributeValue(null, attrName);
         if (attr != null) {
-            String[] split = attr.split("/");
-            // is this a localized resource?
-            if (split[0].equalsIgnoreCase("@string")) {
-                String pack = split[0].replace("@", "");
-                String name = split[1];
-                int id = ctx.getResources().getIdentifier(name, pack, ctx.getPackageName());
-                return ctx.getResources().getString(id);
-            } else {
-                return attr;
-            }
+            return parseStringAttr(ctx, attr);
         } else {
             return null;
         }
+    }*/
+
+    public RenderMode getRenderMode() {
+        return renderMode;
     }
 
+    @Deprecated
     private RenderMode getRenderMode(String renderModeStr) {
         if(renderModeStr.equalsIgnoreCase(RenderMode.USE_BACKGROUND_THREAD.toString())) {
             return RenderMode.USE_BACKGROUND_THREAD;
@@ -547,8 +562,19 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         return renderers;
     }
 
+    /**
+     * Pre 0.5.1 versions of AndroidPlot enabled markup mode by default and a call to
+     * this method was required to disable it.  This was changed in 0.5.1 and now this
+     * method does nothing at all; it remains only to maintain backwards compatibility.
+     * To enable markup mode use {@link #setMarkupEnabled(boolean)}.
+     * @deprecated Since 0.5.1 - Will be removed in 0.5.2
+     */
+    @Deprecated
     public void disableAllMarkup() {
-        this.layoutManager.disableAllMarkup();
+    }
+
+    public void setMarkupEnabled(boolean enabled) {
+        this.layoutManager.setMarkupEnabled(enabled);
     }
 
     /**
@@ -563,15 +589,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             // if the render thread is idle, so we know that we won't have to wait to
             // obtain a lock.
             if (isIdle) {
-                //if (renderThread != null && renderThread.isAlive() && isIdle) {
-                //if (isIdle) {
-                /*synchronized (this) {
-                    notify();
-                }*/
                 synchronized (renderSynch) {
                     renderSynch.notify();
                 }
-                //}
             }
         } else if(renderMode == RenderMode.USE_MAIN_THREAD) {
 
@@ -620,21 +640,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     @Override
     protected void onDetachedFromWindow() {
-        // Due to the nasty way Bitmaps are implemented on Android, we must recycle bitmaps before
-        // this Plot instance is garbage collected, otherwise we have a memory leak.
-        //offScreenCanvas = null;
-        /*if(offScreenBitmap != null) {
-
-            offScreenBitmap.recycle();
-            offScreenBitmap = null;
-        }
-        synchronized(renderSynch) {
-            keepRunning = false;
-            renderSynch.notify();
-        }
-        System.gc();
-        System.runFinalization();*/
-
         synchronized(renderSynch) {
             keepRunning = false;
             renderSynch.notify();
@@ -645,6 +650,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     @Override
     protected synchronized void onSizeChanged (int w, int h, int oldw, int oldh) {
 
+        // update pixel conversion values
+        PixelUtils.init(getContext());
+
         // disable hardware acceleration if it's not explicitly supported
         // by the current Plot implementation. this check only applies to
         // honeycomb and later environments.
@@ -654,12 +662,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             }
         }
 
-        /*if(offScreenBitmap != null) {
-            offScreenBitmap.recycle();
-        }
-        offScreenBitmap = createBitmapBuffer(w, h);
-        offScreenCanvas.setBitmap(offScreenBitmap);
-*/
         pingPong.resize(h, w);
 
         RectF cRect = new RectF(0, 0, w, h);
@@ -687,12 +689,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                     canvas.drawBitmap(bmp, 0, 0, null);
                 }
             }
-            /*if (offScreenBitmap != null) {
-                canvas.drawBitmap(offScreenBitmap, 0, 0, null);
-            }*/
-            /*synchronized (renderSynch) {
-                renderSynch.notify();
-            }*/
         } else if (renderMode == RenderMode.USE_MAIN_THREAD) {
             renderOnCanvas(canvas);
         } else {
@@ -770,7 +766,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     protected void drawBackground(Canvas canvas, RectF dims) throws PlotRenderException {
-        switch(borderStyle) {
+        switch (borderStyle) {
             case ROUNDED:
                 canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, backgroundPaint);
                 break;
@@ -778,7 +774,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 canvas.drawRect(dims, backgroundPaint);
                 break;
             default:
-                }
+        }
     }
 
     /**
@@ -795,6 +791,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public void setTitle(String title) {
         this.title = title;
+        if(titleWidget != null) {
+            titleWidget.pack();
+        }
     }
 
     public LayoutManager getLayoutManager() {

@@ -79,10 +79,10 @@ public class ValPixConverter {
 
     /**
      * Converts a real value into a pixel value.
-     * @param x Real x (domain) component of the point to convert.
+     * @param x Real d (domain) component of the point to convert.
      * @param y Real y (range) component of the point to convert.
      * @param plotArea
-     * @param minX Minimum visible real value on the x (domain) axis.
+     * @param minX Minimum visible real value on the d (domain) axis.
      * @param maxX Maximum visible real value on the y (domain) axis.
      * @param minY Minimum visible real value on the y (range) axis.
      * @param maxY Maximum visible real value on the y (range axis.

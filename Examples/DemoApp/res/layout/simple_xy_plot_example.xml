@@ -22,6 +22,6 @@
             android:id="@+id/mySimpleXYPlot"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            title="@string/sxy_title"
-            renderMode="use_main_thread"/>
+            androidPlot.title="A Simple XY Plot"
+            androidPlot.graphWidget.gridLinePaint.color="#000000"/>
 </LinearLayout>

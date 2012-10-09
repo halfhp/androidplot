@@ -73,6 +73,6 @@ public class SimpleXYPlotActivity extends Activity
 
         // by default, AndroidPlot displays developer guides to aid in laying out your plot.
         // To get rid of them call disableAllMarkup():
-        mySimpleXYPlot.disableAllMarkup();
+        //mySimpleXYPlot.disableAllMarkup();
     }
 }

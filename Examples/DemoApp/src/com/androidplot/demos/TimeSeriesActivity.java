@@ -124,6 +124,6 @@ public class TimeSeriesActivity extends Activity
 
         // by default, AndroidPlot displays developer guides to aid in laying out your plot.
         // To get rid of them call disableAllMarkup():
-        plot1.disableAllMarkup();
+        //plot1.disableAllMarkup();
     }
 }

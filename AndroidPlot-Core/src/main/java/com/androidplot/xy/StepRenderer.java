@@ -94,7 +94,7 @@ public class StepRenderer extends XYSeriesRenderer<StepFormatter> {
         PointF thisPoint;
         for (int i = 0; i < series.size(); i++) {
             Number y = series.getY(i);
-            Number x = series.getX(i);
+            Number x = series.getD(i);
 
             if (y != null && x != null) {
 

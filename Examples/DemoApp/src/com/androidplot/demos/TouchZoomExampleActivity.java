@@ -78,7 +78,7 @@ public class TouchZoomExampleActivity extends Activity implements OnTouchListene
         mySimpleXYPlot.setDomainLabel("");
 
         mySimpleXYPlot.setBorderStyle(Plot.BorderStyle.NONE, null, null);
-        mySimpleXYPlot.disableAllMarkup();
+        //mySimpleXYPlot.disableAllMarkup();
         series = new SimpleXYSeries[4];
         int scale = 1;
         for (int i = 0; i < 4; i++, scale *= 5) {

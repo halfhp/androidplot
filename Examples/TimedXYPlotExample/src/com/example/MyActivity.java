@@ -69,25 +69,19 @@ public class MyActivity extends Activity {
 
         @Override
         public void update(Observable o, Object arg) {
-            try {
-                // Log.d(TAG, "update");
-                mPlot.postRedraw();
-                if (mStartTime == 0) {
-                    mStartTime = SystemClock.elapsedRealtime();
-                } else {
-                    long NowTime = SystemClock.elapsedRealtime();
-                    mFrameNumber++;
-                    long TotalTime = (NowTime - mStartTime);
-                    mFps = ((float) mFrameNumber * 1000) / ((float) (TotalTime));
-                    mAverageTime = (int) (TotalTime / mFrameNumber);
+            mPlot.redraw();
+            if (mStartTime == 0) {
+                mStartTime = SystemClock.elapsedRealtime();
+            } else {
+                long NowTime = SystemClock.elapsedRealtime();
+                mFrameNumber++;
+                long TotalTime = (NowTime - mStartTime);
+                mFps = ((float) mFrameNumber * 1000) / ((float) (TotalTime));
+                mAverageTime = (int) (TotalTime / mFrameNumber);
 
-                    if ((mFrameNumber & 7) == 0) {
-                        MyActivity.this.runOnUiThread(ui_updater);
-                    }
+                if ((mFrameNumber & 7) == 0) {
+                    MyActivity.this.runOnUiThread(ui_updater);
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace(); // To change body of catch statement use
-                                     // File | Settings | File Templates.
             }
         }
     }

@@ -923,7 +923,7 @@ public class XYGraphWidget extends Widget {
      * Creates a copy of gridDomainLinePaint to be used for drawing grid lines. The
      * copied instance will have it's style attribute set to Paint.Style.STROKE.
      * 
-     * @param gridDomainLinePaint
+     * @param gridLinePaint
      */
     public void setGridDomainLinePaint(Paint gridLinePaint) {
         if (gridLinePaint == null) {
@@ -953,7 +953,7 @@ public class XYGraphWidget extends Widget {
      * Creates a copy of gridRangeLinePaint to be used for drawing grid lines. The
      * copied instance will have it's style attribute set to Paint.Style.STROKE.
      * 
-     * @param gridRangeLinePaint
+     * @param gridLinePaint
      */
     public void setGridRangeLinePaint(Paint gridLinePaint) {
         if (gridLinePaint == null) {

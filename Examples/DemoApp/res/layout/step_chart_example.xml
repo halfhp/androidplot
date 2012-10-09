@@ -6,13 +6,17 @@
 
     <com.androidplot.xy.XYPlot
     android:id="@+id/stepChartExamplePlot"
+    style="@style/plotStyle1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_marginTop="3px"
     android:layout_marginLeft="3px"
     android:layout_marginRight="3px"
     android:layout_marginBottom="3px"
-    title="HTTP Server State (15  Sec)"
+    androidplot.title="HTTP Server State (15  Sec)"
+    androidplot.domainLabel="time (secs)"
+    androidplot.rangeLabel="server state"
+    androidplot.markupEnabled="false"
     renderMode="use_main_thread"
     />
 </LinearLayout>

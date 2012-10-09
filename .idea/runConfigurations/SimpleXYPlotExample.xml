@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="SimpleXYPlotExample" type="AndroidRunConfigurationType" factoryName="Android Application">
     <module name="SimpleXYPlotExample" />
-    <option name="ACTIVITY_CLASS" />
+    <option name="ACTIVITY_CLASS" value="" />
     <option name="MODE" value="default_activity" />
     <option name="DEPLOY" value="true" />
-    <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+    <option name="TARGET_SELECTION_MODE" value="USB_DEVICE" />
     <option name="PREFERRED_AVD" value="" />
     <option name="COMMAND_LINE" value="" />
     <option name="WIPE_USER_DATA" value="false" />

@@ -37,7 +37,7 @@ public class PaintUtils {
      * @param lineSizeDp
      */
     public static void setLineSizeDp(Context context, Paint paint, float lineSizeDp){
-        paint.setStrokeWidth(PixelUtils.dpToPix(context, lineSizeDp));
+        paint.setStrokeWidth(PixelUtils.dpToPix(lineSizeDp));
     }
 
     /**
@@ -47,22 +47,21 @@ public class PaintUtils {
      * @param fontSizeDp
      */
     public static void setFontSizeDp(Context context, Paint paint, float fontSizeDp){
-        paint.setTextSize(PixelUtils.dpToPix(context, fontSizeDp));
+        paint.setTextSize(PixelUtils.dpToPix(fontSizeDp));
     }
 
     /**
      * Set a paint instance's shadowing using dp values
-     * @param context
      * @param paint
      * @param radiusDp
      * @param dxDp
      * @param dyDp
      * @param color
      */
-    public static void setShadowDp(Context context, Paint paint, float radiusDp, float dxDp, float dyDp, int color) {
-        float radius = PixelUtils.dpToPix(context, radiusDp);
-        float dx = PixelUtils.dpToPix(context, dxDp);
-        float dy = PixelUtils.dpToPix(context, dyDp);
+    public static void setShadowDp(Paint paint, float radiusDp, float dxDp, float dyDp, int color) {
+        float radius = PixelUtils.dpToPix(radiusDp);
+        float dx = PixelUtils.dpToPix(dxDp);
+        float dy = PixelUtils.dpToPix(dyDp);
         paint.setShadowLayer(radius, dx, dy, color);
     }
 

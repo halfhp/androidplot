@@ -50,7 +50,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     private Paint vertexPaint;
     private Paint fillPaint;
 
-    protected LineAndPointFormatter() {
+    public LineAndPointFormatter() {
         this(Color.RED, Color.GREEN, Color.BLUE);
     }
 

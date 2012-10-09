@@ -20,21 +20,27 @@ import android.content.Context;
 import android.graphics.*;
 import android.os.Handler;
 import android.view.View;
+import com.androidplot.mock.MockContext;
+import com.androidplot.mock.MockPaint;
 import com.androidplot.ui.SeriesAndFormatterList;
 import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.DataRenderer;
 import com.androidplot.ui.Formatter;
 //import mockit.*;
-import mockit.Deencapsulation;
-import mockit.MockClass;
-import mockit.Mockit;
-import mockit.UsingMocksAndStubs;
+import com.androidplot.ui.widget.TextLabelWidget;
+import com.androidplot.ui.widget.TitleWidget;
+import com.androidplot.util.Configurator;
+import com.androidplot.util.PixelUtils;
+import mockit.*;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -42,14 +48,14 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class,RectF.class,Canvas.class})
+@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class,
+        RectF.class,Canvas.class,TitleWidget.class,TextLabelWidget.class,
+        PixelUtils.class,Context.class})
 
 public class PlotTest {
-
-    @MockClass(realClass = Context.class)
-    public static class MockContext {}
 
     /*@MockClass(realClass = Plot.class)
     public static class MockPlot {}*/
@@ -223,7 +229,7 @@ public class PlotTest {
 
     @Before
     public void setUp() throws Exception {
-
+        Mockit.setUpMocks(MockPaint.class,MockContext.class);
     }
 
     @After
@@ -486,5 +492,50 @@ public class PlotTest {
 
         assertEquals(0, listeners.size());
 
+    }
+
+    /*@Test
+    public void testGuessGetterName() throws Exception {
+        Context context = Mockit.setUpMock(new MockContext());
+        Plot plot = new MockPlot(context, "MockPlot");
+
+        Method m = Plot.class.getDeclaredMethod("guessGetterMethod", Object.class, String.class);
+        assertNotNull(m);
+    }
+
+    @Test
+    public void testGuessSetterName() throws Exception {
+        Context context = Mockit.setUpMock(new MockContext());
+        Plot plot = new MockPlot(context, "MockPlot");
+
+        Method m = Plot.class.getDeclaredMethod("guessSetterMethod", Object.class, String.class, Class.class);
+        assertNotNull(m);
+    }*/
+
+
+
+    @Test
+    public void testConfigure() throws Exception {
+        //Context context = Mockit.setUpMock(new MockContext.MockContext2());
+        Context context = new MockContext.MockContext2();
+        Plot plot = new MockPlot(context, "MockPlot");
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        String param1 = "this is a test.";
+        String param2 = Plot.RenderMode.USE_BACKGROUND_THREAD.toString();
+        String param3 = "#FF0000";
+        params.put("title", param1);
+        params.put("renderMode", param2);
+        params.put("backgroundPaint.color", param3);
+
+
+        //Method m = Plot.class.getDeclaredMethod("configure", params.getClass());
+        //m.setAccessible(true);
+        //m.invoke(plot, params);
+        Configurator.configure(context, plot, params);
+
+        assertEquals(param1, plot.getTitle());
+        assertEquals(Plot.RenderMode.USE_BACKGROUND_THREAD, plot.getRenderMode());
+        assertEquals(Color.parseColor(param3), plot.getBackgroundPaint().getColor());
     }
 }

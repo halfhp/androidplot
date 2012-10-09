@@ -31,15 +31,15 @@ import java.util.HashMap;
 
 public class LayoutManager extends ZHash<Widget, PositionMetrics>
         implements View.OnTouchListener, Resizable {
-    private boolean drawAnchorsEnabled = true;
+    private boolean drawAnchorsEnabled = false;
     private Paint anchorPaint;
-    private boolean drawOutlinesEnabled = true;
+    private boolean drawOutlinesEnabled = false;
     private Paint outlinePaint;
-    private boolean drawOutlineShadowsEnabled = true;
+    private boolean drawOutlineShadowsEnabled = false;
     private Paint outlineShadowPaint;
-    private boolean drawMarginsEnabled = true;
+    private boolean drawMarginsEnabled = false;
     private Paint marginPaint;
-    private boolean drawPaddingEnabled = true;
+    private boolean drawPaddingEnabled = false;
     private Paint paddingPaint;
     private DisplayDimensions displayDims = new DisplayDimensions();
 
@@ -75,12 +75,12 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
     public LayoutManager() {
     }
 
-    public void disableAllMarkup() {
-        setDrawOutlinesEnabled(false);
-        setDrawAnchorsEnabled(false);
-        setDrawMarginsEnabled(false);
-        setDrawPaddingEnabled(false);
-        setDrawOutlineShadowsEnabled(false);
+    public void setMarkupEnabled(boolean enabled) {
+        setDrawOutlinesEnabled(enabled);
+        setDrawAnchorsEnabled(enabled);
+        setDrawMarginsEnabled(enabled);
+        setDrawPaddingEnabled(enabled);
+        setDrawOutlineShadowsEnabled(enabled);
 
     }
 

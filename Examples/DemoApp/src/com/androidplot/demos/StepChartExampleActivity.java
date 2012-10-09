@@ -95,8 +95,8 @@ public class StepChartExampleActivity extends Activity
         mySimpleXYPlot.setTicksPerDomainLabel(5);
 
         // customize our domain/range labels
-        mySimpleXYPlot.setDomainLabel("Time (Secs)");
-        mySimpleXYPlot.setRangeLabel("Server State");
+        //mySimpleXYPlot.setDomainLabel("Time (Secs)");
+        //mySimpleXYPlot.setRangeLabel("Server State");
 
         //mySimpleXYPlot.getGraphWidget().getGridLinePaint().setAlpha(0);
       
@@ -138,7 +138,7 @@ public class StepChartExampleActivity extends Activity
 
         // by default, AndroidPlot displays developer guides to aid in laying out your plot.
         // To get rid of them call disableAllMarkup():
-        mySimpleXYPlot.disableAllMarkup();
+        //mySimpleXYPlot.disableAllMarkup();
 
     }
 }

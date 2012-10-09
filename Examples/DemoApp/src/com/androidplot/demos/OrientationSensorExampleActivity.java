@@ -127,7 +127,7 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
 
         aprLevelsPlot.setGridPadding(15, 0, 15, 0);
         //aprLevelsPlot.addListener(new PlotStatistics(1000, true));
-        aprLevelsPlot.disableAllMarkup();
+        //aprLevelsPlot.disableAllMarkup();
 
 
         // setup the APR History plot:
@@ -151,7 +151,7 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         aprHistoryPlot.getDomainLabelWidget().pack();
         aprHistoryPlot.setRangeLabel("Angle (Degs)");
         aprHistoryPlot.getRangeLabelWidget().pack();
-        aprHistoryPlot.disableAllMarkup();
+        //aprHistoryPlot.disableAllMarkup();
 
         // setup checkboxes:
         hwAcceleratedCb = (CheckBox) findViewById(R.id.hwAccelerationCb);

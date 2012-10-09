@@ -22,11 +22,12 @@
     <parent>
         <groupId>com.androidplot</groupId>
         <artifactId>androidplot</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.5.1-SNAPSHOT</version>
     </parent>
     <artifactId>androidplot-core</artifactId>
-    <version>${applicationVersion}</version>
+    <!--<version>${applicationVersion}</version>-->
     <name>AndroidPlot-Core</name>
+    <description>AndroidPlot core library</description>
 
     <profiles>
         <profile>
@@ -51,29 +52,32 @@
         </profile>
     </profiles>
 
-    <repositories>
+    <!--<repositories>
         <repository>
             <id>central</id>
             <name>Maven Central</name>
             <url>http://repo1.maven.org/maven2/</url>
         </repository></repositories>
-
+-->
     <build>
         <plugins>
-            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <keyname>androidplot.com</keyname>
+                </configuration>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
                         <goals>
-                            <goal>jar</goal>
+                            <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -185,4 +189,14 @@
         </dependency>-->
         
     </dependencies>
+
+    <!--<distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-snapshots</id>
+            <name>Sonatype Snapshot Repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+-->
 </project>

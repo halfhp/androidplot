@@ -16,9 +16,11 @@
 
 package com.androidplot.xy;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.DataRenderer;
+import com.androidplot.util.Configurator;
 
 /**
  * Defines the visual aesthetics of an XYSeries; outline color and width, fill style,
@@ -50,8 +52,22 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     private Paint vertexPaint;
     private Paint fillPaint;
 
-    public LineAndPointFormatter() {
+    protected LineAndPointFormatter() {
         this(Color.RED, Color.GREEN, Color.BLUE);
+    }
+
+    /**
+     * Provided as a convenience to users; allows instantiation and xml configuration
+     * to take place in a single line
+     *
+     * @param ctx
+     * @param xmlCfgId Id of the xml config file within /res/xml
+     */
+    public LineAndPointFormatter(Context ctx, int xmlCfgId) {
+        // prevent configuration of classes derived from this one:
+        if (getClass().equals(LineAndPointFormatter.class)) {
+            Configurator.configure(ctx, this, xmlCfgId);
+        }
     }
 
     /**

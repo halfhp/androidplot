@@ -83,8 +83,8 @@ public class MyActivity extends Activity {
 
         // create a series using a formatter with some transparency applied:
         //LineAndPointFormatter f1 = new LineAndPointFormatter(Color.rgb(0, 0, 200), null, Color.rgb(0, 0, 80));
-        LineAndPointFormatter f1 = new LineAndPointFormatter();
-        Configurator.configure(getApplicationContext(), f1, R.xml.formatter1);
+        LineAndPointFormatter f1 = new LineAndPointFormatter(getApplicationContext(), R.xml.formatter1);
+        //Configurator.configure(getApplicationContext(), f1, R.xml.formatter1);
         f1.getFillPaint().setAlpha(220);
         dynamicPlot.addSeries(sine2Series, f1);
 

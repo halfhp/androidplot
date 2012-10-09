@@ -16,7 +16,9 @@
 
 package com.androidplot.xy;
 
+import android.content.Context;
 import android.graphics.Paint;
+import com.androidplot.util.Configurator;
 
 /**
  * Base class of all XYRegionFormatters.
@@ -26,11 +28,30 @@ public class XYRegionFormatter {
     //private int color;
     private Paint paint;
 
-    public XYRegionFormatter(int color) {
-        paint = new Paint();
-        paint.setColor(color);
+    {
         paint.setStyle(Paint.Style.FILL);
         paint.setAntiAlias(true);
+    }
+
+    /**
+     * Provided as a convenience to users; allows instantiation and xml configuration
+     * to take place in a single line
+     *
+     * @param ctx
+     * @param xmlCfgId Id of the xml config file within /res/xml
+     */
+    public XYRegionFormatter(Context ctx, int xmlCfgId) {
+        // prevent configuration of classes derived from this one:
+        if (getClass().equals(XYRegionFormatter.class)) {
+            Configurator.configure(ctx, this, xmlCfgId);
+        }
+    }
+
+    public XYRegionFormatter(int color) {
+        //paint = new Paint();
+        paint.setColor(color);
+        //paint.setStyle(Paint.Style.FILL);
+        //paint.setAntiAlias(true);
         //this.color = color;
     }
 

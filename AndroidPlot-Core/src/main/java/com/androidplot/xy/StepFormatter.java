@@ -16,9 +16,25 @@
 
 package com.androidplot.xy;
 
+import android.content.Context;
 import com.androidplot.ui.DataRenderer;
+import com.androidplot.util.Configurator;
 
 public class StepFormatter extends LineAndPointFormatter {
+
+    /**
+     * Provided as a convenience to users; allows instantiation and xml configuration
+     * to take place in a single line
+     *
+     * @param ctx
+     * @param xmlCfgId Id of the xml config file within /res/xml
+     */
+    public StepFormatter(Context ctx, int xmlCfgId) {
+        // prevent configuration of classes derived from this one:
+        if (getClass().equals(StepFormatter.class)) {
+            Configurator.configure(ctx, this, xmlCfgId);
+        }
+    }
 
     public StepFormatter(Integer lineColor, Integer fillColor) {
         initLinePaint(lineColor);

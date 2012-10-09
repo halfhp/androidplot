@@ -17,11 +17,28 @@
 package com.androidplot.ui;
 
 import com.androidplot.Plot;
+import com.androidplot.util.Configurator;
 
 /**
  * Base class of all Formatters.  Encapsulates visual elements of a series; line style, color etc.
+ * Implementors of this class should include both a default constructor and a one argument
+ * constructor in the following form:
+ *
+ * <pre>
+ * {@code
+ * // provided as a convenience to users; allows instantiation and
+ * // xml configuration in a single line.
+ * public MyFormatter(Context ctx, int xmlCfgId) {
+ *     // prevent configuration of classes derived from this one:
+ *     if (getClass().equals(MyFormatter.class)) {
+ *         Configurator.configure(ctx, this, xmlCfgId);
+ *     }
+ * }
+ * </pre>
  */
 public abstract class Formatter<PlotType extends Plot> {
+
+
 
     /**
      *
@@ -34,4 +51,5 @@ public abstract class Formatter<PlotType extends Plot> {
      * @return An instance of DataRenderer that took plot as an argument to its constructor.
      */
     public abstract DataRenderer getRendererInstance(PlotType plot);
+
 }

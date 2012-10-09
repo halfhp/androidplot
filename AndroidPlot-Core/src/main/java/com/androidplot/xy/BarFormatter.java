@@ -16,12 +16,15 @@
 
 package com.androidplot.xy;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.Plot;
 import com.androidplot.ui.DataRenderer;
+import com.androidplot.util.Configurator;
 
 public class BarFormatter extends XYSeriesFormatter {
+
     public Paint getFillPaint() {
         return fillPaint;
     }
@@ -49,6 +52,19 @@ public class BarFormatter extends XYSeriesFormatter {
         borderPaint = new Paint();
         borderPaint.setStyle(Paint.Style.STROKE);
         borderPaint.setAlpha(100);
+    }
+
+    /**
+     * Provided as a convenience to users; allows instantiation and xml configuration
+     * to take place in a single line
+     * @param ctx
+     * @param xmlCfgId Id of the xml config file within /res/xml
+     */
+    public BarFormatter(Context ctx, int xmlCfgId) {
+        // prevent configuration of classes derived from this one:
+        if (getClass().equals(BarFormatter.class)) {
+            Configurator.configure(ctx, this, xmlCfgId);
+        }
     }
 
     public BarFormatter(int fillColor, int borderColor) {

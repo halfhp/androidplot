@@ -20,12 +20,13 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 
 /**
+ * NOT YET IMPLEMENTED
  * Default PointFormatter used by LineAndPointRenderer to draw a point's text label onto the display.
  */
 public class PointLabelFormatter implements PointFormatter {
 
     @Override
     public void draw(Canvas canvas, Number value, PointF coords) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException("Not yet implemented.");
     }
 }

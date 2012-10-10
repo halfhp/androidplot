@@ -138,8 +138,8 @@
                         <option>-keepclassmembers enum * {public static **[] values();public static ** valueOf(java.lang.String);}</option>
                         <option>-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod</option>
                     </options>
-                    <injar>${project.build.finalName}.jar</injar>
-                    <outjar>obfuscated/${project.build.finalName}-release.jar</outjar>
+                    <!--<injar>${project.build.finalName}.jar</injar>
+                    <outjar>obfuscated/${project.build.finalName}-release.jar</outjar>-->
                     <outputDirectory>${project.build.directory}</outputDirectory>
                     <libs>
                         <!--<lib>${java.home}/lib/rt.jar</lib>-->
@@ -148,8 +148,13 @@
                     <addMavenDescriptor>false</addMavenDescriptor>
                 </configuration>
             </plugin>
-            
-
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <inherited>false</inherited>
+                <configuration>
+                    <skip>false</skip>
+                </configuration>
+            </plugin>
         </plugins>
      
     </build>
@@ -166,37 +171,11 @@
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
-
-        <!--<dependency>
-            <groupId>com.pivotallabs</groupId>
-            <artifactId>robolectric</artifactId>
-            <version>0.9.8</version>
-            <scope>test</scope>
-        </dependency>-->
-
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
             <version>4.0.1.2</version>
             <scope>provided</scope>
         </dependency>
-
-        <!--<dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android-test</artifactId>
-            <version>2.1_r1</version>
-            <scope>provided</scope>
-        </dependency>-->
-        
     </dependencies>
-
-    <!--<distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-snapshots</id>
-            <name>Sonatype Snapshot Repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
--->
 </project>

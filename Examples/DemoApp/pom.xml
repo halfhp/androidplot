@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.androidplot</groupId>
             <artifactId>androidplot-core</artifactId>
-            <version>0.5.1</version>
+            <version>LATEST</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

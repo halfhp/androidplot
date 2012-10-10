@@ -72,8 +72,8 @@
     <properties>
         <!--<applicationVersion>0.5.1-SNAPSHOT</applicationVersion>-->
         <examplesDir>Examples</examplesDir>
-        <obfuscatedJarPath>${project.build.directory}/obfuscated</obfuscatedJarPath>
-        <obfuscatedJarName>${project.build.finalName}.jar</obfuscatedJarName>
+        <!--<obfuscatedJarPath>${project.build.directory}/obfuscated</obfuscatedJarPath>
+        <obfuscatedJarName>${project.build.finalName}.jar</obfuscatedJarName>-->
     </properties>
 
     <modules>
@@ -95,5 +95,16 @@
         </developerConnection>
         <url>https://androidplot.jira.com/svn/ANDROIDPLOT/trunk/</url>
     </scm>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

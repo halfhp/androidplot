@@ -121,10 +121,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private RenderMode renderMode = RenderMode.USE_MAIN_THREAD;
     //private volatile Bitmap offScreenBitmap;
     private Canvas offScreenCanvas = new Canvas();
-    private BufferedCanvas pingPong = new BufferedCanvas();
+    private final BufferedCanvas pingPong = new BufferedCanvas();
 
     // used to get rid of flickering when drawing offScreenBitmap to the visible Canvas.
-    private Object renderSynch = new Object();
+    private final Object renderSynch = new Object();
 
     /**
      * Used for caching renderer instances.  Note that once a renderer is initialized it remains initialized

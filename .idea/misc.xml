@@ -33,11 +33,6 @@
         <option value="$PROJECT_DIR$/Examples/DemoApp/pom.xml" />
       </list>
     </option>
-    <option name="activeProfiles">
-      <list>
-        <option value="default" />
-      </list>
-    </option>
   </component>
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>

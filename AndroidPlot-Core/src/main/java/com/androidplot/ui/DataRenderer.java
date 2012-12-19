@@ -28,10 +28,6 @@ import com.androidplot.xy.XYRegionFormatter;
 
 public abstract class DataRenderer<PlotType extends Plot, SeriesFormatterType extends Formatter> {
     private PlotType plot;
-    //private Paint regionPaint;
-
-    {
-    }
 
     public DataRenderer(PlotType plot) {
         this.plot = plot;

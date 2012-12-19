@@ -63,9 +63,9 @@ public class ListViewActivity extends Activity {
         public View getView(int pos, View convertView, ViewGroup parent) {
             LayoutInflater inf = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View v = (View) convertView;
+            View v = convertView;
             if (v == null) {
-                v = (View) inf.inflate(R.layout.listview_example_item, parent, false);
+                v = inf.inflate(R.layout.listview_example_item, parent, false);
             }
 
             Plot p = (XYPlot) v.findViewById(R.id.xyplot);

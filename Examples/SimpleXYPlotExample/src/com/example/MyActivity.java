@@ -45,7 +45,7 @@ public class MyActivity extends Activity
         
         // add a new series
         XYSeries mySeries = new SimpleXYSeries(
-                Arrays.asList(new Integer[]{0, 25, 55, 2, 80, 30, 99, 0, 44, 6}),
+                Arrays.asList(0, 25, 55, 2, 80, 30, 99, 0, 44, 6),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "series1");
         plot.addSeries(mySeries, new LineAndPointFormatter(
                 getApplicationContext(), R.xml.f1));

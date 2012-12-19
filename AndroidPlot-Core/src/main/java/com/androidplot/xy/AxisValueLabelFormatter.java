@@ -22,11 +22,6 @@ public class AxisValueLabelFormatter {
     //private Paint textPaint;
     private int color;
 
-
-    {
-        //setColor(Color.WHITE);
-    }
-
     public AxisValueLabelFormatter(int color) {
         this.color = color;
     }

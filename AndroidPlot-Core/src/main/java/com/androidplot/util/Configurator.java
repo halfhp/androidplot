@@ -220,7 +220,7 @@ public abstract class Configurator {
             } else if (param.equals(Integer.TYPE)) {
                 out[i] = parseIntAttr(ctx, vals[i]);
             } else if (param.equals(Boolean.TYPE)) {
-                out[i] = new Boolean(vals[i]);
+                out[i] = Boolean.valueOf(vals[i]);
             } else if (param.equals(String.class)) {
                 out[i] = parseStringAttr(ctx, vals[i]);
             } else {

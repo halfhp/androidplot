@@ -80,7 +80,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
 
 
     private void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, LineAndPointFormatter formatter) throws PlotRenderException {
-        PointF thisPoint = null;
+        PointF thisPoint;
         PointF lastPoint = null;
         PointF firstPoint = null;
         //PointF lastDrawn = null;
@@ -208,8 +208,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
             canvas.drawPath(outlinePath, formatter.getLinePaint());
         }
 
-        if (path != null) {
-            path.rewind();
-        }
+        path.rewind();
     }
 }

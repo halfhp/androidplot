@@ -25,10 +25,10 @@ import android.graphics.Paint;
  */
 public class PaintUtils {
 
-    public static Paint getPaint() {
+    /*public static Paint getPaint() {
         Paint p = new Paint();
         return p;
-    }
+    }*/
 
     /**
      * Sets a paint instance's line stroke size in dp

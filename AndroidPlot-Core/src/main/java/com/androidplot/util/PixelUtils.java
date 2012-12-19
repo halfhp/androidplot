@@ -95,13 +95,22 @@ public class PixelUtils {
     /**
      * Converts a dp value to pixels.
      * @param dp
-     * @return
+     * @return Pixel value of dp.
      */
     public static float dpToPix(float dp) {
         //return SCALE * dp + FLOAT_INT_AVG_NUDGE;
         //InternalDimension id = new InternalDimension(dp, TypedValue.COMPLEX_UNIT_DIP);
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, metrics);
 
+    }
+
+    /**
+     * Converts an sp value to pixels.
+     * @param sp
+     * @return Pixel value of sp.
+     */
+    public static float spToPix(float sp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, metrics);
     }
 
 

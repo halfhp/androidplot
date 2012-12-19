@@ -17,6 +17,7 @@
 package com.androidplot.xy;
 
 import android.graphics.*;
+import android.util.Pair;
 import com.androidplot.series.XYSeries;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.util.ValPixConverter;
@@ -30,8 +31,13 @@ import java.util.List;
  */
 public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> extends XYSeriesRenderer<FormatterType> {
 
-
-    //private boolean fillToBottom = false;
+    // default implementation prints point's yVal:
+    private PointLabeler pointLabeler = new PointLabeler() {
+        @Override
+        public String getLabel(XYSeries series, int index) {
+            return series.getY(index) + "";
+        }
+    };
 
     public LineAndPointRenderer(XYPlot plot) {
         super(plot);
@@ -79,13 +85,14 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     }
 
 
-    private void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, LineAndPointFormatter formatter) throws PlotRenderException {
+    protected void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, LineAndPointFormatter formatter) throws PlotRenderException {
         PointF thisPoint;
         PointF lastPoint = null;
         PointF firstPoint = null;
+
         //PointF lastDrawn = null;
         Path path = null;
-        ArrayList<PointF> points = new ArrayList<PointF>(series.size());
+        ArrayList<Pair<PointF, Integer>> points = new ArrayList<Pair<PointF, Integer>>(series.size());
         for (int i = 0; i < series.size(); i++) {
             Number y = series.getY(i);
             Number x = series.getX(i);
@@ -99,7 +106,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                         getPlot().getCalculatedMaxX(),
                         getPlot().getCalculatedMinY(),
                         getPlot().getCalculatedMaxY());
-                points.add(thisPoint);
+                points.add(new Pair(thisPoint, i));
                 //appendToPath(path, thisPoint, lastPoint);
             } else {
                 thisPoint = null;
@@ -134,9 +141,20 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
 
         // TODO: benchmark this against drawPoints(float[]);
-        if (formatter.getVertexPaint() != null) {
-            for (PointF p : points) {
-                canvas.drawPoint(p.x, p.y, formatter.getVertexPaint());
+        Paint vertexPaint = formatter.getVertexPaint();
+        PointLabelFormatter plf = formatter.getPointLabelFormatter();
+        if (vertexPaint != null || plf != null) {
+            for (Pair<PointF, Integer> p : points) {
+
+                // if vertexPaint is available, draw vertex:
+                if(vertexPaint != null) {
+                    canvas.drawPoint(p.first.x, p.first.y, formatter.getVertexPaint());
+                }
+
+                // if textPaint and pointLabeler are available, draw point's text label:
+                if(plf != null && pointLabeler != null) {
+                    canvas.drawText(pointLabeler.getLabel(series, p.second), p.first.x + plf.hOffset, p.first.y + plf.vOffset, plf.getTextPaint());
+                }
             }
         }
     }
@@ -209,5 +227,13 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
 
         path.rewind();
+    }
+
+    public PointLabeler getPointLabeler() {
+        return pointLabeler;
+    }
+
+    public void setPointLabeler(PointLabeler pointLabeler) {
+        this.pointLabeler = pointLabeler;
     }
 }

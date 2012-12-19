@@ -58,14 +58,19 @@ public class SimpleXYPlotActivity extends Activity
         LineAndPointFormatter series1Format = new LineAndPointFormatter(
                 Color.rgb(0, 200, 0),                   // line color
                 Color.rgb(0, 100, 0),                   // point color
-                null);                                  // fill color (none)
+                null,                                   // fill color (none)
+                new PointLabelFormatter(Color.WHITE));                           // text color
 
         // add a new series' to the xyplot:
         mySimpleXYPlot.addSeries(series1, series1Format);
 
         // same as above:
         mySimpleXYPlot.addSeries(series2,
-                new LineAndPointFormatter(Color.rgb(0, 0, 200), Color.rgb(0, 0, 100), null));
+                new LineAndPointFormatter(
+                        Color.rgb(0, 0, 200),
+                        Color.rgb(0, 0, 100),
+                        null,
+                        new PointLabelFormatter(Color.WHITE)));
 
 
         // reduce the number of range labels

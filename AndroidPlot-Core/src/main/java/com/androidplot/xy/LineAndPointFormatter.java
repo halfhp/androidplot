@@ -21,6 +21,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.DataRenderer;
 import com.androidplot.util.Configurator;
+import com.androidplot.util.PixelUtils;
 
 /**
  * Defines the visual aesthetics of an XYSeries; outline color and width, fill style,
@@ -28,10 +29,8 @@ import com.androidplot.util.Configurator;
  */
 public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> {
 
-    private static final float DEFAULT_LINE_STROKE_WIDTH = 1.5f;
-    private static final float DEFAULT_VERTEX_STROKE_WIDTH = 4.5f;
-
-    private int labelStep = 1;  // only every labelStep'th point label will be drawn.
+    private static final float DEFAULT_LINE_STROKE_WIDTH_DP   = 1.5f;
+    private static final float DEFAULT_VERTEX_STROKE_WIDTH_DP = 4.5f;
 
     public FillDirection getFillDirection() {
         return fillDirection;
@@ -46,11 +45,11 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         this.fillDirection = fillDirection;
     }
 
-    private FillDirection fillDirection = FillDirection.BOTTOM;
-
-    private Paint linePaint;
-    private Paint vertexPaint;
-    private Paint fillPaint;
+    protected FillDirection fillDirection = FillDirection.BOTTOM;
+    protected Paint linePaint;
+    protected Paint vertexPaint;
+    protected Paint fillPaint;
+    private PointLabelFormatter pointLabelFormatter;
 
     {
         initLinePaint(Color.BLACK);
@@ -80,9 +79,15 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
      * @param lineColor
      * @param vertexColor
      * @param fillColor
+     * @deprecated As of 0.5.1: Use {@link #LineAndPointFormatter(Integer, Integer, Integer, PointLabelFormatter)} instead.
      */
+    @Deprecated
     public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor) {
-         this(lineColor, vertexColor, fillColor, FillDirection.BOTTOM);
+         this(lineColor, vertexColor, fillColor, (PointLabelFormatter) null);
+    }
+
+    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, PointLabelFormatter plf) {
+        this(lineColor, vertexColor, fillColor, plf, FillDirection.BOTTOM);
     }
 
     /**
@@ -91,13 +96,20 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
      * @param vertexColor
      * @param fillColor
      * @param fillDir Determines which edge or origin of the plot is used to close the path for filling.
+     * @deprecated As of 0.5.1: Use
+     *             {@link #LineAndPointFormatter(Integer, Integer, Integer, PointLabelFormatter, FillDirection)} instead.
      */
+    @Deprecated
     public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, FillDirection fillDir) {
+        this(lineColor, vertexColor, fillColor, null, fillDir);
+    }
+
+    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, PointLabelFormatter plf, FillDirection fillDir) {
         initLinePaint(lineColor);
         initVertexPaint(vertexColor);
-        //this(lineColor, vertexColor);
         initFillPaint(fillColor);
         setFillDirection(fillDir);
+        this.setPointLabelFormatter(plf);
     }
 
     @Override
@@ -116,7 +128,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         } else {
             linePaint = new Paint();
             linePaint.setAntiAlias(true);
-            linePaint.setStrokeWidth(DEFAULT_LINE_STROKE_WIDTH);
+            linePaint.setStrokeWidth(PixelUtils.dpToPix(DEFAULT_LINE_STROKE_WIDTH_DP));
             linePaint.setColor(lineColor);
             linePaint.setStyle(Paint.Style.STROKE);
         }
@@ -128,7 +140,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         } else {
             vertexPaint = new Paint();
             vertexPaint.setAntiAlias(true);
-            vertexPaint.setStrokeWidth(DEFAULT_VERTEX_STROKE_WIDTH);
+            vertexPaint.setStrokeWidth(PixelUtils.dpToPix(DEFAULT_VERTEX_STROKE_WIDTH_DP));
             vertexPaint.setColor(vertexColor);
             vertexPaint.setStrokeCap(Paint.Cap.ROUND);
         }
@@ -182,11 +194,11 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         this.fillPaint = fillPaint;
     }
 
-    public int getLabelStep() {
-        return labelStep;
+    public PointLabelFormatter getPointLabelFormatter() {
+        return pointLabelFormatter;
     }
 
-    public void setLabelStep(int labelStep) {
-        this.labelStep = labelStep;
+    public void setPointLabelFormatter(PointLabelFormatter pointLabelFormatter) {
+        this.pointLabelFormatter = pointLabelFormatter;
     }
 }

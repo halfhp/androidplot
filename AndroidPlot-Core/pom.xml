@@ -66,7 +66,7 @@
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.4</version>
                 <configuration>
-                    <keyname>androidplot.com</keyname>
+                    <keyname>Androidplot</keyname>
                 </configuration>
                 <executions>
                     <execution>

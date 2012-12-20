@@ -90,10 +90,9 @@
     </repositories>-->
 
     <scm>
-        <connection>scm:svn:https://androidplot.jira.com/svn/ANDROIDPLOT/trunk/</connection>
-        <developerConnection>scm:svn:https://androidplot.jira.com/svn/ANDROIDPLOT/trunk/
-        </developerConnection>
-        <url>https://androidplot.jira.com/svn/ANDROIDPLOT/trunk/</url>
+        <connection>scm:git:https://bitbucket.org/androidplot/androidplot.git</connection>
+        <developerConnection>scm:git:https://bitbucket.org/androidplot/androidplot.git</developerConnection>
+        <url>https://bitbucket.org/androidplot/androidplot.git</url>
     </scm>
 
     <build>

@@ -89,6 +89,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         PointF thisPoint;
         PointF lastPoint = null;
         PointF firstPoint = null;
+        Paint  linePaint = formatter.getLinePaint();
 
         //PointF lastDrawn = null;
         Path path = null;
@@ -112,7 +113,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 thisPoint = null;
             }
 
-            if(thisPoint != null) {
+            if(linePaint != null && thisPoint != null) {
 
                 // record the first point of the new Path
                 if(firstPoint == null) {
@@ -136,7 +137,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 lastPoint = null;
             }
         }
-        if(firstPoint != null) {
+        if(linePaint != null && firstPoint != null) {
             renderPath(canvas, plotArea, path, firstPoint, lastPoint, formatter);
         }
 

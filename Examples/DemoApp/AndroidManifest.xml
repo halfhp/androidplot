@@ -3,10 +3,7 @@
       package="com.androidplot.demos"
       android:versionCode="6"
       android:versionName="0.5.1">
-    <uses-sdk
-        android:minSdkVersion="6"
-        android:targetSdkVersion="16"
-        />
+    <uses-sdk android:minSdkVersion="6" android:targetSdkVersion="16"/>
 
     <!-- We must disable hardware acceleration otherwise some lines will not appear in our plots. -->
     <application android:label="AndroidPlot API DemoApp"

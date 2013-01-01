@@ -65,9 +65,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.4</version>
-                <configuration>
+                <!--<configuration>
                     <keyname>Androidplot</keyname>
-                </configuration>
+                    <passphrase>2hot4u</passphrase>
+                </configuration>-->
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>

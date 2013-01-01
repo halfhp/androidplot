@@ -1,7 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="">
+  <settings default="AndroidPlot Apache 2.0">
     <module2copyright>
-      <element module="All" copyright="AndroidPlot Modified BSD" />
+      <element module="All" copyright="AndroidPlot Apache 2.0" />
     </module2copyright>
   </settings>
 </component>

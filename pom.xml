@@ -25,7 +25,7 @@
 
     <groupId>com.androidplot</groupId>
     <artifactId>androidplot</artifactId>
-    <version>0.5.2-SNAPSHOT</version>
+    <version>0.5.1</version>
     <name>AndroidPlot-Parent</name>
     <description>A charting library for the Android platform</description>
     <url>http://androidplot.com</url>

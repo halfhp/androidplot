@@ -4,6 +4,7 @@
     <entry_points version="2.0" />
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="android" url="file://$PROJECT_DIR$/AndroidPlot-Core/src/AndroidManifest.xml" />
     <file type="android" url="file://$PROJECT_DIR$/Examples/DemoApp" />
     <file type="android" url="file://$PROJECT_DIR$/Tests/AndroidManifest.xml" />
   </component>

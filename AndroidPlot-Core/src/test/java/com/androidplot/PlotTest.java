@@ -84,15 +84,6 @@ public class PlotTest {
             return 0;
         }
 
-        /*@Override
-        public void onReadBegin() {
-
-        }
-
-        @Override
-        public void onReadEnd() {
-
-        }*/
     }
 
     static class MockSeries2 implements Series {
@@ -106,15 +97,6 @@ public class PlotTest {
             return 0;
         }
 
-        /*@Override
-        public void onReadBegin() {
-
-        }
-
-        @Override
-        public void onReadEnd() {
-
-        }*/
     }
 
     static class MockSeries3 implements Series {
@@ -127,16 +109,6 @@ public class PlotTest {
         public int size() {
             return 0;
         }
-
-        /*@Override
-        public void onReadBegin() {
-
-        }
-
-        @Override
-        public void onReadEnd() {
-
-        }*/
     }
 
     static class MockRenderer1 extends DataRenderer {

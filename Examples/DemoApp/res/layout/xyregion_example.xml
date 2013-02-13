@@ -9,7 +9,6 @@
             android:id="@+id/xyRegionExamplePlot"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_margin="0px"
             title="XYRegion Example"
             android:layout_weight="1"
             />

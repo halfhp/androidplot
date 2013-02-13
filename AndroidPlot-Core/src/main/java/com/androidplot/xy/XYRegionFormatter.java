@@ -26,7 +26,7 @@ import com.androidplot.util.Configurator;
 public class XYRegionFormatter {
 
     //private int color;
-    private Paint paint;
+    private Paint paint = new Paint();
 
     {
         paint.setStyle(Paint.Style.FILL);

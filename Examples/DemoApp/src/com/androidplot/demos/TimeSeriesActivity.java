@@ -62,11 +62,6 @@ public class TimeSeriesActivity extends Activity
         plot1.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
         plot1.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
 
-        plot1.setBorderStyle(Plot.BorderStyle.SQUARE, null, null);
-        plot1.getBorderPaint().setStrokeWidth(1);
-        plot1.getBorderPaint().setAntiAlias(false);
-        plot1.getBorderPaint().setColor(Color.WHITE);
-
         // Create a formatter to use for drawing a series using LineAndPointRenderer:
         LineAndPointFormatter series1Format = new LineAndPointFormatter(
                 Color.rgb(0, 100, 0),                   // line color

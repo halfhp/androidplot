@@ -110,7 +110,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     protected String title = "My Plot";
     private BoxModel boxModel = new BoxModel(3, 3, 3, 3, 3, 3, 3, 3);
-    private BorderStyle borderStyle = Plot.BorderStyle.ROUNDED;
+    private BorderStyle borderStyle = Plot.BorderStyle.SQUARE;
     private float borderRadiusX = 15;
     private float borderRadiusY = 15;
     private boolean drawBorderEnabled = true;
@@ -151,7 +151,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         borderPaint = new Paint();
         borderPaint.setColor(Color.rgb(150, 150, 150));
         borderPaint.setStyle(Paint.Style.STROKE);
-        borderPaint.setStrokeWidth(3.3f);
+        borderPaint.setStrokeWidth(1.0f);
         borderPaint.setAntiAlias(true);
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.DKGRAY);

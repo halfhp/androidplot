@@ -64,11 +64,6 @@ public class StepChartExampleActivity extends Activity
         mySimpleXYPlot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
         mySimpleXYPlot.getGraphWidget().setMarginRight(5);
 
-        mySimpleXYPlot.setBorderStyle(Plot.BorderStyle.SQUARE, null, null);
-        mySimpleXYPlot.getBorderPaint().setStrokeWidth(1);
-        mySimpleXYPlot.getBorderPaint().setAntiAlias(false);
-        mySimpleXYPlot.getBorderPaint().setColor(Color.WHITE);
-
         // Create a formatter to use for drawing a series using LineAndPointRenderer:
         LineAndPointFormatter series1Format = new LineAndPointFormatter(
                 Color.rgb(0, 100, 0),                   // line color

@@ -32,6 +32,7 @@ import com.androidplot.ui.widget.Widget;
 import com.androidplot.ui.DataRenderer;
 import com.androidplot.util.Configurator;
 import com.androidplot.util.DisplayDimensions;
+import com.androidplot.util.MultiSynch;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.XLayoutStyle;
 import com.androidplot.xy.YLayoutStyle;
@@ -459,6 +460,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             seriesRegistry.put(rendererClass, sfList);
         }
 
+        // if this series implements PlotListener, add it as a listener:
+        if(series instanceof PlotListener) {
+            addListener((PlotListener)series);
+        }
+
         // do nothing if this series already associated with the renderer:
         if(sfList.contains(series)) {
             return false;
@@ -472,6 +478,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         boolean result = seriesRegistry.get(rendererClass).remove(series);
         if(seriesRegistry.get(rendererClass).size() <= 0) {
             seriesRegistry.remove(rendererClass);
+        }
+
+        // if series implements PlotListener, remove it from listeners:
+        if(series instanceof PlotListener) {
+            removeListener((PlotListener) series);
         }
         return result;
     }
@@ -492,6 +503,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             if(it.next().size() <= 0) {
                 it.remove();
             }
+        }
+
+        // if series implements PlotListener, remove it from listeners:
+        if (series instanceof PlotListener) {
+            removeListener((PlotListener) series);
         }
     }
 
@@ -696,38 +712,82 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
     }
 
+    /*private final MultiSynch.Action msa = new MultiSynch.Action() {
+        @Override
+        public void run(Object[] params) {
+            Canvas canvas = (Canvas) params[0];
+            doBeforeDraw();
+            notifyListenersBeforeDraw(canvas);
+            try {
+                // need to completely erase what was on the canvas before redrawing, otherwise
+                // some odd aliasing artifacts begin to build up around the edges of aa'd entities
+                // over time.
+                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                if (backgroundPaint != null) {
+                    drawBackground(canvas, displayDims.marginatedRect);
+                }
+
+                layoutManager.draw(canvas);
+
+                if (isDrawBorderEnabled() && getBorderPaint() != null) {
+                    drawBorder(canvas, displayDims.marginatedRect);
+                }
+            } catch (PlotRenderException e) {
+                e.printStackTrace();
+            } finally {
+                isIdle = true;
+                doAfterDraw();
+                notifyListenersAfterDraw(canvas, new PlotEvent(Plot.this, PlotEvent.Type.PLOT_REDRAWN));
+            }
+        }
+    };*/
+
     /**
-     * Called whenever the plot needs to be drawn via the Handler, which invokes invalidate().
-     * Should never be called directly.
+     * Renders the plot onto a canvas.  Used by both main thread to draw directly
+     * onto the View's canvas as well as by background draw to render onto a
+     * Bitmap buffer.  At the end of the day this is the main entry for a plot's
+     * "heavy lifting".
      * @param canvas
      */
-
     protected synchronized void renderOnCanvas(Canvas canvas) {
 
-        doBeforeDraw();
-        notifyListenersBeforeDraw(canvas);
+        Set<? extends Series> ss = getSeriesSet();
         try {
-            // need to completely erase what was on the canvas before redrawing, otherwise
-            // some odd aliasing artifacts begin to build up around the edges of aa'd entities
-            // over time.
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            if (backgroundPaint != null) {
-                drawBackground(canvas, displayDims.marginatedRect);
-            }
+            doBeforeDraw();
 
-            layoutManager.draw(canvas);
+            // any series interested in synchronizing with plot should
+            // implement PlotListener.onBeforeDraw(...) and do a read lock from within its
+            // invocation.  This is the entry point into that call:
+            notifyListenersBeforeDraw(canvas);
+            try {
+                // need to completely erase what was on the canvas before redrawing, otherwise
+                // some odd aliasing artifacts begin to build up around the edges of aa'd entities
+                // over time.
+                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                if (backgroundPaint != null) {
+                    drawBackground(canvas, displayDims.marginatedRect);
+                }
 
-            if (isDrawBorderEnabled() && getBorderPaint() != null) {
-                drawBorder(canvas, displayDims.marginatedRect);
+                layoutManager.draw(canvas);
+
+                if (isDrawBorderEnabled() && getBorderPaint() != null) {
+                    drawBorder(canvas, displayDims.marginatedRect);
+                }
+            } catch (PlotRenderException e) {
+                e.printStackTrace();
             }
-        } catch (PlotRenderException e) {
-            e.printStackTrace();
         } finally {
             isIdle = true;
             doAfterDraw();
+            // any series interested in synchronizing with plot should
+            // implement PlotListener.onAfterDraw(...) and do a read unlock from within that
+            // invocation. This is the entry point for that invocation.
             notifyListenersAfterDraw(canvas, new PlotEvent(this, PlotEvent.Type.PLOT_REDRAWN));
         }
+        //MultiSynch.run(new Object[]{canvas}, getSeriesSet(), msa);
+        //MultiSynch.lockSeriesSet(new Object[]{canvas}, getSeriesSet(), msa);
     }
+
 
     /**
      * Sets the visual style of the plot's border.

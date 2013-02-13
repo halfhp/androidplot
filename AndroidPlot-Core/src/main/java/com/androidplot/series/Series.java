@@ -38,11 +38,11 @@ public interface Series {
     /**
      * Called whenever the plot initiates a read of a Series.  In most cases this means that
      * a complete read of the Series contents will proceed.
-     */
-    //public void onReadBegin();
+     *//*
+    public void onReadBegin();
 
-    /**
+    *//**
      * Called when a Plot concludes reading of a Series.
-     */
-    //public void onReadEnd();
+     *//*
+    public void onReadEnd();*/
 }

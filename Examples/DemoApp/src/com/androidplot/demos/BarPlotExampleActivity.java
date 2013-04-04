@@ -19,6 +19,8 @@ package com.androidplot.demos;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import com.androidplot.series.XYSeries;
 import com.androidplot.xy.*;
 
@@ -30,43 +32,83 @@ import java.util.Arrays;
 public class BarPlotExampleActivity extends Activity
 {
 
-    private XYPlot mySimpleXYPlot;
+    private XYPlot plot;
+
+    private CheckBox series1CheckBox;
+    private CheckBox series2CheckBox;
+
+    private XYSeries series1;
+    private XYSeries series2;
+
+    private BarFormatter formatter1;
+    private BarFormatter formatter2;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.simple_xy_plot_example);
+        setContentView(R.layout.bar_plot_example);
 
         // initialize our XYPlot reference:
-        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+        plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 
         // Create a couple arrays of y-values to plot:
         Number[] series1Numbers = {1, 8, 5, 2, 7, 4};
         Number[] series2Numbers = {4, 6, 3, 8, 2, 10};
 
         // Turn the above arrays into XYSeries':
-        XYSeries series1 = new SimpleXYSeries(
+        series1 = new SimpleXYSeries(
                 Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
                 "Series1");                             // Set the display title of the series
 
         // same as above
-        XYSeries series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series2");
+        series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series2");
 
         // add a new series' to the xyplot:
-        mySimpleXYPlot.addSeries(series1, new BarFormatter(Color.GREEN, Color.WHITE));
+        formatter1 = new BarFormatter(Color.GREEN, Color.WHITE);
+        plot.addSeries(series1, formatter1);
 
         // same as above:
-        mySimpleXYPlot.addSeries(series2, new BarFormatter(Color.RED, Color.WHITE));
-
+        formatter2 = new BarFormatter(Color.RED, Color.WHITE);
+        plot.addSeries(series2, formatter2);
 
         // reduce the number of range labels
-        mySimpleXYPlot.setTicksPerRangeLabel(3);
+        plot.setTicksPerRangeLabel(3);
 
-        // by default, AndroidPlot displays developer guides to aid in laying out your plot.
-        // To get rid of them call disableAllMarkup():
-        //mySimpleXYPlot.disableAllMarkup();
+        // setup checkbox listers:
+        series1CheckBox = (CheckBox) findViewById(R.id.s1CheckBox);
+        series1CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                onS1CheckBoxClicked(b);
+            }
+        });
+
+        series2CheckBox = (CheckBox) findViewById(R.id.s2CheckBox);
+        series2CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {onS2CheckBoxClicked(b);
+            }
+        });
+    }
+
+    private void onS2CheckBoxClicked(boolean checked) {
+        if (checked) {
+            plot.addSeries(series1, formatter1);
+        } else {
+            plot.removeSeries(series1);
+        }
+        plot.redraw();
+    }
+
+    private void onS1CheckBoxClicked(boolean checked) {
+        if (checked) {
+            plot.addSeries(series2, formatter2);
+        } else {
+            plot.removeSeries(series2);
+        }
+        plot.redraw();
     }
 }

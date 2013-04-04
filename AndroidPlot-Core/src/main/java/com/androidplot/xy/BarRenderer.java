@@ -56,42 +56,15 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
         this.barWidth = barWidth;
     }
 
-    /**
-     * Synchronizes the current thread across multiple objects before
-     * executing a given task.
-     */
-    /*private void multiSynch(Canvas canvas, RectF plotArea, List<XYSeries> sl, int depth) {
-        if (sl != null) {
-            synchronized (sl.get(depth)) {
-                if (depth < sl.size()-1) {
-                    multiSynch(canvas, plotArea, sl, ++depth);
-                } else {
-                    int longest = getLongestSeries(sl);
-                    if(longest == 0) {
-                        return;  // no data, nothing to do.
-                    }
-                    TreeMap<Number, XYSeries> seriesMap = new TreeMap<Number, XYSeries>();
-                    for(int i = 0; i < longest; i++) {
-                        seriesMap.clear();
-                        List<XYSeries> seriesList = getPlot().getSeriesListForRenderer(this.getClass());
-                        for(XYSeries series : seriesList) {
-                            if(i < series.size()) {
-                                seriesMap.put(series.getY(i), series);
-                            }
-                        }
-                        drawBars(canvas, plotArea, seriesMap, i);
-                    }
-                }
-            }
-        }
-    }*/
-
     @Override
     public void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException {
 
         List<XYSeries> sl = getPlot().getSeriesListForRenderer(this.getClass());
-        // need to synch on each series in sl before proceeding with render
-        //multiSynch(canvas, plotArea, sl, 0);
+
+        // dont try to render anything if there's nothing to render.
+        if(sl == null) {
+            return;
+        }
 
         int longest = getLongestSeries(sl);
         if (longest == 0) {

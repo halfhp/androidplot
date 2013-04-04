@@ -33,8 +33,7 @@
                     />
             <Button android:id="@+id/startBarPlotExButton"
                     style="@style/toc_button"
-                    android:text="Bar Plot"
-                    android:enabled="false"/>
+                    android:text="Bar Plot"/>
             <Button android:id="@+id/startXyScatterExButton"
                     style="@style/toc_button"
                     android:text="XY Scatter"

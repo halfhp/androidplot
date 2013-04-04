@@ -3,28 +3,10 @@
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
-        <option name="GEN_FOLDER_RELATIVE_PATH_APT" value="/gen" />
-        <option name="GEN_FOLDER_RELATIVE_PATH_AIDL" value="/gen" />
-        <option name="MANIFEST_FILE_RELATIVE_PATH" value="/AndroidManifest.xml" />
-        <option name="RES_FOLDER_RELATIVE_PATH" value="/res" />
-        <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/assets" />
-        <option name="LIBS_FOLDER_RELATIVE_PATH" value="/libs" />
-        <option name="USE_CUSTOM_APK_RESOURCE_FOLDER" value="false" />
-        <option name="CUSTOM_APK_RESOURCE_FOLDER" value="" />
-        <option name="USE_CUSTOM_COMPILER_MANIFEST" value="false" />
-        <option name="CUSTOM_COMPILER_MANIFEST" value="" />
-        <option name="APK_PATH" value="" />
-        <option name="LIBRARY_PROJECT" value="false" />
         <option name="RUN_PROCESS_RESOURCES_MAVEN_TASK" value="false" />
-        <option name="GENERATE_UNSIGNED_APK" value="true" />
-        <option name="CUSTOM_DEBUG_KEYSTORE_PATH" value="" />
-        <option name="PACK_TEST_CODE" value="false" />
-        <option name="RUN_PROGUARD" value="false" />
-        <option name="PROGUARD_CFG_PATH" value="/proguard-project.txt" />
-        <resOverlayFolders />
         <includeSystemProguardFile>false</includeSystemProguardFile>
         <includeAssetsFromLibraries>true</includeAssetsFromLibraries>
-        <additionalNativeLibs />
+        <resOverlayFolders />
       </configuration>
     </facet>
   </component>
@@ -43,6 +25,7 @@
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="jdk" jdkName="Maven Android 4.1 Platform" jdkType="Android SDK" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.android:android:4.0.1.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpclient:4.0.1" level="project" />
@@ -53,7 +36,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: xpp3:xpp3:1.1.4c" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.json:json:20080701" level="project" />
     <orderEntry type="module" module-name="androidplot-core" />
-    <orderEntry type="inheritedJdk" />
   </component>
 </module>
 

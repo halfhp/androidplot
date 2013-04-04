@@ -39,15 +39,23 @@ public class MainActivity extends Activity
             }
         });
 
-        Button startSimpleXYExButton = (Button)findViewById(R.id.startSimpleXYExButton);
-                startSimpleXYExButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(MainActivity.this, SimpleXYPlotActivity.class));
-                    }
-                });
+        Button startSimpleXYExButton = (Button) findViewById(R.id.startSimpleXYExButton);
+        startSimpleXYExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SimpleXYPlotActivity.class));
+            }
+        });
 
-        Button startOrSensorExButton = (Button)findViewById(R.id.startOrSensorExButton);
+        Button startBarPlotExButton = (Button) findViewById(R.id.startBarPlotExButton);
+        startBarPlotExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, BarPlotExampleActivity.class));
+            }
+        });
+
+        Button startOrSensorExButton = (Button) findViewById(R.id.startOrSensorExButton);
         startOrSensorExButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

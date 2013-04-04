@@ -686,7 +686,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
         layout(new DisplayDimensions(cRect, mRect, pRect));
         super.onSizeChanged(w, h, oldw, oldh);
-        if(renderThread != null) {
+        if(renderThread != null && !renderThread.isAlive()) {
             renderThread.start();
         }
     }

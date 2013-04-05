@@ -24,9 +24,22 @@ public class LineRegion {
     private Number minVal;
     private Number maxVal;
 
-    public LineRegion(Number minVal, Number maxVal) {
-        this.setMinVal(minVal);
-        this.setMaxVal(maxVal);
+    public LineRegion(Number val1, Number v2) {
+        if (val1.doubleValue() < v2.doubleValue()) {
+            this.setMinVal(val1);
+            this.setMaxVal(v2);
+        } else {
+            this.setMinVal(v2);
+            this.setMaxVal(val1);
+        }
+    }
+
+    public static Number measure(Number val1, Number val2) {
+        return new LineRegion(val1, val2).length();
+    }
+
+    public Number length() {
+        return maxVal.doubleValue() - minVal.doubleValue();
     }
 
     /**

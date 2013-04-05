@@ -85,15 +85,6 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
     private SimpleXYSeries azimuthHistorySeries = null;
     private SimpleXYSeries pitchHistorySeries = null;
     private SimpleXYSeries rollHistorySeries = null;
-    //private LinkedList<Number> azimuthHistory;
-    //private LinkedList<Number> pitchHistory;
-    //private LinkedList<Number> rollHistory;
-
-    /*{
-        azimuthHistory = new LinkedList<Number>();
-        pitchHistory = new LinkedList<Number>();
-        rollHistory = new LinkedList<Number>();
-    }*/
 
     /** Called when the activity is first created. */
     @Override
@@ -106,7 +97,8 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
 
         aprLevelsSeries = new SimpleXYSeries("APR Levels");
         aprLevelsSeries.useImplicitXVals();
-        aprLevelsPlot.addSeries(aprLevelsSeries, new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0)));
+        aprLevelsPlot.addSeries(aprLevelsSeries,
+                new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0)));
         aprLevelsPlot.setDomainStepValue(3);
         aprLevelsPlot.setTicksPerRangeLabel(3);
 
@@ -124,11 +116,7 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         aprLevelsPlot.getDomainLabelWidget().pack();
         aprLevelsPlot.setRangeLabel("Angle (Degs)");
         aprLevelsPlot.getRangeLabelWidget().pack();
-
         aprLevelsPlot.setGridPadding(15, 0, 15, 0);
-        //aprLevelsPlot.addListener(new PlotStatistics(1000, true));
-        //aprLevelsPlot.disableAllMarkup();
-
 
         // setup the APR History plot:
         aprHistoryPlot = (XYPlot) findViewById(R.id.aprHistoryPlot);
@@ -151,7 +139,6 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         aprHistoryPlot.getDomainLabelWidget().pack();
         aprHistoryPlot.setRangeLabel("Angle (Degs)");
         aprHistoryPlot.getRangeLabelWidget().pack();
-        //aprHistoryPlot.disableAllMarkup();
 
         // setup checkboxes:
         hwAcceleratedCb = (CheckBox) findViewById(R.id.hwAccelerationCb);
@@ -160,7 +147,6 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
 
         aprLevelsPlot.addListener(levelStats);
         aprHistoryPlot.addListener(histStats);
-        //if(aprLevelsPlot.isHardwareAccelerated() && aprHistoryPlot.isHardwareAccelerated()) {
         hwAcceleratedCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -173,9 +159,7 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
                 }
             }
         });
-        /*} else {
-            hwAcceleratedCb.setEnabled(false);
-        }*/
+
         showFpsCb = (CheckBox) findViewById(R.id.showFpsCb);
         showFpsCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -237,11 +221,6 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         pitchHistorySeries.addLast(null, sensorEvent.values[1]);
         rollHistorySeries.addLast(null, sensorEvent.values[2]);
 
-        /*// update the plot with the updated history Lists:
-        azimuthHistorySeries.setModel(azimuthHistory, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-        pitchHistorySeries.setModel(pitchHistory, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-        rollHistorySeries.setModel(rollHistory, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);*/
-
         // redraw the Plots:
         aprLevelsPlot.redraw();
         aprHistoryPlot.redraw();
@@ -253,4 +232,3 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         // Not interested in this event
     }
 }
-

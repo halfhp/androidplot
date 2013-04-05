@@ -17,13 +17,12 @@
 package com.androidplot.xy;
 
 import android.graphics.*;
+import android.util.Pair;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.series.XYSeries;
 import com.androidplot.util.ValPixConverter;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Renders a point as a Bar
@@ -32,6 +31,36 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
 
     private BarWidthStyle style = BarWidthStyle.FIXED_WIDTH;
     private float barWidth = 5;
+
+    // compares two Numbers by first checking for null then converting to double.
+    // used to determine which value from each series should be drawn first in the case
+    // of stacked render mode.
+    private static final Comparator numberComparator = new Comparator<Number>() {
+        @Override
+        public int compare(Number number, Number number2) {
+            if (number == null) {
+                if (number2 == null) {
+                    return 0;
+                }
+                return -1;
+            } else if (number2 == null) {
+                // dont need to check for double null because the opening if would
+                // have already caught it.
+                return 1;
+            } else {
+                double lhs = number.doubleValue();
+                double rhs = number2.doubleValue();
+
+                if (lhs < rhs) {
+                    return -1;
+                } else if (lhs > rhs) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        }
+    };
 
     public enum BarRenderStyle {
         STACKED,            // bars are overlaid in descending y-val order (largest val in back)
@@ -70,7 +99,8 @@ public class BarRenderer extends XYSeriesRenderer<BarFormatter> {
         if (longest == 0) {
             return;  // no data, nothing to do.
         }
-        TreeMap<Number, XYSeries> seriesMap = new TreeMap<Number, XYSeries>();
+
+        TreeMap<Number, XYSeries> seriesMap = new TreeMap<Number, XYSeries>(numberComparator);
         for (int i = 0; i < longest; i++) {
             seriesMap.clear();
             List<XYSeries> seriesList = getPlot().getSeriesListForRenderer(this.getClass());

@@ -326,12 +326,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     public Number getYVal(PointF point) {
-        throw new UnsupportedOperationException("Not yet implemented.");
-        //ValPixConverter.pixToVal(point.y, )
+        return getGraphWidget().getYVal(point);
+        //throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     public Number getXVal(PointF point) {
-        throw new UnsupportedOperationException("Not yet implemented.");
+        return getGraphWidget().getXVal(point);
+        //throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     private boolean isXValWithinView(double xVal) {

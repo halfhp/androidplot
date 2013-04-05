@@ -19,7 +19,7 @@ package com.androidplot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -33,6 +33,22 @@ public class LineRegionTest {
     public void tearDown() throws Exception {
 
     }
+
+    @Test
+    public void testConstructor() throws Exception {
+        LineRegion lr = new LineRegion(0d, 0d);
+        assertEquals(0d, lr.getMinVal());
+        assertEquals(0d, lr.getMaxVal());
+
+        lr = new LineRegion(1.5d, -2d);
+        assertEquals(-2d, lr.getMinVal());
+        assertEquals(1.5d, lr.getMaxVal());
+
+        lr = new LineRegion(10d, 20d);
+        assertEquals(10d, lr.getMinVal());
+        assertEquals(20d, lr.getMaxVal());
+    }
+
 
     @Test
     public void testContains() throws Exception {
@@ -55,5 +71,14 @@ public class LineRegionTest {
         //l1start = 21;
         line1.setMinVal(21);
         assertFalse(line1.intersects(line2));
+    }
+
+    @Test
+    public void testLength() throws Exception {
+        LineRegion lr = new LineRegion(0, 10);
+        assertEquals(10d, lr.length().doubleValue(), 0);
+
+        lr = new LineRegion(-5, 5);
+        assertEquals(10d, lr.length().doubleValue(), 0);
     }
 }

@@ -26,8 +26,13 @@ public class UserTextLabelWidget extends TextLabelWidget {
         super(sizeMetrics, orientationType);
         this.label = label;
     }
+
     @Override
     protected String getText() {
         return label;
+    }
+
+    public void setText(String label) {
+        this.label = label;
     }
 }

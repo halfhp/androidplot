@@ -54,8 +54,8 @@ public class BarPlotExampleActivity extends Activity
         plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 
         // Create a couple arrays of y-values to plot:
-        Number[] series1Numbers = {1, 8, 5, 2, 7, 4};
-        Number[] series2Numbers = {4, 6, 3, 8, 2, 10};
+        Number[] series1Numbers = {2, null, 5, 2, 7, 4};
+        Number[] series2Numbers = {4, 6, 3, null, 2, 10};
 
         // Turn the above arrays into XYSeries':
         series1 = new SimpleXYSeries(
@@ -76,6 +76,9 @@ public class BarPlotExampleActivity extends Activity
 
         // reduce the number of range labels
         plot.setTicksPerRangeLabel(3);
+        plot.setRangeLowerBoundary(0, BoundaryMode.FIXED);
+        plot.getGraphWidget().setGridPadding(10, 10, 10, 10);
+
 
         // setup checkbox listers:
         series1CheckBox = (CheckBox) findViewById(R.id.s1CheckBox);

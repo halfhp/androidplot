@@ -1066,6 +1066,13 @@ public class XYGraphWidget extends Widget {
         return gridPaddingTop;
     }
 
+    public void setGridPadding(float left, float top, float right, float bottom) {
+        setGridPaddingLeft(left);
+        setGridPaddingTop(top);
+        setGridPaddingRight(right);
+        setGridPaddingBottom(bottom);
+    }
+
     public Paint getDomainOriginLinePaint() {
         return domainOriginLinePaint;
     }

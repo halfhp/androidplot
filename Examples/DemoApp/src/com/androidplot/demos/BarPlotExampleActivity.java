@@ -108,7 +108,7 @@ public class BarPlotExampleActivity extends Activity
         plot.addSeries(series2, formatter2);
 
         // thicken the plot lines:
-        ((MyBarRenderer)plot.getRenderer(MyBarRenderer.class)).setBarWidth(30);
+        ((MyBarRenderer)plot.getRenderer(MyBarRenderer.class)).setBarWidth(300);
 
         // reduce the number of range labels
         plot.setTicksPerRangeLabel(3);
@@ -238,13 +238,14 @@ public class BarPlotExampleActivity extends Activity
         }
 
         /**
-         * We override this method to allow us to inject our
+         * Implementing this method to allow us to inject our
          * special selection formatter.
          * @param index index of the point being rendered.
          * @param series XYSeries to which the point being rendered belongs.
          * @return
          */
-        @Override
+        //@Override
+        // TODO: figure out why using @Override screws up the Maven builds
         protected MyBarFormatter getFormatter(int index, XYSeries series) {
             if(selection != null &&
                     selection.second == series &&

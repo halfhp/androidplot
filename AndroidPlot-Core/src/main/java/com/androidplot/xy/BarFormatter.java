@@ -23,7 +23,7 @@ import com.androidplot.Plot;
 import com.androidplot.ui.DataRenderer;
 import com.androidplot.util.Configurator;
 
-public class BarFormatter<T extends BarRenderer> extends XYSeriesFormatter {
+public class BarFormatter extends XYSeriesFormatter {
 
     public Paint getFillPaint() {
         return fillPaint;

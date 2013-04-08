@@ -19,7 +19,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import com.androidplot.Plot;
-import com.androidplot.series.XYSeries;
+import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.*;
 
 import java.text.DecimalFormat;

@@ -16,13 +16,8 @@
 
 package com.androidplot.xy;
 
-import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.RectF;
-import com.androidplot.exception.PlotRenderException;
-import com.androidplot.series.XYSeries;
-import com.androidplot.util.ValPixConverter;
 
 /**
  * Renders a point as a line with the vertices marked.  Requires 2 or more points to

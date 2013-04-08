@@ -20,13 +20,12 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.SeriesAndFormatterList;
-import com.androidplot.series.XYSeries;
-import com.androidplot.ui.DataRenderer;
+import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.ZIndexable;
 
 import java.util.Hashtable;
 
-public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter> extends DataRenderer<XYPlot, XYFormatterType> {
+public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter> extends SeriesRenderer<XYPlot, XYFormatterType> {
 
     public XYSeriesRenderer(XYPlot plot) {
         super(plot);

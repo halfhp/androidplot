@@ -19,9 +19,8 @@ package com.androidplot.demos;
 import android.app.Activity;
 import android.graphics.*;
 import android.os.Bundle;
-import com.androidplot.Plot;
 import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.series.XYSeries;
+import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.*;
 
 import java.text.*;

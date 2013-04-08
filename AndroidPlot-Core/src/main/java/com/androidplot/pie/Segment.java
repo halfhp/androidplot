@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 AndroidPlot.com
+ * Copyright 2013 AndroidPlot.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,9 +14,14 @@
  *    limitations under the License.
  */
 
-package com.androidplot.xy;
+package com.androidplot.pie;
 
-public interface PointLabeler {
+import com.androidplot.Series;
 
-    public String getLabel(XYSeries series, int index);
+public class Segment implements Series<Number> {
+
+    @Override
+    public String getTitle() {
+        throw new UnsupportedOperationException("Not yet implemented.");
+    }
 }

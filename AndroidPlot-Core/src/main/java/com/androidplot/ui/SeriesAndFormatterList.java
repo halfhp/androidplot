@@ -16,7 +16,7 @@
 
 package com.androidplot.ui;
 
-import com.androidplot.series.Series;
+import com.androidplot.Series;
 
 import java.util.LinkedList;
 import java.util.List;

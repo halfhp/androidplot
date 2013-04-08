@@ -25,12 +25,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import com.androidplot.LineRegion;
-import com.androidplot.exception.PlotRenderException;
-import com.androidplot.series.XYSeries;
+import com.androidplot.xy.XYSeries;
 import com.androidplot.ui.*;
 import com.androidplot.ui.widget.UserTextLabelWidget;
-import com.androidplot.ui.widget.Widget;
-import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.*;
 
 import java.util.Arrays;
@@ -221,12 +218,12 @@ public class BarPlotExampleActivity extends Activity
         }
 
         @Override
-        public Class<? extends DataRenderer> getRendererClass() {
+        public Class<? extends SeriesRenderer> getRendererClass() {
             return MyBarRenderer.class;
         }
 
         @Override
-        public DataRenderer getRendererInstance(XYPlot plot) {
+        public SeriesRenderer getRendererInstance(XYPlot plot) {
             return new MyBarRenderer(plot);
         }
     }

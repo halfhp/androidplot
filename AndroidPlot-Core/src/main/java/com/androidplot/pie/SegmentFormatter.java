@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 AndroidPlot.com
+ * Copyright 2013 AndroidPlot.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,9 +14,19 @@
  *    limitations under the License.
  */
 
-package com.androidplot.xy;
+package com.androidplot.pie;
 
-public interface PointLabeler {
+import com.androidplot.ui.SeriesRenderer;
+import com.androidplot.ui.Formatter;
 
-    public String getLabel(XYSeries series, int index);
+public class SegmentFormatter extends Formatter<PieChart> {
+    @Override
+    public Class<? extends SeriesRenderer> getRendererClass() {
+        throw new UnsupportedOperationException("Not yet implemented.");
+    }
+
+    @Override
+    public SeriesRenderer getRendererInstance(PieChart plot) {
+        throw new UnsupportedOperationException("Not yet implemented.");
+    }
 }

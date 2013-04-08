@@ -33,9 +33,13 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
             <version>2.1_r1</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
         <!-- TODO: figure out how to use this dependency without breaking the clean target;
         used as-is, the clean target can fail because the dependency is erased by maven.
         <dependency>

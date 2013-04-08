@@ -20,14 +20,20 @@ import android.content.Context;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
 import com.androidplot.Series;
+import com.androidplot.ui.AnchorPosition;
 import com.androidplot.ui.SizeLayoutType;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.util.PixelUtils;
+import com.androidplot.xy.XLayoutStyle;
+import com.androidplot.xy.YLayoutStyle;
 
 public class PieChart extends Plot<Series<Number>, SegmentFormatter, PieRenderer> {
 
     private static final int DEFAULT_PIE_WIDGET_H_DP = 18;
     private static final int DEFAULT_PIE_WIDGET_W_DP = 10;
+
+    private static final int DEFAULT_PIE_WIDGET_Y_OFFSET_DP = 0;
+    private static final int DEFAULT_PIE_WIDGET_X_OFFSET_DP = 0;
 
     private PieWidget pieWidget;
 
@@ -54,6 +60,15 @@ public class PieChart extends Plot<Series<Number>, SegmentFormatter, PieRenderer
                         SizeLayoutType.FILL,
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_W_DP),
                         SizeLayoutType.FILL));
+
+        getLayoutManager().position(
+                        pieWidget,
+                        PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_X_OFFSET_DP),
+                        XLayoutStyle.ABSOLUTE_FROM_CENTER,
+                        PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_Y_OFFSET_DP),
+                        YLayoutStyle.ABSOLUTE_FROM_CENTER,
+                        AnchorPosition.CENTER);
+
         // TODO: can't remember why this getClass() check is neccessary.  test if it actually is...
         if (getClass().equals(PieChart.class) && attrs != null) {
             loadAttrs(context, attrs);

@@ -17,6 +17,8 @@
 package com.androidplot.pie;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.SizeMetric;
@@ -37,6 +39,11 @@ public class PieWidget extends Widget {
 
     @Override
     protected void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
-        throw new UnsupportedOperationException("Not yet implemented.");
+        // this is all throwaway but it displays a pretty circle for now...
+        Paint p = new Paint();
+        p.setStrokeWidth(3);
+        p.setColor(Color.WHITE);
+        float rad = widgetRect.width() < widgetRect.height() ? widgetRect.width()/2 : widgetRect.height()/2;
+        canvas.drawCircle(widgetRect.centerX(), widgetRect.centerY(), rad, p);
     }
 }

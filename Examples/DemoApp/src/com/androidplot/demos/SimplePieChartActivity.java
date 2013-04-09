@@ -19,7 +19,10 @@ package com.androidplot.demos;
 import android.app.Activity;
 import android.graphics.*;
 import android.os.Bundle;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import com.androidplot.pie.PieChart;
+import com.androidplot.pie.PieRenderer;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
 import com.androidplot.xy.*;
@@ -31,6 +34,9 @@ import java.util.Arrays;
  */
 public class SimplePieChartActivity extends Activity
 {
+
+    private TextView donutSizeTextView;
+    private SeekBar donutSizeSeekBar;
 
     private PieChart pie;
 
@@ -48,6 +54,28 @@ public class SimplePieChartActivity extends Activity
 
         // initialize our XYPlot reference:
         pie = (PieChart) findViewById(R.id.mySimplePieChart);
+
+
+        donutSizeSeekBar = (SeekBar) findViewById(R.id.donutSizeSeekBar);
+
+        donutSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                pie.getRenderer(PieRenderer.class).setDonutSize(seekBar.getProgress()/100f,
+                        PieRenderer.DonutMode.PERCENT);
+                pie.redraw();
+                updateDonutText();
+            }
+        });
+
+        donutSizeTextView = (TextView) findViewById(R.id.donutSizeTextView);
+        updateDonutText();
 
         s1 = new Segment("s1", 10);
         s2 = new Segment("s2", 1);
@@ -81,5 +109,9 @@ public class SimplePieChartActivity extends Activity
         pie.addSeries(s2, sf2);
         pie.addSeries(s3, sf3);
         pie.addSeries(s4, sf4);
+    }
+
+    protected void updateDonutText() {
+        donutSizeTextView.setText(donutSizeSeekBar.getProgress() + "%");
     }
 }

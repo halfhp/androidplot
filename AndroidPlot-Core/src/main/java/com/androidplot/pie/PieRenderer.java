@@ -28,7 +28,14 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
     private float startDeg = 15;
 
     // TODO: express donut in units other than px.
-    private float donutPix = 160;
+    private float donutSize = 0.5f;
+    private DonutMode donutMode = DonutMode.PERCENT;
+
+    public enum DonutMode {
+        PERCENT,
+        DP,
+        PIXELS
+    }
 
     public PieRenderer(PieChart plot) {
         super(plot);
@@ -66,13 +73,24 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
         float cx = bounds.centerX();
         float cy = bounds.centerY();
 
+        float donutSizePx = 0;
+        switch(donutMode) {
+            case PERCENT:
+                donutSizePx = donutSize * rad;
+                break;
+            case PIXELS:
+                donutSizePx = donutSize;
+            default:
+                throw new UnsupportedOperationException("Not yet implemented.");
+        }
+
         // vertices of the first radial:
         PointF r1Outer = calculateLineEnd(cx, cy, rad, startAngle);
-        PointF r1Inner = calculateLineEnd(cx, cy, rad - donutPix, startAngle);
+        PointF r1Inner = calculateLineEnd(cx, cy, rad - donutSizePx, startAngle);
 
         // vertices of the second radial:
         PointF r2Outer = calculateLineEnd(cx, cy, rad, startAngle + sweep);
-        PointF r2Inner = calculateLineEnd(cx, cy, rad - donutPix, startAngle + sweep);
+        PointF r2Inner = calculateLineEnd(cx, cy, rad - donutSizePx, startAngle + sweep);
 
         Path clip = new Path();
 
@@ -98,10 +116,10 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
 
         // sweep back to original angle:
         p.arcTo(new RectF(
-                cx - donutPix,
-                cy - donutPix,
-                cx + donutPix,
-                cy + donutPix),
+                cx - donutSizePx,
+                cy - donutSizePx,
+                cx + donutSizePx,
+                cy + donutSizePx),
                 startAngle + sweep, -sweep);
 
         p.close();
@@ -114,14 +132,14 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
         canvas.drawLine(r2Inner.x, r2Inner.y, r2Outer.x, r2Outer.y, f.getRadialEdgePaint());
 
         // draw inner line:
-        canvas.drawCircle(cx, cy, donutPix, f.getInnerEdgePaint());
+        canvas.drawCircle(cx, cy, donutSizePx, f.getInnerEdgePaint());
 
         // draw outer line:
         canvas.drawCircle(cx, cy, rad, f.getOuterEdgePaint());
         canvas.restore();
 
         PointF labelOrigin = calculateLineEnd(cx, cy,
-                (rad-((rad-donutPix)/2)), startAngle + (sweep/2));
+                (rad-((rad- donutSizePx)/2)), startAngle + (sweep/2));
         drawSegmentLabel(canvas, labelOrigin, seg, f);
     }
 
@@ -161,5 +179,20 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
 
         // convert to screen space:
         return new PointF(origin.x + (float) x, origin.y + (float) y);
+    }
+
+    public void setDonutSize(float size, DonutMode mode) {
+        switch(mode) {
+            case PERCENT:
+                if(size < 0 || size > 1) {
+                    throw new IllegalArgumentException(
+                            "Size parameter must be between 0 and 1 when operating in PERCENT mode.");
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Not yet implemented.");
+        }
+        donutMode = mode;
+        donutSize = size;
     }
 }

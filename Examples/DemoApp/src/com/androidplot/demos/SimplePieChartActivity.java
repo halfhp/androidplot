@@ -20,6 +20,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import com.androidplot.pie.PieChart;
+import com.androidplot.pie.Segment;
+import com.androidplot.pie.SegmentFormatter;
 import com.androidplot.xy.*;
 
 import java.util.Arrays;
@@ -32,6 +34,11 @@ public class SimplePieChartActivity extends Activity
 
     private PieChart pie;
 
+    private Segment s1;
+    private Segment s2;
+    private Segment s3;
+    private Segment s4;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -41,5 +48,19 @@ public class SimplePieChartActivity extends Activity
 
         // initialize our XYPlot reference:
         pie = (PieChart) findViewById(R.id.mySimplePieChart);
+
+        s1 = new Segment("s1", 10);
+        s2 = new Segment("s2", 1);
+        s3 = new Segment("s3", 10);
+        s4 = new Segment("s4", 10);
+
+        pie.addSeries(s1, new SegmentFormatter(
+                Color.rgb(200, 150, 150), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY));
+        pie.addSeries(s2, new SegmentFormatter(
+                Color.rgb(150, 200, 150), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY));
+        pie.addSeries(s3, new SegmentFormatter(
+                Color.rgb(150, 150, 200), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY));
+        pie.addSeries(s4, new SegmentFormatter(
+                Color.BLUE, Color.DKGRAY,Color.DKGRAY, Color.DKGRAY));
     }
 }

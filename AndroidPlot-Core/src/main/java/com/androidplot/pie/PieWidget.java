@@ -16,14 +16,13 @@
 
 package com.androidplot.pie;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
-import com.androidplot.ui.SizeMetric;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.widget.Widget;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Visualizes data as a pie chart.
@@ -39,11 +38,9 @@ public class PieWidget extends Widget {
 
     @Override
     protected void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
-        // this is all throwaway but it displays a pretty circle for now...
-        Paint p = new Paint();
-        p.setStrokeWidth(3);
-        p.setColor(Color.WHITE);
-        float rad = widgetRect.width() < widgetRect.height() ? widgetRect.width()/2 : widgetRect.height()/2;
-        canvas.drawCircle(widgetRect.centerX(), widgetRect.centerY(), rad, p);
+
+        for(PieRenderer renderer : pieChart.getRendererList()) {
+            renderer.render(canvas, widgetRect);
+        }
     }
 }

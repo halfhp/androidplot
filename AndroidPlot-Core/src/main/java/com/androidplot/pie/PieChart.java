@@ -27,7 +27,7 @@ import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.XLayoutStyle;
 import com.androidplot.xy.YLayoutStyle;
 
-public class PieChart extends Plot<Series<Number>, SegmentFormatter, PieRenderer> {
+public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
     private static final int DEFAULT_PIE_WIDGET_H_DP = 18;
     private static final int DEFAULT_PIE_WIDGET_W_DP = 10;
@@ -69,6 +69,8 @@ public class PieChart extends Plot<Series<Number>, SegmentFormatter, PieRenderer
                         YLayoutStyle.ABSOLUTE_FROM_CENTER,
                         AnchorPosition.CENTER);
 
+        pieWidget.setPadding(10, 10, 10, 10);
+
         // TODO: can't remember why this getClass() check is neccessary.  test if it actually is...
         if (getClass().equals(PieChart.class) && attrs != null) {
             loadAttrs(context, attrs);
@@ -81,5 +83,13 @@ public class PieChart extends Plot<Series<Number>, SegmentFormatter, PieRenderer
 
     @Override
     protected void doAfterDraw() {
+    }
+
+    public void addSegment(Segment segment, SegmentFormatter formatter) {
+        addSeries(segment, formatter);
+    }
+
+    public void removeSegment(Segment segment) {
+        removeSeries(segment);
     }
 }

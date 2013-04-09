@@ -44,7 +44,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
         float offset = startDeg;
         Set<Segment> segments = getPlot().getSeriesSet();
 
-        PointF lastRadial = calculateLineEnd(origin, radius, offset);
+        //PointF lastRadial = calculateLineEnd(origin, radius, offset);
 
         RectF rec = new RectF(origin.x - radius, origin.y - radius, origin.x + radius, origin.y + radius);
 
@@ -52,19 +52,27 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
             float lastOffset = offset;
             float sweep = (float) scale * (segment.getValue().floatValue()) * 360;
             offset += sweep;
-            PointF radial = calculateLineEnd(origin, radius, offset);
+            //PointF radial = calculateLineEnd(origin, radius, offset);
             drawSegment(canvas, rec, getPlot().getFormatter(segment, PieRenderer.class),
-                    lastRadial, radial, radius, lastOffset, sweep);
-            lastRadial = radial;
+                    radius, lastOffset, sweep);
+            //lastRadial = radial;
         }
     }
 
     protected void drawSegment(Canvas canvas, RectF bounds, SegmentFormatter f,
-                               PointF r1, PointF r2, float rad, float startAngle, float sweep) {
+                               float rad, float startAngle, float sweep) {
         canvas.save();
 
         float cx = bounds.centerX();
         float cy = bounds.centerY();
+
+        // vertices of the first radial:
+        PointF r1Outer = calculateLineEnd(cx, cy, rad, startAngle);
+        PointF r1Inner = calculateLineEnd(cx, cy, rad - donutPix, startAngle);
+
+        // vertices of the second radial:
+        PointF r2Outer = calculateLineEnd(cx, cy, rad, startAngle + sweep);
+        PointF r2Inner = calculateLineEnd(cx, cy, rad - donutPix, startAngle + sweep);
 
         Path clip = new Path();
 
@@ -84,39 +92,33 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
         clip.close();
         canvas.clipPath(clip);
 
-        canvas.save();
-
-        Path innerClip = new Path();
-        // reduce clip enough to provide room for stroked borders; same reason as above.
-        innerClip.addCircle(cx, cy, donutPix, Path.Direction.CW);
-        // TODO: figure out which op mode to use to merge
-        canvas.clipPath(innerClip, Region.Op.DIFFERENCE);
-
         Path p = new Path();
-
         p.arcTo(bounds, startAngle, sweep);
-        p.lineTo(cx, cy);
+        p.lineTo(r2Inner.x, r2Inner.y);
+
+        // sweep back to original angle:
+        p.arcTo(new RectF(
+                cx - donutPix,
+                cy - donutPix,
+                cx + donutPix,
+                cy + donutPix),
+                startAngle + sweep, -sweep);
+
         p.close();
 
         // fill segment:
         canvas.drawPath(p, f.getFillPaint());
 
-        // no more use for inner clipping so discard it:
-        canvas.restore();
-
         // draw radial lines
-        canvas.drawLine(cx, cy, r1.x, r1.y, f.getRadialEdgePaint());
-        canvas.drawLine(cx, cy, r2.x, r2.y, f.getRadialEdgePaint());
+        canvas.drawLine(r1Inner.x, r1Inner.y, r1Outer.x, r1Outer.y, f.getRadialEdgePaint());
+        canvas.drawLine(r2Inner.x, r2Inner.y, r2Outer.x, r2Outer.y, f.getRadialEdgePaint());
 
         // draw inner line:
         canvas.drawCircle(cx, cy, donutPix, f.getInnerEdgePaint());
 
         // draw outer line:
         canvas.drawCircle(cx, cy, rad, f.getOuterEdgePaint());
-
-        //canvas.drawCircle(bounds.centerX(), bounds.centerY(), radius, f.getFillPaint());
         canvas.restore();
-        //canvas.drawCircle(bounds.centerX(), bounds.centerY(), donutPix, f.getInnerEdgePaint());
     }
 
     @Override
@@ -135,6 +137,10 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
         }
 
         return (1d / total);
+    }
+
+    private PointF calculateLineEnd(float x, float y, float rad, float deg) {
+        return calculateLineEnd(new PointF(x, y), rad, deg);
     }
 
     private PointF calculateLineEnd(PointF origin, float rad, float deg) {

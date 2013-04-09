@@ -17,7 +17,6 @@
 package com.androidplot.pie;
 
 import android.graphics.Color;
-import android.graphics.EmbossMaskFilter;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.Formatter;
@@ -26,12 +25,18 @@ public class SegmentFormatter extends Formatter<PieChart> {
 
     private static final int DEFAULT_FILL_COLOR = Color.TRANSPARENT;
     private static final int DEFAULT_EDGE_COLOR = Color.BLACK;
+    private static final int DEFAULT_LABEL_COLOR = Color.WHITE;
     private static final float DEFAULT_EDGE_THICKNESS = 3;
+    private static final float DEFAULT_LABEL_MARKER_THICKNESS = 3;
+    private static final float DEFAULT_LABEL_FONT_SIZE = 18;
 
     private Paint innerEdgePaint;
     private Paint outerEdgePaint;
     private Paint radialEdgePaint;
     private Paint fillPaint;
+
+    private Paint labelPaint;
+    private Paint labelMarkerPaint;
 
     public SegmentFormatter(Integer fillColor) {
         setFillPaint(new Paint());
@@ -58,6 +63,20 @@ public class SegmentFormatter extends Formatter<PieChart> {
         getRadialEdgePaint().setStyle(Paint.Style.STROKE);
         getRadialEdgePaint().setStrokeWidth(DEFAULT_EDGE_THICKNESS);
         getRadialEdgePaint().setAntiAlias(true);
+
+        // label paint:
+        setLabelPaint(new Paint());
+        getLabelPaint().setColor(DEFAULT_LABEL_COLOR);
+        getLabelPaint().setTextSize(DEFAULT_LABEL_FONT_SIZE);
+        getLabelPaint().setAntiAlias(true);
+        getLabelPaint().setTextAlign(Paint.Align.CENTER);
+        getLabelPaint().setShadowLayer(5, 4, 4, Color.BLACK);
+
+        // label marker paint:
+        setLabelMarkerPaint(new Paint());
+        getLabelMarkerPaint().setColor(DEFAULT_LABEL_COLOR);
+        getLabelMarkerPaint().setStrokeWidth(DEFAULT_LABEL_MARKER_THICKNESS);
+
     }
 
     public SegmentFormatter(Integer fillColor, Integer outerEdgeColor,
@@ -124,5 +143,21 @@ public class SegmentFormatter extends Formatter<PieChart> {
 
     public void setFillPaint(Paint fillPaint) {
         this.fillPaint = fillPaint;
+    }
+
+    public Paint getLabelPaint() {
+        return labelPaint;
+    }
+
+    public void setLabelPaint(Paint labelPaint) {
+        this.labelPaint = labelPaint;
+    }
+
+    public Paint getLabelMarkerPaint() {
+        return labelMarkerPaint;
+    }
+
+    public void setLabelMarkerPaint(Paint labelMarkerPaint) {
+        this.labelMarkerPaint = labelMarkerPaint;
     }
 }

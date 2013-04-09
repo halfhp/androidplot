@@ -53,13 +53,13 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
             float sweep = (float) scale * (segment.getValue().floatValue()) * 360;
             offset += sweep;
             //PointF radial = calculateLineEnd(origin, radius, offset);
-            drawSegment(canvas, rec, getPlot().getFormatter(segment, PieRenderer.class),
+            drawSegment(canvas, rec, segment, getPlot().getFormatter(segment, PieRenderer.class),
                     radius, lastOffset, sweep);
             //lastRadial = radial;
         }
     }
 
-    protected void drawSegment(Canvas canvas, RectF bounds, SegmentFormatter f,
+    protected void drawSegment(Canvas canvas, RectF bounds, Segment seg, SegmentFormatter f,
                                float rad, float startAngle, float sweep) {
         canvas.save();
 
@@ -119,6 +119,16 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
         // draw outer line:
         canvas.drawCircle(cx, cy, rad, f.getOuterEdgePaint());
         canvas.restore();
+
+        PointF labelOrigin = calculateLineEnd(cx, cy,
+                (rad-((rad-donutPix)/2)), startAngle + (sweep/2));
+        drawSegmentLabel(canvas, labelOrigin, seg, f);
+    }
+
+    protected void drawSegmentLabel(Canvas canvas, PointF origin,
+                                    Segment seg, SegmentFormatter f) {
+        canvas.drawText(seg.getTitle(), origin.x, origin.y, f.getLabelPaint());
+
     }
 
     @Override

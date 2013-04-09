@@ -17,7 +17,7 @@
 package com.androidplot.demos;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.graphics.*;
 import android.os.Bundle;
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.Segment;
@@ -54,13 +54,32 @@ public class SimplePieChartActivity extends Activity
         s3 = new Segment("s3", 10);
         s4 = new Segment("s4", 10);
 
-        pie.addSeries(s1, new SegmentFormatter(
-                Color.rgb(200, 150, 150), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY));
-        pie.addSeries(s2, new SegmentFormatter(
-                Color.rgb(150, 200, 150), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY));
-        pie.addSeries(s3, new SegmentFormatter(
-                Color.rgb(150, 150, 200), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY));
-        pie.addSeries(s4, new SegmentFormatter(
-                Color.BLUE, Color.DKGRAY,Color.DKGRAY, Color.DKGRAY));
+        EmbossMaskFilter emf = new EmbossMaskFilter(new float[]{1, 1, 1}, 0.4f, 10, 8.2f);
+
+
+        SegmentFormatter sf1 = new SegmentFormatter(
+                        Color.rgb(200, 150, 150), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY);
+
+        sf1.getFillPaint().setMaskFilter(emf);
+
+        SegmentFormatter sf2 = new SegmentFormatter(
+                        Color.rgb(150, 200, 150), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY);
+
+        sf2.getFillPaint().setMaskFilter(emf);
+
+        SegmentFormatter sf3 = new SegmentFormatter(
+                        Color.rgb(150, 150, 200), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY);
+
+        sf3.getFillPaint().setMaskFilter(emf);
+
+        SegmentFormatter sf4 = new SegmentFormatter(
+                        Color.BLUE, Color.DKGRAY,Color.DKGRAY, Color.DKGRAY);
+
+        sf4.getFillPaint().setMaskFilter(emf);
+
+        pie.addSeries(s1, sf1);
+        pie.addSeries(s2, sf2);
+        pie.addSeries(s3, sf3);
+        pie.addSeries(s4, sf4);
     }
 }

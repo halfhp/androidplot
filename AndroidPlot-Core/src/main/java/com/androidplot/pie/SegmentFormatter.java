@@ -17,6 +17,7 @@
 package com.androidplot.pie;
 
 import android.graphics.Color;
+import android.graphics.EmbossMaskFilter;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.Formatter;
@@ -25,7 +26,7 @@ public class SegmentFormatter extends Formatter<PieChart> {
 
     private static final int DEFAULT_FILL_COLOR = Color.TRANSPARENT;
     private static final int DEFAULT_EDGE_COLOR = Color.BLACK;
-    private static final float DEFAULT_EDGE_THICKNESS = 8;
+    private static final float DEFAULT_EDGE_THICKNESS = 3;
 
     private Paint innerEdgePaint;
     private Paint outerEdgePaint;

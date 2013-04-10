@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.androidplot</groupId>
         <artifactId>androidplot</artifactId>
-        <version>0.5.2-SNAPSHOT</version>
+        <version>0.5.2</version>
     </parent>
     <artifactId>androidplot-core</artifactId>
     <!--<version>${applicationVersion}</version>-->

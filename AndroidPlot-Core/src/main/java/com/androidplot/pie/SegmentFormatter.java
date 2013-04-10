@@ -79,6 +79,13 @@ public class SegmentFormatter extends Formatter<PieChart> {
 
     }
 
+    public SegmentFormatter(Integer fillColor, Integer borderColor) {
+        this(fillColor);
+        getInnerEdgePaint().setColor(borderColor);
+        getOuterEdgePaint().setColor(borderColor);
+        getRadialEdgePaint().setColor(borderColor);
+    }
+
     public SegmentFormatter(Integer fillColor, Integer outerEdgeColor,
                             Integer innerEdgeColor, Integer radialEdgeColor) {
         this(fillColor);

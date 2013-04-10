@@ -86,11 +86,11 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
 
         // vertices of the first radial:
         PointF r1Outer = calculateLineEnd(cx, cy, rad, startAngle);
-        PointF r1Inner = calculateLineEnd(cx, cy, rad - donutSizePx, startAngle);
+        PointF r1Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle);
 
         // vertices of the second radial:
         PointF r2Outer = calculateLineEnd(cx, cy, rad, startAngle + sweep);
-        PointF r2Inner = calculateLineEnd(cx, cy, rad - donutSizePx, startAngle + sweep);
+        PointF r2Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle + sweep);
 
         Path clip = new Path();
 
@@ -140,6 +140,10 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
 
         PointF labelOrigin = calculateLineEnd(cx, cy,
                 (rad-((rad- donutSizePx)/2)), startAngle + (sweep/2));
+
+        // TODO: move segment labelling outside the segment drawing loop
+        // TODO: so that the labels will not be clipped by the edge of the next
+        // TODO: segment being drawn.
         drawSegmentLabel(canvas, labelOrigin, seg, f);
     }
 

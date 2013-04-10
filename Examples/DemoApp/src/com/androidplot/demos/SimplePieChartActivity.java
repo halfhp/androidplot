@@ -86,22 +86,22 @@ public class SimplePieChartActivity extends Activity
 
 
         SegmentFormatter sf1 = new SegmentFormatter(
-                        Color.rgb(200, 150, 150), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY);
+                        Color.rgb(200, 150, 150), Color.BLACK);
 
         sf1.getFillPaint().setMaskFilter(emf);
 
         SegmentFormatter sf2 = new SegmentFormatter(
-                        Color.rgb(150, 200, 150), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY);
+                        Color.rgb(150, 200, 150), Color.BLACK);
 
         sf2.getFillPaint().setMaskFilter(emf);
 
         SegmentFormatter sf3 = new SegmentFormatter(
-                        Color.rgb(150, 150, 200), Color.DKGRAY,Color.DKGRAY, Color.DKGRAY);
+                        Color.rgb(150, 150, 200), Color.BLACK);
 
         sf3.getFillPaint().setMaskFilter(emf);
 
         SegmentFormatter sf4 = new SegmentFormatter(
-                        Color.BLUE, Color.DKGRAY,Color.DKGRAY, Color.DKGRAY);
+                        Color.BLUE, Color.BLACK);
 
         sf4.getFillPaint().setMaskFilter(emf);
 

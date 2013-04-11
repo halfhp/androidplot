@@ -11,6 +11,9 @@
                       android:orientation="vertical"
                       android:layout_width="fill_parent"
                       android:layout_height="wrap_content">
+            <Button android:id="@+id/startSimplePieExButton"
+                    style="@style/toc_button"
+                    android:text="A Pie Chart"/>
             <Button android:id="@+id/startSimpleXYExButton"
                     style="@style/toc_button"
                     android:text="A Simple XY Plot"/>

@@ -17,9 +17,7 @@
 package com.androidplot.xy;
 
 import android.graphics.*;
-import android.util.Pair;
 import com.androidplot.exception.PlotRenderException;
-import com.androidplot.series.XYSeries;
 import com.androidplot.util.ValPixConverter;
 
 import java.util.*;

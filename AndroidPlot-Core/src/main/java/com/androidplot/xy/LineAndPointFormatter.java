@@ -19,7 +19,7 @@ package com.androidplot.xy;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import com.androidplot.ui.DataRenderer;
+import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.Configurator;
 import com.androidplot.util.PixelUtils;
 
@@ -113,12 +113,12 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     }
 
     @Override
-    public Class<? extends DataRenderer> getRendererClass() {
+    public Class<? extends SeriesRenderer> getRendererClass() {
         return LineAndPointRenderer.class;
     }
 
     @Override
-    public DataRenderer getRendererInstance(XYPlot plot) {
+    public SeriesRenderer getRendererInstance(XYPlot plot) {
         return new LineAndPointRenderer(plot);
     }
 

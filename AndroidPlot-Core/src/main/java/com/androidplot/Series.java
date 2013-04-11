@@ -14,9 +14,31 @@
  *    limitations under the License.
  */
 
-package com.androidplot.xy;
+package com.androidplot;
 
-public interface PointLabeler {
+/**
+ * Base interface for all Series implementations
+ */
+public interface Series<T> {
 
-    public String getLabel(XYSeries series, int index);
+    /**
+     *
+     * @return The title of this Series.
+     */
+    public String getTitle();
+
+
+
+    // used primarily for synchronization.  can also be used to hang a condition on updates.
+
+    /**
+     * Called whenever the plot initiates a read of a Series.  In most cases this means that
+     * a complete read of the Series contents will proceed.
+     *//*
+    public void onReadBegin();
+
+    *//**
+     * Called when a Plot concludes reading of a Series.
+     *//*
+    public void onReadEnd();*/
 }

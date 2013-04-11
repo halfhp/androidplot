@@ -17,10 +17,8 @@
 package com.androidplot.xy;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Paint;
-import com.androidplot.Plot;
-import com.androidplot.ui.DataRenderer;
+import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.Configurator;
 
 public class BarFormatter extends XYSeriesFormatter {
@@ -73,12 +71,12 @@ public class BarFormatter extends XYSeriesFormatter {
     }
 
     @Override
-    public Class<? extends DataRenderer> getRendererClass() {
+    public Class<? extends SeriesRenderer> getRendererClass() {
         return BarRenderer.class;
     }
 
     @Override
-    public DataRenderer getRendererInstance(XYPlot plot) {
+    public SeriesRenderer getRendererInstance(XYPlot plot) {
         return new BarRenderer(plot);
     }
 }

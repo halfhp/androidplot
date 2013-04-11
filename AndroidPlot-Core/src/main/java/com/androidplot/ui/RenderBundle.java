@@ -16,7 +16,7 @@
 
 package com.androidplot.ui;
 
-import com.androidplot.series.Series;
+import com.androidplot.Series;
 import com.androidplot.xy.XYSeriesFormatter;
 
 public abstract class RenderBundle<RenderBundleType extends RenderBundle, SeriesType extends Series, SeriesFormatterType extends XYSeriesFormatter> {

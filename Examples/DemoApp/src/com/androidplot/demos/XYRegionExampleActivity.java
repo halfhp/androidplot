@@ -24,7 +24,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import com.androidplot.series.XYSeries;
+import com.androidplot.xy.XYSeries;
 import com.androidplot.ui.*;
 import com.androidplot.util.PaintUtils;
 import com.androidplot.xy.*;

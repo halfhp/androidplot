@@ -16,8 +16,7 @@
 
 package com.androidplot.xy;
 
-import android.graphics.Paint;
-import com.androidplot.ui.DataRenderer;
+import com.androidplot.ui.SeriesRenderer;
 
 public class BezierLineAndPointFormatter extends LineAndPointFormatter {
     /*public BezierLineAndPointFormatter(Paint linePaint, Paint vertexPaint, Paint fillPaint) {
@@ -33,12 +32,12 @@ public class BezierLineAndPointFormatter extends LineAndPointFormatter {
     }
 
     @Override
-    public Class<? extends DataRenderer> getRendererClass() {
+    public Class<? extends SeriesRenderer> getRendererClass() {
         return BezierLineAndPointRenderer.class;
     }
 
     @Override
-    public DataRenderer getRendererInstance(XYPlot plot) {
+    public SeriesRenderer getRendererInstance(XYPlot plot) {
         return new BezierLineAndPointRenderer(plot);
     }
 }

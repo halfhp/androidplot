@@ -21,7 +21,7 @@
     <parent>
         <artifactId>androidplot</artifactId>
         <groupId>com.androidplot</groupId>
-        <version>0.5.1-SNAPSHOT</version>
+        <version>0.6.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -33,9 +33,13 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
             <version>2.1_r1</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
         <!-- TODO: figure out how to use this dependency without breaking the clean target;
         used as-is, the clean target can fail because the dependency is erased by maven.
         <dependency>

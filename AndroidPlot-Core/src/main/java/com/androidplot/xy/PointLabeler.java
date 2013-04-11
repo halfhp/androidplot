@@ -16,10 +16,6 @@
 
 package com.androidplot.xy;
 
-import android.graphics.Canvas;
-import android.graphics.PointF;
-import com.androidplot.series.XYSeries;
-
 public interface PointLabeler {
 
     public String getLabel(XYSeries series, int index);

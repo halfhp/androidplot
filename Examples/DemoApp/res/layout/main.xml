@@ -11,6 +11,9 @@
                       android:orientation="vertical"
                       android:layout_width="fill_parent"
                       android:layout_height="wrap_content">
+            <Button android:id="@+id/startSimplePieExButton"
+                    style="@style/toc_button"
+                    android:text="A Pie Chart"/>
             <Button android:id="@+id/startSimpleXYExButton"
                     style="@style/toc_button"
                     android:text="A Simple XY Plot"/>
@@ -33,8 +36,7 @@
                     />
             <Button android:id="@+id/startBarPlotExButton"
                     style="@style/toc_button"
-                    android:text="Bar Plot"
-                    android:enabled="false"/>
+                    android:text="Bar Plot"/>
             <Button android:id="@+id/startXyScatterExButton"
                     style="@style/toc_button"
                     android:text="XY Scatter"

@@ -23,7 +23,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
-import com.androidplot.series.XYSeries;
 //import com.androidplot.xy.ui.widget.renderer.XYRendererType;
 import com.androidplot.ui.*;
 import com.androidplot.ui.widget.RangeLabelWidget;
@@ -264,6 +263,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         yValueMarkers = new ArrayList<YValueMarker>();
 
         setDefaultBounds(new RectRegion(-1, 1, -1, 1));
+
+        // TODO: can't remember why this getClass() check is neccessary.  test if it actually is...
         if (getClass().equals(XYPlot.class) && attrs != null) {
             loadAttrs(context, attrs);
         }
@@ -326,12 +327,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     public Number getYVal(PointF point) {
-        throw new UnsupportedOperationException("Not yet implemented.");
-        //ValPixConverter.pixToVal(point.y, )
+        return getGraphWidget().getYVal(point);
+        //throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     public Number getXVal(PointF point) {
-        throw new UnsupportedOperationException("Not yet implemented.");
+        return getGraphWidget().getXVal(point);
+        //throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     private boolean isXValWithinView(double xVal) {

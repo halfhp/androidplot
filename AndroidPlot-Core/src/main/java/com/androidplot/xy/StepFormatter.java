@@ -17,7 +17,7 @@
 package com.androidplot.xy;
 
 import android.content.Context;
-import com.androidplot.ui.DataRenderer;
+import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.Configurator;
 
 public class StepFormatter extends LineAndPointFormatter {
@@ -42,12 +42,12 @@ public class StepFormatter extends LineAndPointFormatter {
     }
 
     @Override
-    public Class<? extends DataRenderer> getRendererClass() {
+    public Class<? extends SeriesRenderer> getRendererClass() {
         return StepRenderer.class;
     }
 
     @Override
-    public DataRenderer getRendererInstance(XYPlot plot) {
+    public SeriesRenderer getRendererInstance(XYPlot plot) {
         return new StepRenderer(plot);
     }
 

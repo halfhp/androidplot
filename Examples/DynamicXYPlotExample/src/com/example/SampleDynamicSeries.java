@@ -39,12 +39,6 @@ public class SampleDynamicSeries implements XYSeries {
     }
 
     @Override
-    public void onReadBegin() {}
-
-    @Override
-    public void onReadEnd() {}
-
-    @Override
     public Number getX(int index) {
         return datasource.getX(seriesIndex, index);
     }

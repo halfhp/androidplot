@@ -18,7 +18,6 @@ package com.androidplot.xy;
 
 import android.graphics.*;
 import com.androidplot.ui.SeriesAndFormatterList;
-import com.androidplot.series.XYSeries;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.TableModel;
 import com.androidplot.ui.widget.Widget;
@@ -153,7 +152,11 @@ public class XYLegendWidget extends Widget {
         // Calculate the number of cells needed to draw the Legend:
         int seriesCount = 0;
         for(XYSeriesRenderer renderer : plot.getRendererList()) {
-            seriesCount += plot.getSeriesAndFormatterListForRenderer(renderer.getClass()).size();
+
+            SeriesAndFormatterList sfl = plot.getSeriesAndFormatterListForRenderer(renderer.getClass());
+            if(sfl != null) {
+                seriesCount += sfl.size();
+            }
 
             // Figure out how many regions need to be added to the legend:
             Hashtable<XYRegionFormatter, String> urf = renderer.getUniqueRegionFormatters();
@@ -172,14 +175,16 @@ public class XYLegendWidget extends Widget {
 
         // draw each series legend item:
         for(XYSeriesRenderer renderer : plot.getRendererList()) {
-            SeriesAndFormatterList<XYSeries,XYSeriesFormatter> sfList = plot.getSeriesAndFormatterListForRenderer(renderer.getClass());
+            SeriesAndFormatterList<XYSeries,XYSeriesFormatter> sfl = plot.getSeriesAndFormatterListForRenderer(renderer.getClass());
 
-            // maxIndex is only used if it has been determined.
-            // if it is 0 then it could not be determined.
-            for(int i = 0; i < sfList.size() && it.hasNext(); i++) {
-                cellRect = it.next();
-                XYSeriesFormatter formatter = sfList.getFormatter(i);
-                drawSeriesLegendCell(canvas, renderer, formatter, cellRect, sfList.getSeries(i).getTitle());
+            if (sfl != null) {
+                // maxIndex is only used if it has been determined.
+                // if it is 0 then it could not be determined.
+                for (int i = 0; i < sfl.size() && it.hasNext(); i++) {
+                    cellRect = it.next();
+                    XYSeriesFormatter formatter = sfl.getFormatter(i);
+                    drawSeriesLegendCell(canvas, renderer, formatter, cellRect, sfl.getSeries(i).getTitle());
+                }
             }
         }
 

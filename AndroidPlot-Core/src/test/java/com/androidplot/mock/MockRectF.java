@@ -21,7 +21,7 @@ import mockit.Instantiation;
 import mockit.Mock;
 import mockit.MockClass;
 
-@MockClass(realClass = RectF.class, instantiation = Instantiation.PerMockedInstance)
+@MockClass(realClass = RectF.class, stubs="", inverse=true)
 public final class MockRectF {
     //public float left;
     //public float top;

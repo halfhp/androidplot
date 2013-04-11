@@ -21,7 +21,7 @@ import android.util.Pair;
 import com.androidplot.Plot;
 import com.androidplot.PlotEvent;
 import com.androidplot.PlotListener;
-import com.androidplot.series.XYSeries;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -273,16 +273,6 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
     public int size() {
         return yVals != null ? yVals.size() : 0;
     }
-
-    /*@Override
-    public void onReadBegin() {
-        lock.readLock().lock();
-    }
-
-    @Override
-    public void onReadEnd() {
-        lock.readLock().unlock();
-    }*/
 
     @Override
     public Number getX(int index) {

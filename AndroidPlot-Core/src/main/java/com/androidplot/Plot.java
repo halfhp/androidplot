@@ -22,29 +22,25 @@ import android.os.Build;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
-import com.androidplot.series.Series;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
 import com.androidplot.ui.Formatter;
 import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TitleWidget;
 import com.androidplot.ui.widget.Widget;
-import com.androidplot.ui.DataRenderer;
+import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.Configurator;
 import com.androidplot.util.DisplayDimensions;
-import com.androidplot.util.MultiSynch;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.XLayoutStyle;
 import com.androidplot.xy.YLayoutStyle;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 
 /**
  * Base class for all other Plot implementations..
  */
-public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends DataRenderer>
+public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends SeriesRenderer>
         extends View implements Resizable{
     private static final String XML_ATTR_PREFIX      = "androidplot";
 
@@ -545,7 +541,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Set<SeriesType> getSeriesSet() {
         Set<SeriesType> seriesSet = new LinkedHashSet<SeriesType>();
-        for (DataRenderer renderer : getRendererList()) {
+        for (SeriesRenderer renderer : getRendererList()) {
             List<SeriesType> seriesList = getSeriesListForRenderer(renderer.getClass());
             if (seriesList != null) {
                 for (SeriesType series : seriesList) {
@@ -686,7 +682,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
         layout(new DisplayDimensions(cRect, mRect, pRect));
         super.onSizeChanged(w, h, oldw, oldh);
-        if(renderThread != null) {
+        if(renderThread != null && !renderThread.isAlive()) {
             renderThread.start();
         }
     }

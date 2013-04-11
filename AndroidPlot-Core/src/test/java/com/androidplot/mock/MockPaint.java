@@ -22,7 +22,7 @@ import mockit.Instantiation;
 import mockit.Mock;
 import mockit.MockClass;
 
-@MockClass(realClass = Paint.class, instantiation = Instantiation.PerMockedInstance)
+@MockClass(realClass = Paint.class)
 public final class MockPaint {
     int color = 0;
 

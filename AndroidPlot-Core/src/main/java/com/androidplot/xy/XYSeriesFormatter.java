@@ -16,7 +16,7 @@
 
 package com.androidplot.xy;
 
-import com.androidplot.ui.DataRenderer;
+import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.Formatter;
 import com.androidplot.util.ZHash;
 import com.androidplot.util.ZIndexable;
@@ -60,5 +60,5 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
      * @return
      */
     @Override
-    public abstract DataRenderer getRendererInstance(XYPlot plot);
+    public abstract SeriesRenderer getRendererInstance(XYPlot plot);
 }

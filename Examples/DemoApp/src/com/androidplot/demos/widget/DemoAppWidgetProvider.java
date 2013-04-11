@@ -23,7 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.widget.RemoteViews;
 import com.androidplot.demos.R;
-import com.androidplot.series.XYSeries;
+import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;

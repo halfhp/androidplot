@@ -36,7 +36,7 @@ import mockit.MockClass;
 
 import java.io.*;
 
-@MockClass(realClass = Context.class, instantiation = Instantiation.PerMockedInstance)
+@MockClass(realClass = Context.class)
 public class MockContext {
 
     /**

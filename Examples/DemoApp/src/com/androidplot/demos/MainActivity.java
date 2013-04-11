@@ -31,6 +31,14 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        Button startSimplePieExButton = (Button) findViewById(R.id.startSimplePieExButton);
+        startSimplePieExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SimplePieChartActivity.class));
+            }
+        });
+
         Button startDynamicXYExButton = (Button)findViewById(R.id.startDynamicXYExButton);
         startDynamicXYExButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,15 +47,23 @@ public class MainActivity extends Activity
             }
         });
 
-        Button startSimpleXYExButton = (Button)findViewById(R.id.startSimpleXYExButton);
-                startSimpleXYExButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(MainActivity.this, SimpleXYPlotActivity.class));
-                    }
-                });
+        Button startSimpleXYExButton = (Button) findViewById(R.id.startSimpleXYExButton);
+        startSimpleXYExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SimpleXYPlotActivity.class));
+            }
+        });
 
-        Button startOrSensorExButton = (Button)findViewById(R.id.startOrSensorExButton);
+        Button startBarPlotExButton = (Button) findViewById(R.id.startBarPlotExButton);
+        startBarPlotExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, BarPlotExampleActivity.class));
+            }
+        });
+
+        Button startOrSensorExButton = (Button) findViewById(R.id.startOrSensorExButton);
         startOrSensorExButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

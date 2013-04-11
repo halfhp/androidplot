@@ -36,11 +36,13 @@ public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter
         Hashtable<XYRegionFormatter, String> found = new Hashtable<XYRegionFormatter, String>();
         SeriesAndFormatterList<XYSeries, XYFormatterType> sfl = getSeriesAndFormatterList();
 
-        for (XYFormatterType xyf : sfl.getFormatterList()) {
-            ZIndexable<RectRegion> regionIndexer = xyf.getRegions();
-            for (RectRegion region : regionIndexer.elements()) {
-                XYRegionFormatter f = xyf.getRegionFormatter(region);
-                found.put(f, region.getLabel());
+        if (sfl != null) {
+            for (XYFormatterType xyf : sfl.getFormatterList()) {
+                ZIndexable<RectRegion> regionIndexer = xyf.getRegions();
+                for (RectRegion region : regionIndexer.elements()) {
+                    XYRegionFormatter f = xyf.getRegionFormatter(region);
+                    found.put(f, region.getLabel());
+                }
             }
         }
 

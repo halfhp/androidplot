@@ -29,6 +29,8 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 
     private BarWidthStyle style = BarWidthStyle.FIXED_WIDTH;
     private float barWidth = 5;
+    private float maxSpacing = 1;
+    private int longest;
 
     // compares two Numbers by first checking for null then converting to double.
     // used to determine which value from each series should be drawn first in the case
@@ -67,9 +69,8 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 
     public enum BarWidthStyle {
         FIXED_WIDTH,
-        FIXED_SPACING
+        MAX_SPACING
     }
-
 
     public BarRenderer(XYPlot plot) {
         super(plot);
@@ -83,6 +84,26 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
         this.barWidth = barWidth;
     }
 
+    public void setMaxSpacing(float barSpacing) {
+        this.maxSpacing = barSpacing;
+    }
+
+    public void setBarStyle(BarWidthStyle style) {
+        this.style = style;
+    }
+    
+    public void setBarStyle(BarWidthStyle style, float value) {
+        this.style = style;
+        switch (style) {
+        	case FIXED_WIDTH:
+        		setBarWidth(value);
+                break;
+        	case MAX_SPACING:
+        		setMaxSpacing(value);
+                break;
+        }
+    }
+
     @Override
     public void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException {
 
@@ -93,7 +114,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
             return;
         }
 
-        int longest = getLongestSeries(sl);
+        longest = getLongestSeries(sl);
         if (longest == 0) {
             return;  // no data, nothing to do.
         }
@@ -185,18 +206,47 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
     protected void drawBar(Canvas canvas, RectF plotArea, int index, XYSeries series) {
         Number xVal = series.getX(index);
         Number yVal = series.getY(index);
+        float pixX, pixY, halfWidth;
         BarFormatter formatter = getFormatter(index, series); // TODO: make this more efficient
         if (yVal != null && xVal != null) {  // make sure there's a real value to draw
             switch (style) {
-                case FIXED_WIDTH:
-                    float halfWidth = barWidth / 2;
-                    float pixX = ValPixConverter.valToPix(xVal.doubleValue(), getPlot().getCalculatedMinX().doubleValue(), getPlot().getCalculatedMaxX().doubleValue(), plotArea.width(), false) + (plotArea.left);
-                    float pixY = ValPixConverter.valToPix(yVal.doubleValue(), getPlot().getCalculatedMinY().doubleValue(), getPlot().getCalculatedMaxY().doubleValue(), plotArea.height(), true) + plotArea.top;
-                    canvas.drawRect(pixX - halfWidth, pixY, pixX + halfWidth, plotArea.bottom, formatter.getFillPaint());
-                    canvas.drawRect(pixX - halfWidth, pixY, pixX + halfWidth, plotArea.bottom, formatter.getBorderPaint());
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Not yet implemented.");
+	            case FIXED_WIDTH:
+	                halfWidth = barWidth / 2;
+	                pixX = ValPixConverter.valToPix(xVal.doubleValue(), getPlot().getCalculatedMinX().doubleValue(), getPlot().getCalculatedMaxX().doubleValue(), plotArea.width(), false) + (plotArea.left);
+	                pixY = ValPixConverter.valToPix(yVal.doubleValue(), getPlot().getCalculatedMinY().doubleValue(), getPlot().getCalculatedMaxY().doubleValue(), plotArea.height(), true) + plotArea.top;
+	                canvas.drawRect(pixX - halfWidth, pixY, pixX + halfWidth, plotArea.bottom, formatter.getFillPaint());
+	                canvas.drawRect(pixX - halfWidth, pixY, pixX + halfWidth, plotArea.bottom, formatter.getBorderPaint());
+	                break;
+	            case MAX_SPACING:
+	            	
+	            	pixX = ValPixConverter.valToPix(xVal.doubleValue(), getPlot().getCalculatedMinX().doubleValue(), getPlot().getCalculatedMaxX().doubleValue(), plotArea.width(), false) + (plotArea.left);
+	                pixY = ValPixConverter.valToPix(yVal.doubleValue(), getPlot().getCalculatedMinY().doubleValue(), getPlot().getCalculatedMaxY().doubleValue(), plotArea.height(), true) + plotArea.top;
+	                
+            		float availWidth = plotArea.width() - ((longest - 1) * maxSpacing);
+            		int barWidth = (int) (availWidth / (longest -1)) ;
+            		
+            		float back = 0;
+            		float forward = 0;
+            		
+            		if (barWidth <= 1) {
+            			back = 1;
+            			forward = 1;
+            		} else if (barWidth <= 2) {
+            			back = 1;
+            			forward = 1;
+            		} else {
+            			back = barWidth / 2;
+            			forward = barWidth / 2;
+            		}
+            		
+            		if ((back + forward) >= 2) {
+            			canvas.drawRect(pixX - back, pixY, pixX + forward, plotArea.bottom, formatter.getFillPaint());
+            		}
+            		canvas.drawRect(pixX - back, pixY, pixX + forward, plotArea.bottom, formatter.getBorderPaint());
+	                
+	                break;
+	            default:
+	                throw new UnsupportedOperationException("Not yet implemented.");
             }
         }
     }

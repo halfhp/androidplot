@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import com.androidplot.LineRegion;
+import com.androidplot.xy.BarRenderer.BarWidthStyle;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.ui.*;
 import com.androidplot.ui.widget.UserTextLabelWidget;
@@ -86,8 +87,8 @@ public class BarPlotExampleActivity extends Activity
                 AnchorPosition.TOP_MIDDLE);
 
         // Create a couple arrays of y-values to plot:
-        Number[] series1Numbers = {2, null, 5, 2, 7, 4};
-        Number[] series2Numbers = {4, 6, 3, null, 2, 10};
+        Number[] series1Numbers = {2, null, 5, 2, 7, 4, 3, 7, 4, 5, 7, 4, 5, 8, 5, 3, 6, 3, 9};
+        Number[] series2Numbers = {4, 6, 3, null, 2, 0, 7, 4, 5, 4, 9, 6, 2, 8, 4, 0, 7, 4, 7};
 
         // Turn the above arrays into XYSeries':
         series1 = new SimpleXYSeries(
@@ -104,8 +105,9 @@ public class BarPlotExampleActivity extends Activity
         // same as above:
         plot.addSeries(series2, formatter2);
 
-        // thicken the plot lines:
-        ((MyBarRenderer)plot.getRenderer(MyBarRenderer.class)).setBarWidth(300);
+        // thicken the plot lines or make the fixed spacing
+        //((MyBarRenderer)plot.getRenderer(MyBarRenderer.class)).setBarWidth(300);
+        ((MyBarRenderer)plot.getRenderer(MyBarRenderer.class)).setBarStyle(BarWidthStyle.MAX_SPACING, 10);
 
         // reduce the number of range labels
         plot.setTicksPerRangeLabel(3);

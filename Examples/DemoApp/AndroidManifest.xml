@@ -65,7 +65,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TimeSeriesActivity"/>
-
+		<activity android:name=".DualScaleXYPlotExampleActivity"/>
+        
         <!-- receiver for demo app widget -->
         <receiver
                 android:icon="@drawable/icon"

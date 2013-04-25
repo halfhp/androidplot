@@ -7,7 +7,7 @@
     <ScrollView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout 
                       android:orientation="vertical"
                       android:layout_width="fill_parent"
                       android:layout_height="wrap_content">
@@ -53,7 +53,11 @@
                     style="@style/toc_button"
                     android:text="ListView of XYPlots"
                     android:enabled="true"/>
-        </LinearLayout>
+            <Button android:id="@+id/startDualScaleExampleButton"
+                    style="@style/toc_button"
+                    android:text="Dual Scale Example"
+                    android:enabled="true"/>
+            </LinearLayout>
     </ScrollView>
     <TextView android:id="@+id/text"
               android:layout_width="fill_parent"

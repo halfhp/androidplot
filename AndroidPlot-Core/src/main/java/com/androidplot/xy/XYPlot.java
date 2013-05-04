@@ -431,11 +431,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 updateRangeMinMaxForOriginModel();
                 break;
             case EDGE:
-                updateRangeMinMaxForEdgeModel();
-                calculatedMinY = ApplyUserMinMax(calculatedMinY,
-                        rangeBottomMin, rangeBottomMax);
-                calculatedMaxY = ApplyUserMinMax(calculatedMaxY, rangeTopMin,
-                        rangeTopMax);
+            	if (getSeriesSet().size() > 0) {
+	                updateRangeMinMaxForEdgeModel();
+	                calculatedMinY = ApplyUserMinMax(calculatedMinY,
+	                        rangeBottomMin, rangeBottomMax);
+	                calculatedMaxY = ApplyUserMinMax(calculatedMaxY, rangeTopMin,
+	                        rangeTopMax);
+            	}
                 break;
             default:
                 throw new UnsupportedOperationException("Range Framing Model not yet supported: " + domainFramingModel);

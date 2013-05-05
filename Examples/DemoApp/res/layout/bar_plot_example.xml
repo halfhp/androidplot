@@ -26,7 +26,55 @@
             androidPlot.title="A Simple XY Plot"
             android:layout_weight="1"
             androidPlot.graphWidget.gridLinePaint.color="#000000"/>
-    <LinearLayout
+
+   	<LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+	    <Spinner 
+	       	android:id="@+id/spRenderStyle"
+	       	android:layout_width="wrap_content"
+	       	android:layout_height="wrap_content" />		    
+	   	<Spinner 
+	       	android:id="@+id/spSeriesSize"
+	       	android:layout_width="wrap_content"
+	       	android:layout_height="wrap_content" />
+  			    
+	</LinearLayout>
+ 
+   	<LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+	   	<Spinner 
+	       	android:id="@+id/spWidthStyle"
+	       	android:layout_width="wrap_content"
+	       	android:layout_height="wrap_content" />
+	    <RelativeLayout 
+	           android:id="@+id/sectionGraph" 
+		       android:layout_width="fill_parent"
+		       android:layout_height="wrap_content">
+		   	<SeekBar
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:paddingLeft="10dp"
+	                android:paddingRight="10dp"
+	                android:max="300"
+	                android:progress="10"
+	                android:id="@+id/sbFixed"/>
+	        <SeekBar
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:paddingLeft="10dp"
+	                android:paddingRight="10dp"
+	                android:max="50"
+	                android:progress="1"
+	                android:id="@+id/sbVariable"/>
+		</RelativeLayout>        	   				    
+	</LinearLayout>
+   	<LinearLayout
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center"

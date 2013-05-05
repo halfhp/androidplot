@@ -112,6 +112,13 @@ public class MainActivity extends Activity
             }
         });
 
+        Button startDualScaleExampleButton = (Button)findViewById(R.id.startDualScaleExampleButton);
+        startDualScaleExampleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, DualScaleXYPlotExampleActivity.class));
+            }
+        });
 
     }
 }

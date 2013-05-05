@@ -16,22 +16,40 @@
 
 package com.androidplot.demos;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 import android.app.Activity;
-import android.graphics.*;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import com.androidplot.LineRegion;
-import com.androidplot.xy.BarRenderer.BarWidthStyle;
-import com.androidplot.xy.XYSeries;
-import com.androidplot.ui.*;
-import com.androidplot.ui.widget.UserTextLabelWidget;
-import com.androidplot.xy.*;
+import android.widget.SeekBar;
+import android.widget.Spinner;
 
-import java.util.Arrays;
+import com.androidplot.LineRegion;
+import com.androidplot.ui.AnchorPosition;
+import com.androidplot.ui.SeriesRenderer;
+import com.androidplot.ui.SizeLayoutType;
+import com.androidplot.ui.SizeMetrics;
+import com.androidplot.ui.TextOrientationType;
+import com.androidplot.ui.widget.UserTextLabelWidget;
+import com.androidplot.xy.BarFormatter;
+import com.androidplot.xy.BarRenderer;
+import com.androidplot.xy.BoundaryMode;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XLayoutStyle;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
+import com.androidplot.xy.YLayoutStyle;
 
 /**
  * The simplest possible example of using AndroidPlot to plot some data.
@@ -44,9 +62,26 @@ public class BarPlotExampleActivity extends Activity
 
     private CheckBox series1CheckBox;
     private CheckBox series2CheckBox;
-
+    private Spinner spRenderStyle, spWidthStyle, spSeriesSize;
+    private SeekBar sbFixedWidth, sbVariableWidth;
+    
     private XYSeries series1;
     private XYSeries series2;
+    private enum SeriesSize {
+        TEN,
+        TWENTY,
+        SIXTY
+    }
+
+    // Create a couple arrays of y-values to plot:
+    Number[] series1Numbers10 = {2, null, 5, 2, 7, 4, 3, 7, 4, 5};
+    Number[] series2Numbers10 = {4, 6, 3, null, 2, 0, 7, 4, 5, 4};
+    Number[] series1Numbers20 = {2, null, 5, 2, 7, 4, 3, 7, 4, 5, 7, 4, 5, 8, 5, 3, 6, 3, 9, 3};
+    Number[] series2Numbers20 = {4, 6, 3, null, 2, 0, 7, 4, 5, 4, 9, 6, 2, 8, 4, 0, 7, 4, 7, 9};
+    Number[] series1Numbers60 = {2, null, 5, 2, 7, 4, 3, 7, 4, 5, 7, 4, 5, 8, 5, 3, 6, 3, 9, 3, 2, null, 5, 2, 7, 4, 3, 7, 4, 5, 7, 4, 5, 8, 5, 3, 6, 3, 9, 3, 2, null, 5, 2, 7, 4, 3, 7, 4, 5, 7, 4, 5, 8, 5, 3, 6, 3, 9, 3};
+    Number[] series2Numbers60 = {4, 6, 3, null, 2, 0, 7, 4, 5, 4, 9, 6, 2, 8, 4, 0, 7, 4, 7, 9, 4, 6, 3, null, 2, 0, 7, 4, 5, 4, 9, 6, 2, 8, 4, 0, 7, 4, 7, 9, 4, 6, 3, null, 2, 0, 7, 4, 5, 4, 9, 6, 2, 8, 4, 0, 7, 4, 7, 9};
+    Number[] series1Numbers = series1Numbers10;
+    Number[] series2Numbers = series2Numbers10;
 
     private MyBarFormatter formatter1 =
             new MyBarFormatter(Color.argb(200, 100, 150, 100), Color.LTGRAY);
@@ -86,28 +121,6 @@ public class BarPlotExampleActivity extends Activity
                 50, YLayoutStyle.ABSOLUTE_FROM_TOP,
                 AnchorPosition.TOP_MIDDLE);
 
-        // Create a couple arrays of y-values to plot:
-        Number[] series1Numbers = {2, null, 5, 2, 7, 4, 3, 7, 4, 5, 7, 4, 5, 8, 5, 3, 6, 3, 9};
-        Number[] series2Numbers = {4, 6, 3, null, 2, 0, 7, 4, 5, 4, 9, 6, 2, 8, 4, 0, 7, 4, 7};
-
-        // Turn the above arrays into XYSeries':
-        series1 = new SimpleXYSeries(
-                Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
-                "Series1");                             // Set the display title of the series
-
-        // same as above
-        series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series2");
-
-        // add a new series' to the xyplot:
-        plot.addSeries(series1, formatter1);
-
-        // same as above:
-        plot.addSeries(series2, formatter2);
-
-        // thicken the plot lines or make the fixed spacing
-        //((MyBarRenderer)plot.getRenderer(MyBarRenderer.class)).setBarWidth(300);
-        ((MyBarRenderer)plot.getRenderer(MyBarRenderer.class)).setBarStyle(BarWidthStyle.MAX_SPACING, 10);
 
         // reduce the number of range labels
         plot.setTicksPerRangeLabel(3);
@@ -138,12 +151,140 @@ public class BarPlotExampleActivity extends Activity
                 return true;
             }
         });
+        
+        spRenderStyle = (Spinner) findViewById(R.id.spRenderStyle);
+        ArrayAdapter <BarRenderer.BarRenderStyle> adapter = new ArrayAdapter <BarRenderer.BarRenderStyle> (this, android.R.layout.simple_spinner_item, BarRenderer.BarRenderStyle.values() );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spRenderStyle.setAdapter(adapter);
+        spRenderStyle.setSelection(BarRenderer.BarRenderStyle.OVERLAID.ordinal());
+        spRenderStyle.setOnItemSelectedListener(new OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+                updatePlot();
+            }
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+        });             
+        
+        spWidthStyle = (Spinner) findViewById(R.id.spWidthStyle);
+        ArrayAdapter <BarRenderer.BarWidthStyle> adapter1 = new ArrayAdapter <BarRenderer.BarWidthStyle> (this, android.R.layout.simple_spinner_item, BarRenderer.BarWidthStyle.values() );
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spWidthStyle.setAdapter(adapter1);
+        spWidthStyle.setSelection(BarRenderer.BarWidthStyle.FIXED_WIDTH.ordinal());
+        spWidthStyle.setOnItemSelectedListener(new OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+            	if (BarRenderer.BarWidthStyle.FIXED_WIDTH.equals(spWidthStyle.getSelectedItem())) {
+            		sbFixedWidth.setVisibility(View.VISIBLE);
+            		sbVariableWidth.setVisibility(View.INVISIBLE);
+            	} else {
+            		sbFixedWidth.setVisibility(View.INVISIBLE);
+            		sbVariableWidth.setVisibility(View.VISIBLE);
+            	}
+                updatePlot();
+            }
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {    
+			}
+        });             
+
+        spSeriesSize = (Spinner) findViewById(R.id.spSeriesSize);
+        ArrayAdapter <SeriesSize> adapter11 = new ArrayAdapter <SeriesSize> (this, android.R.layout.simple_spinner_item, SeriesSize.values() );
+        adapter11.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spSeriesSize.setAdapter(adapter11);
+        spSeriesSize.setSelection(SeriesSize.TEN.ordinal());
+        spSeriesSize.setOnItemSelectedListener(new OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+                switch ((SeriesSize)arg0.getSelectedItem()) {
+				case TEN:
+					series1Numbers = series1Numbers10;
+					series2Numbers = series2Numbers10;
+					break;
+				case TWENTY:
+					series1Numbers = series1Numbers20;
+					series2Numbers = series2Numbers20;
+					break;
+				case SIXTY:
+					series1Numbers = series1Numbers60;
+					series2Numbers = series2Numbers60;
+					break;
+				default:
+					break;
+                }
+                updatePlot();
+            }
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+        });          
+        
+       
+        sbFixedWidth = (SeekBar) findViewById(R.id.sbFixed);
+        sbFixedWidth.setProgress(100);
+        sbFixedWidth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {updatePlot();}
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        
+        
+        sbVariableWidth = (SeekBar) findViewById(R.id.sbVariable);
+        sbVariableWidth.setProgress(1);
+        sbVariableWidth.setVisibility(View.INVISIBLE);
+        sbVariableWidth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {updatePlot();}
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        
+        updatePlot();
+
     }
 
+    private void updatePlot() {
+    	
+    	// Remove all current series from each plot
+        Iterator<XYSeries> iterator1 = plot.getSeriesSet().iterator();
+        while(iterator1.hasNext()) { 
+        	XYSeries setElement = iterator1.next();
+        	plot.removeSeries(setElement);
+        }
+
+        // Setup our Series with the selected number of elements
+        series1 = new SimpleXYSeries(Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1");
+        series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series2");
+
+        // add a new series' to the xyplot:
+        if (series1CheckBox.isChecked()) plot.addSeries(series1, formatter1);
+        if (series2CheckBox.isChecked()) plot.addSeries(series2, formatter2); 
+
+        // Setup the BarRenderer with our selected options
+        MyBarRenderer renderer = ((MyBarRenderer)plot.getRenderer(MyBarRenderer.class));
+        renderer.setBarRenderStyle((BarRenderer.BarRenderStyle)spRenderStyle.getSelectedItem());
+        renderer.setBarWidthStyle((BarRenderer.BarWidthStyle)spWidthStyle.getSelectedItem());
+        renderer.setBarWidth(sbFixedWidth.getProgress());
+        renderer.setBarGap(sbVariableWidth.getProgress());
+        
+        if (BarRenderer.BarRenderStyle.STACKED.equals(spRenderStyle.getSelectedItem())) {
+        	plot.setRangeTopMin(15);
+        } else {
+        	plot.setRangeTopMin(0);
+        }
+	        
+        plot.redraw();
+    	
+    }  
+    
     private void onPlotClicked(PointF point) {
 
         // make sure the point lies within the graph area.  we use gridrect
-        // because it accounts for margins and padding as well.
+        // because it accounts for margins and padding as well. 
         if (plot.getGraphWidget().getGridRect().contains(point.x, point.y)) {
             Number x = plot.getXVal(point);
             Number y = plot.getYVal(point);
@@ -207,7 +348,7 @@ public class BarPlotExampleActivity extends Activity
 
     private void onS2CheckBoxClicked(boolean checked) {
         if (checked) {
-            plot.addSeries(series2, formatter2);
+            plot.addSeries(series2, formatter2);  
         } else {
             plot.removeSeries(series2);
         }
@@ -245,9 +386,9 @@ public class BarPlotExampleActivity extends Activity
          */
         //@Override
         // TODO: figure out why using @Override screws up the Maven builds
-        protected MyBarFormatter getFormatter(int index, XYSeries series) {
+        protected MyBarFormatter getFormatter(int index, XYSeries series) { 
             if(selection != null &&
-                    selection.second == series &&
+                    selection.second == series && 
                     selection.first == index) {
                 return selectionFormatter;
             } else {

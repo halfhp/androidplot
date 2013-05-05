@@ -16,60 +16,38 @@
 
 package com.androidplot.xy;
 
-import android.graphics.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
+import android.graphics.Canvas;
+import android.graphics.RectF;
+
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.util.ValPixConverter;
-
-import java.util.*;
 
 /**
  * Renders a point as a Bar
  */
 public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 
-    private BarWidthStyle style = BarWidthStyle.FIXED_WIDTH;
+    private BarRenderStyle renderStyle = BarRenderStyle.OVERLAID;  // default Render Style
+	private BarWidthStyle widthStyle = BarWidthStyle.FIXED_WIDTH;  // default Width Style
     private float barWidth = 5;
-    private float maxSpacing = 1;
-    private int longest;
-
-    // compares two Numbers by first checking for null then converting to double.
-    // used to determine which value from each series should be drawn first in the case
-    // of stacked render mode.
-    private static final Comparator numberComparator = new Comparator<Number>() {
-        @Override
-        public int compare(Number number, Number number2) {
-            if (number == null) {
-                if (number2 == null) {
-                    return 0;
-                }
-                return -1;
-            } else if (number2 == null) {
-                // dont need to check for double null because the opening if would
-                // have already caught it.
-                return 1;
-            } else {
-                double lhs = number.doubleValue();
-                double rhs = number2.doubleValue();
-
-                if (lhs < rhs) {
-                    return -1;
-                } else if (lhs > rhs) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        }
-    };
+    private float barGap = 1;
 
     public enum BarRenderStyle {
-        STACKED,            // bars are overlaid in descending y-val order (largest val in back)
-        SIDE_BY_SIDE        // bars are drawn next to each-other
+        OVERLAID,           // bars are overlaid in descending y-val order (largest val in back)
+        STACKED,            // bars are drawn stacked vertically on top of each other
+        SIDE_BY_SIDE        // bars are drawn horizontally next to each-other
     }
 
     public enum BarWidthStyle {
-        FIXED_WIDTH,
-        MAX_SPACING
+        FIXED_WIDTH,        // bar width is always barWidth
+        VARIABLE_WIDTH      // bar width is calculated so that there is only barGap between each bar
     }
 
     public BarRenderer(XYPlot plot) {
@@ -77,58 +55,40 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
     }
 
     /**
-     * Sets the width of the bars draw.
+     * Sets the width of the bars when using the FIXED_WIDTH render style
      * @param barWidth
      */
     public void setBarWidth(float barWidth) {
         this.barWidth = barWidth;
     }
 
-    public void setMaxSpacing(float barSpacing) {
-        this.maxSpacing = barSpacing;
+    /**
+     * Sets the size of the gap between the bar (or bar groups) when using the VARIABLE_WIDTH render style
+     * @param barGap
+     */
+    public void setBarGap(float barGap) {
+        this.barGap = barGap;
     }
 
-    public void setBarStyle(BarWidthStyle style) {
-        this.style = style;
+    public void setBarRenderStyle(BarRenderStyle renderStyle) {
+        this.renderStyle = renderStyle;
     }
     
-    public void setBarStyle(BarWidthStyle style, float value) {
-        this.style = style;
+    public void setBarWidthStyle(BarWidthStyle widthStyle) {
+        this.widthStyle = widthStyle;
+    }
+    
+    public void setBarWidthStyle(BarWidthStyle style, float value) {
+    	setBarWidthStyle(style);
         switch (style) {
         	case FIXED_WIDTH:
         		setBarWidth(value);
                 break;
-        	case MAX_SPACING:
-        		setMaxSpacing(value);
-                break;
-        }
-    }
-
-    @Override
-    public void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException {
-
-        List<XYSeries> sl = getPlot().getSeriesListForRenderer(this.getClass());
-
-        // dont try to render anything if there's nothing to render.
-        if(sl == null) {
-            return;
-        }
-
-        longest = getLongestSeries(sl);
-        if (longest == 0) {
-            return;  // no data, nothing to do.
-        }
-
-        TreeMap<Number, XYSeries> seriesMap = new TreeMap<Number, XYSeries>(numberComparator);
-        for (int i = 0; i < longest; i++) {
-            seriesMap.clear();
-            List<XYSeries> seriesList = getPlot().getSeriesListForRenderer(this.getClass());
-            for (XYSeries series : seriesList) {
-                if (i < series.size()) {
-                    seriesMap.put(series.getY(i), series);
-                }
-            }
-            drawBars(canvas, plotArea, seriesMap, i);
+        	case VARIABLE_WIDTH:
+        		setBarGap(value);
+        		break;
+		default:
+			break;
         }
     }
 
@@ -136,60 +96,6 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
     public void doDrawLegendIcon(Canvas canvas, RectF rect, BarFormatter formatter) {
         canvas.drawRect(rect, formatter.getFillPaint());
         canvas.drawRect(rect, formatter.getBorderPaint());
-    }
-
-    private int getLongestSeries(List<XYSeries> seriesList) {
-        int longest = 0;
-
-        for(XYSeries series : seriesList) {
-            int seriesSize = series.size();
-            if(seriesSize > longest) {
-                longest = seriesSize;
-            }
-        }
-        return longest;
-    }
-
-
-    private int getLongestSeries() {
-        return getLongestSeries(getPlot().getSeriesListForRenderer(this.getClass()));
-    }
-
-    private void drawBars(Canvas canvas, RectF plotArea, TreeMap<Number, XYSeries> seriesMap, int x) {
-        Paint p = new Paint();
-        p.setColor(Color.RED);
-        Object[] oa = seriesMap.entrySet().toArray();
-        //Map.Entry<Number, XYSeries> entry;
-
-        for(int i = oa.length-1; i >= 0; i--) {
-                    //entry = (Map.Entry<Number, XYSeries>) oa[i];
-        drawBar(canvas, plotArea, x,
-                ((Map.Entry<Number, XYSeries>)oa[i]).getValue());
-        }
-        /*for(int i = oa.length-1; i >= 0; i--) {
-            entry = (Map.Entry<Number, XYSeries>) oa[i];
-            BarFormatter formatter = getFormatter(entry.getValue()); // TODO: make this more efficient
-            Number yVal = null;
-            Number xVal = null;
-            if(entry.getValue() != null) {
-                yVal = entry.getValue().getY(x);
-                xVal = entry.getValue().getX(x);
-            }  
-          
-            if (yVal != null && xVal != null) {  // make sure there's a real value to draw
-                switch (style) {
-                    case FIXED_WIDTH:
-                        float halfWidth = barWidth/2;
-                        float pixX = ValPixConverter.valToPix(xVal.doubleValue(), getPlot().getCalculatedMinX().doubleValue(), getPlot().getCalculatedMaxX().doubleValue(), plotArea.width(), false) + (plotArea.left);
-                        float pixY = ValPixConverter.valToPix(yVal.doubleValue(), getPlot().getCalculatedMinY().doubleValue(), getPlot().getCalculatedMaxY().doubleValue(), plotArea.height(), true) + plotArea.top;
-                        canvas.drawRect(pixX - halfWidth, pixY, pixX + halfWidth, plotArea.bottom, formatter.getFillPaint());
-                        canvas.drawRect(pixX - halfWidth, pixY, pixX + halfWidth, plotArea.bottom, formatter.getBorderPaint());
-                        break;
-                    default:
-                        throw new UnsupportedOperationException("Not yet implemented.");
-                }
-            }
-        }*/
     }
 
     /**
@@ -202,52 +108,233 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
     protected T getFormatter(int index, XYSeries series) {
         return getFormatter(series);
     }
+    
+    public void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException {
+        
+    	List<XYSeries> sl = getPlot().getSeriesListForRenderer(this.getClass());
+    	
+    	TreeMap<Number, BarGroup> axisMap = new TreeMap<Number, BarGroup>();
+    	
+        // dont try to render anything if there's nothing to render.
+        if(sl == null) return;
 
-    protected void drawBar(Canvas canvas, RectF plotArea, int index, XYSeries series) {
-        Number xVal = series.getX(index);
-        Number yVal = series.getY(index);
-        float pixX, pixY, halfWidth;
-        BarFormatter formatter = getFormatter(index, series); // TODO: make this more efficient
-        if (yVal != null && xVal != null) {  // make sure there's a real value to draw
-            switch (style) {
-	            case FIXED_WIDTH:
-	                halfWidth = barWidth / 2;
-	                pixX = ValPixConverter.valToPix(xVal.doubleValue(), getPlot().getCalculatedMinX().doubleValue(), getPlot().getCalculatedMaxX().doubleValue(), plotArea.width(), false) + (plotArea.left);
-	                pixY = ValPixConverter.valToPix(yVal.doubleValue(), getPlot().getCalculatedMinY().doubleValue(), getPlot().getCalculatedMaxY().doubleValue(), plotArea.height(), true) + plotArea.top;
-	                canvas.drawRect(pixX - halfWidth, pixY, pixX + halfWidth, plotArea.bottom, formatter.getFillPaint());
-	                canvas.drawRect(pixX - halfWidth, pixY, pixX + halfWidth, plotArea.bottom, formatter.getBorderPaint());
-	                break;
-	            case MAX_SPACING:
+        /* 
+         * Build the axisMap (yVal,BarGroup)... a TreeMap of BarGroups
+         * BarGroups represent a point on the X axis where a single or group of bars need to be drawn.
+         */
+        
+        // For each Series
+        for(XYSeries series : sl) { 
+        	BarGroup barGroup;
+        	
+            // For each value in the series
+            for(int i = 0; i < series.size(); i++) {
+            	
+               	if (series.getX(i) != null) {
+
+            		// get a new bar object
+            		Bar b = new Bar(series,i,plotArea);
 	            	
-	            	pixX = ValPixConverter.valToPix(xVal.doubleValue(), getPlot().getCalculatedMinX().doubleValue(), getPlot().getCalculatedMaxX().doubleValue(), plotArea.width(), false) + (plotArea.left);
-	                pixY = ValPixConverter.valToPix(yVal.doubleValue(), getPlot().getCalculatedMinY().doubleValue(), getPlot().getCalculatedMaxY().doubleValue(), plotArea.height(), true) + plotArea.top;
-	                
-            		float availWidth = plotArea.width() - ((longest - 1) * maxSpacing);
-            		int barWidth = (int) (availWidth / (longest -1)) ;
-            		
-            		float back = 0;
-            		float forward = 0;
-            		
-            		if (barWidth <= 1) {
-            			back = 1;
-            			forward = 1;
-            		} else if (barWidth <= 2) {
-            			back = 1;
-            			forward = 1;
-            		} else {
-            			back = barWidth / 2;
-            			forward = barWidth / 2;
-            		}
-            		
-            		if ((back + forward) >= 2) {
-            			canvas.drawRect(pixX - back, pixY, pixX + forward, plotArea.bottom, formatter.getFillPaint());
-            		}
-            		canvas.drawRect(pixX - back, pixY, pixX + forward, plotArea.bottom, formatter.getBorderPaint());
-	                
-	                break;
-	            default:
-	                throw new UnsupportedOperationException("Not yet implemented.");
+            		// Find or create the barGroup
+	            	if (axisMap.containsKey(b.intX)) {
+	            		barGroup = axisMap.get(b.intX);
+	            	} else {
+	            		barGroup = new BarGroup(b.intX,plotArea);
+	            		axisMap.put(b.intX, barGroup);
+	            	}
+	            	barGroup.addBar(b);
+            	}
+            	
             }
         }
+
+		// Loop through the axisMap linking up prev pointers
+		BarGroup prev, current;
+		prev = null;
+		for(Entry<Number, BarGroup> mapEntry : axisMap.entrySet()) {
+			current = mapEntry.getValue(); 
+    		current.prev = prev;
+    		prev = current;
+		}
+
+		
+		// The default gap between each bar section
+		int gap  = (int) barGap;
+
+		// Determine roughly how wide (rough_width) this bar should be. This is then used as a default width
+		// when there are gaps in the data or for the first/last bars.
+		float f_rough_width = ((plotArea.width() - ((axisMap.size() - 1) * gap)) / (axisMap.size() - 1));
+		int rough_width = (int) f_rough_width;
+		if (rough_width < 0) rough_width = 0;
+		if (gap > rough_width) {
+			gap = (int) rough_width / 2;
+		}
+
+		//Log.d("PARAMTER","PLOT_WIDTH=" + plotArea.width());
+		//Log.d("PARAMTER","BAR_GROUPS=" + axisMap.size());
+		//Log.d("PARAMTER","ROUGH_WIDTH=" + rough_width);
+		//Log.d("PARAMTER","GAP=" + gap);
+
+		/* 
+		 * Calculate the dimensions of each barGroup and then draw each bar within it according to
+		 * the Render Style and Width Style. 
+		 */
+		
+		for(Number key : axisMap.keySet()) {
+
+			BarGroup barGroup = axisMap.get(key);
+
+			// Determine the exact left and right X for the Bar Group
+			switch (widthStyle) {
+			case FIXED_WIDTH:
+    			// use intX and go halfwidth either side.
+    			barGroup.leftX = barGroup.intX - (int) (barWidth / 2);
+    			barGroup.width = (int) barWidth;
+    			barGroup.rightX = barGroup.leftX + barGroup.width;
+				break;
+			case VARIABLE_WIDTH:
+	    		if (barGroup.prev != null) {
+	    			if (barGroup.intX - barGroup.prev.intX - gap - 1 > (int)(rough_width * 1.5)) {
+	    				// use intX and go halfwidth either side.
+	        			barGroup.leftX = barGroup.intX - (int) (rough_width / 2);
+	        			barGroup.width = rough_width;
+	        			barGroup.rightX = barGroup.leftX + barGroup.width;
+	    			} else {
+	    				// base left off prev right to get the gap correct.
+	    				barGroup.leftX = barGroup.prev.rightX + gap + 1;
+	    				if (barGroup.leftX > barGroup.intX) barGroup.leftX = barGroup.intX;
+	    				// base right off intX + halfwidth.
+	    				barGroup.rightX = barGroup.intX + (int) (rough_width / 2);
+	    				// calculate the width
+	    				barGroup.width = barGroup.rightX - barGroup.leftX;
+	    			}
+	    		} else {
+	    			// use intX and go halfwidth either side.
+	    			barGroup.leftX = barGroup.intX - (int) (rough_width / 2);
+	    			barGroup.width = rough_width;
+	    			barGroup.rightX = barGroup.leftX + barGroup.width;
+	    		}
+				break;
+			default:
+				break;
+			}
+    		
+    		//Log.d("BAR_GROUP", "rough_width=" + rough_width + " width=" + barGroup.width + " <" + barGroup.leftX + "|" + barGroup.intX + "|" + barGroup.rightX + ">"); 
+    		
+    		/*
+    		 * Draw the bars within the barGroup area.
+    		 */
+			switch (renderStyle) {
+			case OVERLAID:
+				Collections.sort(barGroup.bars, new BarComparator());
+				for (Bar b : barGroup.bars) {
+	        		//Log.d("BAR", b.series.getTitle() + " <" + b.barGroup.leftX + "|" + b.barGroup.intX + "|" + b.barGroup.rightX + "> " + b.intY); 
+	    			if (b.barGroup.width >= 2) {
+	        			canvas.drawRect(b.barGroup.leftX, b.intY, b.barGroup.rightX, b.barGroup.plotArea.bottom, b.formatter().getFillPaint());
+	        		}
+	        		canvas.drawRect(b.barGroup.leftX, b.intY, b.barGroup.rightX, b.barGroup.plotArea.bottom, b.formatter().getBorderPaint());
+	        	}
+				break;
+			case SIDE_BY_SIDE:
+				int width = (int) barGroup.width / barGroup.bars.size();
+				int leftX = barGroup.leftX;
+				Collections.sort(barGroup.bars, new BarComparator());
+				for (Bar b : barGroup.bars) {
+	        		//Log.d("BAR", "width=" + width + " <" + leftX + "|" + b.intX + "|" + (leftX + width) + "> " + b.intY); 
+	        		if (b.barGroup.width >= 2) {
+	        			canvas.drawRect(leftX, b.intY, leftX + width, b.barGroup.plotArea.bottom, b.formatter().getFillPaint());
+	        		}
+	        		canvas.drawRect(leftX, b.intY, leftX + width, b.barGroup.plotArea.bottom, b.formatter().getBorderPaint());
+	        		leftX = leftX + width;
+	        	}
+				break;
+			case STACKED:
+				int bottom = (int) barGroup.plotArea.bottom;
+				Collections.sort(barGroup.bars, new BarComparator());
+				for (Bar b : barGroup.bars) {
+	        		int height = (int) b.barGroup.plotArea.bottom - b.intY;
+	        		int top = bottom - height;
+	        		//Log.d("BAR", "top=" + top + " bottom=" + bottom + " height=" + height); 
+	    			if (b.barGroup.width >= 2) {
+	        			canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, b.formatter().getFillPaint());
+	        		}
+	        		canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, b.formatter().getBorderPaint());
+		        	bottom = top;
+	        	}
+				break;
+			default:
+				break;
+			}
+			
+		}
+    		
     }
+    
+    private class Bar {
+		public XYSeries series;
+		public int seriesIndex;
+		public double yVal, xVal;
+		public int intX, intY;
+		public float pixX, pixY;
+		public BarGroup barGroup;
+    	
+    	public Bar(XYSeries series, int seriesIndex, RectF plotArea) {
+			this.series = series;
+			this.seriesIndex = seriesIndex;
+			
+			this.xVal = series.getX(seriesIndex).doubleValue();
+			this.pixX = ValPixConverter.valToPix(xVal, getPlot().getCalculatedMinX().doubleValue(), getPlot().getCalculatedMaxX().doubleValue(), plotArea.width(), false) + (plotArea.left);
+			this.intX = (int) pixX;
+			
+			if (series.getY(seriesIndex) != null) {
+				this.yVal = series.getY(seriesIndex).doubleValue();
+				this.pixY = ValPixConverter.valToPix(yVal, getPlot().getCalculatedMinY().doubleValue(), getPlot().getCalculatedMaxY().doubleValue(), plotArea.height(), true) + plotArea.top;
+				this.intY = (int) pixY;
+			} else {
+				this.yVal = 0;
+				this.pixY = plotArea.bottom;
+				this.intY = (int) pixY;
+			}
+		}
+    	public BarFormatter formatter() {
+    		return getFormatter(seriesIndex, series);
+    	}
+    }
+    
+    private class BarGroup {
+    	public ArrayList<Bar> bars;
+    	public int intX;
+    	public int width, leftX, rightX;
+    	public RectF plotArea;
+    	public BarGroup prev;
+		
+    	public BarGroup(int intX, RectF plotArea) {
+    		// Setup the TreeMap with the required comparator
+   			this.bars = new ArrayList<Bar>(); // create a comparator that compares series title given the index.
+    		this.intX = intX;
+			this.plotArea = plotArea;
+		}
+    	
+    	public void addBar(Bar bar) {
+    		bar.barGroup = this;
+   			this.bars.add(bar);
+    	}
+    }
+
+    public class BarComparator implements Comparator<Bar>{
+        @Override
+        public int compare(Bar bar1, Bar bar2) {
+			switch (renderStyle) {
+			case OVERLAID:
+				return Integer.valueOf(bar1.intY).compareTo(Integer.valueOf(bar2.intY));
+			case SIDE_BY_SIDE:
+				return bar1.series.getTitle().compareToIgnoreCase(bar2.series.getTitle());
+			case STACKED:
+				return bar1.series.getTitle().compareToIgnoreCase(bar2.series.getTitle());
+			default:
+	            return 0;
+			}
+        }
+    }        
+    
 }

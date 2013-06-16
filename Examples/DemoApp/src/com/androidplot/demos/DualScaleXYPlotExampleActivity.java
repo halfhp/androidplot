@@ -18,8 +18,10 @@ package com.androidplot.demos;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,7 +68,14 @@ public class DualScaleXYPlotExampleActivity extends Activity implements OnClickL
 
         // Setup the LEFT Plot as normal
         myXYPlot_LEFT = (XYPlot) findViewById(R.id.mySimpleXYPlot_L);
+        myXYPlot_RIGHT = (XYPlot) findViewById(R.id.mySimpleXYPlot_R);
         
+        // Disable Hardware Acceleration on the xyPlot view object.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        	myXYPlot_LEFT.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        	myXYPlot_RIGHT.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
         XYGraphWidget graphWidget_LEFT = myXYPlot_LEFT.getGraphWidget();
         graphWidget_LEFT.setRangeAxisPosition(true, false, 4, "10");
         graphWidget_LEFT.setMarginRight(0);
@@ -75,7 +84,6 @@ public class DualScaleXYPlotExampleActivity extends Activity implements OnClickL
         graphWidget_LEFT.setRangeLabelWidth(50);
         
         // Setup the second Plot with Right-hand Scale and otherwise invisible.
-        myXYPlot_RIGHT = (XYPlot) findViewById(R.id.mySimpleXYPlot_R);
         myXYPlot_RIGHT.getDomainLabelWidget().setVisible(false);
         myXYPlot_RIGHT.getRangeLabelWidget().setVisible(false);
         myXYPlot_RIGHT.getTitleWidget().setVisible(false);

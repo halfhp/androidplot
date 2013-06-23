@@ -21,6 +21,7 @@ import android.graphics.*;
 import android.os.Build;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
@@ -42,6 +43,7 @@ import java.util.*;
  */
 public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends SeriesRenderer>
         extends View implements Resizable{
+    private static final String TAG = Plot.class.getName();
     private static final String XML_ATTR_PREFIX      = "androidplot";
 
     private static final String ATTR_TITLE           = "title";
@@ -215,7 +217,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param title The display title of this Plot.
      */
     public Plot(Context context, String title) {
-        this(context, title, RenderMode.USE_BACKGROUND_THREAD);
+        this(context, title, RenderMode.USE_MAIN_THREAD);
     }
 
     /**
@@ -295,6 +297,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         layoutManager.position(titleWidget, 0,
                 XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
 
+        Log.d(TAG, "AndroidPlot RenderMode: " + renderMode);
         if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
             renderThread = new Thread(new Runnable() {
                 @Override
@@ -674,7 +677,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             }
         }
 
-        pingPong.resize(h, w);
+        // pingPong is only used in background rendering mode.
+        if(renderMode == RenderMode.USE_BACKGROUND_THREAD) {
+            pingPong.resize(h, w);
+        }
 
         RectF cRect = new RectF(0, 0, w, h);
         RectF mRect = boxModel.getMarginatedRect(cRect);

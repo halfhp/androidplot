@@ -39,20 +39,18 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
     public PieChart(Context context, String title) {
         super(context, title);
-        postInit(context, null);
     }
 
     public PieChart(Context context, String title, RenderMode mode) {
         super(context, title, mode);
-        postInit(context, null);
     }
 
     public PieChart(Context context, AttributeSet attributes) {
         super(context, attributes);
-        postInit(context, attributes);
     }
 
-    private void postInit(Context context, AttributeSet attrs) {
+    @Override
+    protected void onPostInit() {
         pieWidget = new PieWidget(
                 this,
                 new SizeMetrics(
@@ -72,9 +70,9 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
         pieWidget.setPadding(10, 10, 10, 10);
 
         // TODO: can't remember why this getClass() check is neccessary.  test if it actually is...
-        if (getClass().equals(PieChart.class) && attrs != null) {
+        /*if (getClass().equals(PieChart.class) && attrs != null) {
             loadAttrs(context, attrs);
-        }
+        }*/
     }
 
     @Override

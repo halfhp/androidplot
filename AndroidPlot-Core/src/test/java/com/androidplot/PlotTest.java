@@ -19,6 +19,7 @@ package com.androidplot;
 import android.content.Context;
 import android.graphics.*;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import com.androidplot.mock.MockContext;
 import com.androidplot.mock.MockPaint;
@@ -48,7 +49,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class,
+@UsingMocksAndStubs({Log.class, View.class,Handler.class,Paint.class,Color.class,
         RectF.class,Canvas.class,TitleWidget.class,TextLabelWidget.class,
         PixelUtils.class,Context.class})
 
@@ -155,6 +156,11 @@ public class PlotTest {
     public static class MockPlot extends Plot<MockSeries, Formatter, SeriesRenderer> {
         public MockPlot(Context context, String title) {
             super(context, title);
+        }
+
+        @Override
+        protected void onPostInit() {
+
         }
 
         /*@Override
@@ -475,7 +481,8 @@ public class PlotTest {
 
         HashMap<String, String> params = new HashMap<String, String>();
         String param1 = "this is a test.";
-        String param2 = Plot.RenderMode.USE_BACKGROUND_THREAD.toString();
+        //String param2 = Plot.RenderMode.USE_BACKGROUND_THREAD.toString();
+        String param2 = "use_background_thread";
         String param3 = "#FF0000";
         params.put("title", param1);
         params.put("renderMode", param2);

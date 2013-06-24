@@ -229,7 +229,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         super(context);
         this.title = title;
         this.renderMode = mode;
-        postInit();
+        postInit(null, null);
     }
 
 
@@ -250,7 +250,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Plot(Context context, AttributeSet attrs) {
         super(context, attrs);
-        postInit();
+        postInit(context, attrs);
     }
 
     /**
@@ -271,7 +271,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Plot(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        postInit();
+        postInit(context, attrs);
     }
 
     /**
@@ -284,12 +284,25 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         return false;
     }
 
+    /**
+     * Sets the render mode used by the Plot.
+     * WARNING: This method is not currently designed for general use outside of Configurator.
+     * Attempting to reassign the render mode at runtime will result in unexpected behavior.
+     * @param mode
+     */
     public void setRenderMode(RenderMode mode) {
-        // TODO
+        this.renderMode = mode;
     }
 
+    /**
+     * Concrete implementations should do any final setup / initialization
+     * here.  Immediately following this method's invocation, AndroidPlot assumes
+     * that the Plot instance is ready for final configuration via the Configurator.
+     */
+    protected abstract void onPostInit();
 
-    private void postInit() {
+
+    private void postInit(Context context, AttributeSet attrs) {
         PixelUtils.init(getContext());
         titleWidget = new TitleWidget(this, new SizeMetrics(25,
                 SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
@@ -297,6 +310,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         layoutManager.position(titleWidget, 0,
                 XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
 
+        onPostInit();
+        if(context != null && attrs != null) {
+            loadAttrs(context, attrs);
+        }
         Log.d(TAG, "AndroidPlot RenderMode: " + renderMode);
         if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
             renderThread = new Thread(new Runnable() {
@@ -336,7 +353,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param context
      * @param attrs
      */
-    protected void loadAttrs(Context context, AttributeSet attrs) {
+    private void loadAttrs(Context context, AttributeSet attrs) {
 
         if (attrs != null) {
             // filter out androidplot prefixed attrs:
@@ -350,17 +367,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 }
             }
             Configurator.configure(getContext(), this, attrHash);
-            //configure(attrHash);
-            /*//title = getStringAttr(context, attrs, ATTR_TITLE);
-            String renderModeStr = getStringAttr(context, attrs, ATTR_RENDER_MODE);
-            if (renderModeStr != null) {
-                renderMode = getRenderMode(renderModeStr);
-                if (renderMode == null) {
-                    throw new IllegalArgumentException("Unknown Render Mode specified in XML: " + renderModeStr);
-                }
-            }*/
         }
-
     }
 
     /*@Deprecated

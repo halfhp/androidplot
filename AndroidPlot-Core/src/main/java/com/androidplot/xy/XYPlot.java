@@ -143,17 +143,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public XYPlot(Context context, String title) {
         super(context, title);
-        postInit(context, null);
     }
 
     public XYPlot(Context context, String title, RenderMode mode) {
         super(context, title, mode);
-        postInit(context, null);
     }
 
     public XYPlot(Context context, AttributeSet attributes) {
         super(context, attributes);
-        postInit(context, attributes);
     }
 
     /*public XYPlot(Context context, AttributeSet attributes, boolean loadAttrs) {
@@ -168,10 +165,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public XYPlot(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        postInit(context, attrs);
+
     }
 
-    private void postInit(Context context, AttributeSet attrs) {
+    @Override
+    protected void onPostInit() {
         legendWidget = new XYLegendWidget(
                 this,
                 new SizeMetrics(
@@ -264,10 +262,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
         setDefaultBounds(new RectRegion(-1, 1, -1, 1));
 
-        // TODO: can't remember why this getClass() check is neccessary.  test if it actually is...
-        if (getClass().equals(XYPlot.class) && attrs != null) {
+        // safety check to avoid issues with subclasses
+        /*if (getClass().equals(XYPlot.class) && attrs != null) {
             loadAttrs(context, attrs);
-        }
+        }*/
     }
 
 

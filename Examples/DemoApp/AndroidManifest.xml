@@ -66,6 +66,7 @@
         </activity>
         <activity android:name=".TimeSeriesActivity"/>
 		<activity android:name=".DualScaleXYPlotExampleActivity"/>
+        <activity android:name=".XYPlotWithBgImgActivity"/>
         
         <!-- receiver for demo app widget -->
         <receiver

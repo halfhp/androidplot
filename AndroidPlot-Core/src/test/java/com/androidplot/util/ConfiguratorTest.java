@@ -89,7 +89,7 @@ public class ConfiguratorTest {
         Context context = Mockit.setUpMock(new MockContext());
         C c = new C();
 
-        Method m = Configurator.getSetter(c, "b");
+        Method m = Configurator.getSetter(c.getClass(), "b");
         assertEquals(1, m.getParameterTypes().length);
         assertEquals(B.class, m.getParameterTypes()[0]);
     }

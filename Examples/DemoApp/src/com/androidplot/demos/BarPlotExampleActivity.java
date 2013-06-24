@@ -219,7 +219,7 @@ public class BarPlotExampleActivity extends Activity
         
        
         sbFixedWidth = (SeekBar) findViewById(R.id.sbFixed);
-        sbFixedWidth.setProgress(100);
+        sbFixedWidth.setProgress(50);
         sbFixedWidth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {updatePlot();}

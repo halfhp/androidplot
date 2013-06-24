@@ -19,6 +19,7 @@ package com.androidplot.xy;
 import android.content.Context;
 import android.graphics.*;
 import android.os.Handler;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import com.androidplot.Plot;
@@ -42,7 +43,7 @@ import java.util.Arrays;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class, Rect.class,
+@UsingMocksAndStubs({Log.class,View.class,Handler.class,Paint.class,Color.class, Rect.class,
         FontUtils.class, Bitmap.class, Pair.class, TextLabelWidget.class,
         TitleWidget.class})
 

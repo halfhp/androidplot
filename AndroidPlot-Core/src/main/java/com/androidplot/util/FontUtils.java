@@ -80,7 +80,7 @@ public class FontUtils {
     public static Rect getStringDimensions(String text, Paint paint) {
         Rect size = new Rect();
         if(text == null || text.length() == 0) {
-            return size;
+            return null;
         }
         paint.getTextBounds(text, 0, text.length(), size);
         size.bottom = size.top + (int) getFontHeight(paint);

@@ -29,7 +29,6 @@ import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.Formatter;
 //import mockit.*;
 import com.androidplot.ui.widget.TextLabelWidget;
-import com.androidplot.ui.widget.TitleWidget;
 import com.androidplot.util.Configurator;
 import com.androidplot.util.PixelUtils;
 import mockit.*;
@@ -50,7 +49,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @UsingMocksAndStubs({Log.class, View.class,Handler.class,Paint.class,Color.class,
-        RectF.class,Canvas.class,TitleWidget.class,TextLabelWidget.class,
+        RectF.class,Canvas.class,TextLabelWidget.class,
         PixelUtils.class,Context.class})
 
 public class PlotTest {
@@ -159,7 +158,7 @@ public class PlotTest {
         }
 
         @Override
-        protected void onPostInit() {
+        protected void onPreInit() {
 
         }
 

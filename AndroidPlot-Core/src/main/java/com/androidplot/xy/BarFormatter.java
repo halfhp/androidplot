@@ -53,16 +53,9 @@ public class BarFormatter extends XYSeriesFormatter {
     }
 
     /**
-     * Provided as a convenience to users; allows instantiation and xml configuration
-     * to take place in a single line
-     * @param ctx
-     * @param xmlCfgId Id of the xml config file within /res/xml
+     * Should only be used in conjunction with calls to configure()...
      */
-    public BarFormatter(Context ctx, int xmlCfgId) {
-        // prevent configuration of classes derived from this one:
-        if (getClass().equals(BarFormatter.class)) {
-            Configurator.configure(ctx, this, xmlCfgId);
-        }
+    public BarFormatter() {
     }
 
     public BarFormatter(int fillColor, int borderColor) {

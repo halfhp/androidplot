@@ -23,14 +23,15 @@
             android:id="@+id/mySimplePieChart"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            androidPlot.title="A Simple Pie Chart"
             android:layout_weight="1"
+            androidPlot.title="A Simple Pie Chart"
+            androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
             androidPlot.graphWidget.gridLinePaint.color="#000000"/>
     <LinearLayout
-                    android:layout_height="wrap_content"
-                    android:layout_width="fill_parent"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
         <TextView
                 android:layout_width="wrap_content"
@@ -52,8 +53,5 @@
                 android:layout_gravity="center"
                 android:text="unknown"
                 android:id="@+id/donutSizeTextView"/>
-
-
     </LinearLayout>
-
 </LinearLayout>

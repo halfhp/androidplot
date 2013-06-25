@@ -27,7 +27,7 @@ import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
 import com.androidplot.ui.Formatter;
 import com.androidplot.ui.TextOrientationType;
-import com.androidplot.ui.widget.TitleWidget;
+import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.Configurator;
@@ -105,8 +105,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
          */
         USE_MAIN_THREAD
     }
-
-    protected String title = "My Plot";
     private BoxModel boxModel = new BoxModel(3, 3, 3, 3, 3, 3, 3, 3);
     private BorderStyle borderStyle = Plot.BorderStyle.SQUARE;
     private float borderRadiusX = 15;
@@ -115,7 +113,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private Paint borderPaint;
     private Paint backgroundPaint;
     private LayoutManager layoutManager;
-    private TitleWidget titleWidget;
+    private TextLabelWidget titleWidget;
     private DisplayDimensions displayDims = new DisplayDimensions();
     private RenderMode renderMode = RenderMode.USE_MAIN_THREAD;
     //private volatile Bitmap offScreenBitmap;
@@ -227,9 +225,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Plot(Context context, String title, RenderMode mode) {
         super(context);
-        this.title = title;
         this.renderMode = mode;
-        postInit(null, null);
+        init(null, null);
+        setTitle(title);
     }
 
 
@@ -250,7 +248,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Plot(Context context, AttributeSet attrs) {
         super(context, attrs);
-        postInit(context, attrs);
+        init(context, attrs);
     }
 
     /**
@@ -271,7 +269,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Plot(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        postInit(context, attrs);
+        init(context, attrs);
     }
 
     /**
@@ -299,21 +297,25 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * here.  Immediately following this method's invocation, AndroidPlot assumes
      * that the Plot instance is ready for final configuration via the Configurator.
      */
-    protected abstract void onPostInit();
+    protected abstract void onPreInit();
 
 
-    private void postInit(Context context, AttributeSet attrs) {
+    private void init(Context context, AttributeSet attrs) {
         PixelUtils.init(getContext());
-        titleWidget = new TitleWidget(this, new SizeMetrics(25,
-                SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
+        titleWidget = new TextLabelWidget(new SizeMetrics(25,
+                SizeLayoutType.ABSOLUTE, 100,
+                SizeLayoutType.ABSOLUTE),
+                TextOrientationType.HORIZONTAL);
         layoutManager = new LayoutManager();
         layoutManager.position(titleWidget, 0,
                 XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
 
-        onPostInit();
+        onPreInit();
         if(context != null && attrs != null) {
             loadAttrs(context, attrs);
         }
+
+        layoutManager.onPostInit();
         Log.d(TAG, "AndroidPlot RenderMode: " + renderMode);
         if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
             renderThread = new Thread(new Runnable() {
@@ -851,7 +853,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @return The displayed title of this Plot.
      */
     public String getTitle() {
-        return title;
+        return getTitleWidget().getText();
     }
 
     /**
@@ -859,10 +861,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param title  The title to display on this Plot.
      */
     public void setTitle(String title) {
-        this.title = title;
-        if(titleWidget != null) {
-            titleWidget.pack();
-        }
+        titleWidget.setText(title);
     }
 
     public LayoutManager getLayoutManager() {
@@ -890,11 +889,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         this.drawBorderEnabled = drawBorderEnabled;
     }
 
-    public TitleWidget getTitleWidget() {
+    public TextLabelWidget getTitleWidget() {
         return titleWidget;
     }
 
-    public void setTitleWidget(TitleWidget titleWidget) {
+    public void setTitleWidget(TextLabelWidget titleWidget) {
         this.titleWidget = titleWidget;
     }
 

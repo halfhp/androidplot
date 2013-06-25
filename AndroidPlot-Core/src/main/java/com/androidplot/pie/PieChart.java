@@ -50,7 +50,7 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
     }
 
     @Override
-    protected void onPostInit() {
+    protected void onPreInit() {
         pieWidget = new PieWidget(
                 this,
                 new SizeMetrics(

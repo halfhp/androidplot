@@ -26,7 +26,6 @@ import com.androidplot.PlotTest;
 import com.androidplot.mock.MockContext;
 import com.androidplot.mock.MockPaint;
 import com.androidplot.ui.widget.TextLabelWidget;
-import com.androidplot.ui.widget.TitleWidget;
 import com.androidplot.util.Configurator;
 import com.androidplot.util.FontUtils;
 import com.androidplot.util.PixelUtils;
@@ -45,7 +44,7 @@ import static junit.framework.Assert.assertEquals;
 
 @UsingMocksAndStubs({Log.class,View.class,Context.class,Handler.class,Paint.class,Color.class,
         Rect.class, RectF.class,FontUtils.class, PixelUtils.class, Canvas.class,
-        TextLabelWidget.class, TitleWidget.class})
+        TextLabelWidget.class})
 
 public class XYPlotTest {
 

@@ -41,7 +41,7 @@ import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.SizeLayoutType;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.TextOrientationType;
-import com.androidplot.ui.widget.UserTextLabelWidget;
+import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BarRenderer;
 import com.androidplot.xy.BoundaryMode;
@@ -92,12 +92,12 @@ public class BarPlotExampleActivity extends Activity
     private MyBarFormatter selectionFormatter =
             new MyBarFormatter(Color.YELLOW, Color.WHITE);
 
-    private UserTextLabelWidget selectionWidget;
+    private TextLabelWidget selectionWidget;
 
     private Pair<Integer, XYSeries> selection;
 
     {
-        selectionWidget = new UserTextLabelWidget(NO_SELECTION_TXT, new SizeMetrics(25,
+        selectionWidget = new TextLabelWidget(NO_SELECTION_TXT, new SizeMetrics(25,
                 SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
 
         // add a dark, semi-transparent background to the selection label widget:

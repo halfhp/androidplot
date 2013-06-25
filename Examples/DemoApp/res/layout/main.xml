@@ -59,7 +59,7 @@
                     android:enabled="true"/>
             <Button android:id="@+id/startXYPlotWithBgImgExample"
                     style="@style/toc_button"
-                    android:text="XY BackgroundImg Example"
+                    android:text="XY Background Example"
                     android:enabled="true"/>
             </LinearLayout>
     </ScrollView>

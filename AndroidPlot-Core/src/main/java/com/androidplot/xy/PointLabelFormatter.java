@@ -17,6 +17,7 @@
 package com.androidplot.xy;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import com.androidplot.util.PixelUtils;
@@ -28,6 +29,10 @@ public class PointLabelFormatter {
     private Paint textPaint;
     public float hOffset;
     public float vOffset;
+
+    public PointLabelFormatter() {
+        this(Color.WHITE);
+    }
 
     public PointLabelFormatter(int textColor) {
         this(textColor, PixelUtils.dpToPix(DEFAULT_H_OFFSET_DP),

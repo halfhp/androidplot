@@ -54,10 +54,6 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         outlinePaint = new Paint();
         outlinePaint.setColor(Color.GREEN);
         outlinePaint.setStyle(Paint.Style.STROKE);
-        outlineShadowPaint = new Paint();
-        outlineShadowPaint.setColor(Color.DKGRAY);
-        outlineShadowPaint.setStyle(Paint.Style.FILL);
-        outlineShadowPaint.setShadowLayer(3, 5, 5, Color.BLACK);
         marginPaint = new Paint();
         marginPaint.setColor(Color.YELLOW);
         marginPaint.setStyle(Paint.Style.FILL);
@@ -66,6 +62,15 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         paddingPaint.setColor(Color.BLUE);
         paddingPaint.setStyle(Paint.Style.FILL);
         paddingPaint.setAlpha(200);
+    }
+
+    /**
+     * Invoked immediately following XML configuration.
+     */
+    public synchronized void onPostInit() {
+        for(Widget w : getKeysAsList()) {
+            w.onPostInit();
+        }
     }
 
     /*@Deprecated
@@ -310,6 +315,13 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
 
     public void setDrawOutlineShadowsEnabled(boolean drawOutlineShadowsEnabled) {
         this.drawOutlineShadowsEnabled = drawOutlineShadowsEnabled;
+        if(drawOutlineShadowsEnabled && outlineShadowPaint == null) {
+            // use a default shadow effect in the case where none has been set:
+            outlineShadowPaint = new Paint();
+            outlineShadowPaint.setColor(Color.DKGRAY);
+            outlineShadowPaint.setStyle(Paint.Style.FILL);
+            outlineShadowPaint.setShadowLayer(3, 5, 5, Color.BLACK);
+        }
     }
 
     public Paint getOutlineShadowPaint() {

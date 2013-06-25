@@ -37,8 +37,23 @@ public abstract class Widget implements BoxModelable, Resizable {
     }
 
     public Widget(SizeMetrics sizeMetrics) {
-        this.sizeMetrics = sizeMetrics;
+        SizeMetrics oldSize = this.sizeMetrics;
+        setSize(sizeMetrics);
+        onMetricsChanged(oldSize, sizeMetrics);
     }
+
+    /**
+     * Can be overridden by subclasses to respond to resizing events.
+     * @param oldSize
+     * @param newSize
+     */
+    protected void onMetricsChanged(SizeMetrics oldSize, SizeMetrics newSize) {}
+
+    /**
+     * Can be overridden by subclasses to handle any final resizing etc. that
+     * can only be done after XML configuration etc. has completed.
+     */
+    public void onPostInit() {}
 
     /**
      * Determines whether or not point lies within this Widget.

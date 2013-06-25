@@ -28,7 +28,6 @@ import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.SizeMetric;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.widget.TextLabelWidget;
-import com.androidplot.ui.widget.TitleWidget;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.FontUtils;
 import com.androidplot.util.PixelUtils;
@@ -44,8 +43,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 @UsingMocksAndStubs({Log.class,View.class,Handler.class,Paint.class,Color.class, Rect.class,
-        FontUtils.class, Bitmap.class, Pair.class, TextLabelWidget.class,
-        TitleWidget.class})
+        FontUtils.class, Bitmap.class, Pair.class, TextLabelWidget.class})
 
 public class XYLegendWidgetTest {
 
@@ -77,7 +75,7 @@ public class XYLegendWidgetTest {
 
         assertEquals(1, plot.getSeriesSet().size());
 
-        Deencapsulation.invoke(plot, "onSizeChanged", 100, 100, 100, 100);
+        Deencapsulation.invoke(plot, "onMetricsChanged", 100, 100, 100, 100);
         plot.redraw();
         // have to manually invoke this because the invalidate()
         // invoked by redraw() is a stub and will not result in onDraw being called.

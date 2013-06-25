@@ -25,10 +25,10 @@ import android.util.AttributeSet;
 import com.androidplot.Plot;
 //import com.androidplot.xy.ui.widget.renderer.XYRendererType;
 import com.androidplot.ui.*;
-import com.androidplot.ui.widget.RangeLabelWidget;
-import com.androidplot.ui.widget.DomainLabelWidget;
 import com.androidplot.ui.TextOrientationType;
+import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.util.PixelUtils;
+import sun.font.TextLabel;
 
 import java.text.Format;
 import java.util.ArrayList;
@@ -45,17 +45,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     // widgets
     private XYLegendWidget legendWidget;
     private XYGraphWidget graphWidget;
-    private DomainLabelWidget domainLabelWidget;
-    private RangeLabelWidget rangeLabelWidget;
+    private TextLabelWidget domainLabelWidget;
+    private TextLabelWidget rangeLabelWidget;
 
     private XYStepMode domainStepMode = XYStepMode.SUBDIVIDE;
     private double domainStepValue = 10;
 
     private XYStepMode rangeStepMode = XYStepMode.SUBDIVIDE;
     private double rangeStepValue = 10;
-
-    private String domainLabel = "domain";
-    private String rangeLabel = "range";
 
     // user settable min/max values
     private Number userMinX;
@@ -169,7 +166,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     @Override
-    protected void onPostInit() {
+    protected void onPreInit() {
         legendWidget = new XYLegendWidget(
                 this,
                 new SizeMetrics(
@@ -196,16 +193,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         graphWidget.setBackgroundPaint(backgroundPaint);
 
 
-        domainLabelWidget = new DomainLabelWidget(
-                this,
+        domainLabelWidget = new TextLabelWidget(
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_H_DP),
                         SizeLayoutType.ABSOLUTE,
                         PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_W_DP),
                         SizeLayoutType.ABSOLUTE),
                 TextOrientationType.HORIZONTAL);
-        rangeLabelWidget = new RangeLabelWidget(
-                this,
+        rangeLabelWidget = new TextLabelWidget(
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_H_DP),
                         SizeLayoutType.ABSOLUTE,
@@ -250,7 +245,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         graphWidget.setMarginTop(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_TOP_MARGIN_DP));
         graphWidget.setMarginRight(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN_DP));
 
-        getTitleWidget().pack();
         getDomainLabelWidget().pack();
         getRangeLabelWidget().pack();
         setPlotMarginLeft(PixelUtils.dpToPix(DEFAULT_PLOT_LEFT_MARGIN_DP));
@@ -806,25 +800,19 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     public String getDomainLabel() {
-        return domainLabel;
+        return getDomainLabelWidget().getText();
     }
 
     public void setDomainLabel(String domainLabel) {
-        this.domainLabel = domainLabel;
-        if (getDomainLabelWidget() != null) {
-            getDomainLabelWidget().pack();
-        }
+        getDomainLabelWidget().setText(domainLabel);
     }
 
     public String getRangeLabel() {
-        return rangeLabel;
+        return getRangeLabelWidget().getText();
     }
 
     public void setRangeLabel(String rangeLabel) {
-        this.rangeLabel = rangeLabel;
-        if (getRangeLabelWidget() != null) {
-            getRangeLabelWidget().pack();
-        }
+        getRangeLabelWidget().setText(rangeLabel);
     }
 
     public XYLegendWidget getLegendWidget() {
@@ -843,19 +831,19 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         this.graphWidget = graphWidget;
     }
 
-    public DomainLabelWidget getDomainLabelWidget() {
+    public TextLabelWidget getDomainLabelWidget() {
         return domainLabelWidget;
     }
 
-    public void setDomainLabelWidget(DomainLabelWidget domainLabelWidget) {
+    public void setDomainLabelWidget(TextLabelWidget domainLabelWidget) {
         this.domainLabelWidget = domainLabelWidget;
     }
 
-    public RangeLabelWidget getRangeLabelWidget() {
+    public TextLabelWidget getRangeLabelWidget() {
         return rangeLabelWidget;
     }
 
-    public void setRangeLabelWidget(RangeLabelWidget rangeLabelWidget) {
+    public void setRangeLabelWidget(TextLabelWidget rangeLabelWidget) {
         this.rangeLabelWidget = rangeLabelWidget;
     }
 

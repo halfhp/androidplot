@@ -16,7 +16,6 @@
 
 package com.androidplot.demos;
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYSeries;
@@ -24,7 +23,7 @@ import com.androidplot.xy.*;
 import java.util.Arrays;
 
 /**
- * The simplest possible example of using AndroidPlot to plot some data.
+ * A straightforward example of using AndroidPlot to plot some data.
  */
 public class SimpleXYPlotActivity extends Activity
 {

@@ -116,8 +116,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private TextLabelWidget titleWidget;
     private DisplayDimensions displayDims = new DisplayDimensions();
     private RenderMode renderMode = RenderMode.USE_MAIN_THREAD;
-    //private volatile Bitmap offScreenBitmap;
-    private Canvas offScreenCanvas = new Canvas();
     private final BufferedCanvas pingPong = new BufferedCanvas();
 
     // used to get rid of flickering when drawing offScreenBitmap to the visible Canvas.
@@ -372,29 +370,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
     }
 
-    /*@Deprecated
-    private String getStringAttr(Context ctx, AttributeSet attrs, String attrName) {
-        String attr = attrs.getAttributeValue(null, attrName);
-        if (attr != null) {
-            return parseStringAttr(ctx, attr);
-        } else {
-            return null;
-        }
-    }*/
-
     public RenderMode getRenderMode() {
         return renderMode;
-    }
-
-    @Deprecated
-    private RenderMode getRenderMode(String renderModeStr) {
-        if(renderModeStr.equalsIgnoreCase(RenderMode.USE_BACKGROUND_THREAD.toString())) {
-            return RenderMode.USE_BACKGROUND_THREAD;
-        } else if(renderModeStr.equalsIgnoreCase(RenderMode.USE_MAIN_THREAD.toString())) {
-            return RenderMode.USE_MAIN_THREAD;
-        } else {
-            return null;
-        }
     }
 
     public boolean addListener(PlotListener listener) {
@@ -510,7 +487,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     public FormatterType getFormatter(SeriesType series, Class rendererClass) {
         return seriesRegistry.get(rendererClass).getFormatter(series);
-        //throw new UnsupportedOperationException();
     }
 
     public boolean setFormatter(SeriesType series, Class rendererClass, FormatterType formatter) {
@@ -561,17 +537,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         return renderers;
     }
 
-    /**
-     * Pre 0.5.1 versions of AndroidPlot enabled markup mode by default and a call to
-     * this method was required to disable it.  This was changed in 0.5.1 and now this
-     * method does nothing at all; it remains only to maintain backwards compatibility.
-     * To enable markup mode use {@link #setMarkupEnabled(boolean)}.
-     * @deprecated Since 0.5.1 - Will be removed in 0.5.2
-     */
-    @Deprecated
-    public void disableAllMarkup() {
-    }
-
     public void setMarkupEnabled(boolean enabled) {
         this.layoutManager.setMarkupEnabled(enabled);
     }
@@ -605,36 +570,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
     }
 
-    /**
-     * @deprecated Since 0.5.1 - Users should transition to using {@link #addListener(PlotListener)}
-     */
-    @Deprecated
-    protected abstract void doBeforeDraw();
-
-    /**
-     * @deprecated Since 0.5.1 - Users should transition to using {@link #addListener(PlotListener)}
-     */
-    @Deprecated
-    protected abstract void doAfterDraw();
-
     @Override
     public synchronized void layout(final DisplayDimensions dims) {
         displayDims = dims;
         layoutManager.layout(displayDims);
-    }
-
-    /**
-     * Always use this method to regenerate the offscreen bitmap buffer, for consistency.
-     * @param w
-     * @param h
-     * @return
-     */
-    private static Bitmap createBitmapBuffer(int w, int h) {
-        if(w <= 0 || h <= 0) {
-            return null;
-        } else {
-            return Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
-        }
     }
 
     @Override
@@ -698,36 +637,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
     }
 
-    /*private final MultiSynch.Action msa = new MultiSynch.Action() {
-        @Override
-        public void run(Object[] params) {
-            Canvas canvas = (Canvas) params[0];
-            doBeforeDraw();
-            notifyListenersBeforeDraw(canvas);
-            try {
-                // need to completely erase what was on the canvas before redrawing, otherwise
-                // some odd aliasing artifacts begin to build up around the edges of aa'd entities
-                // over time.
-                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                if (backgroundPaint != null) {
-                    drawBackground(canvas, displayDims.marginatedRect);
-                }
-
-                layoutManager.draw(canvas);
-
-                if (isDrawBorderEnabled() && getBorderPaint() != null) {
-                    drawBorder(canvas, displayDims.marginatedRect);
-                }
-            } catch (PlotRenderException e) {
-                e.printStackTrace();
-            } finally {
-                isIdle = true;
-                doAfterDraw();
-                notifyListenersAfterDraw(canvas, new PlotEvent(Plot.this, PlotEvent.Type.PLOT_REDRAWN));
-            }
-        }
-    };*/
-
     /**
      * Renders the plot onto a canvas.  Used by both main thread to draw directly
      * onto the View's canvas as well as by background draw to render onto a
@@ -736,11 +645,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param canvas
      */
     protected synchronized void renderOnCanvas(Canvas canvas) {
-
-        Set<? extends Series> ss = getSeriesSet();
         try {
-            doBeforeDraw();
-
             // any series interested in synchronizing with plot should
             // implement PlotListener.onBeforeDraw(...) and do a read lock from within its
             // invocation.  This is the entry point into that call:
@@ -764,14 +669,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             }
         } finally {
             isIdle = true;
-            doAfterDraw();
             // any series interested in synchronizing with plot should
             // implement PlotListener.onAfterDraw(...) and do a read unlock from within that
             // invocation. This is the entry point for that invocation.
             notifyListenersAfterDraw(canvas, new PlotEvent(this, PlotEvent.Type.PLOT_REDRAWN));
         }
-        //MultiSynch.run(new Object[]{canvas}, getSeriesSet(), msa);
-        //MultiSynch.lockSeriesSet(new Object[]{canvas}, getSeriesSet(), msa);
     }
 
 

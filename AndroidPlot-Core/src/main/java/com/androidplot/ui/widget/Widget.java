@@ -20,6 +20,8 @@ import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
 import com.androidplot.util.DisplayDimensions;
+import com.androidplot.ui.XLayoutStyle;
+import com.androidplot.ui.YLayoutStyle;
 
 public abstract class Widget implements BoxModelable, Resizable {
 
@@ -32,31 +34,73 @@ public abstract class Widget implements BoxModelable, Resizable {
     private DisplayDimensions displayDimensions = new DisplayDimensions();
     private boolean isVisible = true;
 
-    public Widget(SizeMetric heightMetric, SizeMetric widthMetric) {
-        sizeMetrics = new SizeMetrics(heightMetric, widthMetric);
+    private PositionMetrics positionMetrics;
+    private LayoutManager layoutManager;
+
+    public Widget(LayoutManager layoutManager, SizeMetric heightMetric, SizeMetric widthMetric) {
+        this(layoutManager, new SizeMetrics(heightMetric, widthMetric));
     }
 
-    public Widget(SizeMetrics sizeMetrics) {
+    public Widget(LayoutManager layoutManager, SizeMetrics sizeMetrics) {
+        this.layoutManager = layoutManager;
         SizeMetrics oldSize = this.sizeMetrics;
         setSize(sizeMetrics);
         onMetricsChanged(oldSize, sizeMetrics);
     }
 
+    public AnchorPosition getAnchor() {
+        return getPositionMetrics().getAnchor();
+    }
+
+    public void setAnchor(AnchorPosition anchor) {
+        getPositionMetrics().setAnchor(anchor);
+    }
+
+
+    /**
+     * Same as {@link #position(float, com.androidplot.ui.XLayoutStyle, float, com.androidplot.ui.YLayoutStyle, com.androidplot.ui.AnchorPosition)}
+     * but with the anchor parameter defaulted to the upper left corner.
+     * @param x
+     * @param xLayoutStyle
+     * @param y
+     * @param yLayoutStyle
+     */
+    public void position(float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle) {
+        position(x, xLayoutStyle, y, yLayoutStyle, AnchorPosition.LEFT_TOP);
+    }
+
+    /**
+     * @param x            X-Coordinate of the top left corner of element.  When using RELATIVE, must be a value between 0 and 1.
+     * @param xLayoutStyle LayoutType to use when orienting this element's X-Coordinate.
+     * @param y            Y_VALS_ONLY-Coordinate of the top-left corner of element.  When using RELATIVE, must be a value between 0 and 1.
+     * @param yLayoutStyle LayoutType to use when orienting this element's Y_VALS_ONLY-Coordinate.
+     * @param anchor       The point of reference used by this positioning call.
+     */
+    public void position(float x, XLayoutStyle xLayoutStyle, float y,
+                         YLayoutStyle yLayoutStyle, AnchorPosition anchor) {
+        setPositionMetrics(new PositionMetrics(x, xLayoutStyle, y, yLayoutStyle, anchor));
+        layoutManager.addToTop(this);
+    }
+
     /**
      * Can be overridden by subclasses to respond to resizing events.
+     *
      * @param oldSize
      * @param newSize
      */
-    protected void onMetricsChanged(SizeMetrics oldSize, SizeMetrics newSize) {}
+    protected void onMetricsChanged(SizeMetrics oldSize, SizeMetrics newSize) {
+    }
 
     /**
      * Can be overridden by subclasses to handle any final resizing etc. that
      * can only be done after XML configuration etc. has completed.
      */
-    public void onPostInit() {}
+    public void onPostInit() {
+    }
 
     /**
      * Determines whether or not point lies within this Widget.
+     *
      * @param point
      * @return
      */
@@ -83,11 +127,13 @@ public abstract class Widget implements BoxModelable, Resizable {
     }
 
     public void setHeight(float height, SizeLayoutType layoutType) {
-       sizeMetrics.getHeightMetric().set(height, layoutType);
+        sizeMetrics.getHeightMetric().set(height, layoutType);
     }
+
     public SizeMetric getWidthMetric() {
         return sizeMetrics.getWidthMetric();
     }
+
     public SizeMetric getHeightMetric() {
         return sizeMetrics.getHeightMetric();
     }
@@ -226,8 +272,7 @@ public abstract class Widget implements BoxModelable, Resizable {
     }
 
     /**
-     *
-     * @param canvas The Canvas to draw onto
+     * @param canvas     The Canvas to draw onto
      * @param widgetRect the size and coordinates of this widget
      */
     protected abstract void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException;
@@ -282,5 +327,13 @@ public abstract class Widget implements BoxModelable, Resizable {
 
     public void setVisible(boolean visible) {
         isVisible = visible;
+    }
+
+    public PositionMetrics getPositionMetrics() {
+        return positionMetrics;
+    }
+
+    public void setPositionMetrics(PositionMetrics positionMetrics) {
+        this.positionMetrics = positionMetrics;
     }
 }

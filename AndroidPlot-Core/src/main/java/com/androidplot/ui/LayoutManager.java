@@ -24,12 +24,11 @@ import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.util.ZHash;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.xy.XLayoutStyle;
-import com.androidplot.xy.YLayoutStyle;
+import com.androidplot.util.ZLinkedList;
 
 import java.util.HashMap;
 
-public class LayoutManager extends ZHash<Widget, PositionMetrics>
+public class LayoutManager extends ZLinkedList<Widget>
         implements View.OnTouchListener, Resizable {
     private boolean drawAnchorsEnabled = false;
     private Paint anchorPaint;
@@ -68,7 +67,7 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
      * Invoked immediately following XML configuration.
      */
     public synchronized void onPostInit() {
-        for(Widget w : getKeysAsList()) {
+        for(Widget w : elements()) {
             w.onPostInit();
         }
     }
@@ -86,23 +85,9 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         setDrawMarginsEnabled(enabled);
         setDrawPaddingEnabled(enabled);
         setDrawOutlineShadowsEnabled(enabled);
-
     }
 
-    public AnchorPosition getElementAnchor(Widget element) {
-        //return widgets.get(element).getAnchor();
-        return get(element).getAnchor();
-    }
 
-    public boolean setElementAnchor(Widget element, AnchorPosition anchor) {
-        //PositionMetrics metrics = widgets.get(element);
-        PositionMetrics metrics = get(element);
-        if(metrics == null) {
-            return false;
-        }
-        metrics.setAnchor(anchor);
-        return true;
-    }
 
     public static PointF getAnchorCoordinates(RectF widgetRect, AnchorPosition anchorPosition) {
         return PixelUtils.add(new PointF(widgetRect.left, widgetRect.top),
@@ -163,11 +148,11 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         if (isDrawPaddingEnabled()) {
             drawSpacing(canvas, displayDims.marginatedRect, displayDims.paddedRect, paddingPaint);
         }
-        for (Widget widget : getKeysAsList()) {
+        for (Widget widget : elements()) {
             //int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG); // preserve clipping etc
             try {
                 canvas.save(Canvas.ALL_SAVE_FLAG);
-                PositionMetrics metrics = get(widget);
+                PositionMetrics metrics = widget.getPositionMetrics();
                 float elementWidth = widget.getWidthPix(displayDims.paddedRect.width());
                 float elementHeight = widget.getHeightPix(displayDims.paddedRect.height());
                 PointF coords = getElementCoordinates(elementHeight,
@@ -235,22 +220,6 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         float anchorSize = 4;
         canvas.drawRect(coords.x-anchorSize, coords.y-anchorSize, coords.x+anchorSize, coords.y+anchorSize, anchorPaint);
 
-    }
-
-    /**
-     *
-     * @param element The Widget to position.  Used for positioning both new and existing widgets.
-     * @param x X-Coordinate of the top left corner of element.  When using RELATIVE, must be a value between 0 and 1.
-     * @param xLayoutStyle LayoutType to use when orienting this element's X-Coordinate.
-     * @param y Y_VALS_ONLY-Coordinate of the top-left corner of element.  When using RELATIVE, must be a value between 0 and 1.
-     * @param yLayoutStyle LayoutType to use when orienting this element's Y_VALS_ONLY-Coordinate.
-     */
-    public void position(Widget element, float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle) {
-        position(element, x, xLayoutStyle, y, yLayoutStyle, AnchorPosition.LEFT_TOP);
-    }
-
-    public void position(Widget element, float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle, AnchorPosition anchor) {
-        addToTop(element, new PositionMetrics(x, xLayoutStyle, y, yLayoutStyle, anchor));
     }
 
     public boolean isDrawOutlinesEnabled() {
@@ -346,8 +315,8 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         this.displayDims = dims;
 
         widgetRects.clear();
-        for (Widget widget : getKeysAsList()) {
-            PositionMetrics metrics = get(widget);
+        for (Widget widget : elements()) {
+            PositionMetrics metrics = widget.getPositionMetrics();
             float elementWidth = widget.getWidthPix(displayDims.paddedRect.width());
             float elementHeight = widget.getHeightPix(displayDims.paddedRect.height());
             PointF coords = getElementCoordinates(elementHeight,

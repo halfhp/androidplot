@@ -28,7 +28,6 @@ import com.androidplot.ui.*;
 import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.util.PixelUtils;
-import sun.font.TextLabel;
 
 import java.text.Format;
 import java.util.ArrayList;
@@ -168,6 +167,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     @Override
     protected void onPreInit() {
         legendWidget = new XYLegendWidget(
+                getLayoutManager(),
                 this,
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_H_DP),
@@ -180,6 +180,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                         SizeLayoutType.ABSOLUTE));
 
         graphWidget = new XYGraphWidget(
+                getLayoutManager(),
                 this,
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_H_DP),
@@ -194,6 +195,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
 
         domainLabelWidget = new TextLabelWidget(
+                getLayoutManager(),
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_H_DP),
                         SizeLayoutType.ABSOLUTE,
@@ -201,6 +203,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                         SizeLayoutType.ABSOLUTE),
                 TextOrientationType.HORIZONTAL);
         rangeLabelWidget = new TextLabelWidget(
+                getLayoutManager(),
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_H_DP),
                         SizeLayoutType.ABSOLUTE,
@@ -208,32 +211,28 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                         SizeLayoutType.ABSOLUTE),
                 TextOrientationType.VERTICAL_ASCENDING);
 
-        getLayoutManager().position(
-                legendWidget,
+        legendWidget.position(
                 PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_RIGHT,
                 PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_Y_OFFSET_DP),
                 YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
                 AnchorPosition.RIGHT_BOTTOM);
 
-        getLayoutManager().position(
-                graphWidget,
+        graphWidget.position(
                 PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_RIGHT,
                 PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_Y_OFFSET_DP),
                 YLayoutStyle.ABSOLUTE_FROM_CENTER,
                 AnchorPosition.RIGHT_MIDDLE);
 
-        getLayoutManager().position(
-                domainLabelWidget,
+        domainLabelWidget.position(
                 PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_LEFT,
                 PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_Y_OFFSET_DP),
                 YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
                 AnchorPosition.LEFT_BOTTOM);
 
-        getLayoutManager().position(
-                rangeLabelWidget,
+        rangeLabelWidget.position(
                 PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_LEFT,
                 PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP),

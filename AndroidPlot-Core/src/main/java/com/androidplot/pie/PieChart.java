@@ -19,13 +19,12 @@ package com.androidplot.pie;
 import android.content.Context;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
-import com.androidplot.Series;
 import com.androidplot.ui.AnchorPosition;
 import com.androidplot.ui.SizeLayoutType;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.xy.XLayoutStyle;
-import com.androidplot.xy.YLayoutStyle;
+import com.androidplot.ui.XLayoutStyle;
+import com.androidplot.ui.YLayoutStyle;
 
 public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
@@ -52,6 +51,7 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
     @Override
     protected void onPreInit() {
         pieWidget = new PieWidget(
+                getLayoutManager(),
                 this,
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_H_DP),
@@ -59,8 +59,7 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_W_DP),
                         SizeLayoutType.FILL));
 
-        getLayoutManager().position(
-                        pieWidget,
+        pieWidget.position(
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_X_OFFSET_DP),
                         XLayoutStyle.ABSOLUTE_FROM_CENTER,
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_Y_OFFSET_DP),

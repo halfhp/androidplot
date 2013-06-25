@@ -46,10 +46,10 @@ import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BarRenderer;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XLayoutStyle;
+import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
-import com.androidplot.xy.YLayoutStyle;
+import com.androidplot.ui.YLayoutStyle;
 
 /**
  * The simplest possible example of using AndroidPlot to plot some data.
@@ -97,7 +97,7 @@ public class BarPlotExampleActivity extends Activity
     private Pair<Integer, XYSeries> selection;
 
     {
-        selectionWidget = new TextLabelWidget(NO_SELECTION_TXT, new SizeMetrics(25,
+        selectionWidget = new TextLabelWidget(plot.getLayoutManager(), NO_SELECTION_TXT, new SizeMetrics(25,
                 SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
 
         // add a dark, semi-transparent background to the selection label widget:
@@ -116,7 +116,7 @@ public class BarPlotExampleActivity extends Activity
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 
-        plot.position(selectionWidget,
+        selectionWidget.position(
                 0, XLayoutStyle.RELATIVE_TO_CENTER,
                 50, YLayoutStyle.ABSOLUTE_FROM_TOP,
                 AnchorPosition.TOP_MIDDLE);

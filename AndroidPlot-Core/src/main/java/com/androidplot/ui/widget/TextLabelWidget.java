@@ -38,17 +38,17 @@ public class TextLabelWidget extends Widget {
         labelPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public TextLabelWidget(SizeMetrics sizeMetrics) {
-        this(sizeMetrics, TextOrientationType.HORIZONTAL);
+    public TextLabelWidget(LayoutManager layoutManager, SizeMetrics sizeMetrics) {
+        this(layoutManager, sizeMetrics, TextOrientationType.HORIZONTAL);
     }
 
-    public TextLabelWidget(String title, SizeMetrics sizeMetrics, TextOrientationType orientation) {
-        this(sizeMetrics, orientation);
+    public TextLabelWidget(LayoutManager layoutManager, String title, SizeMetrics sizeMetrics, TextOrientationType orientation) {
+        this(layoutManager, sizeMetrics, orientation);
         setText(title);
     }
 
-    public TextLabelWidget(SizeMetrics sizeMetrics, TextOrientationType orientation) {
-        super(new SizeMetrics(0, SizeLayoutType.ABSOLUTE, 0, SizeLayoutType.ABSOLUTE));
+    public TextLabelWidget(LayoutManager layoutManager, SizeMetrics sizeMetrics, TextOrientationType orientation) {
+        super(layoutManager, new SizeMetrics(0, SizeLayoutType.ABSOLUTE, 0, SizeLayoutType.ABSOLUTE));
         //this.plot = plot;
         //this.setWidth(labelPaint.measureText(plot.getTitle()));
         //this.setHeight(labelPaint.getFontMetrics().top);

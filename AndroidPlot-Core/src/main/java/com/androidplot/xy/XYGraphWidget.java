@@ -20,6 +20,7 @@ import android.graphics.*;
 import android.util.Log;
 
 import com.androidplot.exception.PlotRenderException;
+import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.FontUtils;
@@ -147,8 +148,8 @@ public class XYGraphWidget extends Widget {
         axisValueLabelRegions = new ZHash<RectRegion, AxisValueLabelFormatter>();
     }
 
-    public XYGraphWidget(XYPlot plot, SizeMetrics sizeMetrics) {
-        super(sizeMetrics);
+    public XYGraphWidget(LayoutManager layoutManager, XYPlot plot, SizeMetrics sizeMetrics) {
+        super(layoutManager, sizeMetrics);
         this.plot = plot;
     }
 

@@ -43,17 +43,23 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 @UsingMocksAndStubs({Log.class,View.class,Handler.class,Paint.class,Color.class, Rect.class,
-        FontUtils.class, Bitmap.class, Pair.class, TextLabelWidget.class})
+        FontUtils.class, Paint.FontMetrics.class,Bitmap.class, Pair.class})
 
 public class XYLegendWidgetTest {
 
     @MockClass(realClass = Context.class)
     public static class MockContext {}
 
+    @MockClass(realClass = TextLabelWidget.class)
+    public static class MockTextLabelWidget {
+        @Mock
+        public void doOnDraw(Canvas canvas, RectF widgetRect) {}
+    }
+
     @Before
     public void setUp() throws Exception {
         Mockit.setUpMocks(MockCanvas.class, MockRectF.class, MockSizeMetrics.class,
-                MockPointF.class, MockLooper.class, MockPixelUtils.class);
+                MockPointF.class, MockLooper.class, MockPixelUtils.class, MockTextLabelWidget.class);
     }
 
     @After
@@ -75,7 +81,7 @@ public class XYLegendWidgetTest {
 
         assertEquals(1, plot.getSeriesSet().size());
 
-        Deencapsulation.invoke(plot, "onMetricsChanged", 100, 100, 100, 100);
+        Deencapsulation.invoke(plot, "onSizeChanged", 100, 100, 100, 100);
         plot.redraw();
         // have to manually invoke this because the invalidate()
         // invoked by redraw() is a stub and will not result in onDraw being called.

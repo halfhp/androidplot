@@ -33,8 +33,8 @@ import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.Configurator;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.xy.XLayoutStyle;
-import com.androidplot.xy.YLayoutStyle;
+import com.androidplot.ui.XLayoutStyle;
+import com.androidplot.ui.YLayoutStyle;
 
 import java.util.*;
 
@@ -302,13 +302,13 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     private void init(Context context, AttributeSet attrs) {
         PixelUtils.init(getContext());
-        titleWidget = new TextLabelWidget(new SizeMetrics(25,
+        layoutManager = new LayoutManager();
+        titleWidget = new TextLabelWidget(layoutManager, new SizeMetrics(25,
                 SizeLayoutType.ABSOLUTE, 100,
                 SizeLayoutType.ABSOLUTE),
                 TextOrientationType.HORIZONTAL);
-        layoutManager = new LayoutManager();
-        layoutManager.position(titleWidget, 0,
-                XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
+        titleWidget.position(0, XLayoutStyle.RELATIVE_TO_CENTER, 0,
+                YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
 
         onPreInit();
         if(context != null && attrs != null) {
@@ -424,31 +424,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 listener.onPlotUpdate(event);
             }
         }
-    }
-
-    /**
-     * Convenience method - wraps LayoutManager.position().
-     * @param element
-     * @param x
-     * @param xLayoutStyle
-     * @param y
-     * @param yLayoutStyle
-     */
-    public void position(Widget element, float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle) {
-        layoutManager.position(element, x, xLayoutStyle, y, yLayoutStyle, AnchorPosition.LEFT_TOP);
-    }
-
-    /**
-     * Convenience method - wraps LayoutManager.positon().
-     * @param element
-     * @param x
-     * @param xLayoutStyle
-     * @param y
-     * @param yLayoutStyle
-     * @param anchor
-     */
-    public void position(Widget element, float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle, AnchorPosition anchor) {
-        layoutManager.position(element, x, xLayoutStyle, y, yLayoutStyle, anchor);
     }
 
     /**

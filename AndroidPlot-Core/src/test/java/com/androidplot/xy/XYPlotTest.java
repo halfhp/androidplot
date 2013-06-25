@@ -43,8 +43,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 
 @UsingMocksAndStubs({Log.class,View.class,Context.class,Handler.class,Paint.class,Color.class,
-        Rect.class, RectF.class,FontUtils.class, PixelUtils.class, Canvas.class,
-        TextLabelWidget.class})
+        Rect.class, RectF.class,FontUtils.class, PixelUtils.class, Canvas.class})
 
 public class XYPlotTest {
 

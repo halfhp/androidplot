@@ -247,8 +247,7 @@ public class XYRegionExampleActivity extends Activity {
 
         // reposition the grid so that it rests above the bottom-left
         // edge of the graph widget:
-        plot.position(
-                plot.getLegendWidget(),
+        plot.getLegendWidget().position(
                 20,
                 XLayoutStyle.ABSOLUTE_FROM_RIGHT,
                 35,

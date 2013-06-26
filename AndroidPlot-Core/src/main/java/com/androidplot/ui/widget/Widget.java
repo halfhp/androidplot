@@ -24,6 +24,10 @@ import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
 import com.androidplot.util.PixelUtils;
 
+/**
+ * A Widget is a graphical sub-element of a Plot that can be positioned relative
+ * to the bounds of the Plot.
+ */
 public abstract class Widget implements BoxModelable, Resizable {
 
     private Paint borderPaint;
@@ -31,11 +35,9 @@ public abstract class Widget implements BoxModelable, Resizable {
     private boolean clippingEnabled = true;
     private BoxModel boxModel = new BoxModel();
     private SizeMetrics sizeMetrics;
-    //private RectF outlineRect;  // last known dimensions of this widget
     private DisplayDimensions plotDimensions = new DisplayDimensions();
     private DisplayDimensions widgetDimensions = new DisplayDimensions();
     private boolean isVisible = true;
-
     private PositionMetrics positionMetrics;
     private LayoutManager layoutManager;
 
@@ -374,22 +376,6 @@ public abstract class Widget implements BoxModelable, Resizable {
         this.backgroundPaint = backgroundPaint;
     }
 
-    /*public boolean isDrawBorderEnabled() {
-        return drawBorderEnabled;
-    }
-
-    public void setDrawBorderEnabled(boolean drawBorderEnabled) {
-        this.drawBorderEnabled = drawBorderEnabled;
-    }
-
-    public boolean isDrawBackgroundEnabled() {
-        return drawBackgroundEnabled;
-    }
-
-    public void setDrawBackgroundEnabled(boolean drawBackgroundEnabled) {
-        this.drawBackgroundEnabled = drawBackgroundEnabled;
-    }*/
-
     public boolean isClippingEnabled() {
         return clippingEnabled;
     }
@@ -397,10 +383,6 @@ public abstract class Widget implements BoxModelable, Resizable {
     public void setClippingEnabled(boolean clippingEnabled) {
         this.clippingEnabled = clippingEnabled;
     }
-
-    /*public RectF getOutlineRect() {
-        return outlineRect;
-    }*/
 
     public boolean isVisible() {
         return isVisible;

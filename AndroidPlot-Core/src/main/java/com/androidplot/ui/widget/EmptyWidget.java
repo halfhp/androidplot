@@ -19,12 +19,13 @@ package com.androidplot.ui.widget;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import com.androidplot.exception.PlotRenderException;
+import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.SizeMetrics;
 
 public class EmptyWidget extends Widget {
 
-    public EmptyWidget(SizeMetrics sizeMetrics) {
-        super(sizeMetrics);
+    public EmptyWidget(LayoutManager layoutManager, SizeMetrics sizeMetrics) {
+        super(layoutManager, sizeMetrics);
     }
     @Override
     protected void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException {

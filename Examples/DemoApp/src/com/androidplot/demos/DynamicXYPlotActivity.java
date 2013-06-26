@@ -68,7 +68,9 @@ public class DynamicXYPlotActivity extends Activity {
         SampleDynamicSeries sine1Series = new SampleDynamicSeries(data, 0, "Sine 1");
         SampleDynamicSeries sine2Series = new SampleDynamicSeries(data, 1, "Sine 2");
 
-        dynamicPlot.addSeries(sine1Series, new LineAndPointFormatter(Color.rgb(0, 0, 0), null, Color.rgb(0, 80, 0)));
+        dynamicPlot.addSeries(sine1Series,
+                new LineAndPointFormatter(
+                        Color.rgb(0, 0, 0), null, Color.rgb(0, 80, 0), null));
 
         // create a series using a formatter with some transparency applied:
         LineAndPointFormatter f1 =

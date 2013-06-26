@@ -17,6 +17,7 @@
 package com.androidplot.xy;
 
 import android.graphics.*;
+import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.SeriesAndFormatterList;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.TableModel;
@@ -65,11 +66,11 @@ public class XYLegendWidget extends Widget {
         //regionEntryComparator = new RegionEntryComparator();
     }
 
-    public XYLegendWidget(XYPlot plot,
+    public XYLegendWidget(LayoutManager layoutManager, XYPlot plot,
                           SizeMetrics widgetSizeMetrics,
                           TableModel tableModel,
                           SizeMetrics iconSizeMetrics) {
-        super(widgetSizeMetrics);
+        super(layoutManager, widgetSizeMetrics);
         this.plot = plot;
         setTableModel(tableModel);
         this.iconSizeMetrics = iconSizeMetrics;

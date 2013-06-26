@@ -38,14 +38,8 @@ public class SegmentFormatter extends Formatter<PieChart> {
     private Paint labelPaint;
     private Paint labelMarkerPaint;
 
-    public SegmentFormatter(Integer fillColor) {
+    {
         setFillPaint(new Paint());
-        if(fillColor != null) {
-            getFillPaint().setColor(fillColor);
-        } else {
-            getFillPaint().setColor(DEFAULT_FILL_COLOR);
-        }
-
         // outer edge:
         setOuterEdgePaint(new Paint());
         getOuterEdgePaint().setStyle(Paint.Style.STROKE);
@@ -70,13 +64,25 @@ public class SegmentFormatter extends Formatter<PieChart> {
         getLabelPaint().setTextSize(DEFAULT_LABEL_FONT_SIZE);
         getLabelPaint().setAntiAlias(true);
         getLabelPaint().setTextAlign(Paint.Align.CENTER);
-        getLabelPaint().setShadowLayer(5, 4, 4, Color.BLACK);
+        //getLabelPaint().setShadowLayer(5, 4, 4, Color.BLACK);
 
         // label marker paint:
         setLabelMarkerPaint(new Paint());
         getLabelMarkerPaint().setColor(DEFAULT_LABEL_COLOR);
         getLabelMarkerPaint().setStrokeWidth(DEFAULT_LABEL_MARKER_THICKNESS);
+    }
 
+    /**
+     * Should only be used in conjunction with calls to configure()...
+     */
+    public SegmentFormatter() {}
+
+    public SegmentFormatter(Integer fillColor) {
+        if(fillColor != null) {
+            getFillPaint().setColor(fillColor);
+        } else {
+            getFillPaint().setColor(DEFAULT_FILL_COLOR);
+        }
     }
 
     public SegmentFormatter(Integer fillColor, Integer borderColor) {

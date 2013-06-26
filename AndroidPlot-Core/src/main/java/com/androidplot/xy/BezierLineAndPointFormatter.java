@@ -16,19 +16,26 @@
 
 package com.androidplot.xy;
 
+import android.content.Context;
 import com.androidplot.ui.SeriesRenderer;
 
+/**
+ * This is an experimental class and should not currently be used in production apps.
+ */
 public class BezierLineAndPointFormatter extends LineAndPointFormatter {
-    /*public BezierLineAndPointFormatter(Paint linePaint, Paint vertexPaint, Paint fillPaint) {
-        super(linePaint, vertexPaint, fillPaint);
-    }*/
+
+    /**
+     * Should only be used in conjunction with calls to configure()...
+     */
+    public BezierLineAndPointFormatter() {
+    }
 
     public BezierLineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor) {
-        super(lineColor, vertexColor, fillColor);
+        super(lineColor, vertexColor, fillColor, null);
     }
 
     public BezierLineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, FillDirection fillDir) {
-        super(lineColor, vertexColor, fillColor, fillDir);
+        super(lineColor, vertexColor, fillColor, null, fillDir);
     }
 
     @Override

@@ -57,6 +57,10 @@
                     style="@style/toc_button"
                     android:text="Dual Scale Example"
                     android:enabled="true"/>
+            <Button android:id="@+id/startXYPlotWithBgImgExample"
+                    style="@style/toc_button"
+                    android:text="XY Background Example"
+                    android:enabled="true"/>
             </LinearLayout>
     </ScrollView>
     <TextView android:id="@+id/text"

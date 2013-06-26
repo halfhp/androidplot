@@ -91,6 +91,7 @@ public class TextLabelWidget extends Widget {
                 setSize(new SizeMetrics(size.width(), SizeLayoutType.ABSOLUTE, size.height()+2, SizeLayoutType.ABSOLUTE));
                 break;
         }
+        refreshLayout();
 
     }
 
@@ -105,10 +106,11 @@ public class TextLabelWidget extends Widget {
         if(text == null || text.length() == 0) {
             return;
         }
-        Log.d(TAG, "In TextLabelWidget.doOnDraw()");
-        FontUtils.getStringDimensions(text, labelPaint);
+        Log.d(TAG, "In TextLabelWidget.doOnDraw(). Instance: " + this);
+        //FontUtils.getStringDimensions(text, labelPaint);
         float vOffset = labelPaint.getFontMetrics().descent;
-        PointF start = LayoutManager.getAnchorCoordinates(widgetRect, AnchorPosition.CENTER);
+        PointF start = getAnchorCoordinates(widgetRect,
+                AnchorPosition.CENTER);
 
         // BEGIN ROTATION CALCULATION
         //int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG);

@@ -173,17 +173,6 @@ public class PlotTest {
                 return null;
             }
         }*/
-
-        @Override
-        protected void doBeforeDraw() {
-
-        }
-
-        @Override
-        protected void doAfterDraw() {
-
-        }
-
     }
 
     @Before

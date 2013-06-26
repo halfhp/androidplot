@@ -309,6 +309,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
 
         onPreInit();
+        // make sure the title widget is always the topmost widget:
+        layoutManager.moveToTop(titleWidget);
         if(context != null && attrs != null) {
             loadAttrs(context, attrs);
         }

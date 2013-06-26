@@ -18,6 +18,7 @@ package com.androidplot.xy;
 
 import android.content.Context;
 //import android.graphics.*;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
@@ -254,11 +255,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         yValueMarkers = new ArrayList<YValueMarker>();
 
         setDefaultBounds(new RectRegion(-1, 1, -1, 1));
-
-        // safety check to avoid issues with subclasses
-        /*if (getClass().equals(XYPlot.class) && attrs != null) {
-            loadAttrs(context, attrs);
-        }*/
     }
 
 
@@ -269,19 +265,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         getGraphWidget().setGridPaddingRight(right);
     }
 
-    /*@Override
-    protected XYSeriesRenderer doGetRendererInstance(Class clazz) {
-        return XYRendererFactory.getInstance(this, clazz);
-    }*/
-
     @Override
-    protected void doBeforeDraw() {
+    protected void notifyListenersBeforeDraw(Canvas canvas) {
         calculateMinMaxVals();
-    }
-
-    @Override
-    protected void doAfterDraw() {
-
+        super.notifyListenersBeforeDraw(canvas);
     }
 
     /**
@@ -319,12 +306,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public Number getYVal(PointF point) {
         return getGraphWidget().getYVal(point);
-        //throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     public Number getXVal(PointF point) {
         return getGraphWidget().getXVal(point);
-        //throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     private boolean isXValWithinView(double xVal) {
@@ -628,22 +613,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             return y - x;
         }
     }
-
-    /*private double min(double a, double b) {
-        if(a < b) {
-            return a;
-        } else {
-            return b;
-        }
-    }*/
-
-    /*private double max(double a, double b) {
-        if(a > b) {
-            return a;
-        } else {
-            return b;
-        }
-    }*/
 
     public void updateDomainMinMaxForOriginModel() {
         double origin = userDomainOrigin.doubleValue();
@@ -1004,7 +973,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         setUserMaxY((mode == BoundaryMode.FIXED) ? boundary : null);
         setRangeUpperBoundaryMode(mode);
         setRangeFramingModel(XYFramingModel.EDGE);
-        //updateMinMaxVals();
     }
 
     protected synchronized void setRangeLowerBoundaryMode(BoundaryMode mode) {

@@ -22,6 +22,7 @@ import com.androidplot.ui.*;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
+import com.androidplot.util.PixelUtils;
 
 public abstract class Widget implements BoxModelable, Resizable {
 
@@ -31,7 +32,8 @@ public abstract class Widget implements BoxModelable, Resizable {
     private BoxModel boxModel = new BoxModel();
     private SizeMetrics sizeMetrics;
     //private RectF outlineRect;  // last known dimensions of this widget
-    private DisplayDimensions displayDimensions = new DisplayDimensions();
+    private DisplayDimensions plotDimensions = new DisplayDimensions();
+    private DisplayDimensions widgetDimensions = new DisplayDimensions();
     private boolean isVisible = true;
 
     private PositionMetrics positionMetrics;
@@ -46,6 +48,10 @@ public abstract class Widget implements BoxModelable, Resizable {
         SizeMetrics oldSize = this.sizeMetrics;
         setSize(sizeMetrics);
         onMetricsChanged(oldSize, sizeMetrics);
+    }
+
+    public DisplayDimensions getWidgetDimensions() {
+        return widgetDimensions;
     }
 
     public AnchorPosition getAnchor() {
@@ -106,7 +112,7 @@ public abstract class Widget implements BoxModelable, Resizable {
      */
     public boolean containsPoint(PointF point) {
         //return outlineRect != null && outlineRect.contains(point.x, point.y);
-        return displayDimensions.canvasRect.contains(point.x, point.y);
+        return widgetDimensions.canvasRect.contains(point.x, point.y);
     }
 
     public void setSize(SizeMetrics sizeMetrics) {
@@ -234,18 +240,93 @@ public abstract class Widget implements BoxModelable, Resizable {
         return boxModel.getMarginRight();
     }
 
-    @Override
-    public synchronized void layout(final DisplayDimensions dims) {
-        RectF mRect = boxModel.getMarginatedRect(dims.canvasRect);
-        RectF pRect = boxModel.getPaddedRect(mRect);
-        displayDimensions = new DisplayDimensions(dims.canvasRect, mRect, pRect);
+    /**
+     * Causes the pixel dimensions used for rendering this Widget
+     * to be recalculated.  Should be called any time a parameter that factors
+     * into this Widget's size or position is altered.
+     */
+    public synchronized void refreshLayout() {
+        if(positionMetrics == null) {
+            // make sure positionMetrics have been set.  this method can be
+            // automatically called during xml configuration of certain params
+            // before the widget is fully configured.
+            return;
+        }
+        float elementWidth = getWidthPix(plotDimensions.paddedRect.width());
+        float elementHeight = getHeightPix(plotDimensions.paddedRect.height());
+        PointF coords = getElementCoordinates(elementHeight,
+                elementWidth, plotDimensions.paddedRect, positionMetrics);
+
+        RectF widgetRect = new RectF(coords.x, coords.y,
+                coords.x + elementWidth, coords.y + elementHeight);
+        RectF marginatedWidgetRect = getMarginatedRect(widgetRect);
+        RectF paddedWidgetRect = getPaddedRect(marginatedWidgetRect);
+        widgetDimensions = new DisplayDimensions(widgetRect,
+                marginatedWidgetRect, paddedWidgetRect);
     }
+
+    @Override
+    public synchronized void layout(final DisplayDimensions plotDimensions) {
+        this.plotDimensions = plotDimensions;
+        refreshLayout();
+    }
+
+    public PointF getElementCoordinates(float height, float width, RectF viewRect, PositionMetrics metrics) {
+            float x = metrics.getxPositionMetric().getPixelValue(viewRect.width()) + viewRect.left;
+            float y = metrics.getyPositionMetric().getPixelValue(viewRect.height()) + viewRect.top;
+            PointF point = new PointF(x, y);
+            return PixelUtils.sub(point, getAnchorOffset(width, height, metrics.getAnchor()));
+        }
+
+    public static PointF getAnchorOffset(float width, float height, AnchorPosition anchorPosition) {
+            PointF point = new PointF();
+            switch (anchorPosition) {
+                case LEFT_TOP:
+                    break;
+                case LEFT_MIDDLE:
+                    point.set(0, height / 2);
+                    break;
+                case LEFT_BOTTOM:
+                    point.set(0, height);
+                    break;
+                case RIGHT_TOP:
+                    point.set(width, 0);
+                    break;
+                case RIGHT_BOTTOM:
+                    point.set(width, height);
+                    break;
+                case RIGHT_MIDDLE:
+                    point.set(width, height / 2);
+                    break;
+                case TOP_MIDDLE:
+                    point.set(width / 2, 0);
+                    break;
+                case BOTTOM_MIDDLE:
+                    point.set(width / 2, height);
+                    break;
+                case CENTER:
+                    point.set(width / 2, height / 2);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported anchor location: " + anchorPosition);
+            }
+            return point;
+        }
+
+    public static PointF getAnchorCoordinates(RectF widgetRect, AnchorPosition anchorPosition) {
+            return PixelUtils.add(new PointF(widgetRect.left, widgetRect.top),
+                    getAnchorOffset(widgetRect.width(), widgetRect.height(), anchorPosition));
+        }
+
+        public static PointF getAnchorCoordinates(float x, float y, float width, float height, AnchorPosition anchorPosition) {
+            return getAnchorCoordinates(new RectF(x, y, x+width, y+height), anchorPosition);
+        }
 
     public void draw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
         //outlineRect = widgetRect;
         if (isVisible()) {
             if (backgroundPaint != null) {
-                drawBackground(canvas, displayDimensions.canvasRect);
+                drawBackground(canvas, widgetDimensions.canvasRect);
             }
 
             /* RectF marginatedRect = new RectF(outlineRect.left + marginLeft,
@@ -255,10 +336,10 @@ public abstract class Widget implements BoxModelable, Resizable {
 
             /*RectF marginatedRect = boxModel.getMarginatedRect(widgetRect);
             RectF paddedRect = boxModel.getPaddedRect(marginatedRect);*/
-            doOnDraw(canvas, displayDimensions.paddedRect);
+            doOnDraw(canvas, widgetDimensions.paddedRect);
 
             if (borderPaint != null) {
-                drawBorder(canvas, displayDimensions.paddedRect);
+                drawBorder(canvas, widgetDimensions.paddedRect);
             }
         }
     }

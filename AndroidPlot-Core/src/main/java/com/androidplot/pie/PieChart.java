@@ -74,14 +74,6 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
         }*/
     }
 
-    @Override
-    protected void doBeforeDraw() {
-    }
-
-    @Override
-    protected void doAfterDraw() {
-    }
-
     public void addSegment(Segment segment, SegmentFormatter formatter) {
         addSeries(segment, formatter);
     }

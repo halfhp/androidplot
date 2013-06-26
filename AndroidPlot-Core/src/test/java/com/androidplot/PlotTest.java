@@ -55,13 +55,7 @@ import static org.junit.Assert.assertTrue;
 
 public class PlotTest {
 
-    /*@MockClass(realClass = Plot.class)
-    public static class MockPlot {}*/
-
     static class MockPlotListener implements PlotListener {
-
-        @Override
-        public void onPlotUpdate(PlotEvent event) {}
 
         @Override
         public void onBeforeDraw(Plot source, Canvas canvas) {}
@@ -70,7 +64,6 @@ public class PlotTest {
         public void onAfterDraw(Plot source, Canvas canvas) {}
     }
 
-    //@MockClass(realClass = Series.class)
     static class MockSeries implements Series {
         @Override
         public String getTitle() {

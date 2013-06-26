@@ -59,38 +59,11 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
      * Should only be used in conjunction with calls to configure()...
      */
     public LineAndPointFormatter() {
-        this(Color.RED, Color.GREEN, Color.BLUE);
-    }
-
-    /**
-     * Set corresponding parameter to null to disable the drawing of lines, vertexes or fill.
-     * Uses a default of FillDirection.BOTTOM.
-     * @param lineColor
-     * @param vertexColor
-     * @param fillColor
-     * @deprecated As of 0.5.1: Use {@link #LineAndPointFormatter(Integer, Integer, Integer, PointLabelFormatter)} instead.
-     */
-    @Deprecated
-    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor) {
-         this(lineColor, vertexColor, fillColor, (PointLabelFormatter) null);
+        this(Color.RED, Color.GREEN, Color.BLUE, null);
     }
 
     public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, PointLabelFormatter plf) {
         this(lineColor, vertexColor, fillColor, plf, FillDirection.BOTTOM);
-    }
-
-    /**
-     *
-     * @param lineColor
-     * @param vertexColor
-     * @param fillColor
-     * @param fillDir Determines which edge or origin of the plot is used to close the path for filling.
-     * @deprecated As of 0.5.1: Use
-     *             {@link #LineAndPointFormatter(Integer, Integer, Integer, PointLabelFormatter, FillDirection)} instead.
-     */
-    @Deprecated
-    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, FillDirection fillDir) {
-        this(lineColor, vertexColor, fillColor, null, fillDir);
     }
 
     public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, PointLabelFormatter plf, FillDirection fillDir) {

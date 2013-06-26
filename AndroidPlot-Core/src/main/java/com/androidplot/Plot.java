@@ -396,11 +396,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
     }
 
-    protected void notifyListenersAfterDraw(Canvas canvas, PlotEvent event) {
+    protected void notifyListenersAfterDraw(Canvas canvas) {
         synchronized (listeners) {
             for (PlotListener listener : listeners) {
                 listener.onAfterDraw(this, canvas);
-                listener.onPlotUpdate(event);
             }
         }
     }
@@ -663,7 +662,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
                 layoutManager.draw(canvas);
 
-                if (isDrawBorderEnabled() && getBorderPaint() != null) {
+                if (getBorderPaint() != null) {
                     drawBorder(canvas, displayDims.marginatedRect);
                 }
             } catch (PlotRenderException e) {
@@ -674,7 +673,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             // any series interested in synchronizing with plot should
             // implement PlotListener.onAfterDraw(...) and do a read unlock from within that
             // invocation. This is the entry point for that invocation.
-            notifyListenersAfterDraw(canvas, new PlotEvent(this, PlotEvent.Type.PLOT_REDRAWN));
+            notifyListenersAfterDraw(canvas);
         }
     }
 
@@ -749,23 +748,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     public void setLayoutManager(LayoutManager layoutManager) {
         this.layoutManager = layoutManager;
-    }
-
-    /**
-     * Deprecated.  Use getBorderPaint instead.  If return is null then
-     * borders are disabled.
-     * @return
-     */
-    public boolean isDrawBorderEnabled() {
-        return drawBorderEnabled;
-    }
-
-    /**
-     * Deprecated - Use setBorderPaint(null) instead.
-     * @param drawBorderEnabled
-     */
-    public void setDrawBorderEnabled(boolean drawBorderEnabled) {
-        this.drawBorderEnabled = drawBorderEnabled;
     }
 
     public TextLabelWidget getTitleWidget() {

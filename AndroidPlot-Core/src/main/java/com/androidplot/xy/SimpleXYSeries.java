@@ -19,7 +19,6 @@ package com.androidplot.xy;
 import android.graphics.Canvas;
 import android.util.Pair;
 import com.androidplot.Plot;
-import com.androidplot.PlotEvent;
 import com.androidplot.PlotListener;
 
 import java.util.LinkedList;
@@ -35,11 +34,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * mechanism(s) to accomplish this.
  */
 public class SimpleXYSeries implements XYSeries, PlotListener {
-
-    @Override
-    public void onPlotUpdate(PlotEvent event) {
-        // This is gonna get removed soon...
-    }
 
     @Override
     public void onBeforeDraw(Plot source, Canvas canvas) {

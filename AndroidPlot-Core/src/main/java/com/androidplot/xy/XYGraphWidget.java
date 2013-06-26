@@ -1015,26 +1015,6 @@ public class XYGraphWidget extends Widget {
         this.ticksPerDomainLabel = ticksPerDomainLabel;
     }
 
-    /**
-     * Deprecated - use getTicksPerRangeLabel() instead.
-     * 
-     * @return
-     */
-    @Deprecated
-    public int getRangeTicksPerLabel() {
-        return ticksPerRangeLabel;
-    }
-
-    /**
-     * Deprecated - use setTicksPerRangeLabel() instead.
-     * 
-     * @param rangeTicksPerLabel
-     */
-    @Deprecated
-    public void setRangeTicksPerLabel(int rangeTicksPerLabel) {
-        this.ticksPerRangeLabel = rangeTicksPerLabel;
-    }
-
     public void setGridPaddingTop(float gridPaddingTop) {
         this.gridPaddingTop = gridPaddingTop;
     }

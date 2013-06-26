@@ -68,10 +68,6 @@ public class LayoutManager extends ZLinkedList<Widget>
         }
     }
 
-    /*@Deprecated
-    public LayoutManager(View view) {
-    }*/
-
     public LayoutManager() {
     }
 

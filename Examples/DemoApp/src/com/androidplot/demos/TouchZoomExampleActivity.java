@@ -85,10 +85,18 @@ public class TouchZoomExampleActivity extends Activity implements OnTouchListene
             series[i] = new SimpleXYSeries("S" + i);
             populateSeries(series[i], scale);
         }
-        mySimpleXYPlot.addSeries(series[3], new LineAndPointFormatter(Color.rgb(50, 0, 0), null, Color.rgb(100, 0, 0)));
-        mySimpleXYPlot.addSeries(series[2], new LineAndPointFormatter(Color.rgb(50, 50, 0), null, Color.rgb(100, 100, 0)));
-        mySimpleXYPlot.addSeries(series[1], new LineAndPointFormatter(Color.rgb(0, 50, 0), null, Color.rgb(0, 100, 0)));
-        mySimpleXYPlot.addSeries(series[0], new LineAndPointFormatter(Color.rgb(0, 0, 0), null, Color.rgb(0, 0, 150)));
+        mySimpleXYPlot.addSeries(series[3],
+                new LineAndPointFormatter(Color.rgb(50, 0, 0), null,
+                        Color.rgb(100, 0, 0), null));
+        mySimpleXYPlot.addSeries(series[2],
+                new LineAndPointFormatter(Color.rgb(50, 50, 0), null,
+                        Color.rgb(100, 100, 0), null));
+        mySimpleXYPlot.addSeries(series[1],
+                new LineAndPointFormatter(Color.rgb(0, 50, 0), null,
+                        Color.rgb(0, 100, 0), null));
+        mySimpleXYPlot.addSeries(series[0],
+                new LineAndPointFormatter(Color.rgb(0, 0, 0), null,
+                        Color.rgb(0, 0, 150), null));
         mySimpleXYPlot.redraw();
         mySimpleXYPlot.calculateMinMaxVals();
         minXY = new PointF(mySimpleXYPlot.getCalculatedMinX().floatValue(),

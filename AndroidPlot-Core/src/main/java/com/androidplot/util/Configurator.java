@@ -26,6 +26,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 
 /**
@@ -307,6 +308,7 @@ public abstract class Configurator {
 
             Method m = getSetter(o.getClass(), fieldId);
             Class[] paramTypes = m.getParameterTypes();
+            // TODO: add support for generic type params
             if (paramTypes.length >= 1) {
 
                 // split on "|"

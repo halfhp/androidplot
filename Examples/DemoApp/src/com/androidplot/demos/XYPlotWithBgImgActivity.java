@@ -3,8 +3,6 @@ package com.androidplot.demos;
 import android.app.Activity;
 import android.graphics.*;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ToggleButton;
 import com.androidplot.xy.*;
@@ -18,7 +16,7 @@ public class XYPlotWithBgImgActivity extends Activity {
 	private int SERIES_LEN = 50;
 	private Shader WHITE_SHADER = new LinearGradient(1, 1, 1, 1, Color.WHITE, Color.WHITE, Shader.TileMode.REPEAT);
 
-	private XYPlot graphView;
+	private XYPlot plot;
 	private SimpleXYSeries series;
 
 	@Override
@@ -26,29 +24,30 @@ public class XYPlotWithBgImgActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xy_plot_with_bq_img_example);
 
-		graphView = (XYPlot) findViewById(R.id.graph_metrics);
+		plot = (XYPlot) findViewById(R.id.graph_metrics);
 
 		//For debugging.
-        //graphView.setMarkupEnabled(true);
+        //plot.setMarkupEnabled(true);
 
         // Format Graph
-        graphView.getGraphWidget().getBackgroundPaint().setColor(Color.TRANSPARENT);
-        graphView.getGraphWidget().getGridBackgroundPaint().setShader(WHITE_SHADER);
-        graphView.getGraphWidget().getGridLinePaint().setColor(Color.BLACK);
-        graphView.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{3,3}, 1));
-        graphView.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
-        graphView.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
-        //graphView.getGraphWidget().setMarginTop(10);
+        plot.getGraphWidget().getBackgroundPaint().setColor(Color.TRANSPARENT);
+        plot.getGraphWidget().getGridBackgroundPaint().setShader(WHITE_SHADER);
+        plot.getGraphWidget().getGridLinePaint().setColor(Color.BLACK);
+        plot.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{3, 3}, 1));
+        plot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
+        plot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
+        //plot.getGraphWidget().setMarginTop(10);
 
         // Customize domain and range labels.
-        graphView.setDomainLabel("x");
-        graphView.setRangeLabel("y");
-        graphView.setRangeValueFormat(new DecimalFormat("0"));
+        plot.setDomainLabel("x-vals");
+        plot.setRangeLabel("y-vals");
+        plot.setRangeValueFormat(new DecimalFormat("0"));
 
         // Make the domain and range step correctly
-        graphView.setRangeBoundaries(40, 160, BoundaryMode.FIXED);
-        graphView.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 20);
-        graphView.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 60);
+        plot.setRangeBoundaries(40, 160, BoundaryMode.FIXED);
+        plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 20);
+        plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 60);
+        plot.setTicksPerDomainLabel(2);
 
         series = (SimpleXYSeries) getSeries();
 		LineAndPointFormatter lpFormat = new LineAndPointFormatter(
@@ -57,8 +56,8 @@ public class XYPlotWithBgImgActivity extends Activity {
 				null, // No fill
 				new PointLabelFormatter(Color.TRANSPARENT) // Don't show text at points
 		);
-        graphView.addSeries(series, lpFormat);
-        graphView.redraw();
+        plot.addSeries(series, lpFormat);
+        plot.redraw();
 	}
 
 	private SimpleXYSeries getSeries() {
@@ -82,7 +81,7 @@ public class XYPlotWithBgImgActivity extends Activity {
 	public void onGraphStyleToggle(View v) {
 		boolean styleOn = ((ToggleButton) v).isChecked();
 
-        /*RectF graphRect = graphView.getGraphWidget().getGridRect();
+        /*RectF graphRect = plot.getGraphWidget().getGridRect();
         float segmentSize = 1.0f/6.0f;
         LinearGradient lg = new LinearGradient(
                 0,
@@ -102,9 +101,9 @@ public class XYPlotWithBgImgActivity extends Activity {
                 },
                 Shader.TileMode.REPEAT
         );
-        graphView.getGraphWidget().getGridBackgroundPaint().setShader(lg);*/
+        plot.getGraphWidget().getGridBackgroundPaint().setShader(lg);*/
 
-        RectF rect = graphView.getGraphWidget().getGridRect();
+        RectF rect = plot.getGraphWidget().getGridRect();
         BitmapShader myShader = new BitmapShader(
                 Bitmap.createScaledBitmap(
                         BitmapFactory.decodeResource(
@@ -119,12 +118,12 @@ public class XYPlotWithBgImgActivity extends Activity {
         m.setTranslate(rect.left, rect.top);
         myShader.setLocalMatrix(m);
         if (styleOn)
-	        graphView.getGraphWidget().getGridBackgroundPaint().setShader(
+	        plot.getGraphWidget().getGridBackgroundPaint().setShader(
 	        		myShader);
 		else
-			graphView.getGraphWidget().getGridBackgroundPaint().setShader(WHITE_SHADER);
+			plot.getGraphWidget().getGridBackgroundPaint().setShader(WHITE_SHADER);
 
-        graphView.redraw();
+        plot.redraw();
 
 	}
 }

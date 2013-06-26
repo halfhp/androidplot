@@ -24,26 +24,17 @@ public class PositionMetrics implements Comparable<PositionMetrics> {
     private float layerDepth;
 
     public PositionMetrics(float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle, AnchorPosition anchor) {
-        setxPositionMetric(new XPositionMetric(x, xLayoutStyle));
-        setyPositionMetric(new YPositionMetric(y, yLayoutStyle));
+        setXPositionMetric(new XPositionMetric(x, xLayoutStyle));
+        setYPositionMetric(new YPositionMetric(y, yLayoutStyle));
         setAnchor(anchor);
 
     }
 
-
-    public XPositionMetric getxPositionMetric() {
-        return xPositionMetric;
-    }
-
-    public void setxPositionMetric(XPositionMetric xPositionMetric) {
-        this.xPositionMetric = xPositionMetric;
-    }
-
-    public YPositionMetric getyPositionMetric() {
+    public YPositionMetric getYPositionMetric() {
         return yPositionMetric;
     }
 
-    public void setyPositionMetric(YPositionMetric yPositionMetric) {
+    public void setYPositionMetric(YPositionMetric yPositionMetric) {
         this.yPositionMetric = yPositionMetric;
     }
 
@@ -64,5 +55,13 @@ public class PositionMetrics implements Comparable<PositionMetrics> {
         } else {
             return 1;
         }
+    }
+
+    public XPositionMetric getXPositionMetric() {
+        return xPositionMetric;
+    }
+
+    public void setXPositionMetric(XPositionMetric xPositionMetric) {
+        this.xPositionMetric = xPositionMetric;
     }
 }

@@ -274,8 +274,8 @@ public abstract class Widget implements BoxModelable, Resizable {
     }
 
     public PointF getElementCoordinates(float height, float width, RectF viewRect, PositionMetrics metrics) {
-            float x = metrics.getxPositionMetric().getPixelValue(viewRect.width()) + viewRect.left;
-            float y = metrics.getyPositionMetric().getPixelValue(viewRect.height()) + viewRect.top;
+            float x = metrics.getXPositionMetric().getPixelValue(viewRect.width()) + viewRect.left;
+            float y = metrics.getYPositionMetric().getPixelValue(viewRect.height()) + viewRect.top;
             PointF point = new PointF(x, y);
             return PixelUtils.sub(point, getAnchorOffset(width, height, metrics.getAnchor()));
         }

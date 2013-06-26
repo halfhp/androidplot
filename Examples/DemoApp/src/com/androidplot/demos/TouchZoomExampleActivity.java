@@ -82,7 +82,7 @@ public class TouchZoomExampleActivity extends Activity implements OnTouchListene
         series = new SimpleXYSeries[4];
         int scale = 1;
         for (int i = 0; i < 4; i++, scale *= 5) {
-            series[i] = new SimpleXYSeries("Series " + i);
+            series[i] = new SimpleXYSeries("S" + i);
             populateSeries(series[i], scale);
         }
         mySimpleXYPlot.addSeries(series[3], new LineAndPointFormatter(Color.rgb(50, 0, 0), null, Color.rgb(100, 0, 0)));

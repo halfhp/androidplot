@@ -67,7 +67,7 @@ public class StepChartExampleActivity extends Activity
         LineAndPointFormatter series1Format = new LineAndPointFormatter(
                 Color.rgb(0, 100, 0),                   // line color
                 Color.rgb(0, 100, 0),                   // point color
-                Color.rgb(100, 200, 0));                // fill color
+                Color.rgb(100, 200, 0), null);                // fill color
 
 
         // setup our line fill paint to be a slightly transparent gradient:

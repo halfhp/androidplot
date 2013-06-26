@@ -18,6 +18,7 @@ package com.androidplot.xy;
 
 import android.content.Context;
 //import android.graphics.*;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
@@ -25,9 +26,8 @@ import android.util.AttributeSet;
 import com.androidplot.Plot;
 //import com.androidplot.xy.ui.widget.renderer.XYRendererType;
 import com.androidplot.ui.*;
-import com.androidplot.ui.widget.RangeLabelWidget;
-import com.androidplot.ui.widget.DomainLabelWidget;
 import com.androidplot.ui.TextOrientationType;
+import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.util.PixelUtils;
 
 import java.text.Format;
@@ -45,17 +45,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     // widgets
     private XYLegendWidget legendWidget;
     private XYGraphWidget graphWidget;
-    private DomainLabelWidget domainLabelWidget;
-    private RangeLabelWidget rangeLabelWidget;
+    private TextLabelWidget domainLabelWidget;
+    private TextLabelWidget rangeLabelWidget;
 
     private XYStepMode domainStepMode = XYStepMode.SUBDIVIDE;
     private double domainStepValue = 10;
 
     private XYStepMode rangeStepMode = XYStepMode.SUBDIVIDE;
     private double rangeStepValue = 10;
-
-    private String domainLabel = "domain";
-    private String rangeLabel = "range";
 
     // user settable min/max values
     private Number userMinX;
@@ -143,17 +140,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public XYPlot(Context context, String title) {
         super(context, title);
-        postInit(context, null);
     }
 
     public XYPlot(Context context, String title, RenderMode mode) {
         super(context, title, mode);
-        postInit(context, null);
     }
 
     public XYPlot(Context context, AttributeSet attributes) {
         super(context, attributes);
-        postInit(context, attributes);
     }
 
     /*public XYPlot(Context context, AttributeSet attributes, boolean loadAttrs) {
@@ -168,11 +162,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public XYPlot(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        postInit(context, attrs);
+
     }
 
-    private void postInit(Context context, AttributeSet attrs) {
+    @Override
+    protected void onPreInit() {
         legendWidget = new XYLegendWidget(
+                getLayoutManager(),
                 this,
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_H_DP),
@@ -185,6 +181,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                         SizeLayoutType.ABSOLUTE));
 
         graphWidget = new XYGraphWidget(
+                getLayoutManager(),
                 this,
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_H_DP),
@@ -198,16 +195,16 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         graphWidget.setBackgroundPaint(backgroundPaint);
 
 
-        domainLabelWidget = new DomainLabelWidget(
-                this,
+        domainLabelWidget = new TextLabelWidget(
+                getLayoutManager(),
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_H_DP),
                         SizeLayoutType.ABSOLUTE,
                         PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_W_DP),
                         SizeLayoutType.ABSOLUTE),
                 TextOrientationType.HORIZONTAL);
-        rangeLabelWidget = new RangeLabelWidget(
-                this,
+        rangeLabelWidget = new TextLabelWidget(
+                getLayoutManager(),
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_H_DP),
                         SizeLayoutType.ABSOLUTE,
@@ -215,32 +212,28 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                         SizeLayoutType.ABSOLUTE),
                 TextOrientationType.VERTICAL_ASCENDING);
 
-        getLayoutManager().position(
-                legendWidget,
+        legendWidget.position(
                 PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_RIGHT,
                 PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_Y_OFFSET_DP),
                 YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
                 AnchorPosition.RIGHT_BOTTOM);
 
-        getLayoutManager().position(
-                graphWidget,
+        graphWidget.position(
                 PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_RIGHT,
                 PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_Y_OFFSET_DP),
                 YLayoutStyle.ABSOLUTE_FROM_CENTER,
                 AnchorPosition.RIGHT_MIDDLE);
 
-        getLayoutManager().position(
-                domainLabelWidget,
+        domainLabelWidget.position(
                 PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_LEFT,
                 PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_Y_OFFSET_DP),
                 YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
                 AnchorPosition.LEFT_BOTTOM);
 
-        getLayoutManager().position(
-                rangeLabelWidget,
+        rangeLabelWidget.position(
                 PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP),
                 XLayoutStyle.ABSOLUTE_FROM_LEFT,
                 PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP),
@@ -252,7 +245,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         graphWidget.setMarginTop(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_TOP_MARGIN_DP));
         graphWidget.setMarginRight(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN_DP));
 
-        getTitleWidget().pack();
         getDomainLabelWidget().pack();
         getRangeLabelWidget().pack();
         setPlotMarginLeft(PixelUtils.dpToPix(DEFAULT_PLOT_LEFT_MARGIN_DP));
@@ -263,11 +255,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         yValueMarkers = new ArrayList<YValueMarker>();
 
         setDefaultBounds(new RectRegion(-1, 1, -1, 1));
-
-        // TODO: can't remember why this getClass() check is neccessary.  test if it actually is...
-        if (getClass().equals(XYPlot.class) && attrs != null) {
-            loadAttrs(context, attrs);
-        }
     }
 
 
@@ -278,19 +265,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         getGraphWidget().setGridPaddingRight(right);
     }
 
-    /*@Override
-    protected XYSeriesRenderer doGetRendererInstance(Class clazz) {
-        return XYRendererFactory.getInstance(this, clazz);
-    }*/
-
     @Override
-    protected void doBeforeDraw() {
+    protected void notifyListenersBeforeDraw(Canvas canvas) {
         calculateMinMaxVals();
-    }
-
-    @Override
-    protected void doAfterDraw() {
-
+        super.notifyListenersBeforeDraw(canvas);
     }
 
     /**
@@ -328,12 +306,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public Number getYVal(PointF point) {
         return getGraphWidget().getYVal(point);
-        //throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     public Number getXVal(PointF point) {
         return getGraphWidget().getXVal(point);
-        //throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     private boolean isXValWithinView(double xVal) {
@@ -638,22 +614,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         }
     }
 
-    /*private double min(double a, double b) {
-        if(a < b) {
-            return a;
-        } else {
-            return b;
-        }
-    }*/
-
-    /*private double max(double a, double b) {
-        if(a > b) {
-            return a;
-        } else {
-            return b;
-        }
-    }*/
-
     public void updateDomainMinMaxForOriginModel() {
         double origin = userDomainOrigin.doubleValue();
         double maxXDelta = distance(calculatedMaxX.doubleValue(), origin);
@@ -808,25 +768,19 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     public String getDomainLabel() {
-        return domainLabel;
+        return getDomainLabelWidget().getText();
     }
 
     public void setDomainLabel(String domainLabel) {
-        this.domainLabel = domainLabel;
-        if (getDomainLabelWidget() != null) {
-            getDomainLabelWidget().pack();
-        }
+        getDomainLabelWidget().setText(domainLabel);
     }
 
     public String getRangeLabel() {
-        return rangeLabel;
+        return getRangeLabelWidget().getText();
     }
 
     public void setRangeLabel(String rangeLabel) {
-        this.rangeLabel = rangeLabel;
-        if (getRangeLabelWidget() != null) {
-            getRangeLabelWidget().pack();
-        }
+        getRangeLabelWidget().setText(rangeLabel);
     }
 
     public XYLegendWidget getLegendWidget() {
@@ -845,19 +799,19 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         this.graphWidget = graphWidget;
     }
 
-    public DomainLabelWidget getDomainLabelWidget() {
+    public TextLabelWidget getDomainLabelWidget() {
         return domainLabelWidget;
     }
 
-    public void setDomainLabelWidget(DomainLabelWidget domainLabelWidget) {
+    public void setDomainLabelWidget(TextLabelWidget domainLabelWidget) {
         this.domainLabelWidget = domainLabelWidget;
     }
 
-    public RangeLabelWidget getRangeLabelWidget() {
+    public TextLabelWidget getRangeLabelWidget() {
         return rangeLabelWidget;
     }
 
-    public void setRangeLabelWidget(RangeLabelWidget rangeLabelWidget) {
+    public void setRangeLabelWidget(TextLabelWidget rangeLabelWidget) {
         this.rangeLabelWidget = rangeLabelWidget;
     }
 
@@ -1019,7 +973,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         setUserMaxY((mode == BoundaryMode.FIXED) ? boundary : null);
         setRangeUpperBoundaryMode(mode);
         setRangeFramingModel(XYFramingModel.EDGE);
-        //updateMinMaxVals();
     }
 
     protected synchronized void setRangeLowerBoundaryMode(BoundaryMode mode) {

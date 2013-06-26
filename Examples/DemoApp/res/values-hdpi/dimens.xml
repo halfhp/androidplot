@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HDPI DIMENSIONS -->
+<resources>
+    <dimen name="title_font_size">30dp</dimen>
+    <dimen name="pie_segment_label_font_size">20dp</dimen>
+</resources>

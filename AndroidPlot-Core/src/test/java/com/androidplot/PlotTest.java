@@ -19,6 +19,7 @@ package com.androidplot;
 import android.content.Context;
 import android.graphics.*;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import com.androidplot.mock.MockContext;
 import com.androidplot.mock.MockPaint;
@@ -28,8 +29,8 @@ import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.Formatter;
 //import mockit.*;
 import com.androidplot.ui.widget.TextLabelWidget;
-import com.androidplot.ui.widget.TitleWidget;
 import com.androidplot.util.Configurator;
+import com.androidplot.util.FontUtils;
 import com.androidplot.util.PixelUtils;
 import mockit.*;
 import org.junit.After;
@@ -48,19 +49,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class,
-        RectF.class,Canvas.class,TitleWidget.class,TextLabelWidget.class,
+@UsingMocksAndStubs({Log.class, View.class,Handler.class,Paint.class,Color.class,
+        RectF.class, Rect.class, FontUtils.class, Canvas.class,
         PixelUtils.class,Context.class})
 
 public class PlotTest {
 
-    /*@MockClass(realClass = Plot.class)
-    public static class MockPlot {}*/
-
     static class MockPlotListener implements PlotListener {
-
-        @Override
-        public void onPlotUpdate(PlotEvent event) {}
 
         @Override
         public void onBeforeDraw(Plot source, Canvas canvas) {}
@@ -69,7 +64,6 @@ public class PlotTest {
         public void onAfterDraw(Plot source, Canvas canvas) {}
     }
 
-    //@MockClass(realClass = Series.class)
     static class MockSeries implements Series {
         @Override
         public String getTitle() {
@@ -157,6 +151,11 @@ public class PlotTest {
             super(context, title);
         }
 
+        @Override
+        protected void onPreInit() {
+
+        }
+
         /*@Override
         protected SeriesRenderer doGetRendererInstance(Class clazz) {
             if(clazz == MockRenderer1.class) {
@@ -167,17 +166,6 @@ public class PlotTest {
                 return null;
             }
         }*/
-
-        @Override
-        protected void doBeforeDraw() {
-
-        }
-
-        @Override
-        protected void doAfterDraw() {
-
-        }
-
     }
 
     @Before
@@ -475,7 +463,8 @@ public class PlotTest {
 
         HashMap<String, String> params = new HashMap<String, String>();
         String param1 = "this is a test.";
-        String param2 = Plot.RenderMode.USE_BACKGROUND_THREAD.toString();
+        //String param2 = Plot.RenderMode.USE_BACKGROUND_THREAD.toString();
+        String param2 = "use_background_thread";
         String param3 = "#FF0000";
         params.put("title", param1);
         params.put("renderMode", param2);

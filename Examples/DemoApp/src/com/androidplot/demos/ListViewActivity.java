@@ -87,9 +87,9 @@ public class ListViewActivity extends Activity {
                 XYSeries series = new SimpleXYSeries(nums, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "S" + k);
                 p.addSeries(series, new LineAndPointFormatter(
                         Color.rgb(new Double(rl * 255).intValue(), new Double(gl * 255).intValue(), new Double(bl * 255).intValue()),
-                        Color.rgb(new Double(rp * 255).intValue(), new Double(gp * 255).intValue(), new Double(bp * 255).intValue()), null));
+                        Color.rgb(new Double(rp * 255).intValue(), new Double(gp * 255).intValue(), new Double(bp * 255).intValue()),
+                        null, null));
             }
-            //p.disableAllMarkup();
             return v;
         }
     }

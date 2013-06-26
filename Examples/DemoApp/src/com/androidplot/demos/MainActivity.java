@@ -120,5 +120,13 @@ public class MainActivity extends Activity
             }
         });
 
+        Button startXYPlotWithBgImgExampleButton = (Button)findViewById(R.id.startXYPlotWithBgImgExample);
+        startXYPlotWithBgImgExampleButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(MainActivity.this, XYPlotWithBgImgActivity.class));
+                    }
+                });
+
     }
 }

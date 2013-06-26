@@ -19,12 +19,14 @@ package com.androidplot.util;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
+import android.util.Log;
 import android.util.TypedValue;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 
 /**
@@ -100,6 +102,7 @@ import java.util.HashMap;
  */
 public abstract class Configurator {
 
+    private static final String TAG = Configurator.class.getName();
     protected static final String CFG_ELEMENT_NAME = "config";
 
     protected static int parseResId(Context ctx, String prefix, String value) {
@@ -157,8 +160,8 @@ public abstract class Configurator {
     }
 
 
-    protected static Method getSetter(Object obj, final String fieldId) throws NoSuchMethodException {
-        Method[] methods = obj.getClass().getMethods();
+    protected static Method getSetter(Class clazz, final String fieldId) throws NoSuchMethodException {
+        Method[] methods = clazz.getMethods();
 
         String methodName = "set" + fieldId;
         for (Method method : methods) {
@@ -167,13 +170,14 @@ public abstract class Configurator {
             }
         }
         throw new NoSuchMethodException("No such public method (case insensitive): " +
-                methodName + " in " + obj.getClass());
+                methodName + " in " + clazz);
     }
 
-    protected static Method getGetter(Object obj, final String fieldId) throws NoSuchMethodException {
+    protected static Method getGetter(Class clazz, final String fieldId) throws NoSuchMethodException {
+        Log.d(TAG, "Attempting to find getter for " + fieldId + " in class " + clazz.getName());
         String firstLetter = fieldId.substring(0, 1);
         String methodName = "get" + firstLetter.toUpperCase() + fieldId.substring(1, fieldId.length());
-        return obj.getClass().getMethod(methodName);
+        return clazz.getMethod(methodName);
     }
 
     /**
@@ -187,6 +191,11 @@ public abstract class Configurator {
      */
     protected static Object getObjectContaining(Object obj, String path) throws
             InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        if(obj == null) {
+            throw new NullPointerException("Attempt to call getObjectContaining(Object obj, String path) " +
+                    "on a null Object instance.  Path was: " + path);
+        }
+        Log.d(TAG, "Looking up object containing: " + path);
         int separatorIndex = path.indexOf(".");
 
         // not there yet, descend deeper:
@@ -195,7 +204,12 @@ public abstract class Configurator {
             String rhs = path.substring(separatorIndex + 1, path.length());
 
             // use getter to retrieve the instance
-            Object o = getGetter(obj, lhs).invoke(obj);
+            Method m = getGetter(obj.getClass(), lhs);
+            if(m == null) {
+                throw new NullPointerException("No getter found for field: " + lhs + " within " + obj.getClass());
+            }
+            Log.d(TAG, "Invoking " + m.getName() + " on instance of " + obj.getClass().getName());
+            Object o = m.invoke(obj);
             // delve into o
             return getObjectContaining(o, rhs);
             //} catch (NoSuchMethodException e) {
@@ -214,7 +228,7 @@ public abstract class Configurator {
         int i = 0;
         for (Class param : params) {
             if (Enum.class.isAssignableFrom(param)) {
-                param.getMethod("valueOf", String.class).invoke(null, vals[i]);
+                out[i] = param.getMethod("valueOf", String.class).invoke(null, vals[i].toUpperCase());
             } else if (param.equals(Float.TYPE)) {
                 out[i] = parseFloatAttr(ctx, vals[i]);
             } else if (param.equals(Integer.TYPE)) {
@@ -272,7 +286,7 @@ public abstract class Configurator {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (NoSuchMethodException e) {
-                System.out.println("Error inflating XML: Setter for field \"" + key + "\" does not exist: ");
+                Log.w(TAG, "Error inflating XML: Setter for field \"" + key + "\" does not exist. ");
                 e.printStackTrace();
             }
         }
@@ -292,8 +306,9 @@ public abstract class Configurator {
             int idx = key.lastIndexOf(".");
             String fieldId = idx > 0 ? key.substring(idx + 1, key.length()) : key;
 
-            Method m = getSetter(o, fieldId);
+            Method m = getSetter(o.getClass(), fieldId);
             Class[] paramTypes = m.getParameterTypes();
+            // TODO: add support for generic type params
             if (paramTypes.length >= 1) {
 
                 // split on "|"
@@ -302,6 +317,7 @@ public abstract class Configurator {
                 if (paramStrs.length == paramTypes.length) {
 
                     Object[] oa = inflateParams(ctx, paramTypes, paramStrs);
+                    Log.d(TAG, "Invoking " + m.getName() + " with arg(s) " + argArrToString(oa));
                     m.invoke(o, oa);
                 } else {
                     throw new IllegalArgumentException("Error inflating XML: Unexpected number of argments passed to \""
@@ -313,6 +329,15 @@ public abstract class Configurator {
                         fieldId + "\".");
             }
         }
+    }
+
+    protected static String argArrToString(Object[] args) {
+        String out = "";
+        for(Object obj : args) {
+            out += (obj == null ? (out += "[null] ") :
+                    ("[" + obj.getClass() + ": " + obj + "] "));
+        }
+        return out;
     }
 }
 

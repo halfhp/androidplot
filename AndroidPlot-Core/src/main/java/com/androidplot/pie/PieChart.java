@@ -19,13 +19,12 @@ package com.androidplot.pie;
 import android.content.Context;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
-import com.androidplot.Series;
 import com.androidplot.ui.AnchorPosition;
 import com.androidplot.ui.SizeLayoutType;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.xy.XLayoutStyle;
-import com.androidplot.xy.YLayoutStyle;
+import com.androidplot.ui.XLayoutStyle;
+import com.androidplot.ui.YLayoutStyle;
 
 public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
@@ -39,21 +38,20 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
     public PieChart(Context context, String title) {
         super(context, title);
-        postInit(context, null);
     }
 
     public PieChart(Context context, String title, RenderMode mode) {
         super(context, title, mode);
-        postInit(context, null);
     }
 
     public PieChart(Context context, AttributeSet attributes) {
         super(context, attributes);
-        postInit(context, attributes);
     }
 
-    private void postInit(Context context, AttributeSet attrs) {
+    @Override
+    protected void onPreInit() {
         pieWidget = new PieWidget(
+                getLayoutManager(),
                 this,
                 new SizeMetrics(
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_H_DP),
@@ -61,8 +59,7 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_W_DP),
                         SizeLayoutType.FILL));
 
-        getLayoutManager().position(
-                        pieWidget,
+        pieWidget.position(
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_X_OFFSET_DP),
                         XLayoutStyle.ABSOLUTE_FROM_CENTER,
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_Y_OFFSET_DP),
@@ -72,17 +69,9 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
         pieWidget.setPadding(10, 10, 10, 10);
 
         // TODO: can't remember why this getClass() check is neccessary.  test if it actually is...
-        if (getClass().equals(PieChart.class) && attrs != null) {
+        /*if (getClass().equals(PieChart.class) && attrs != null) {
             loadAttrs(context, attrs);
-        }
-    }
-
-    @Override
-    protected void doBeforeDraw() {
-    }
-
-    @Override
-    protected void doAfterDraw() {
+        }*/
     }
 
     public void addSegment(Segment segment, SegmentFormatter formatter) {

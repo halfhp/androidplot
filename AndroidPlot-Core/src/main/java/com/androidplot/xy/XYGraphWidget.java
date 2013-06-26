@@ -20,6 +20,7 @@ import android.graphics.*;
 import android.util.Log;
 
 import com.androidplot.exception.PlotRenderException;
+import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.FontUtils;
@@ -147,8 +148,8 @@ public class XYGraphWidget extends Widget {
         axisValueLabelRegions = new ZHash<RectRegion, AxisValueLabelFormatter>();
     }
 
-    public XYGraphWidget(XYPlot plot, SizeMetrics sizeMetrics) {
-        super(sizeMetrics);
+    public XYGraphWidget(LayoutManager layoutManager, XYPlot plot, SizeMetrics sizeMetrics) {
+        super(layoutManager, sizeMetrics);
         this.plot = plot;
     }
 
@@ -1012,26 +1013,6 @@ public class XYGraphWidget extends Widget {
 
     public void setTicksPerDomainLabel(int ticksPerDomainLabel) {
         this.ticksPerDomainLabel = ticksPerDomainLabel;
-    }
-
-    /**
-     * Deprecated - use getTicksPerRangeLabel() instead.
-     * 
-     * @return
-     */
-    @Deprecated
-    public int getRangeTicksPerLabel() {
-        return ticksPerRangeLabel;
-    }
-
-    /**
-     * Deprecated - use setTicksPerRangeLabel() instead.
-     * 
-     * @param rangeTicksPerLabel
-     */
-    @Deprecated
-    public void setRangeTicksPerLabel(int rangeTicksPerLabel) {
-        this.ticksPerRangeLabel = rangeTicksPerLabel;
     }
 
     public void setGridPaddingTop(float gridPaddingTop) {

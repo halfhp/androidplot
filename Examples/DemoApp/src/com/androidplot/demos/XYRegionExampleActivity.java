@@ -247,8 +247,7 @@ public class XYRegionExampleActivity extends Activity {
 
         // reposition the grid so that it rests above the bottom-left
         // edge of the graph widget:
-        plot.position(
-                plot.getLegendWidget(),
+        plot.getLegendWidget().position(
                 20,
                 XLayoutStyle.ABSOLUTE_FROM_RIGHT,
                 35,
@@ -319,7 +318,7 @@ public class XYRegionExampleActivity extends Activity {
         lpFormatter1 = new LineAndPointFormatter(
                 Color.rgb(100, 25, 20),
                 Color.rgb(4, 100, 88),
-                Color.rgb(66, 100, 3));
+                Color.rgb(66, 100, 3), null);
         lpFormatter1.setFillPaint(null);
         lpFormatter1.setVertexPaint(null);
         lpFormatter1.getLinePaint().setShadowLayer(0, 0, 0, 0);
@@ -333,7 +332,7 @@ public class XYRegionExampleActivity extends Activity {
         lpFormatter2 = new LineAndPointFormatter(
                 Color.rgb(100, 25, 200),
                 Color.rgb(114, 100, 88),
-                Color.rgb(66, 100, 200));
+                Color.rgb(66, 100, 200), null);
 
         lpFormatter2.setFillPaint(null);
         lpFormatter2.setVertexPaint(null);
@@ -348,7 +347,7 @@ public class XYRegionExampleActivity extends Activity {
         lpFormatter3 = new LineAndPointFormatter(
                 Color.rgb(200, 25, 200),
                 Color.rgb(200, 100, 88),
-                Color.rgb(66, 100, 100));
+                Color.rgb(66, 100, 100), null);
         lpFormatter3.setFillPaint(null);
         lpFormatter3.setVertexPaint(null);
         lpFormatter3.getLinePaint().setShadowLayer(0, 0, 0, 0);
@@ -362,7 +361,7 @@ public class XYRegionExampleActivity extends Activity {
         lpFormatter4 = new LineAndPointFormatter(
                 Color.rgb(220, 25, 20),
                 Color.rgb(4, 220, 88),
-                Color.rgb(1, 100, 225));
+                Color.rgb(1, 100, 225), null);
         lpFormatter4.setFillPaint(null);
         lpFormatter4.setVertexPaint(null);
         lpFormatter4.getLinePaint().setShadowLayer(0, 0, 0, 0);

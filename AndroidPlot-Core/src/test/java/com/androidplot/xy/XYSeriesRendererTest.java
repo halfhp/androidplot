@@ -19,6 +19,7 @@ package com.androidplot.xy;
 import android.content.Context;
 import android.graphics.*;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import com.androidplot.util.FontUtils;
 import com.androidplot.util.PixelUtils;
@@ -30,7 +31,7 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class, Rect.class, RectF.class,
+@UsingMocksAndStubs({Log.class,View.class,Handler.class,Paint.class,Color.class, Rect.class, RectF.class,
         FontUtils.class, PixelUtils.class, Canvas.class})
 
 public class XYSeriesRendererTest {

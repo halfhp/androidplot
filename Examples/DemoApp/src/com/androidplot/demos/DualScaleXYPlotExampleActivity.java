@@ -18,7 +18,6 @@ package com.androidplot.demos;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
@@ -34,12 +33,12 @@ import com.androidplot.ui.SizeMetrics;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XLayoutStyle;
+import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYLegendWidget;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
-import com.androidplot.xy.YLayoutStyle;
+import com.androidplot.ui.YLayoutStyle;
 
 /**
  * The simplest possible example of using AndroidPlot to plot some data.
@@ -105,8 +104,10 @@ public class DualScaleXYPlotExampleActivity extends Activity implements OnClickL
         graphWidget_RIGHT.setRangeLabelWidth(graphWidget_LEFT.getRangeLabelWidth());
 
         // Position the Graphs
-        myXYPlot_LEFT.position(myXYPlot_LEFT.getGraphWidget()  ,0 ,XLayoutStyle.ABSOLUTE_FROM_LEFT,10,YLayoutStyle.ABSOLUTE_FROM_TOP,AnchorPosition.LEFT_TOP);
-        myXYPlot_RIGHT.position(myXYPlot_RIGHT.getGraphWidget(),49,XLayoutStyle.ABSOLUTE_FROM_LEFT,10,YLayoutStyle.ABSOLUTE_FROM_TOP,AnchorPosition.LEFT_TOP);
+        myXYPlot_LEFT.getGraphWidget().position(
+                0 ,XLayoutStyle.ABSOLUTE_FROM_LEFT,10,YLayoutStyle.ABSOLUTE_FROM_TOP,AnchorPosition.LEFT_TOP);
+        myXYPlot_RIGHT.getGraphWidget().position(
+                49,XLayoutStyle.ABSOLUTE_FROM_LEFT,10,YLayoutStyle.ABSOLUTE_FROM_TOP,AnchorPosition.LEFT_TOP);
 
         // Setup and Position the LEFT Legend
         XYLegendWidget legendWidget_LEFT = myXYPlot_LEFT.getLegendWidget();
@@ -114,7 +115,8 @@ public class DualScaleXYPlotExampleActivity extends Activity implements OnClickL
         legendWidget_LEFT.getTextPaint().setTextSize(20);
         legendWidget_LEFT.setSize(new SizeMetrics(100, SizeLayoutType.ABSOLUTE, 75, SizeLayoutType.FILL));
         legendWidget_LEFT.setPadding(1, 1, 1, 1);
-        myXYPlot_LEFT.position(legendWidget_LEFT, 55, XLayoutStyle.ABSOLUTE_FROM_LEFT, 15, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.LEFT_TOP);
+        myXYPlot_LEFT.getGraphWidget().position(
+                55, XLayoutStyle.ABSOLUTE_FROM_LEFT, 15, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.LEFT_TOP);
         
         // Setup and Position the RIGHT Legend
         XYLegendWidget legendWidget_RIGHT = myXYPlot_RIGHT.getLegendWidget();
@@ -122,7 +124,8 @@ public class DualScaleXYPlotExampleActivity extends Activity implements OnClickL
         legendWidget_RIGHT.getTextPaint().setTextSize(20);
         legendWidget_RIGHT.setSize(new SizeMetrics(100, SizeLayoutType.ABSOLUTE, 110, SizeLayoutType.ABSOLUTE));
         legendWidget_RIGHT.setPadding(1, 1, 1, 1);
-        myXYPlot_RIGHT.position(legendWidget_RIGHT, 25, XLayoutStyle.ABSOLUTE_FROM_RIGHT, 15, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.RIGHT_TOP);
+        myXYPlot_RIGHT.getGraphWidget().position(
+                25, XLayoutStyle.ABSOLUTE_FROM_RIGHT, 15, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.RIGHT_TOP);
 
         // Setup the Series
         series1 = new SimpleXYSeries(Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1");                            

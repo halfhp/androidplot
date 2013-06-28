@@ -276,6 +276,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @return True if hardware acceleration is allowed, false otherwise.
      * @since 0.5.1
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected boolean isHwAccelerationSupported() {
         return false;
     }
@@ -312,7 +313,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         // make sure the title widget is always the topmost widget:
         layoutManager.moveToTop(titleWidget);
         if(context != null && attrs != null) {
-            loadAttrs(context, attrs);
+            loadAttrs(attrs);
         }
 
         layoutManager.onPostInit();
@@ -352,10 +353,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      * Parse XML Attributes.  Should only be called once and at the end of the base class constructor.
      *
-     * @param context
      * @param attrs
      */
-    private void loadAttrs(Context context, AttributeSet attrs) {
+    private void loadAttrs(AttributeSet attrs) {
 
         if (attrs != null) {
             // filter out androidplot prefixed attrs:
@@ -488,10 +488,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     public FormatterType getFormatter(SeriesType series, Class rendererClass) {
         return seriesRegistry.get(rendererClass).getFormatter(series);
-    }
-
-    public boolean setFormatter(SeriesType series, Class rendererClass, FormatterType formatter) {
-        throw new UnsupportedOperationException();
     }
 
     public SeriesAndFormatterList<SeriesType,FormatterType> getSeriesAndFormatterListForRenderer(Class rendererClass) {
@@ -700,10 +696,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param canvas
      * @throws PlotRenderException
      */
-    protected void drawBorder(Canvas canvas, RectF dims) throws PlotRenderException {
-
-
-        switch(borderStyle) {
+    protected void drawBorder(Canvas canvas, RectF dims) {
+        switch (borderStyle) {
             case ROUNDED:
                 canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, borderPaint);
                 break;
@@ -711,10 +705,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 canvas.drawRect(dims, borderPaint);
                 break;
             default:
-                }
+        }
     }
 
-    protected void drawBackground(Canvas canvas, RectF dims) throws PlotRenderException {
+    protected void drawBackground(Canvas canvas, RectF dims) {
         switch (borderStyle) {
             case ROUNDED:
                 canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, backgroundPaint);

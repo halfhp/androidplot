@@ -127,7 +127,9 @@ public class LayoutManager extends ZLinkedList<Widget>
                 }
 
                 if (drawAnchorsEnabled) {
-                    PointF anchorCoords = widget.getAnchorCoordinates(coords.x, coords.y, elementWidth, elementHeight, metrics.getAnchor());
+                    PointF anchorCoords =
+                            Widget.getAnchorCoordinates(coords.x, coords.y, elementWidth,
+                                    elementHeight, metrics.getAnchor());
                     drawAnchor(canvas, anchorCoords);
                 }
 
@@ -243,10 +245,6 @@ public class LayoutManager extends ZLinkedList<Widget>
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return false;
-    }
-
-    private void delegateOnTouchEvt(View v, MotionEvent event) {
-
     }
 
     /**

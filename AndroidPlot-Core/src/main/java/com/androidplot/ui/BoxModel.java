@@ -40,11 +40,13 @@ public class BoxModel implements BoxModelable{
         
     }
 
+    @SuppressWarnings("SameParameterValue")
     public BoxModel(float marginLeft, float marginTop, float marginRight, float marginBottom,
                     float paddingLeft, float paddingTop, float paddingRight, float paddingBottom) {
         this.marginLeft = marginLeft;
         this.marginTop = marginTop;
         this.marginRight = marginRight;
+        this.marginBottom = marginBottom;
 
         this.paddingLeft = paddingLeft;
         this.paddingTop = paddingTop;
@@ -70,8 +72,6 @@ public class BoxModel implements BoxModelable{
      * @return
      */
     public RectF getPaddedRect(RectF marginRect) {
-        //RectF marginRect = getMarginatedRect();
-        //RectF marginRect = getMarginatedRect(boundsRect);
         return new RectF(marginRect.left + getPaddingLeft(),
                 marginRect.top+getPaddingTop(),
                 marginRect.right - getPaddingRight(),

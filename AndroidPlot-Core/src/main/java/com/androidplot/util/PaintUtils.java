@@ -15,8 +15,6 @@
  */
 
 package com.androidplot.util;
-
-import android.content.Context;
 import android.graphics.Paint;
 
 /**
@@ -32,21 +30,19 @@ public class PaintUtils {
 
     /**
      * Sets a paint instance's line stroke size in dp
-     * @param context
      * @param paint
      * @param lineSizeDp
      */
-    public static void setLineSizeDp(Context context, Paint paint, float lineSizeDp){
+    public static void setLineSizeDp(Paint paint, float lineSizeDp){
         paint.setStrokeWidth(PixelUtils.dpToPix(lineSizeDp));
     }
 
     /**
      * Sets a paint instance's font size in dp
-     * @param context
      * @param paint
      * @param fontSizeDp
      */
-    public static void setFontSizeDp(Context context, Paint paint, float fontSizeDp){
+    public static void setFontSizeDp(Paint paint, float fontSizeDp){
         paint.setTextSize(PixelUtils.dpToPix(fontSizeDp));
     }
 

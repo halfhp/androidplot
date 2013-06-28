@@ -22,9 +22,10 @@ import com.androidplot.ui.SeriesRenderer;
 
 import java.util.Set;
 
-public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
+public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormatter> {
 
     // starting angle to use when drawing the first radial line of the first segment.
+    @SuppressWarnings("FieldCanBeLocal")
     private float startDeg = 15;
 
     // TODO: express donut in units other than px.

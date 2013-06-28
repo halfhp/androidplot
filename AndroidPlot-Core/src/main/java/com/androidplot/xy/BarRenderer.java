@@ -105,6 +105,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
      * @param series XYSeries to which the point being rendered belongs.
      * @return
      */
+    @SuppressWarnings("UnusedParameters")
     protected T getFormatter(int index, XYSeries series) {
         return getFormatter(series);
     }
@@ -167,7 +168,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 		int rough_width = (int) f_rough_width;
 		if (rough_width < 0) rough_width = 0;
 		if (gap > rough_width) {
-			gap = (int) rough_width / 2;
+			gap = rough_width / 2;
 		}
 
 		//Log.d("PARAMTER","PLOT_WIDTH=" + plotArea.width());
@@ -196,7 +197,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 	    		if (barGroup.prev != null) {
 	    			if (barGroup.intX - barGroup.prev.intX - gap - 1 > (int)(rough_width * 1.5)) {
 	    				// use intX and go halfwidth either side.
-	        			barGroup.leftX = barGroup.intX - (int) (rough_width / 2);
+	        			barGroup.leftX = barGroup.intX - (rough_width / 2);
 	        			barGroup.width = rough_width;
 	        			barGroup.rightX = barGroup.leftX + barGroup.width;
 	    			} else {
@@ -204,13 +205,13 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 	    				barGroup.leftX = barGroup.prev.rightX + gap + 1;
 	    				if (barGroup.leftX > barGroup.intX) barGroup.leftX = barGroup.intX;
 	    				// base right off intX + halfwidth.
-	    				barGroup.rightX = barGroup.intX + (int) (rough_width / 2);
+	    				barGroup.rightX = barGroup.intX + (rough_width / 2);
 	    				// calculate the width
 	    				barGroup.width = barGroup.rightX - barGroup.leftX;
 	    			}
 	    		} else {
 	    			// use intX and go halfwidth either side.
-	    			barGroup.leftX = barGroup.intX - (int) (rough_width / 2);
+	    			barGroup.leftX = barGroup.intX - (rough_width / 2);
 	    			barGroup.width = rough_width;
 	    			barGroup.rightX = barGroup.leftX + barGroup.width;
 	    		}
@@ -236,7 +237,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 	        	}
 				break;
 			case SIDE_BY_SIDE:
-				int width = (int) barGroup.width / barGroup.bars.size();
+				int width = barGroup.width / barGroup.bars.size();
 				int leftX = barGroup.leftX;
 				Collections.sort(barGroup.bars, new BarComparator());
 				for (Bar b : barGroup.bars) {
@@ -321,12 +322,13 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
     	}
     }
 
+    @SuppressWarnings("WeakerAccess")
     public class BarComparator implements Comparator<Bar>{
         @Override
         public int compare(Bar bar1, Bar bar2) {
 			switch (renderStyle) {
 			case OVERLAID:
-				return Integer.valueOf(bar1.intY).compareTo(Integer.valueOf(bar2.intY));
+				return Integer.valueOf(bar1.intY).compareTo(bar2.intY);
 			case SIDE_BY_SIDE:
 				return bar1.series.getTitle().compareToIgnoreCase(bar2.series.getTitle());
 			case STACKED:

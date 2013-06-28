@@ -109,6 +109,7 @@ public class PixelUtils {
      * @param sp
      * @return Pixel value of sp.
      */
+    @SuppressWarnings("SameParameterValue")
     public static float spToPix(float sp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, metrics);
     }

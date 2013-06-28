@@ -114,11 +114,15 @@ public class XYLegendWidget extends Widget {
                 canvas.drawText(text, iconRect.right + 2, centeredTextOriginY, textPaint);
     }
 
-    private void drawRegionLegendCell(Canvas canvas, XYSeriesRenderer renderer, XYRegionFormatter formatter, RectF cellRect, String text) {
+    protected void drawRegionLegendIcon(Canvas canvas, RectF rect, XYRegionFormatter formatter) {
+            canvas.drawRect(rect, formatter.getPaint());
+        }
+
+    private void drawRegionLegendCell(Canvas canvas, XYRegionFormatter formatter, RectF cellRect, String text) {
         RectF iconRect = getIconRect(cellRect);
         beginDrawingCell(canvas, iconRect);
 
-                renderer.drawRegionLegendIcon(
+                drawRegionLegendIcon(
                         canvas,
                         iconRect,
                         formatter
@@ -145,7 +149,7 @@ public class XYLegendWidget extends Widget {
             return;
         }
 
-        Hashtable<XYRegionFormatter, XYSeriesRenderer> regionRendererLookup = new Hashtable<XYRegionFormatter, XYSeriesRenderer>();
+        //Hashtable<XYRegionFormatter, XYSeriesRenderer> regionRendererLookup = new Hashtable<XYRegionFormatter, XYSeriesRenderer>();
 
         // Keep an alphabetically sorted list of regions:
         TreeSet<Map.Entry<XYRegionFormatter, String>> sortedRegions = new TreeSet<Map.Entry<XYRegionFormatter, String>>(new RegionEntryComparator());
@@ -161,9 +165,9 @@ public class XYLegendWidget extends Widget {
 
             // Figure out how many regions need to be added to the legend:
             Hashtable<XYRegionFormatter, String> urf = renderer.getUniqueRegionFormatters();
-            for(XYRegionFormatter xyf : urf.keySet()) {
+            /*for(XYRegionFormatter xyf : urf.keySet()) {
                 regionRendererLookup.put(xyf, renderer);
-            }
+            }*/
             sortedRegions.addAll(urf.entrySet());
             //sortedRegions.addAll(renderer.getUniqueRegionFormatters().entrySet());
         }
@@ -196,7 +200,7 @@ public class XYLegendWidget extends Widget {
             }
             cellRect = it.next();
             XYRegionFormatter formatter = entry.getKey();
-            drawRegionLegendCell(canvas, regionRendererLookup.get(formatter), formatter, cellRect, entry.getValue());
+            drawRegionLegendCell(canvas, formatter, cellRect, entry.getValue());
         }
     }
 

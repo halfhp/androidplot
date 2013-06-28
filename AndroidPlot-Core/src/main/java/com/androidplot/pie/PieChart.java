@@ -34,6 +34,7 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
     private static final int DEFAULT_PIE_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_PIE_WIDGET_X_OFFSET_DP = 0;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private PieWidget pieWidget;
 
     public PieChart(Context context, String title) {
@@ -60,11 +61,11 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
                         SizeLayoutType.FILL));
 
         pieWidget.position(
-                        PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_X_OFFSET_DP),
-                        XLayoutStyle.ABSOLUTE_FROM_CENTER,
-                        PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_Y_OFFSET_DP),
-                        YLayoutStyle.ABSOLUTE_FROM_CENTER,
-                        AnchorPosition.CENTER);
+                PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_X_OFFSET_DP),
+                XLayoutStyle.ABSOLUTE_FROM_CENTER,
+                PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_Y_OFFSET_DP),
+                YLayoutStyle.ABSOLUTE_FROM_CENTER,
+                AnchorPosition.CENTER);
 
         pieWidget.setPadding(10, 10, 10, 10);
 

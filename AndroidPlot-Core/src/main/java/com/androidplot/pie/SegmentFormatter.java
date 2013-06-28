@@ -100,18 +100,21 @@ public class SegmentFormatter extends Formatter<PieChart> {
         if(getOuterEdgePaint() != null) {
             getOuterEdgePaint().setColor(outerEdgeColor);
         } else {
+            outerEdgePaint = new Paint();
             getOuterEdgePaint().setColor(DEFAULT_EDGE_COLOR);
         }
 
         if (getInnerEdgePaint() != null) {
             getInnerEdgePaint().setColor(innerEdgeColor);
         } else {
+            outerEdgePaint = new Paint();
             getInnerEdgePaint().setColor(DEFAULT_EDGE_COLOR);
         }
 
         if (getRadialEdgePaint() != null) {
             getRadialEdgePaint().setColor(radialEdgeColor);
         } else {
+            radialEdgePaint = new Paint();
             getRadialEdgePaint().setColor(DEFAULT_EDGE_COLOR);
         }
     }

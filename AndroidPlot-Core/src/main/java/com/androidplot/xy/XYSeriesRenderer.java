@@ -25,7 +25,8 @@ import com.androidplot.util.ZIndexable;
 
 import java.util.Hashtable;
 
-public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter> extends SeriesRenderer<XYPlot, XYFormatterType> {
+public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter>
+        extends SeriesRenderer<XYPlot, XYSeries, XYFormatterType> {
 
     public XYSeriesRenderer(XYPlot plot) {
         super(plot);
@@ -47,13 +48,5 @@ public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter
         }
 
         return found;
-    }
-
-    @Override
-    public void render(Canvas canvas, RectF plotArea) throws PlotRenderException {
-        super.render(canvas, plotArea);
-        //onRender(canvas, plotArea);
-        // TODO: draw point labels here
-
     }
 }

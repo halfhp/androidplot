@@ -16,8 +16,6 @@
 
 package com.androidplot.xy;
 
-import android.graphics.Color;
-
 public class AxisValueLabelFormatter {
     //private Paint textPaint;
     private int color;

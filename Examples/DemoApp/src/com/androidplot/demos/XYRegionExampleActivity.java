@@ -35,7 +35,6 @@ import java.util.Arrays;
  * Demonstration of the usage of Marker and RectRegion.
  */
 public class XYRegionExampleActivity extends Activity {
-    private static final int FONT_LABEL_SIZE = 13;
     private XYPlot plot;
     private final Number[] series1Numbers = {1, 4, 9, 9, 5, 2, 12};
     private final Number[] series2Numbers = {5, 2, 3, 2, 17, 9, 1};
@@ -155,7 +154,6 @@ public class XYRegionExampleActivity extends Activity {
         axisLabelSetup();
         regionSetup();
         makePlotPretty();
-        //plot.disableAllMarkup();
     }
 
     private void onS1CheckBoxClicked() {
@@ -218,7 +216,6 @@ public class XYRegionExampleActivity extends Activity {
         } else {
             lpf.addRegion(rr, rf);
         }
-
     }
 
     /**
@@ -272,40 +269,30 @@ public class XYRegionExampleActivity extends Activity {
         plot.setBorderPaint(null);
         plot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
 
-        Context ctx = getApplicationContext();
-        PaintUtils.setFontSizeDp(ctx,
-            plot.getDomainLabelWidget().getLabelPaint(), GlobalDefs.PLOT_DOMAIN_LABEL_FONT_SIZE_DP);
-        PaintUtils.setFontSizeDp(ctx,
-            plot.getRangeLabelWidget().getLabelPaint(), GlobalDefs.PLOT_RANGE_LABEL_FONT_SIZE_DP);
-        PaintUtils.setFontSizeDp(ctx,
-            plot.getGraphWidget().getRangeOriginLabelPaint(), GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
-        PaintUtils.setFontSizeDp(ctx,
-            plot.getGraphWidget().getRangeLabelPaint(), GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
-        PaintUtils.setFontSizeDp(ctx,
-            plot.getGraphWidget().getDomainOriginLabelPaint(), GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
-        PaintUtils.setFontSizeDp(ctx,
-            plot.getGraphWidget().getDomainLabelPaint(), GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
-        PaintUtils.setFontSizeDp(ctx,
-            plot.getTitleWidget().getLabelPaint(), GlobalDefs.PLOT_TITLE_FONT_SIZE_DP);
+        PaintUtils.setFontSizeDp(
+            plot.getDomainLabelWidget().getLabelPaint(),
+                GlobalDefs.PLOT_DOMAIN_LABEL_FONT_SIZE_DP);
+        PaintUtils.setFontSizeDp(
+            plot.getRangeLabelWidget().getLabelPaint(),
+                GlobalDefs.PLOT_RANGE_LABEL_FONT_SIZE_DP);
+        PaintUtils.setFontSizeDp(
+            plot.getGraphWidget().getRangeOriginLabelPaint(),
+                GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
+        PaintUtils.setFontSizeDp(
+            plot.getGraphWidget().getRangeLabelPaint(),
+                GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
+        PaintUtils.setFontSizeDp(
+            plot.getGraphWidget().getDomainOriginLabelPaint(),
+                GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
+        PaintUtils.setFontSizeDp(
+            plot.getGraphWidget().getDomainLabelPaint(),
+                GlobalDefs.PLOT_TICK_LABEL_FONT_SIZE_DP);
+        PaintUtils.setFontSizeDp(
+            plot.getTitleWidget().getLabelPaint(),
+                GlobalDefs.PLOT_TITLE_FONT_SIZE_DP);
         plot.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1, 2, 1, 2}, 0));
         plot.getTitleWidget().pack();
     }
-
-    /*private void showS1() {
-        plot.addSeries(s1, lpFormatter1);
-    }*/
-
-    /*private void showS2() {
-        plot.addSeries(s2, lpFormatter2);
-    }*/
-
-    /*private void showS3() {
-        plot.addSeries(s3, lpFormatter3);
-    }*/
-
-    /*private void showS4() {
-        plot.addSeries(s4, lpFormatter4);
-    }*/
 
     /**
      * Create 4 XYSeries from the values defined above add add them to the plot.

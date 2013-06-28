@@ -84,7 +84,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     }
 
 
-    protected void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, LineAndPointFormatter formatter) throws PlotRenderException {
+    protected void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, LineAndPointFormatter formatter) {
         PointF thisPoint;
         PointF lastPoint = null;
         PointF firstPoint = null;
@@ -106,7 +106,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                         getPlot().getCalculatedMaxX(),
                         getPlot().getCalculatedMinY(),
                         getPlot().getCalculatedMaxY());
-                points.add(new Pair(thisPoint, i));
+                points.add(new Pair<PointF, Integer>(thisPoint, i));
                 //appendToPath(path, thisPoint, lastPoint);
             } else {
                 thisPoint = null;

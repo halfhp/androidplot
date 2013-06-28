@@ -85,6 +85,7 @@ public class XYGraphWidget extends Widget {
     private RectF paddedGridRect;
     private float domainCursorPosition;
     private float rangeCursorPosition;
+    @SuppressWarnings("FieldCanBeLocal")
     private boolean drawCursorLabelEnabled = true;
     private boolean drawMarkersEnabled = true;
     
@@ -486,9 +487,8 @@ public class XYGraphWidget extends Widget {
      * Draws the drid and domain/range labels for the plot.
      * 
      * @param canvas
-     * @throws com.androidplot.exception.PlotRenderException
      */
-    protected void drawGrid(Canvas canvas) throws PlotRenderException {
+    protected void drawGrid(Canvas canvas) {
 
         if (gridBackgroundPaint != null) {
             canvas.drawRect(gridRect, gridBackgroundPaint);
@@ -1157,13 +1157,6 @@ public class XYGraphWidget extends Widget {
 
     public void setDomainAxisBottom(boolean domainAxisBottom) {
         this.domainAxisBottom = domainAxisBottom;
-    }
-
-    private class TickLabelArea {
-        private float size; // size in pixels
-        protected void draw(Canvas canvas) {
-            // TODO
-        }
     }
     
     /*

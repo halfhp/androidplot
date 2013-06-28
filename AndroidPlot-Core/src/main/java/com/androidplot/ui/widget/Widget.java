@@ -226,6 +226,7 @@ public abstract class Widget implements BoxModelable, Resizable {
         boxModel.setPaddingBottom(paddingBottom);
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void setMarginBottom(float marginBottom) {
         boxModel.setMarginBottom(marginBottom);
     }

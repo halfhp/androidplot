@@ -100,6 +100,7 @@ import java.util.HashMap;
  * <config thingy.description="@string/thingyDescription"
  * thingy.titlePaint.textSize=""/>
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class Configurator {
 
     private static final String TAG = Configurator.class.getName();
@@ -173,6 +174,7 @@ public abstract class Configurator {
                 methodName + " in " + clazz);
     }
 
+    @SuppressWarnings("unchecked")
     protected static Method getGetter(Class clazz, final String fieldId) throws NoSuchMethodException {
         Log.d(TAG, "Attempting to find getter for " + fieldId + " in class " + clazz.getName());
         String firstLetter = fieldId.substring(0, 1);
@@ -222,6 +224,7 @@ public abstract class Configurator {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static Object[] inflateParams(Context ctx, Class[] params, String[] vals) throws NoSuchMethodException,
             InvocationTargetException, IllegalAccessException {
         Object[] out = new Object[params.length];
@@ -271,7 +274,7 @@ public abstract class Configurator {
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } finally {
             xrp.close();
         }

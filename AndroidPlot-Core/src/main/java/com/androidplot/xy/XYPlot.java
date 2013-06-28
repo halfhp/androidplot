@@ -97,7 +97,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private Number calculatedDomainOrigin;
     private Number calculatedRangeOrigin;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private Number domainOriginExtent = null;
+    @SuppressWarnings("FieldCanBeLocal")
     private Number rangeOriginExtent = null;
 
     private BoundaryMode domainUpperBoundaryMode = BoundaryMode.AUTO;
@@ -345,8 +347,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         calculatedMaxY = userMaxY;
 
         // next we go through each series to update our min/max values:
-        for (XYSeries series : getSeriesSet()) {
+        for (final XYSeries series : getSeriesSet()) {
             // step through each point in each series:
+            // TODO: verify whether this synchronization is redundant
             synchronized (series) {
                 for (int i = 0; i < series.size(); i++) {
                     Number thisX = series.getX(i);
@@ -578,6 +581,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @param extent
      * @param mode
      */
+    @SuppressWarnings("SameParameterValue")
     public void centerOnRangeOrigin(Number origin, Number extent, BoundaryMode mode) {
         if (origin == null) {
             throw new NullPointerException("Origin param cannot be null.");
@@ -1058,6 +1062,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         return domainFramingModel;
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected void setDomainFramingModel(XYFramingModel domainFramingModel) {
         this.domainFramingModel = domainFramingModel;
     }
@@ -1067,6 +1072,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         return rangeFramingModel;
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected void setRangeFramingModel(XYFramingModel rangeFramingModel) {
         this.rangeFramingModel = rangeFramingModel;
     }

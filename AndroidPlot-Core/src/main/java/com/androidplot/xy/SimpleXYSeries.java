@@ -124,10 +124,13 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
 
                 // array containing only y-vals. assume x = index:
                 case Y_VALS_ONLY:
-                    for (int i = 0; i < model.size(); i++) {
+                    for(Number n : model) {
+                        yVals.add(n);
+                    }
+                    /*for (int i = 0; i < model.size(); i++) {
                         //xVals.add(i);
                         yVals.add(model.get(i));
-                    }
+                    }*/
                     break;
 
                 // xy interleaved array:

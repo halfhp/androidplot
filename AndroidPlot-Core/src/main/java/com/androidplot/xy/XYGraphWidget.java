@@ -405,7 +405,7 @@ public class XYGraphWidget extends Widget {
         // if a matching region formatter was found, create a clone
         // of labelPaint and use the formatter's color. Otherwise
         // just use labelPaint:
-        Paint p = null;
+        Paint p;
         if (rf != null) {
             // p = rf.getPaint();
             p = new Paint(labelPaint);
@@ -431,7 +431,7 @@ public class XYGraphWidget extends Widget {
             }
             if (labelPaint != null) {
                 float fontHeight = FontUtils.getFontHeight(labelPaint);
-                float yPix = 0.0f;
+                float yPix;
                 if (domainAxisBottom){
                     yPix = gridRect.bottom + domainLabelTickExtension
                             + domainLabelVerticalOffset + fontHeight;
@@ -463,7 +463,7 @@ public class XYGraphWidget extends Widget {
                 }
             }
             if (labelPaint != null) {
-                float xPix = 0.0f;
+                float xPix;
                 if (rangeAxisLeft){
                     xPix = gridRect.left
                             - (rangeLabelTickExtension + rangeLabelHorizontalOffset);
@@ -1154,10 +1154,10 @@ public class XYGraphWidget extends Widget {
      * 
      * @param domainAxisBottom axis labels are on the bottom not the top of the plot.
      * @param domainAxisOverlay axis labels are overlaid on the plot, not external to it.
-     * @param tickSize the size of the tick extensions for none overlaid axis.
+     * @param tickSize the size of the tick extensions for non overlaid axis.
      * @param maxLableString Sample label representing the biggest size space needs to be allocated for.
      */
-    public void setDomainAxisPosition(boolean domainAxisBottom, boolean domainAxisOverlay, int tickSize, String maxLableString){
+    public void setDomainAxisPosition(boolean domainAxisBottom, boolean domainAxisOverlay, int tickSize, String maxLabelString){
         setDomainAxisBottom(domainAxisBottom);
         if (domainAxisOverlay) {
             setDomainLabelWidth(1);    // needs to be at least 1 to display grid line.
@@ -1165,8 +1165,7 @@ public class XYGraphWidget extends Widget {
             setDomainLabelTickExtension(0);
             Paint p = getDomainLabelPaint();
             if (p != null) {
-                float fontHeight = FontUtils.getFontHeight(p);
-                Rect r = FontUtils.getPackedStringDimensions(maxLableString,p);
+                Rect r = FontUtils.getPackedStringDimensions(maxLabelString,p);
                 if (domainAxisBottom){
                     setDomainLabelVerticalOffset(2 * r.top);
                 } else {
@@ -1175,12 +1174,11 @@ public class XYGraphWidget extends Widget {
             }
         } else {
             setDomainLabelWidth(1);    // needs to be at least 1 to display grid line.
-                                                                    // if we have a paint this gets bigger.
+                                       // if we have a paint this gets bigger.
             setDomainLabelTickExtension(tickSize);
             Paint p = getDomainLabelPaint();
             if (p != null) {
                 float fontHeight = FontUtils.getFontHeight(p);
-                Rect r = FontUtils.getPackedStringDimensions(maxLableString,p);
                 if (domainAxisBottom){
                     setDomainLabelVerticalOffset(-4.0f);
                 } else {

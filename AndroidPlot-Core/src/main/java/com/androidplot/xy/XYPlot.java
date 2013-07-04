@@ -17,14 +17,12 @@
 package com.androidplot.xy;
 
 import android.content.Context;
-//import android.graphics.*;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
-//import com.androidplot.xy.ui.widget.renderer.XYRendererType;
 import com.androidplot.ui.*;
 import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TextLabelWidget;
@@ -152,16 +150,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         super(context, attributes);
     }
 
-    /*public XYPlot(Context context, AttributeSet attributes, boolean loadAttrs) {
-            super(context, attributes, false);
-            postInit(context, attributes, loadAttrs);
-        }*/
-
-    /*public XYPlot(Context context, AttributeSet attrs, int defStyle, boolean loadAttrs) {
-            super(context, attrs, defStyle, false);
-            postInit(context, attrs, loadAttrs);
-        }*/
-
     public XYPlot(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
@@ -269,8 +257,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     @Override
     protected void notifyListenersBeforeDraw(Canvas canvas) {
-        calculateMinMaxVals();
         super.notifyListenersBeforeDraw(canvas);
+
+        // this call must be AFTER the notify so that if the listener
+        // is a synchronized series, it has the opportunity to
+        // place a read lock on it's data.
+        calculateMinMaxVals();
     }
 
     /**
@@ -349,38 +341,35 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         // next we go through each series to update our min/max values:
         for (final XYSeries series : getSeriesSet()) {
             // step through each point in each series:
-            // TODO: verify whether this synchronization is redundant
-            synchronized (series) {
-                for (int i = 0; i < series.size(); i++) {
-                    Number thisX = series.getX(i);
-                    Number thisY = series.getY(i);
-                    if (isPointVisible(thisX, thisY)) {
-                        // only calculate if a static value has not been set:
-                        if (userMinX == null) {
-                            if (thisX != null && (calculatedMinX == null || thisX.doubleValue() < calculatedMinX.doubleValue())) {
-                                calculatedMinX = thisX;
-                            }
+            for (int i = 0; i < series.size(); i++) {
+                Number thisX = series.getX(i);
+                Number thisY = series.getY(i);
+                if (isPointVisible(thisX, thisY)) {
+                    // only calculate if a static value has not been set:
+                    if (userMinX == null) {
+                        if (thisX != null && (calculatedMinX == null ||
+                                thisX.doubleValue() < calculatedMinX.doubleValue())) {
+                            calculatedMinX = thisX;
                         }
+                    }
 
-                        if (userMaxX == null) {
-                            //Number thisMaxX = series.getMaxX();
-                            if (thisX != null && (calculatedMaxX == null || thisX.doubleValue() > calculatedMaxX.doubleValue())) {
-                                calculatedMaxX = thisX;
-                            }
+                    if (userMaxX == null) {
+                        if (thisX != null && (calculatedMaxX == null ||
+                                thisX.doubleValue() > calculatedMaxX.doubleValue())) {
+                            calculatedMaxX = thisX;
                         }
+                    }
 
-                        if (userMinY == null) {
-                            //Number thisMinY = series.getMinY();
-                            if (thisY != null && (calculatedMinY == null || thisY.doubleValue() < calculatedMinY.doubleValue())) {
-                                calculatedMinY = thisY;
-                            }
+                    if (userMinY == null) {
+                        if (thisY != null && (calculatedMinY == null ||
+                                thisY.doubleValue() < calculatedMinY.doubleValue())) {
+                            calculatedMinY = thisY;
                         }
+                    }
 
-                        if (userMaxY == null) {
-                            //Number thisMaxY = series.getMaxY();
-                            if (thisY != null && (calculatedMaxY == null || thisY.doubleValue() > calculatedMaxY.doubleValue())) {
-                                calculatedMaxY = thisY;
-                            }
+                    if (userMaxY == null) {
+                        if (thisY != null && (calculatedMaxY == null || thisY.doubleValue() > calculatedMaxY.doubleValue())) {
+                            calculatedMaxY = thisY;
                         }
                     }
                 }
@@ -402,7 +391,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                         domainRightMin, domainRightMax);
                 break;
             default:
-                throw new UnsupportedOperationException("Domain Framing Model not yet supported: " + domainFramingModel);
+                throw new UnsupportedOperationException(
+                        "Domain Framing Model not yet supported: " + domainFramingModel);
         }
 
         switch (rangeFramingModel) {
@@ -419,7 +409,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             	}
                 break;
             default:
-                throw new UnsupportedOperationException("Range Framing Model not yet supported: " + domainFramingModel);
+                throw new UnsupportedOperationException(
+                        "Range Framing Model not yet supported: " + domainFramingModel);
         }
 
         calculatedDomainOrigin = userDomainOrigin != null ? userDomainOrigin : getCalculatedMinX();
@@ -447,7 +438,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 }
                 break;
             default:
-                throw new UnsupportedOperationException("DomainUpperBoundaryMode not yet implemented: " + domainUpperBoundaryMode);
+                throw new UnsupportedOperationException(
+                        "DomainUpperBoundaryMode not yet implemented: " + domainUpperBoundaryMode);
         }
 
         switch (domainLowerBoundaryMode) {
@@ -466,7 +458,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 }
                 break;
             default:
-                throw new UnsupportedOperationException("DomainLowerBoundaryMode not supported: " + domainLowerBoundaryMode);
+                throw new UnsupportedOperationException(
+                        "DomainLowerBoundaryMode not supported: " + domainLowerBoundaryMode);
         }
     }
 
@@ -487,7 +480,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 }
                 break;
             default:
-                throw new UnsupportedOperationException("RangeUpperBoundaryMode not supported: " + rangeUpperBoundaryMode);
+                throw new UnsupportedOperationException(
+                        "RangeUpperBoundaryMode not supported: " + rangeUpperBoundaryMode);
         }
 
         switch (rangeLowerBoundaryMode) {
@@ -506,7 +500,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 }
                 break;
             default:
-                throw new UnsupportedOperationException("RangeLowerBoundaryMode not supported: " + rangeLowerBoundaryMode);
+                throw new UnsupportedOperationException(
+                        "RangeLowerBoundaryMode not supported: " + rangeLowerBoundaryMode);
         }
     }
 
@@ -685,7 +680,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             case GROW:
             case SHRINNK:
             default:
-                throw new UnsupportedOperationException("Range Origin Boundary Mode not yet supported: " + rangeOriginBoundaryMode);
+                throw new UnsupportedOperationException(
+                        "Range Origin Boundary Mode not yet supported: " + rangeOriginBoundaryMode);
         }
     }
 
@@ -874,7 +870,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @param upperBoundary
      * @param upperBoundaryMode
      */
-    public synchronized void setDomainBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode, Number upperBoundary, BoundaryMode upperBoundaryMode) {
+    public synchronized void setDomainBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode,
+                                                 Number upperBoundary, BoundaryMode upperBoundaryMode) {
         setDomainLowerBoundary(lowerBoundary, lowerBoundaryMode);
         setDomainUpperBoundary(upperBoundary, upperBoundaryMode);
     }
@@ -898,7 +895,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @param upperBoundary
      * @param upperBoundaryMode
      */
-    public synchronized void setRangeBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode, Number upperBoundary, BoundaryMode upperBoundaryMode) {
+    public synchronized void setRangeBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode,
+                                                Number upperBoundary, BoundaryMode upperBoundaryMode) {
         setRangeLowerBoundary(lowerBoundary, lowerBoundaryMode);
         setRangeUpperBoundary(upperBoundary, upperBoundaryMode);
     }

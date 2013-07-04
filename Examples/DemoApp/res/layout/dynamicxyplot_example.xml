@@ -23,9 +23,24 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     androidplot.renderMode="use_background_thread"
-    androidplot.title="Dynamic Plot Example"
-    androidplot.titleWidget.labelPaint.color="green"
-    androidplot.domainLabel="domain"
-    androidplot.rangeLabel="range"/>
+    androidPlot.title="A Dynamic XY Plot"
+    androidPlot.domainLabel="Domain"
+    androidPlot.rangeLabel="Range"
+    androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
+    androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
+    androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
+    androidPlot.graphWidget.marginTop="20dp"
+    androidPlot.graphWidget.marginLeft="15dp"
+    androidPlot.graphWidget.marginBottom="25dp"
+    androidPlot.graphWidget.marginRight="10dp"
+    androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
+    androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
+    androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+    androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+    androidPlot.legendWidget.textPaint.textSize="@dimen/legend_text_font_size"
+    androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp"
+    androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp"
+    androidPlot.legendWidget.heightMetric.value="25dp"
+    androidPlot.legendWidget.positionMetrics.anchor="right_bottom"/>
 
 </LinearLayout>

@@ -94,7 +94,8 @@ public class DualScaleXYPlotExampleActivity extends Activity implements OnClickL
         graphWidget_RIGHT.getGridBackgroundPaint().setAlpha(0);
         graphWidget_RIGHT.getDomainOriginLabelPaint().setAlpha(0);
         graphWidget_RIGHT.getRangeOriginLinePaint().setAlpha(0); 
-        graphWidget_RIGHT.getGridLinePaint().setAlpha(0);
+        graphWidget_RIGHT.getDomainGridLinePaint().setAlpha(0);
+        graphWidget_RIGHT.getRangeGridLinePaint().setAlpha(0);
         graphWidget_RIGHT.setRangeAxisPosition(false, false, 4, "10");
 
         // Copy where possible from the LEFT plot

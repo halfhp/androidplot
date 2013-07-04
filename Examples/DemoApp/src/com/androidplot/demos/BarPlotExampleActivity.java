@@ -16,6 +16,10 @@
 
 package com.androidplot.demos;
 
+import java.text.DateFormatSymbols;
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -42,13 +46,9 @@ import com.androidplot.ui.SizeLayoutType;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TextLabelWidget;
-import com.androidplot.xy.BarFormatter;
-import com.androidplot.xy.BarRenderer;
-import com.androidplot.xy.BoundaryMode;
-import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.util.PixelUtils;
+import com.androidplot.xy.*;
 import com.androidplot.ui.XLayoutStyle;
-import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYSeries;
 import com.androidplot.ui.YLayoutStyle;
 
 /**
@@ -106,8 +106,13 @@ public class BarPlotExampleActivity extends Activity
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 
-        selectionWidget = new TextLabelWidget(plot.getLayoutManager(), NO_SELECTION_TXT, new SizeMetrics(25,
-                SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
+        selectionWidget = new TextLabelWidget(plot.getLayoutManager(), NO_SELECTION_TXT,
+                new SizeMetrics(
+                        PixelUtils.dpToPix(100), SizeLayoutType.ABSOLUTE,
+                        PixelUtils.dpToPix(100), SizeLayoutType.ABSOLUTE),
+                TextOrientationType.HORIZONTAL);
+
+        selectionWidget.getLabelPaint().setTextSize(PixelUtils.dpToPix(16));
 
         // add a dark, semi-transparent background to the selection label widget:
         Paint p = new Paint();
@@ -116,14 +121,17 @@ public class BarPlotExampleActivity extends Activity
 
         selectionWidget.position(
                 0, XLayoutStyle.RELATIVE_TO_CENTER,
-                50, YLayoutStyle.ABSOLUTE_FROM_TOP,
+                PixelUtils.dpToPix(45), YLayoutStyle.ABSOLUTE_FROM_TOP,
                 AnchorPosition.TOP_MIDDLE);
+        selectionWidget.pack();
 
 
         // reduce the number of range labels
         plot.setTicksPerRangeLabel(3);
         plot.setRangeLowerBoundary(0, BoundaryMode.FIXED);
         plot.getGraphWidget().setGridPadding(30, 10, 30, 0);
+
+        plot.setTicksPerDomainLabel(2);
 
 
         // setup checkbox listers:
@@ -242,7 +250,25 @@ public class BarPlotExampleActivity extends Activity
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
-        
+
+        plot.setDomainValueFormat(new NumberFormat() {
+            @Override
+            public StringBuffer format(double value, StringBuffer buffer, FieldPosition field) {
+                int year = (int) (value + 0.5d) / 12;
+                int month = (int) ((value + 0.5d) % 12);
+                return new StringBuffer(DateFormatSymbols.getInstance().getShortMonths()[month] + " '0" + year);
+            }
+
+            @Override
+            public StringBuffer format(long value, StringBuffer buffer, FieldPosition field) {
+                throw new UnsupportedOperationException("Not yet implemented.");
+            }
+
+            @Override
+            public Number parse(String string, ParsePosition position) {
+                throw new UnsupportedOperationException("Not yet implemented.");
+            }
+        });
         updatePlot();
 
     }
@@ -257,8 +283,8 @@ public class BarPlotExampleActivity extends Activity
         }
 
         // Setup our Series with the selected number of elements
-        series1 = new SimpleXYSeries(Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1");
-        series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series2");
+        series1 = new SimpleXYSeries(Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Us");
+        series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Them");
 
         // add a new series' to the xyplot:
         if (series1CheckBox.isChecked()) plot.addSeries(series1, formatter1);

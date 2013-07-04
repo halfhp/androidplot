@@ -106,7 +106,6 @@ public class TextLabelWidget extends Widget {
         if(text == null || text.length() == 0) {
             return;
         }
-        Log.d(TAG, "In TextLabelWidget.doOnDraw(). Instance: " + this);
         //FontUtils.getStringDimensions(text, labelPaint);
         float vOffset = labelPaint.getFontMetrics().descent;
         PointF start = getAnchorCoordinates(widgetRect,

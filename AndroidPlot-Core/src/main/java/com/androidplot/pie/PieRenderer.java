@@ -74,13 +74,14 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         float cx = bounds.centerX();
         float cy = bounds.centerY();
 
-        float donutSizePx = 0;
+        float donutSizePx;
         switch(donutMode) {
             case PERCENT:
                 donutSizePx = donutSize * rad;
                 break;
             case PIXELS:
                 donutSizePx = donutSize;
+                break;
             default:
                 throw new UnsupportedOperationException("Not yet implemented.");
         }

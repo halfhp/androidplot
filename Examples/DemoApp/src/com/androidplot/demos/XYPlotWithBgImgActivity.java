@@ -32,8 +32,10 @@ public class XYPlotWithBgImgActivity extends Activity {
         // Format Graph
         plot.getGraphWidget().getBackgroundPaint().setColor(Color.TRANSPARENT);
         plot.getGraphWidget().getGridBackgroundPaint().setShader(WHITE_SHADER);
-        plot.getGraphWidget().getGridLinePaint().setColor(Color.BLACK);
-        plot.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{3, 3}, 1));
+        plot.getGraphWidget().getDomainGridLinePaint().setColor(Color.BLACK);
+        plot.getGraphWidget().getDomainGridLinePaint().setPathEffect(new DashPathEffect(new float[]{3, 3}, 1));
+        plot.getGraphWidget().getRangeGridLinePaint().setColor(Color.BLACK);
+        plot.getGraphWidget().getRangeGridLinePaint().setPathEffect(new DashPathEffect(new float[]{3, 3}, 1));
         plot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
         plot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
         //plot.getGraphWidget().setMarginTop(10);

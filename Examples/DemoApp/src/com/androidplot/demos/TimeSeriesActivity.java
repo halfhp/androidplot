@@ -56,8 +56,12 @@ public class TimeSeriesActivity extends Activity
                 "Sightings in USA");
 
         plot1.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
-        plot1.getGraphWidget().getGridLinePaint().setColor(Color.BLACK);
-        plot1.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
+        plot1.getGraphWidget().getDomainGridLinePaint().setColor(Color.BLACK);
+        plot1.getGraphWidget().getDomainGridLinePaint().
+                setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
+        plot1.getGraphWidget().getRangeGridLinePaint().setColor(Color.BLACK);
+        plot1.getGraphWidget().getRangeGridLinePaint().
+                setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
         plot1.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
         plot1.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
 

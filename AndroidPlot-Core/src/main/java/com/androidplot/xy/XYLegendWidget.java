@@ -176,7 +176,7 @@ public class XYLegendWidget extends Widget {
         // Create an iterator specially created to draw the number of cells we calculated:
         Iterator<RectF> it = tableModel.getIterator(widgetRect, seriesCount);
 
-        RectF cellRect = null;
+        RectF cellRect;
 
         // draw each series legend item:
         for(XYSeriesRenderer renderer : plot.getRendererList()) {

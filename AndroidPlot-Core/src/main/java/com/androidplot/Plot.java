@@ -376,31 +376,23 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         return renderMode;
     }
 
-    public boolean addListener(PlotListener listener) {
-        synchronized (listeners) {
-            return !listeners.contains(listener) && listeners.add(listener);
-        }
+    public synchronized boolean addListener(PlotListener listener) {
+        return !listeners.contains(listener) && listeners.add(listener);
     }
 
-    public boolean removeListener(PlotListener listener) {
-        synchronized(listeners) {
-            return listeners.remove(listener);
-        }
+    public synchronized boolean removeListener(PlotListener listener) {
+        return listeners.remove(listener);
     }
 
     protected void notifyListenersBeforeDraw(Canvas canvas) {
-        synchronized (listeners) {
-            for (PlotListener listener : listeners) {
-                listener.onBeforeDraw(this, canvas);
-            }
+        for (PlotListener listener : listeners) {
+            listener.onBeforeDraw(this, canvas);
         }
     }
 
     protected void notifyListenersAfterDraw(Canvas canvas) {
-        synchronized (listeners) {
-            for (PlotListener listener : listeners) {
-                listener.onAfterDraw(this, canvas);
-            }
+        for (PlotListener listener : listeners) {
+            listener.onAfterDraw(this, canvas);
         }
     }
 
@@ -662,7 +654,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                     drawBorder(canvas, displayDims.marginatedRect);
                 }
             } catch (PlotRenderException e) {
+                Log.e(TAG, "Exception while rendering Plot.", e);
                 e.printStackTrace();
+            } catch (Exception e) {
+                Log.e(TAG, "Exception while rendering Plot.", e);
             }
         } finally {
             isIdle = true;

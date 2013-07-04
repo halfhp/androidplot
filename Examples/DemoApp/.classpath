@@ -5,6 +5,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="src" output="bin/classes" path="src"/>
 	<classpathentry kind="src" output="bin/classes" path="gen"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/AndroidPlot-Core"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

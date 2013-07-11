@@ -32,6 +32,14 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     private static final float DEFAULT_LINE_STROKE_WIDTH_DP   = 1.5f;
     private static final float DEFAULT_VERTEX_STROKE_WIDTH_DP = 4.5f;
 
+     // default implementation prints point's yVal:
+    private PointLabeler pointLabeler = new PointLabeler() {
+        @Override
+        public String getLabel(XYSeries series, int index) {
+            return series.getY(index) + "";
+        }
+    };
+
     public FillDirection getFillDirection() {
         return fillDirection;
     }
@@ -162,5 +170,13 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
 
     public void setPointLabelFormatter(PointLabelFormatter pointLabelFormatter) {
         this.pointLabelFormatter = pointLabelFormatter;
+    }
+    
+    public PointLabeler getPointLabeler() {
+        return pointLabeler;
+    }
+
+    public void setPointLabeler(PointLabeler pointLabeler) {
+        this.pointLabeler = pointLabeler;
     }
 }

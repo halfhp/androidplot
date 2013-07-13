@@ -25,8 +25,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             androidPlot.title="A Simple Pie Chart"
-            androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
-            androidPlot.graphWidget.gridLinePaint.color="#000000"/>
+            androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"/>
     <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"

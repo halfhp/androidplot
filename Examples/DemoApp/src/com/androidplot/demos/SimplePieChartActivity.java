@@ -106,6 +106,9 @@ public class SimplePieChartActivity extends Activity
         pie.addSeries(s2, sf2);
         pie.addSeries(s3, sf3);
         pie.addSeries(s4, sf4);
+
+        pie.getBorderPaint().setColor(Color.TRANSPARENT);
+        pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
     }
 
     protected void updateDonutText() {

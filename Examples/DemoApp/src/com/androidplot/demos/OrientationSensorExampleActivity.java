@@ -28,15 +28,10 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import com.androidplot.Plot;
-import com.androidplot.util.PixelUtils;
 import com.androidplot.util.PlotStatistics;
 import com.androidplot.util.Redrawer;
 import com.androidplot.xy.*;
-
 import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.Format;
-import java.text.ParsePosition;
 import java.util.Arrays;
 
 // Monitor the phone's orientation sensor and plot the resulting azimuth pitch and roll values.

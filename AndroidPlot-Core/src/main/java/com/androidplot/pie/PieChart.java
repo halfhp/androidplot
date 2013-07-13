@@ -34,6 +34,14 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
     private static final int DEFAULT_PIE_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_PIE_WIDGET_X_OFFSET_DP = 0;
 
+    public PieWidget getPieWidget() {
+        return pieWidget;
+    }
+
+    public void setPieWidget(PieWidget pieWidget) {
+        this.pieWidget = pieWidget;
+    }
+
     @SuppressWarnings("FieldCanBeLocal")
     private PieWidget pieWidget;
 

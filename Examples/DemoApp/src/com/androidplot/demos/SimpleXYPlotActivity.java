@@ -29,7 +29,7 @@ import java.util.Arrays;
 public class SimpleXYPlotActivity extends Activity
 {
 
-    private XYPlot mySimpleXYPlot;
+    private XYPlot plot;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -43,7 +43,7 @@ public class SimpleXYPlotActivity extends Activity
         setContentView(R.layout.simple_xy_plot_example);
 
         // initialize our XYPlot reference:
-        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+        plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 
         // Create a couple arrays of y-values to plot:
         Number[] series1Numbers = {1, 8, 5, 2, 7, 4};
@@ -66,16 +66,18 @@ public class SimpleXYPlotActivity extends Activity
                 R.xml.line_point_formatter_with_plf1);
 
         // add a new series' to the xyplot:
-        mySimpleXYPlot.addSeries(series1, series1Format);
+        plot.addSeries(series1, series1Format);
 
         // same as above:
         LineAndPointFormatter series2Format = new LineAndPointFormatter();
         series2Format.setPointLabelFormatter(new PointLabelFormatter());
         series2Format.configure(getApplicationContext(),
                 R.xml.line_point_formatter_with_plf2);
-        mySimpleXYPlot.addSeries(series2, series2Format);
+        plot.addSeries(series2, series2Format);
 
         // reduce the number of range labels
-        mySimpleXYPlot.setTicksPerRangeLabel(3);
+        plot.setTicksPerRangeLabel(3);
+        plot.getGraphWidget().setDomainLabelOrientation(-45);
+
     }
 }

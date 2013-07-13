@@ -35,6 +35,22 @@ import java.text.Format;
  */
 public class XYGraphWidget extends Widget {
 
+    public float getRangeLabelOrientation() {
+        return rangeLabelOrientation;
+    }
+
+    public void setRangeLabelOrientation(float rangeLabelOrientation) {
+        this.rangeLabelOrientation = rangeLabelOrientation;
+    }
+
+    public float getDomainLabelOrientation() {
+        return domainLabelOrientation;
+    }
+
+    public void setDomainLabelOrientation(float domainLabelOrientation) {
+        this.domainLabelOrientation = domainLabelOrientation;
+    }
+
     /**
      * Will be used in a future version.
      */
@@ -89,6 +105,9 @@ public class XYGraphWidget extends Widget {
     
     private boolean rangeAxisLeft = true;
     private boolean domainAxisBottom = true;
+
+    private float rangeLabelOrientation;
+    private float domainLabelOrientation;
 
     // TODO: consider typing this manager with a special
     // axisLabelRegionFormatter
@@ -391,30 +410,38 @@ public class XYGraphWidget extends Widget {
         AxisValueLabelFormatter rf = null;
         String txt = null;
         double v = value.doubleValue();
-        switch (axis) {
-            case DOMAIN :
-                rf = getAxisValueLabelFormatterForDomainVal(v);
-                txt = getFormattedDomainValue(value);
-                break;
-            case RANGE :
-                rf = getAxisValueLabelFormatterForRangeVal(v);
-                txt = getFormattedRangeValue(value);
-                break;
-        }
 
-        // if a matching region formatter was found, create a clone
-        // of labelPaint and use the formatter's color. Otherwise
-        // just use labelPaint:
-        Paint p;
-        if (rf != null) {
-            // p = rf.getPaint();
-            p = new Paint(labelPaint);
-            p.setColor(rf.getColor());
-            // p.setColor(Color.RED);
-        } else {
-            p = labelPaint;
+        int canvasState = canvas.save();
+        try {
+            switch (axis) {
+                case DOMAIN:
+                    rf = getAxisValueLabelFormatterForDomainVal(v);
+                    txt = getFormattedDomainValue(value);
+                    canvas.rotate(getDomainLabelOrientation(), xPix, yPix);
+                    break;
+                case RANGE:
+                    rf = getAxisValueLabelFormatterForRangeVal(v);
+                    txt = getFormattedRangeValue(value);
+                    canvas.rotate(getRangeLabelOrientation(), xPix, yPix);
+                    break;
+            }
+
+            // if a matching region formatter was found, create a clone
+            // of labelPaint and use the formatter's color. Otherwise
+            // just use labelPaint:
+            Paint p;
+            if (rf != null) {
+                // p = rf.getPaint();
+                p = new Paint(labelPaint);
+                p.setColor(rf.getColor());
+                // p.setColor(Color.RED);
+            } else {
+                p = labelPaint;
+            }
+            canvas.drawText(txt, xPix, yPix, p);
+        } finally {
+            canvas.restoreToCount(canvasState);
         }
-        canvas.drawText(txt, xPix, yPix, p);
     }
 
     private void drawDomainTick(Canvas canvas, float xPix, Number xVal,

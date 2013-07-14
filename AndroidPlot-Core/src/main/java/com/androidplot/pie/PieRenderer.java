@@ -26,7 +26,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 
     // starting angle to use when drawing the first radial line of the first segment.
     @SuppressWarnings("FieldCanBeLocal")
-    private float startDeg = 15;
+    private float startDeg = 0;
 
     // TODO: express donut in units other than px.
     private float donutSize = 0.5f;
@@ -80,7 +80,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
                 donutSizePx = donutSize * rad;
                 break;
             case PIXELS:
-                donutSizePx = donutSize;
+                donutSizePx = (donutSize > 0)?donutSize:(rad + donutSize);
                 break;
             default:
                 throw new UnsupportedOperationException("Not yet implemented.");
@@ -195,10 +195,16 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
                             "Size parameter must be between 0 and 1 when operating in PERCENT mode.");
                 }
                 break;
+            case PIXELS:
+            	break;
             default:
                 throw new UnsupportedOperationException("Not yet implemented.");
         }
         donutMode = mode;
         donutSize = size;
+    }
+    
+    public void setStartDeg(float deg) {
+        startDeg = deg;
     }
 }

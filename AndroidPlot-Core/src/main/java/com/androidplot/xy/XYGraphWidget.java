@@ -81,7 +81,9 @@ public class XYGraphWidget extends Widget {
     private int rangeLabelTickExtension = 5;
     private Paint gridBackgroundPaint;
     private Paint rangeGridLinePaint;
+    private Paint rangeSubGridLinePaint;
     private Paint domainGridLinePaint;
+    private Paint domainSubGridLinePaint;
     private Paint domainLabelPaint;
     private Paint rangeLabelPaint;
     private Paint domainCursorPaint;
@@ -124,6 +126,8 @@ public class XYGraphWidget extends Widget {
         rangeGridLinePaint.setAntiAlias(true);
         rangeGridLinePaint.setStyle(Paint.Style.STROKE);
         domainGridLinePaint = new Paint(rangeGridLinePaint);
+        domainSubGridLinePaint = new Paint(domainGridLinePaint);
+        rangeSubGridLinePaint = new Paint(rangeGridLinePaint);
         domainOriginLinePaint = new Paint();
         domainOriginLinePaint.setColor(Color.WHITE);
         domainOriginLinePaint.setAntiAlias(true);
@@ -561,7 +565,7 @@ public class XYGraphWidget extends Widget {
                                 domainGridLinePaint, false);
                     } else {
                         drawDomainTick(canvas, xPix, xVal, domainLabelPaint,
-                                domainGridLinePaint, true);
+                                domainSubGridLinePaint, true);
                     }
                 }
                 i++;
@@ -584,7 +588,7 @@ public class XYGraphWidget extends Widget {
                                 domainGridLinePaint, false);
                     } else {
                         drawDomainTick(canvas, xPix, xVal, domainLabelPaint,
-                                domainGridLinePaint, true);
+                                domainSubGridLinePaint, true);
                     }
                 }
                 i++;
@@ -636,7 +640,7 @@ public class XYGraphWidget extends Widget {
                                 rangeGridLinePaint, false);
                     } else {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint,
-                                rangeGridLinePaint, true);
+                                rangeSubGridLinePaint, true);
                     }
                 }
                 i++;
@@ -658,7 +662,7 @@ public class XYGraphWidget extends Widget {
                                 rangeGridLinePaint, false);
                     } else {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint,
-                                rangeGridLinePaint, true);
+                                rangeSubGridLinePaint, true);
                     }
                 }
                 i++;
@@ -930,6 +934,21 @@ public class XYGraphWidget extends Widget {
     }
 
     /**
+     * Get the paint used to draw the domain grid line.
+     */
+    public Paint getDomainSubGridLinePaint() {
+        return domainSubGridLinePaint;
+    }
+    
+    /**
+     * Set the paint used to draw the domain grid line.
+     * @param gridLinePaint
+     */
+    public void setDomainSubGridLinePaint(Paint gridLinePaint) {
+        this.domainSubGridLinePaint = gridLinePaint;
+    }
+
+    /**
      * Set the Paint used to draw the range grid line.
      * @param gridLinePaint
      */
@@ -937,6 +956,21 @@ public class XYGraphWidget extends Widget {
         this.rangeGridLinePaint = gridLinePaint;
     }
 
+    /**
+     * Get the paint used to draw the range grid line.
+     */
+    public Paint getRangeSubGridLinePaint() {
+        return rangeSubGridLinePaint;
+    }
+
+    /**
+     * Set the Paint used to draw the range grid line.
+     * @param gridLinePaint
+     */
+    public void setRangeSubGridLinePaint(Paint gridLinePaint) {
+        this.rangeSubGridLinePaint = gridLinePaint;
+    }
+    
     // TODO: make a generic renderer queue.
 
     public Format getRangeValueFormat() {

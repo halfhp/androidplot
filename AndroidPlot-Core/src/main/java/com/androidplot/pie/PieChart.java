@@ -82,6 +82,10 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
             loadAttrs(context, attrs);
         }*/
     }
+    
+    public PieWidget getPieWidget() {
+        return pieWidget;
+    }
 
     public void addSegment(Segment segment, SegmentFormatter formatter) {
         addSeries(segment, formatter);

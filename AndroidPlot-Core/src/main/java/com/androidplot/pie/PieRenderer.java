@@ -27,6 +27,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     // starting angle to use when drawing the first radial line of the first segment.
     @SuppressWarnings("FieldCanBeLocal")
     private float startDeg = 0;
+    private float endDeg = 360;
 
     // TODO: express donut in units other than px.
     private float donutSize = 0.5f;
@@ -47,6 +48,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 
         float radius = plotArea.width() < plotArea.height() ? plotArea.width() / 2 : plotArea.height() / 2;
         PointF origin = new PointF(plotArea.centerX(), plotArea.centerY());
+        float totalAngle = endDeg - startDeg;
 
         double scale = calculateScale();
         float offset = startDeg;
@@ -58,7 +60,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 
         for (Segment segment : segments) {
             float lastOffset = offset;
-            float sweep = (float) scale * (segment.getValue().floatValue()) * 360;
+            float sweep = (float) scale * (segment.getValue().floatValue()) * totalAngle;
             offset += sweep;
             //PointF radial = calculateLineEnd(origin, radius, offset);
             drawSegment(canvas, rec, segment, getPlot().getFormatter(segment, PieRenderer.class),
@@ -206,5 +208,9 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     
     public void setStartDeg(float deg) {
         startDeg = deg;
+    }
+    
+    public void setEndDeg(float deg) {
+        endDeg = deg;
     }
 }

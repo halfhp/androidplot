@@ -22,11 +22,9 @@ import android.graphics.Region;
 import com.androidplot.Series;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.Plot;
-//import com.androidplot.xy.ui.widget.renderer.XYRenderBundle;
-import com.androidplot.xy.XYSeries;
-import com.androidplot.xy.XYRegionFormatter;
 
-public abstract class SeriesRenderer<PlotType extends Plot, SeriesFormatterType extends Formatter> {
+public abstract class SeriesRenderer
+        <PlotType extends Plot, SeriesType extends Series, SeriesFormatterType extends Formatter> {
     private PlotType plot;
 
     public SeriesRenderer(PlotType plot) {
@@ -41,16 +39,15 @@ public abstract class SeriesRenderer<PlotType extends Plot, SeriesFormatterType 
         this.plot = plot;
     }
 
-    public SeriesAndFormatterList<XYSeries,SeriesFormatterType> getSeriesAndFormatterList() {
+    public SeriesAndFormatterList<SeriesType,SeriesFormatterType> getSeriesAndFormatterList() {
         return plot.getSeriesAndFormatterListForRenderer(getClass());
     }
 
-    public SeriesFormatterType getFormatter(Series series) {
+    public SeriesFormatterType getFormatter(SeriesType series) {
         return (SeriesFormatterType) plot.getFormatter(series, getClass());
     }
 
     public void render(Canvas canvas, RectF plotArea) throws PlotRenderException {
-        //recalculateMinMaxVals();
         onRender(canvas, plotArea);
     }
     public abstract void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException;
@@ -73,9 +70,4 @@ public abstract class SeriesRenderer<PlotType extends Plot, SeriesFormatterType 
             canvas.restore();
         }
     }
-
-    public void drawRegionLegendIcon(Canvas canvas, RectF rect, XYRegionFormatter formatter) {
-        canvas.drawRect(rect, formatter.getPaint());
-    }
-
 }

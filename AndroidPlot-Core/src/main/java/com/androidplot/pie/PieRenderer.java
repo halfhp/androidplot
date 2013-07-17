@@ -22,10 +22,12 @@ import com.androidplot.ui.SeriesRenderer;
 
 import java.util.Set;
 
-public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
+public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormatter> {
 
     // starting angle to use when drawing the first radial line of the first segment.
-    private float startDeg = 15;
+    @SuppressWarnings("FieldCanBeLocal")
+    private float startDeg = 0;
+    private float endDeg = 360;
 
     // TODO: express donut in units other than px.
     private float donutSize = 0.5f;
@@ -46,6 +48,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
 
         float radius = plotArea.width() < plotArea.height() ? plotArea.width() / 2 : plotArea.height() / 2;
         PointF origin = new PointF(plotArea.centerX(), plotArea.centerY());
+        float totalAngle = endDeg - startDeg;
 
         double scale = calculateScale();
         float offset = startDeg;
@@ -57,7 +60,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
 
         for (Segment segment : segments) {
             float lastOffset = offset;
-            float sweep = (float) scale * (segment.getValue().floatValue()) * 360;
+            float sweep = (float) scale * (segment.getValue().floatValue()) * totalAngle;
             offset += sweep;
             //PointF radial = calculateLineEnd(origin, radius, offset);
             drawSegment(canvas, rec, segment, getPlot().getFormatter(segment, PieRenderer.class),
@@ -73,13 +76,14 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
         float cx = bounds.centerX();
         float cy = bounds.centerY();
 
-        float donutSizePx = 0;
+        float donutSizePx;
         switch(donutMode) {
             case PERCENT:
                 donutSizePx = donutSize * rad;
                 break;
             case PIXELS:
-                donutSizePx = donutSize;
+                donutSizePx = (donutSize > 0)?donutSize:(rad + donutSize);
+                break;
             default:
                 throw new UnsupportedOperationException("Not yet implemented.");
         }
@@ -193,10 +197,20 @@ public class PieRenderer extends SeriesRenderer<PieChart, SegmentFormatter> {
                             "Size parameter must be between 0 and 1 when operating in PERCENT mode.");
                 }
                 break;
+            case PIXELS:
+            	break;
             default:
                 throw new UnsupportedOperationException("Not yet implemented.");
         }
         donutMode = mode;
         donutSize = size;
+    }
+    
+    public void setStartDeg(float deg) {
+        startDeg = deg;
+    }
+    
+    public void setEndDeg(float deg) {
+        endDeg = deg;
     }
 }

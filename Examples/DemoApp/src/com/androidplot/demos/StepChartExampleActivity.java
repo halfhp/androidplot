@@ -57,8 +57,10 @@ public class StepChartExampleActivity extends Activity
 
 
         mySimpleXYPlot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
-        mySimpleXYPlot.getGraphWidget().getGridLinePaint().setColor(Color.BLACK);
-        mySimpleXYPlot.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1,1}, 1));
+        mySimpleXYPlot.getGraphWidget().getDomainGridLinePaint().setColor(Color.BLACK);
+        mySimpleXYPlot.getGraphWidget().getDomainGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
+        mySimpleXYPlot.getGraphWidget().getRangeGridLinePaint().setColor(Color.BLACK);
+        mySimpleXYPlot.getGraphWidget().getRangeGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
         mySimpleXYPlot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
         mySimpleXYPlot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
         mySimpleXYPlot.getGraphWidget().setMarginRight(5);
@@ -67,7 +69,7 @@ public class StepChartExampleActivity extends Activity
         LineAndPointFormatter series1Format = new LineAndPointFormatter(
                 Color.rgb(0, 100, 0),                   // line color
                 Color.rgb(0, 100, 0),                   // point color
-                Color.rgb(100, 200, 0));                // fill color
+                Color.rgb(100, 200, 0), null);                // fill color
 
 
         // setup our line fill paint to be a slightly transparent gradient:

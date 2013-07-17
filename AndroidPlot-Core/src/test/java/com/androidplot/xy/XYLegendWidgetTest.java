@@ -19,6 +19,7 @@ package com.androidplot.xy;
 import android.content.Context;
 import android.graphics.*;
 import android.os.Handler;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import com.androidplot.Plot;
@@ -27,7 +28,6 @@ import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.SizeMetric;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.widget.TextLabelWidget;
-import com.androidplot.ui.widget.TitleWidget;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.FontUtils;
 import com.androidplot.util.PixelUtils;
@@ -42,19 +42,24 @@ import java.util.Arrays;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-@UsingMocksAndStubs({View.class,Handler.class,Paint.class,Color.class, Rect.class,
-        FontUtils.class, Bitmap.class, Pair.class, TextLabelWidget.class,
-        TitleWidget.class})
+@UsingMocksAndStubs({Log.class,View.class,Handler.class,Paint.class,Color.class, Rect.class,
+        FontUtils.class, Paint.FontMetrics.class,Bitmap.class, Pair.class})
 
 public class XYLegendWidgetTest {
 
     @MockClass(realClass = Context.class)
     public static class MockContext {}
 
+    @MockClass(realClass = TextLabelWidget.class)
+    public static class MockTextLabelWidget {
+        @Mock
+        public void doOnDraw(Canvas canvas, RectF widgetRect) {}
+    }
+
     @Before
     public void setUp() throws Exception {
         Mockit.setUpMocks(MockCanvas.class, MockRectF.class, MockSizeMetrics.class,
-                MockPointF.class, MockLooper.class, MockPixelUtils.class);
+                MockPointF.class, MockLooper.class, MockPixelUtils.class, MockTextLabelWidget.class);
     }
 
     @After

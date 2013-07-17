@@ -17,8 +17,10 @@
 package com.androidplot.util;
 
 import android.content.Context;
+import android.util.Log;
 import com.androidplot.mock.MockContext;
 import mockit.Mockit;
+import mockit.UsingMocksAndStubs;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -26,6 +28,7 @@ import java.lang.reflect.Method;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+@UsingMocksAndStubs({Log.class})
 public class ConfiguratorTest {
 
     class A {
@@ -89,7 +92,7 @@ public class ConfiguratorTest {
         Context context = Mockit.setUpMock(new MockContext());
         C c = new C();
 
-        Method m = Configurator.getSetter(c, "b");
+        Method m = Configurator.getSetter(c.getClass(), "b");
         assertEquals(1, m.getParameterTypes().length);
         assertEquals(B.class, m.getParameterTypes()[0]);
     }

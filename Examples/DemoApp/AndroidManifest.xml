@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.androidplot.demos"
-      android:versionCode="6"
-      android:versionName="0.5.1">
+      android:versionCode="8"
+      android:versionName="0.6.0.1">
     <uses-sdk android:minSdkVersion="6" android:targetSdkVersion="16"/>
 
     <!-- We must disable hardware acceleration otherwise some lines will not appear in our plots. -->
@@ -66,6 +66,7 @@
         </activity>
         <activity android:name=".TimeSeriesActivity"/>
 		<activity android:name=".DualScaleXYPlotExampleActivity"/>
+        <activity android:name=".XYPlotWithBgImgActivity"/>
         
         <!-- receiver for demo app widget -->
         <receiver

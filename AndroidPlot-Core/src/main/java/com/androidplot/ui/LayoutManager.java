@@ -22,14 +22,9 @@ import android.view.View;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.DisplayDimensions;
-import com.androidplot.util.ZHash;
-import com.androidplot.util.PixelUtils;
-import com.androidplot.xy.XLayoutStyle;
-import com.androidplot.xy.YLayoutStyle;
+import com.androidplot.util.ZLinkedList;
 
-import java.util.HashMap;
-
-public class LayoutManager extends ZHash<Widget, PositionMetrics>
+public class LayoutManager extends ZLinkedList<Widget>
         implements View.OnTouchListener, Resizable {
     private boolean drawAnchorsEnabled = false;
     private Paint anchorPaint;
@@ -44,20 +39,16 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
     private DisplayDimensions displayDims = new DisplayDimensions();
 
     // cache of widget rects
-    private HashMap<Widget, DisplayDimensions> widgetRects;
+    //private HashMap<Widget, DisplayDimensions> widgetRects;
 
     {
-        widgetRects = new HashMap<Widget, DisplayDimensions>();
+        //widgetRects = new HashMap<Widget, DisplayDimensions>();
         anchorPaint = new Paint();
         anchorPaint.setStyle(Paint.Style.FILL);
         anchorPaint.setColor(Color.GREEN);
         outlinePaint = new Paint();
         outlinePaint.setColor(Color.GREEN);
         outlinePaint.setStyle(Paint.Style.STROKE);
-        outlineShadowPaint = new Paint();
-        outlineShadowPaint.setColor(Color.DKGRAY);
-        outlineShadowPaint.setStyle(Paint.Style.FILL);
-        outlineShadowPaint.setShadowLayer(3, 5, 5, Color.BLACK);
         marginPaint = new Paint();
         marginPaint.setColor(Color.YELLOW);
         marginPaint.setStyle(Paint.Style.FILL);
@@ -68,9 +59,14 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         paddingPaint.setAlpha(200);
     }
 
-    /*@Deprecated
-    public LayoutManager(View view) {
-    }*/
+    /**
+     * Invoked immediately following XML configuration.
+     */
+    public synchronized void onPostInit() {
+        for(Widget w : elements()) {
+            w.onPostInit();
+        }
+    }
 
     public LayoutManager() {
     }
@@ -81,74 +77,6 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         setDrawMarginsEnabled(enabled);
         setDrawPaddingEnabled(enabled);
         setDrawOutlineShadowsEnabled(enabled);
-
-    }
-
-    public AnchorPosition getElementAnchor(Widget element) {
-        //return widgets.get(element).getAnchor();
-        return get(element).getAnchor();
-    }
-
-    public boolean setElementAnchor(Widget element, AnchorPosition anchor) {
-        //PositionMetrics metrics = widgets.get(element);
-        PositionMetrics metrics = get(element);
-        if(metrics == null) {
-            return false;
-        }
-        metrics.setAnchor(anchor);
-        return true;
-    }
-
-    public static PointF getAnchorCoordinates(RectF widgetRect, AnchorPosition anchorPosition) {
-        return PixelUtils.add(new PointF(widgetRect.left, widgetRect.top),
-                getAnchorOffset(widgetRect.width(), widgetRect.height(), anchorPosition));
-    }
-
-    public static PointF getAnchorCoordinates(float x, float y, float width, float height, AnchorPosition anchorPosition) {
-        return getAnchorCoordinates(new RectF(x, y, x+width, y+height), anchorPosition);
-    }
-
-    public static PointF getAnchorOffset(float width, float height, AnchorPosition anchorPosition) {
-        PointF point = new PointF();
-        switch (anchorPosition) {
-            case LEFT_TOP:
-                break;
-            case LEFT_MIDDLE:
-                point.set(0, height / 2);
-                break;
-            case LEFT_BOTTOM:
-                point.set(0, height);
-                break;
-            case RIGHT_TOP:
-                point.set(width, 0);
-                break;
-            case RIGHT_BOTTOM:
-                point.set(width, height);
-                break;
-            case RIGHT_MIDDLE:
-                point.set(width, height / 2);
-                break;
-            case TOP_MIDDLE:
-                point.set(width / 2, 0);
-                break;
-            case BOTTOM_MIDDLE:
-                point.set(width / 2, height);
-                break;
-            case CENTER:
-                point.set(width / 2, height / 2);
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported anchor location: " + anchorPosition);
-        }
-        return point;
-    }
-
-
-    public PointF getElementCoordinates(float height, float width, RectF viewRect, PositionMetrics metrics) {
-        float x = metrics.getxPositionMetric().getPixelValue(viewRect.width()) + viewRect.left;
-        float y = metrics.getyPositionMetric().getPixelValue(viewRect.height()) + viewRect.top;
-        PointF point = new PointF(x, y);
-        return PixelUtils.sub(point, getAnchorOffset(width, height, metrics.getAnchor()));
     }
 
     public void draw(Canvas canvas) throws PlotRenderException {
@@ -158,18 +86,19 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         if (isDrawPaddingEnabled()) {
             drawSpacing(canvas, displayDims.marginatedRect, displayDims.paddedRect, paddingPaint);
         }
-        for (Widget widget : getKeysAsList()) {
+        for (Widget widget : elements()) {
             //int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG); // preserve clipping etc
             try {
                 canvas.save(Canvas.ALL_SAVE_FLAG);
-                PositionMetrics metrics = get(widget);
+                PositionMetrics metrics = widget.getPositionMetrics();
                 float elementWidth = widget.getWidthPix(displayDims.paddedRect.width());
                 float elementHeight = widget.getHeightPix(displayDims.paddedRect.height());
-                PointF coords = getElementCoordinates(elementHeight,
+                PointF coords = widget.getElementCoordinates(elementHeight,
                         elementWidth, displayDims.paddedRect, metrics);
 
                 //RectF widgetRect = new RectF(coords.x, coords.y, coords.x + elementWidth, coords.y + elementHeight);
-                DisplayDimensions dims = widgetRects.get(widget);
+                //DisplayDimensions dims = widgetRects.get(widget);
+                DisplayDimensions dims = widget.getWidgetDimensions();
                 //RectF widgetRect = widgetRects.get(widget);
 
                 if (drawOutlineShadowsEnabled) {
@@ -198,7 +127,9 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
                 }
 
                 if (drawAnchorsEnabled) {
-                    PointF anchorCoords = getAnchorCoordinates(coords.x, coords.y, elementWidth, elementHeight, metrics.getAnchor());
+                    PointF anchorCoords =
+                            Widget.getAnchorCoordinates(coords.x, coords.y, elementWidth,
+                                    elementHeight, metrics.getAnchor());
                     drawAnchor(canvas, anchorCoords);
                 }
 
@@ -230,22 +161,6 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         float anchorSize = 4;
         canvas.drawRect(coords.x-anchorSize, coords.y-anchorSize, coords.x+anchorSize, coords.y+anchorSize, anchorPaint);
 
-    }
-
-    /**
-     *
-     * @param element The Widget to position.  Used for positioning both new and existing widgets.
-     * @param x X-Coordinate of the top left corner of element.  When using RELATIVE, must be a value between 0 and 1.
-     * @param xLayoutStyle LayoutType to use when orienting this element's X-Coordinate.
-     * @param y Y_VALS_ONLY-Coordinate of the top-left corner of element.  When using RELATIVE, must be a value between 0 and 1.
-     * @param yLayoutStyle LayoutType to use when orienting this element's Y_VALS_ONLY-Coordinate.
-     */
-    public void position(Widget element, float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle) {
-        position(element, x, xLayoutStyle, y, yLayoutStyle, AnchorPosition.LEFT_TOP);
-    }
-
-    public void position(Widget element, float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle, AnchorPosition anchor) {
-        addToTop(element, new PositionMetrics(x, xLayoutStyle, y, yLayoutStyle, anchor));
     }
 
     public boolean isDrawOutlinesEnabled() {
@@ -310,6 +225,13 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
 
     public void setDrawOutlineShadowsEnabled(boolean drawOutlineShadowsEnabled) {
         this.drawOutlineShadowsEnabled = drawOutlineShadowsEnabled;
+        if(drawOutlineShadowsEnabled && outlineShadowPaint == null) {
+            // use a default shadow effect in the case where none has been set:
+            outlineShadowPaint = new Paint();
+            outlineShadowPaint.setColor(Color.DKGRAY);
+            outlineShadowPaint.setStyle(Paint.Style.FILL);
+            outlineShadowPaint.setShadowLayer(3, 5, 5, Color.BLACK);
+        }
     }
 
     public Paint getOutlineShadowPaint() {
@@ -325,28 +247,22 @@ public class LayoutManager extends ZHash<Widget, PositionMetrics>
         return false;
     }
 
-    private void delegateOnTouchEvt(View v, MotionEvent event) {
-
+    /**
+     * Recalculates layouts for all widgets using last set
+     * DisplayDimensions.  Care should be excersized when choosing when
+     * to call this method as it is a relatively slow operation.
+     */
+    public void refreshLayout() {
+        //widgetRects.clear();
+        for (Widget widget : elements()) {
+            widget.layout(displayDims);
+        }
     }
 
     @Override
     public void layout(final DisplayDimensions dims) {
         this.displayDims = dims;
 
-        widgetRects.clear();
-        for (Widget widget : getKeysAsList()) {
-            PositionMetrics metrics = get(widget);
-            float elementWidth = widget.getWidthPix(displayDims.paddedRect.width());
-            float elementHeight = widget.getHeightPix(displayDims.paddedRect.height());
-            PointF coords = getElementCoordinates(elementHeight,
-                    elementWidth, displayDims.paddedRect, metrics);
-
-            RectF canvasRect = new RectF(coords.x, coords.y, coords.x + elementWidth, coords.y + elementHeight);
-            RectF marginatedWidgetRect = widget.getMarginatedRect(canvasRect);
-            RectF paddedWidgetRect = widget.getPaddedRect(marginatedWidgetRect);
-            DisplayDimensions dd = new DisplayDimensions(canvasRect, marginatedWidgetRect, paddedWidgetRect);
-            widgetRects.put(widget, dd);
-            widget.layout(dd);
-        }
+        refreshLayout();
     }
 }

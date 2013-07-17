@@ -47,6 +47,7 @@ public class RectRegion {
         this.setLabel(label);
     }
 
+    @SuppressWarnings("SameParameterValue")
     public RectRegion(Number minX, Number maxX, Number minY, Number maxY) {
         this(minX, maxX, minY, maxY, null);
     }
@@ -95,27 +96,6 @@ public class RectRegion {
                 visMinY.doubleValue(), visMaxY.doubleValue());
         return RectF.intersects(thisRegion, region);
     }
-
-    /*public RectF getRectF(RectF plotRect, Number visMinX, Number visMaxX, Number visMinY, Number visMaxY) {
-        PointF topLeftPoint = ValPixConverter.valToPix(
-                xLineRegion.getMinVal().doubleValue() != Double.NEGATIVE_INFINITY ? xLineRegion.getMinVal() : visMinX,
-                yLineRegion.getMaxVal().doubleValue() != Double.NEGATIVE_INFINITY ? yLineRegion.getMaxVal() : visMaxY,
-                plotRect,
-                visMinX,
-                visMaxX,
-                visMinY,
-                visMaxY);
-        PointF bottomRightPoint = ValPixConverter.valToPix(
-                xLineRegion.getMaxVal().doubleValue() != Double.POSITIVE_INFINITY ? xLineRegion.getMaxVal() : visMaxX,
-                yLineRegion.getMinVal().doubleValue() != Double.POSITIVE_INFINITY ? yLineRegion.getMinVal() : visMinY,
-                plotRect,
-                visMinX,
-                visMaxX,
-                visMinY,
-                visMaxY);
-        // TODO: figure out why the y-values are inverted
-        return new RectF(topLeftPoint.x, topLeftPoint.y, bottomRightPoint.x, bottomRightPoint.y);
-    }*/
 
     public RectF getRectF(RectF plotRect, Number visMinX, Number visMaxX, Number visMinY, Number visMaxY) {
         PointF topLeftPoint = ValPixConverter.valToPix(

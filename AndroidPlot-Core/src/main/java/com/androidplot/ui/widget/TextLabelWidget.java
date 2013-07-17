@@ -17,17 +17,19 @@
 package com.androidplot.ui.widget;
 
 import android.graphics.*;
+import android.util.Log;
 import com.androidplot.ui.*;
 import com.androidplot.util.FontUtils;
 
-public abstract class TextLabelWidget extends Widget {
+public class TextLabelWidget extends Widget {
+    private static final String TAG = TextLabelWidget.class.getName();
 
-
-    //private Plot plot;
-    //private String label;
+    private String text;
     private Paint labelPaint;
 
     private TextOrientationType orientation;
+
+    private boolean autoPackEnabled = true;
 
     {
         labelPaint = new Paint();
@@ -36,12 +38,17 @@ public abstract class TextLabelWidget extends Widget {
         labelPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public TextLabelWidget(SizeMetrics sizeMetrics) {
-        this(sizeMetrics, TextOrientationType.HORIZONTAL);
+    public TextLabelWidget(LayoutManager layoutManager, SizeMetrics sizeMetrics) {
+        this(layoutManager, sizeMetrics, TextOrientationType.HORIZONTAL);
     }
 
-    public TextLabelWidget(SizeMetrics sizeMetrics, TextOrientationType orientation) {
-        super(new SizeMetrics(0, SizeLayoutType.ABSOLUTE, 0, SizeLayoutType.ABSOLUTE));
+    public TextLabelWidget(LayoutManager layoutManager, String title, SizeMetrics sizeMetrics, TextOrientationType orientation) {
+        this(layoutManager, sizeMetrics, orientation);
+        setText(title);
+    }
+
+    public TextLabelWidget(LayoutManager layoutManager, SizeMetrics sizeMetrics, TextOrientationType orientation) {
+        super(layoutManager, new SizeMetrics(0, SizeLayoutType.ABSOLUTE, 0, SizeLayoutType.ABSOLUTE));
         //this.plot = plot;
         //this.setWidth(labelPaint.measureText(plot.getTitle()));
         //this.setHeight(labelPaint.getFontMetrics().top);
@@ -49,25 +56,42 @@ public abstract class TextLabelWidget extends Widget {
         this.orientation = orientation;
     }
 
-    protected abstract String getText();
+    @Override
+    protected void onMetricsChanged(SizeMetrics olds, SizeMetrics news) {
+        if(autoPackEnabled) {
+            pack();
+        }
+    }
+
+    @Override
+    public void onPostInit() {
+       if(autoPackEnabled) {
+           pack();
+       }
+    }
+
+    //protected abstract String getText();
 
     /**
      * Sets the dimensions of the widget to exactly contain the text contents
      */
     public void pack() {
-        Rect size = FontUtils.getStringDimensions(getText(), getLabelPaint());
+        Log.d(TAG, "Packing...");
+        Rect size = FontUtils.getStringDimensions(text, getLabelPaint());
         if(size == null) {
+            Log.w(TAG, "Attempt to pack empty text.");
             return;
         }
         switch(orientation) {
             case HORIZONTAL:
-                this.setSize(new SizeMetrics(size.height(), SizeLayoutType.ABSOLUTE, size.width()+2, SizeLayoutType.ABSOLUTE));
+                setSize(new SizeMetrics(size.height(), SizeLayoutType.ABSOLUTE, size.width()+2, SizeLayoutType.ABSOLUTE));
                 break;
             case VERTICAL_ASCENDING:
             case VERTICAL_DESCENDING:
-                this.setSize(new SizeMetrics(size.width(), SizeLayoutType.ABSOLUTE, size.height()+2, SizeLayoutType.ABSOLUTE));
+                setSize(new SizeMetrics(size.width(), SizeLayoutType.ABSOLUTE, size.height()+2, SizeLayoutType.ABSOLUTE));
                 break;
         }
+        refreshLayout();
 
     }
 
@@ -79,10 +103,13 @@ public abstract class TextLabelWidget extends Widget {
      */
     @Override
     public void doOnDraw(Canvas canvas, RectF widgetRect) {
-        String label = getText();
-        FontUtils.getStringDimensions(label, labelPaint);
+        if(text == null || text.length() == 0) {
+            return;
+        }
+        //FontUtils.getStringDimensions(text, labelPaint);
         float vOffset = labelPaint.getFontMetrics().descent;
-        PointF start = LayoutManager.getAnchorCoordinates(widgetRect, AnchorPosition.CENTER);
+        PointF start = getAnchorCoordinates(widgetRect,
+                AnchorPosition.CENTER);
 
         // BEGIN ROTATION CALCULATION
         //int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG);
@@ -103,7 +130,7 @@ public abstract class TextLabelWidget extends Widget {
 
                     throw new UnsupportedOperationException("Orientation " + orientation + " not yet implemented for TextLabelWidget.");
             }
-            canvas.drawText(label, 0, vOffset, labelPaint);
+            canvas.drawText(text, 0, vOffset, labelPaint);
         } finally {
             //canvas.restoreToCount(canvasState);
             canvas.restore();
@@ -118,6 +145,12 @@ public abstract class TextLabelWidget extends Widget {
 
     public void setLabelPaint(Paint labelPaint) {
         this.labelPaint = labelPaint;
+
+        // when paint changes, packing params change too so check
+        // to see if we need to resize:
+        if(autoPackEnabled) {
+            pack();
+        }
     }
 
     public TextOrientationType getOrientation() {
@@ -126,5 +159,31 @@ public abstract class TextLabelWidget extends Widget {
 
     public void setOrientation(TextOrientationType orientation) {
         this.orientation = orientation;
+        if(autoPackEnabled) {
+            pack();
+        }
+    }
+
+    public boolean isAutoPackEnabled() {
+        return autoPackEnabled;
+    }
+
+    public void setAutoPackEnabled(boolean autoPackEnabled) {
+        this.autoPackEnabled = autoPackEnabled;
+        if(autoPackEnabled) {
+            pack();
+        }
+    }
+
+    public void setText(String text) {
+        Log.d(TAG, "Setting textLabel to: " + text);
+        this.text = text;
+        if(autoPackEnabled) {
+            pack();
+        }
+    }
+
+    public String getText() {
+        return text;
     }
 }

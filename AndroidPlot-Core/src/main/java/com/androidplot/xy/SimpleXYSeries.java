@@ -17,9 +17,9 @@
 package com.androidplot.xy;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import android.util.Pair;
 import com.androidplot.Plot;
-import com.androidplot.PlotEvent;
 import com.androidplot.PlotListener;
 
 import java.util.LinkedList;
@@ -30,16 +30,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * A convenience class used to create instances of XYPlot generated from Lists of Numbers.
- * Note that SimpleXYSeries is not synchronized; never alter the underlying model of a SimpleXYSeries during a call to Plot.redraw() on a Plot with which
- * the SimpleXYSeries instance has been registered.  It is the developer's responsibility to implement the synchronization
- * mechanism(s) to accomplish this.
  */
 public class SimpleXYSeries implements XYSeries, PlotListener {
 
-    @Override
-    public void onPlotUpdate(PlotEvent event) {
-        // This is gonna get removed soon...
-    }
+    private static final String TAG = SimpleXYSeries.class.getName();
 
     @Override
     public void onBeforeDraw(Plot source, Canvas canvas) {
@@ -59,7 +53,7 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
     private volatile LinkedList<Number> xVals = new LinkedList<Number>();
     private volatile LinkedList<Number> yVals = new LinkedList<Number>();
     private volatile String title = null;
-    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
 
 
     public SimpleXYSeries(String title) {
@@ -130,10 +124,13 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
 
                 // array containing only y-vals. assume x = index:
                 case Y_VALS_ONLY:
-                    for (int i = 0; i < model.size(); i++) {
+                    for(Number n : model) {
+                        yVals.add(n);
+                    }
+                    /*for (int i = 0; i < model.size(); i++) {
                         //xVals.add(i);
                         yVals.add(model.get(i));
-                    }
+                    }*/
                     break;
 
                 // xy interleaved array:

@@ -21,19 +21,20 @@ import android.graphics.*;
 import android.os.Build;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
 import com.androidplot.ui.Formatter;
 import com.androidplot.ui.TextOrientationType;
-import com.androidplot.ui.widget.TitleWidget;
+import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.Configurator;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.xy.XLayoutStyle;
-import com.androidplot.xy.YLayoutStyle;
+import com.androidplot.ui.XLayoutStyle;
+import com.androidplot.ui.YLayoutStyle;
 
 import java.util.*;
 
@@ -42,6 +43,7 @@ import java.util.*;
  */
 public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends SeriesRenderer>
         extends View implements Resizable{
+    private static final String TAG = Plot.class.getName();
     private static final String XML_ATTR_PREFIX      = "androidplot";
 
     private static final String ATTR_TITLE           = "title";
@@ -103,8 +105,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
          */
         USE_MAIN_THREAD
     }
-
-    protected String title = "My Plot";
     private BoxModel boxModel = new BoxModel(3, 3, 3, 3, 3, 3, 3, 3);
     private BorderStyle borderStyle = Plot.BorderStyle.SQUARE;
     private float borderRadiusX = 15;
@@ -113,11 +113,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private Paint borderPaint;
     private Paint backgroundPaint;
     private LayoutManager layoutManager;
-    private TitleWidget titleWidget;
+    private TextLabelWidget titleWidget;
     private DisplayDimensions displayDims = new DisplayDimensions();
     private RenderMode renderMode = RenderMode.USE_MAIN_THREAD;
-    //private volatile Bitmap offScreenBitmap;
-    private Canvas offScreenCanvas = new Canvas();
     private final BufferedCanvas pingPong = new BufferedCanvas();
 
     // used to get rid of flickering when drawing offScreenBitmap to the visible Canvas.
@@ -215,7 +213,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param title The display title of this Plot.
      */
     public Plot(Context context, String title) {
-        this(context, title, RenderMode.USE_BACKGROUND_THREAD);
+        this(context, title, RenderMode.USE_MAIN_THREAD);
     }
 
     /**
@@ -225,9 +223,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Plot(Context context, String title, RenderMode mode) {
         super(context);
-        this.title = title;
         this.renderMode = mode;
-        postInit();
+        init(null, null);
+        setTitle(title);
     }
 
 
@@ -248,7 +246,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Plot(Context context, AttributeSet attrs) {
         super(context, attrs);
-        postInit();
+        init(context, attrs);
     }
 
     /**
@@ -269,7 +267,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Plot(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        postInit();
+        init(context, attrs);
     }
 
     /**
@@ -278,23 +276,48 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @return True if hardware acceleration is allowed, false otherwise.
      * @since 0.5.1
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected boolean isHwAccelerationSupported() {
         return false;
     }
 
+    /**
+     * Sets the render mode used by the Plot.
+     * WARNING: This method is not currently designed for general use outside of Configurator.
+     * Attempting to reassign the render mode at runtime will result in unexpected behavior.
+     * @param mode
+     */
     public void setRenderMode(RenderMode mode) {
-        // TODO
+        this.renderMode = mode;
     }
 
+    /**
+     * Concrete implementations should do any final setup / initialization
+     * here.  Immediately following this method's invocation, AndroidPlot assumes
+     * that the Plot instance is ready for final configuration via the Configurator.
+     */
+    protected abstract void onPreInit();
 
-    private void postInit() {
+
+    private void init(Context context, AttributeSet attrs) {
         PixelUtils.init(getContext());
-        titleWidget = new TitleWidget(this, new SizeMetrics(25,
-                SizeLayoutType.ABSOLUTE, 100, SizeLayoutType.ABSOLUTE), TextOrientationType.HORIZONTAL);
         layoutManager = new LayoutManager();
-        layoutManager.position(titleWidget, 0,
-                XLayoutStyle.RELATIVE_TO_CENTER, 0, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
+        titleWidget = new TextLabelWidget(layoutManager, new SizeMetrics(25,
+                SizeLayoutType.ABSOLUTE, 100,
+                SizeLayoutType.ABSOLUTE),
+                TextOrientationType.HORIZONTAL);
+        titleWidget.position(0, XLayoutStyle.RELATIVE_TO_CENTER, 0,
+                YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
 
+        onPreInit();
+        // make sure the title widget is always the topmost widget:
+        layoutManager.moveToTop(titleWidget);
+        if(context != null && attrs != null) {
+            loadAttrs(attrs);
+        }
+
+        layoutManager.onPostInit();
+        Log.d(TAG, "AndroidPlot RenderMode: " + renderMode);
         if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
             renderThread = new Thread(new Runnable() {
                 @Override
@@ -330,10 +353,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      * Parse XML Attributes.  Should only be called once and at the end of the base class constructor.
      *
-     * @param context
      * @param attrs
      */
-    protected void loadAttrs(Context context, AttributeSet attrs) {
+    private void loadAttrs(AttributeSet attrs) {
 
         if (attrs != null) {
             // filter out androidplot prefixed attrs:
@@ -347,96 +369,31 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 }
             }
             Configurator.configure(getContext(), this, attrHash);
-            //configure(attrHash);
-            /*//title = getStringAttr(context, attrs, ATTR_TITLE);
-            String renderModeStr = getStringAttr(context, attrs, ATTR_RENDER_MODE);
-            if (renderModeStr != null) {
-                renderMode = getRenderMode(renderModeStr);
-                if (renderMode == null) {
-                    throw new IllegalArgumentException("Unknown Render Mode specified in XML: " + renderModeStr);
-                }
-            }*/
         }
-
     }
-
-    /*@Deprecated
-    private String getStringAttr(Context ctx, AttributeSet attrs, String attrName) {
-        String attr = attrs.getAttributeValue(null, attrName);
-        if (attr != null) {
-            return parseStringAttr(ctx, attr);
-        } else {
-            return null;
-        }
-    }*/
 
     public RenderMode getRenderMode() {
         return renderMode;
     }
 
-    @Deprecated
-    private RenderMode getRenderMode(String renderModeStr) {
-        if(renderModeStr.equalsIgnoreCase(RenderMode.USE_BACKGROUND_THREAD.toString())) {
-            return RenderMode.USE_BACKGROUND_THREAD;
-        } else if(renderModeStr.equalsIgnoreCase(RenderMode.USE_MAIN_THREAD.toString())) {
-            return RenderMode.USE_MAIN_THREAD;
-        } else {
-            return null;
-        }
+    public synchronized boolean addListener(PlotListener listener) {
+        return !listeners.contains(listener) && listeners.add(listener);
     }
 
-    public boolean addListener(PlotListener listener) {
-        synchronized (listeners) {
-            return !listeners.contains(listener) && listeners.add(listener);
-        }
-    }
-
-    public boolean removeListener(PlotListener listener) {
-        synchronized(listeners) {
-            return listeners.remove(listener);
-        }
+    public synchronized boolean removeListener(PlotListener listener) {
+        return listeners.remove(listener);
     }
 
     protected void notifyListenersBeforeDraw(Canvas canvas) {
-        synchronized (listeners) {
-            for (PlotListener listener : listeners) {
-                listener.onBeforeDraw(this, canvas);
-            }
+        for (PlotListener listener : listeners) {
+            listener.onBeforeDraw(this, canvas);
         }
     }
 
-    protected void notifyListenersAfterDraw(Canvas canvas, PlotEvent event) {
-        synchronized (listeners) {
-            for (PlotListener listener : listeners) {
-                listener.onAfterDraw(this, canvas);
-                listener.onPlotUpdate(event);
-            }
+    protected void notifyListenersAfterDraw(Canvas canvas) {
+        for (PlotListener listener : listeners) {
+            listener.onAfterDraw(this, canvas);
         }
-    }
-
-    /**
-     * Convenience method - wraps LayoutManager.position().
-     * @param element
-     * @param x
-     * @param xLayoutStyle
-     * @param y
-     * @param yLayoutStyle
-     */
-    public void position(Widget element, float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle) {
-        layoutManager.position(element, x, xLayoutStyle, y, yLayoutStyle, AnchorPosition.LEFT_TOP);
-    }
-
-    /**
-     * Convenience method - wraps LayoutManager.positon().
-     * @param element
-     * @param x
-     * @param xLayoutStyle
-     * @param y
-     * @param yLayoutStyle
-     * @param anchor
-     */
-    public void position(Widget element, float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle, AnchorPosition anchor) {
-        layoutManager.position(element, x, xLayoutStyle, y, yLayoutStyle, anchor);
     }
 
     /**
@@ -523,11 +480,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     public FormatterType getFormatter(SeriesType series, Class rendererClass) {
         return seriesRegistry.get(rendererClass).getFormatter(series);
-        //throw new UnsupportedOperationException();
-    }
-
-    public boolean setFormatter(SeriesType series, Class rendererClass, FormatterType formatter) {
-        throw new UnsupportedOperationException();
     }
 
     public SeriesAndFormatterList<SeriesType,FormatterType> getSeriesAndFormatterListForRenderer(Class rendererClass) {
@@ -574,17 +526,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         return renderers;
     }
 
-    /**
-     * Pre 0.5.1 versions of AndroidPlot enabled markup mode by default and a call to
-     * this method was required to disable it.  This was changed in 0.5.1 and now this
-     * method does nothing at all; it remains only to maintain backwards compatibility.
-     * To enable markup mode use {@link #setMarkupEnabled(boolean)}.
-     * @deprecated Since 0.5.1 - Will be removed in 0.5.2
-     */
-    @Deprecated
-    public void disableAllMarkup() {
-    }
-
     public void setMarkupEnabled(boolean enabled) {
         this.layoutManager.setMarkupEnabled(enabled);
     }
@@ -618,36 +559,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
     }
 
-    /**
-     * @deprecated Since 0.5.1 - Users should transition to using {@link #addListener(PlotListener)}
-     */
-    @Deprecated
-    protected abstract void doBeforeDraw();
-
-    /**
-     * @deprecated Since 0.5.1 - Users should transition to using {@link #addListener(PlotListener)}
-     */
-    @Deprecated
-    protected abstract void doAfterDraw();
-
     @Override
     public synchronized void layout(final DisplayDimensions dims) {
         displayDims = dims;
         layoutManager.layout(displayDims);
-    }
-
-    /**
-     * Always use this method to regenerate the offscreen bitmap buffer, for consistency.
-     * @param w
-     * @param h
-     * @return
-     */
-    private static Bitmap createBitmapBuffer(int w, int h) {
-        if(w <= 0 || h <= 0) {
-            return null;
-        } else {
-            return Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
-        }
     }
 
     @Override
@@ -674,7 +589,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             }
         }
 
-        pingPong.resize(h, w);
+        // pingPong is only used in background rendering mode.
+        if(renderMode == RenderMode.USE_BACKGROUND_THREAD) {
+            pingPong.resize(h, w);
+        }
 
         RectF cRect = new RectF(0, 0, w, h);
         RectF mRect = boxModel.getMarginatedRect(cRect);
@@ -708,36 +626,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
     }
 
-    /*private final MultiSynch.Action msa = new MultiSynch.Action() {
-        @Override
-        public void run(Object[] params) {
-            Canvas canvas = (Canvas) params[0];
-            doBeforeDraw();
-            notifyListenersBeforeDraw(canvas);
-            try {
-                // need to completely erase what was on the canvas before redrawing, otherwise
-                // some odd aliasing artifacts begin to build up around the edges of aa'd entities
-                // over time.
-                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                if (backgroundPaint != null) {
-                    drawBackground(canvas, displayDims.marginatedRect);
-                }
-
-                layoutManager.draw(canvas);
-
-                if (isDrawBorderEnabled() && getBorderPaint() != null) {
-                    drawBorder(canvas, displayDims.marginatedRect);
-                }
-            } catch (PlotRenderException e) {
-                e.printStackTrace();
-            } finally {
-                isIdle = true;
-                doAfterDraw();
-                notifyListenersAfterDraw(canvas, new PlotEvent(Plot.this, PlotEvent.Type.PLOT_REDRAWN));
-            }
-        }
-    };*/
-
     /**
      * Renders the plot onto a canvas.  Used by both main thread to draw directly
      * onto the View's canvas as well as by background draw to render onto a
@@ -746,11 +634,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param canvas
      */
     protected synchronized void renderOnCanvas(Canvas canvas) {
-
-        Set<? extends Series> ss = getSeriesSet();
         try {
-            doBeforeDraw();
-
             // any series interested in synchronizing with plot should
             // implement PlotListener.onBeforeDraw(...) and do a read lock from within its
             // invocation.  This is the entry point into that call:
@@ -766,22 +650,22 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
                 layoutManager.draw(canvas);
 
-                if (isDrawBorderEnabled() && getBorderPaint() != null) {
+                if (getBorderPaint() != null) {
                     drawBorder(canvas, displayDims.marginatedRect);
                 }
             } catch (PlotRenderException e) {
+                Log.e(TAG, "Exception while rendering Plot.", e);
                 e.printStackTrace();
+            } catch (Exception e) {
+                Log.e(TAG, "Exception while rendering Plot.", e);
             }
         } finally {
             isIdle = true;
-            doAfterDraw();
             // any series interested in synchronizing with plot should
             // implement PlotListener.onAfterDraw(...) and do a read unlock from within that
             // invocation. This is the entry point for that invocation.
-            notifyListenersAfterDraw(canvas, new PlotEvent(this, PlotEvent.Type.PLOT_REDRAWN));
+            notifyListenersAfterDraw(canvas);
         }
-        //MultiSynch.run(new Object[]{canvas}, getSeriesSet(), msa);
-        //MultiSynch.lockSeriesSet(new Object[]{canvas}, getSeriesSet(), msa);
     }
 
 
@@ -807,10 +691,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param canvas
      * @throws PlotRenderException
      */
-    protected void drawBorder(Canvas canvas, RectF dims) throws PlotRenderException {
-
-
-        switch(borderStyle) {
+    protected void drawBorder(Canvas canvas, RectF dims) {
+        switch (borderStyle) {
             case ROUNDED:
                 canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, borderPaint);
                 break;
@@ -818,10 +700,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 canvas.drawRect(dims, borderPaint);
                 break;
             default:
-                }
+        }
     }
 
-    protected void drawBackground(Canvas canvas, RectF dims) throws PlotRenderException {
+    protected void drawBackground(Canvas canvas, RectF dims) {
         switch (borderStyle) {
             case ROUNDED:
                 canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, backgroundPaint);
@@ -838,7 +720,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @return The displayed title of this Plot.
      */
     public String getTitle() {
-        return title;
+        return getTitleWidget().getText();
     }
 
     /**
@@ -846,10 +728,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param title  The title to display on this Plot.
      */
     public void setTitle(String title) {
-        this.title = title;
-        if(titleWidget != null) {
-            titleWidget.pack();
-        }
+        titleWidget.setText(title);
     }
 
     public LayoutManager getLayoutManager() {
@@ -860,28 +739,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         this.layoutManager = layoutManager;
     }
 
-    /**
-     * Deprecated.  Use getBorderPaint instead.  If return is null then
-     * borders are disabled.
-     * @return
-     */
-    public boolean isDrawBorderEnabled() {
-        return drawBorderEnabled;
-    }
-
-    /**
-     * Deprecated - Use setBorderPaint(null) instead.
-     * @param drawBorderEnabled
-     */
-    public void setDrawBorderEnabled(boolean drawBorderEnabled) {
-        this.drawBorderEnabled = drawBorderEnabled;
-    }
-
-    public TitleWidget getTitleWidget() {
+    public TextLabelWidget getTitleWidget() {
         return titleWidget;
     }
 
-    public void setTitleWidget(TitleWidget titleWidget) {
+    public void setTitleWidget(TextLabelWidget titleWidget) {
         this.titleWidget = titleWidget;
     }
 

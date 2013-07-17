@@ -18,3 +18,9 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# remove all debug and verbose level logging statements:
+-assumenosideeffects class android.util.Log {
+  public static *** d(...);
+  public static *** v(...);
+}

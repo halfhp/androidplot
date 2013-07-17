@@ -21,7 +21,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import com.androidplot.Plot;
-import com.androidplot.PlotEvent;
 import com.androidplot.PlotListener;
 
 /**
@@ -95,11 +94,6 @@ public class PlotStatistics implements PlotListener {
         if(annotatePlotEnabled) {
             canvas.drawText(annotationString, r.centerX(),  r.centerY(), paint);
         }
-    }
-
-    @Override
-    public void onPlotUpdate(PlotEvent event) {
-        // Deprecated so ignored.
     }
 
     @Override

@@ -105,6 +105,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
      * @param series XYSeries to which the point being rendered belongs.
      * @return
      */
+    @SuppressWarnings("UnusedParameters")
     protected T getFormatter(int index, XYSeries series) {
         return getFormatter(series);
     }
@@ -167,7 +168,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 		int rough_width = (int) f_rough_width;
 		if (rough_width < 0) rough_width = 0;
 		if (gap > rough_width) {
-			gap = (int) rough_width / 2;
+			gap = rough_width / 2;
 		}
 
 		//Log.d("PARAMTER","PLOT_WIDTH=" + plotArea.width());
@@ -196,7 +197,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 	    		if (barGroup.prev != null) {
 	    			if (barGroup.intX - barGroup.prev.intX - gap - 1 > (int)(rough_width * 1.5)) {
 	    				// use intX and go halfwidth either side.
-	        			barGroup.leftX = barGroup.intX - (int) (rough_width / 2);
+	        			barGroup.leftX = barGroup.intX - (rough_width / 2);
 	        			barGroup.width = rough_width;
 	        			barGroup.rightX = barGroup.leftX + barGroup.width;
 	    			} else {
@@ -204,13 +205,13 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 	    				barGroup.leftX = barGroup.prev.rightX + gap + 1;
 	    				if (barGroup.leftX > barGroup.intX) barGroup.leftX = barGroup.intX;
 	    				// base right off intX + halfwidth.
-	    				barGroup.rightX = barGroup.intX + (int) (rough_width / 2);
+	    				barGroup.rightX = barGroup.intX + (rough_width / 2);
 	    				// calculate the width
 	    				barGroup.width = barGroup.rightX - barGroup.leftX;
 	    			}
 	    		} else {
 	    			// use intX and go halfwidth either side.
-	    			barGroup.leftX = barGroup.intX - (int) (rough_width / 2);
+	    			barGroup.leftX = barGroup.intX - (rough_width / 2);
 	    			barGroup.width = rough_width;
 	    			barGroup.rightX = barGroup.leftX + barGroup.width;
 	    		}
@@ -228,11 +229,20 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 			case OVERLAID:
 				Collections.sort(barGroup.bars, new BarComparator());
 				for (Bar b : barGroup.bars) {
+					BarFormatter formatter = b.formatter();
+			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
+			        PointLabeler pointLabeler = null;
+                	if (formatter != null) {
+                		pointLabeler = formatter.getPointLabeler();
+                	}
 	        		//Log.d("BAR", b.series.getTitle() + " <" + b.barGroup.leftX + "|" + b.barGroup.intX + "|" + b.barGroup.rightX + "> " + b.intY); 
 	    			if (b.barGroup.width >= 2) {
-	        			canvas.drawRect(b.barGroup.leftX, b.intY, b.barGroup.rightX, b.barGroup.plotArea.bottom, b.formatter().getFillPaint());
+	        			canvas.drawRect(b.barGroup.leftX, b.intY, b.barGroup.rightX, b.barGroup.plotArea.bottom, formatter.getFillPaint());
 	        		}
-	        		canvas.drawRect(b.barGroup.leftX, b.intY, b.barGroup.rightX, b.barGroup.plotArea.bottom, b.formatter().getBorderPaint());
+	        		canvas.drawRect(b.barGroup.leftX, b.intY, b.barGroup.rightX, b.barGroup.plotArea.bottom, formatter.getBorderPaint());
+	        		if(plf != null && pointLabeler != null) {
+	                    canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, b.intY + plf.vOffset, plf.getTextPaint());
+	                }
 	        	}
 				break;
 			case SIDE_BY_SIDE:
@@ -240,11 +250,20 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 				int leftX = barGroup.leftX;
 				Collections.sort(barGroup.bars, new BarComparator());
 				for (Bar b : barGroup.bars) {
+					BarFormatter formatter = b.formatter();
+			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
+			        PointLabeler pointLabeler = null;
+                	if (formatter != null) {
+                		pointLabeler = formatter.getPointLabeler();
+                	}
 	        		//Log.d("BAR", "width=" + width + " <" + leftX + "|" + b.intX + "|" + (leftX + width) + "> " + b.intY); 
 	        		if (b.barGroup.width >= 2) {
-	        			canvas.drawRect(leftX, b.intY, leftX + width, b.barGroup.plotArea.bottom, b.formatter().getFillPaint());
+	        			canvas.drawRect(leftX, b.intY, leftX + width, b.barGroup.plotArea.bottom, formatter.getFillPaint());
 	        		}
-	        		canvas.drawRect(leftX, b.intY, leftX + width, b.barGroup.plotArea.bottom, b.formatter().getBorderPaint());
+	        		canvas.drawRect(leftX, b.intY, leftX + width, b.barGroup.plotArea.bottom, formatter.getBorderPaint());
+	        		if(plf != null && pointLabeler != null) {
+	                    canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), leftX + width/2 + plf.hOffset, b.intY + plf.vOffset, plf.getTextPaint());
+	                }
 	        		leftX = leftX + width;
 	        	}
 				break;
@@ -252,13 +271,22 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 				int bottom = (int) barGroup.plotArea.bottom;
 				Collections.sort(barGroup.bars, new BarComparator());
 				for (Bar b : barGroup.bars) {
+					BarFormatter formatter = b.formatter();
+			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
+			        PointLabeler pointLabeler = null;
+                	if (formatter != null) {
+                		pointLabeler = formatter.getPointLabeler();
+                	}
 	        		int height = (int) b.barGroup.plotArea.bottom - b.intY;
 	        		int top = bottom - height;
 	        		//Log.d("BAR", "top=" + top + " bottom=" + bottom + " height=" + height); 
 	    			if (b.barGroup.width >= 2) {
-	        			canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, b.formatter().getFillPaint());
+	        			canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, formatter.getFillPaint());
 	        		}
-	        		canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, b.formatter().getBorderPaint());
+	        		canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, formatter.getBorderPaint());
+	        		if(plf != null && pointLabeler != null) {
+	                    canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, b.intY + plf.vOffset, plf.getTextPaint());
+	                }
 		        	bottom = top;
 	        	}
 				break;
@@ -321,12 +349,13 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
     	}
     }
 
+    @SuppressWarnings("WeakerAccess")
     public class BarComparator implements Comparator<Bar>{
         @Override
         public int compare(Bar bar1, Bar bar2) {
 			switch (renderStyle) {
 			case OVERLAID:
-				return Integer.valueOf(bar1.intY).compareTo(Integer.valueOf(bar2.intY));
+				return Integer.valueOf(bar1.intY).compareTo(bar2.intY);
 			case SIDE_BY_SIDE:
 				return bar1.series.getTitle().compareToIgnoreCase(bar2.series.getTitle());
 			case STACKED:

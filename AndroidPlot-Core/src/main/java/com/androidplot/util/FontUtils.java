@@ -33,31 +33,6 @@ public class FontUtils {
     }
 
     /**
-     *
-     * @param text
-     * @param paint
-     * @return
-     */
-    @Deprecated
-    public static float getStringHeight(String text, Paint paint) {
-        Rect size = new Rect();
-        //String label = getText();
-        paint.getTextBounds(text, 0, text.length(), size);
-        return size.height();
-    }
-
-    /**
-     * 
-     * @param text
-     * @param paint
-     * @return
-     */
-    @Deprecated
-    public static float getHalfStringHeight(String text, Paint paint) {
-        return getStringHeight(text, paint)/2;
-    }
-
-    /**
      * Get the smallest rect that ecompasses the text to be drawn using paint.
      * @param text
      * @param paint
@@ -79,6 +54,9 @@ public class FontUtils {
      */
     public static Rect getStringDimensions(String text, Paint paint) {
         Rect size = new Rect();
+        if(text == null || text.length() == 0) {
+            return null;
+        }
         paint.getTextBounds(text, 0, text.length(), size);
         size.bottom = size.top + (int) getFontHeight(paint);
         return size;

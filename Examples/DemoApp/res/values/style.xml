@@ -14,7 +14,7 @@
   ~    limitations under the License.
   -->
 
-<resources>
+<resources xmlns="http://schemas.android.com/apk/lib/com.androidplot.xy">
     <style name="sample_activity">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
@@ -28,6 +28,7 @@
     <style name="plotStyle1">
         <!--<item name="androidplot.title">Default Title</item>
         <item name="androidplot.domainLabel">my domain</item>-->
+        <!--<item name="XYPlot:androidplot.title">my domain</item>-->
     </style>
 
 </resources>

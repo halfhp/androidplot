@@ -17,8 +17,11 @@
 package com.androidplot.demos;
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
 import android.os.Bundle;
 import com.androidplot.Plot;
+import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.*;
 
@@ -43,7 +46,6 @@ public class DynamicXYPlotActivity extends Activity {
     }
 
     private XYPlot dynamicPlot;
-    private XYPlot staticPlot;
     private MyPlotUpdater plotUpdater;
     SampleDynamicXYDatasource data;
     private Thread myThread;
@@ -68,27 +70,43 @@ public class DynamicXYPlotActivity extends Activity {
         SampleDynamicSeries sine1Series = new SampleDynamicSeries(data, 0, "Sine 1");
         SampleDynamicSeries sine2Series = new SampleDynamicSeries(data, 1, "Sine 2");
 
-        dynamicPlot.addSeries(sine1Series, new LineAndPointFormatter(Color.rgb(0, 0, 0), null, Color.rgb(0, 80, 0)));
+        LineAndPointFormatter formatter1 = new LineAndPointFormatter(
+                                Color.rgb(0, 0, 0), null, null, null);
+        formatter1.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
+        formatter1.getLinePaint().setStrokeWidth(10);
+        dynamicPlot.addSeries(sine1Series,
+                formatter1);
 
-        // create a series using a formatter with some transparency applied:
-        LineAndPointFormatter f1 =
-                new LineAndPointFormatter(Color.rgb(0, 0, 200), null, Color.rgb(0, 0, 80), (PointLabelFormatter) null);
+        LineAndPointFormatter formatter2 =
+                new LineAndPointFormatter(Color.rgb(0, 0, 200), null, null, null);
+        formatter2.getLinePaint().setStrokeWidth(10);
+        formatter2.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
 
-        f1.getFillPaint().setAlpha(220);
-        dynamicPlot.addSeries(sine2Series, f1);
+        //formatter2.getFillPaint().setAlpha(220);
+        dynamicPlot.addSeries(sine2Series, formatter2);
 
         // hook up the plotUpdater to the data model:
         data.addObserver(plotUpdater);
 
-        dynamicPlot.setDomainStepMode(XYStepMode.SUBDIVIDE);
-        dynamicPlot.setDomainStepValue(sine1Series.size());
+        // thin out domain tick labels so they dont overlap each other:
+        dynamicPlot.setDomainStepMode(XYStepMode.INCREMENT_BY_VAL);
+        dynamicPlot.setDomainStepValue(5);
 
-        // thin out domain/range tick labels so they dont overlap each other:
-        dynamicPlot.setTicksPerDomainLabel(5);
-        dynamicPlot.setTicksPerRangeLabel(3);
+        dynamicPlot.setRangeStepMode(XYStepMode.INCREMENT_BY_VAL);
+        dynamicPlot.setRangeStepValue(10);
+
+        dynamicPlot.setRangeValueFormat(new DecimalFormat("###.#"));
 
         // uncomment this line to freeze the range boundaries:
         dynamicPlot.setRangeBoundaries(-100, 100, BoundaryMode.FIXED);
+
+        // create a dash effect for domain and range grid lines:
+        DashPathEffect dashFx = new DashPathEffect(
+                new float[] {PixelUtils.dpToPix(3), PixelUtils.dpToPix(3)}, 0);
+        dynamicPlot.getGraphWidget().getDomainGridLinePaint().setPathEffect(dashFx);
+        dynamicPlot.getGraphWidget().getRangeGridLinePaint().setPathEffect(dashFx);
+
+
     }
 
     @Override
@@ -116,14 +134,15 @@ public class DynamicXYPlotActivity extends Activity {
             }
         }
 
+        private static final double FREQUENCY = 5; // larger is lower frequency
         private static final int MAX_AMP_SEED = 100;
         private static final int MIN_AMP_SEED = 10;
-        private static final int AMP_STEP = 5;
+        private static final int AMP_STEP = 1;
         public static final int SINE1 = 0;
         public static final int SINE2 = 1;
         private static final int SAMPLE_SIZE = 30;
         private int phase = 0;
-        private int sinAmp = 20;
+        private int sinAmp = 1;
         private MyObservable notifier;
         private boolean keepRunning = false;
 
@@ -142,7 +161,7 @@ public class DynamicXYPlotActivity extends Activity {
                 boolean isRising = true;
                 while (keepRunning) {
 
-                    Thread.sleep(50); // decrease or remove to speed up the refresh rate.
+                    Thread.sleep(10); // decrease or remove to speed up the refresh rate.
                     phase++;
                     if (sinAmp >= MAX_AMP_SEED) {
                         isRising = false;
@@ -163,7 +182,7 @@ public class DynamicXYPlotActivity extends Activity {
         }
 
         public int getItemCount(int series) {
-            return 30;
+            return SAMPLE_SIZE;
         }
 
         public Number getX(int series, int index) {
@@ -177,7 +196,8 @@ public class DynamicXYPlotActivity extends Activity {
             if (index >= SAMPLE_SIZE) {
                 throw new IllegalArgumentException();
             }
-            double amp = sinAmp * Math.sin(index + phase + 4);
+            double angle = (index + (phase))/FREQUENCY;
+            double amp = sinAmp * Math.sin(angle);
             switch (series) {
                 case SINE1:
                     return amp;

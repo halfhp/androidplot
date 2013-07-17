@@ -18,6 +18,7 @@ package com.androidplot.pie;
 
 import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
+import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.widget.Widget;
 
@@ -31,8 +32,8 @@ public class PieWidget extends Widget {
 
     private PieChart pieChart;
 
-    public PieWidget(PieChart pieChart, SizeMetrics metrics) {
-        super(metrics);
+    public PieWidget(LayoutManager layoutManager, PieChart pieChart, SizeMetrics metrics) {
+        super(layoutManager, metrics);
         this.pieChart = pieChart;
     }
 

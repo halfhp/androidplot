@@ -56,8 +56,12 @@ public class TimeSeriesActivity extends Activity
                 "Sightings in USA");
 
         plot1.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
-        plot1.getGraphWidget().getGridLinePaint().setColor(Color.BLACK);
-        plot1.getGraphWidget().getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
+        plot1.getGraphWidget().getDomainGridLinePaint().setColor(Color.BLACK);
+        plot1.getGraphWidget().getDomainGridLinePaint().
+                setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
+        plot1.getGraphWidget().getRangeGridLinePaint().setColor(Color.BLACK);
+        plot1.getGraphWidget().getRangeGridLinePaint().
+                setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
         plot1.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
         plot1.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
 
@@ -65,7 +69,7 @@ public class TimeSeriesActivity extends Activity
         LineAndPointFormatter series1Format = new LineAndPointFormatter(
                 Color.rgb(0, 100, 0),                   // line color
                 Color.rgb(0, 100, 0),                   // point color
-                Color.rgb(100, 200, 0));                // fill color
+                Color.rgb(100, 200, 0), null);                // fill color
 
 
         // setup our line fill paint to be a slightly transparent gradient:
@@ -77,7 +81,8 @@ public class TimeSeriesActivity extends Activity
         // and use that accordingly.  at least then the values can be customized for the device type and orientation.
         lineFill.setShader(new LinearGradient(0, 0, 200, 200, Color.WHITE, Color.GREEN, Shader.TileMode.CLAMP));
 
-        LineAndPointFormatter formatter  = new LineAndPointFormatter(Color.rgb(0, 0,0), Color.BLUE, Color.RED);
+        LineAndPointFormatter formatter  =
+                new LineAndPointFormatter(Color.rgb(0, 0,0), Color.BLUE, Color.RED, null);
         formatter.setFillPaint(lineFill);
         plot1.getGraphWidget().setPaddingRight(2);
         plot1.addSeries(series2, formatter);

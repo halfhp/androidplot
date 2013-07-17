@@ -30,14 +30,6 @@ import java.util.List;
  */
 public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> extends XYSeriesRenderer<FormatterType> {
 
-    // default implementation prints point's yVal:
-    private PointLabeler pointLabeler = new PointLabeler() {
-        @Override
-        public String getLabel(XYSeries series, int index) {
-            return series.getY(index) + "";
-        }
-    };
-
     public LineAndPointRenderer(XYPlot plot) {
         super(plot);
     }
@@ -84,7 +76,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     }
 
 
-    protected void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, LineAndPointFormatter formatter) throws PlotRenderException {
+    protected void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, LineAndPointFormatter formatter) {
         PointF thisPoint;
         PointF lastPoint = null;
         PointF firstPoint = null;
@@ -106,7 +98,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                         getPlot().getCalculatedMaxX(),
                         getPlot().getCalculatedMinY(),
                         getPlot().getCalculatedMaxY());
-                points.add(new Pair(thisPoint, i));
+                points.add(new Pair<PointF, Integer>(thisPoint, i));
                 //appendToPath(path, thisPoint, lastPoint);
             } else {
                 thisPoint = null;
@@ -145,7 +137,8 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         PointLabelFormatter plf = formatter.getPointLabelFormatter();
         if (vertexPaint != null || plf != null) {
             for (Pair<PointF, Integer> p : points) {
-
+            	PointLabeler pointLabeler = formatter.getPointLabeler();
+ 
                 // if vertexPaint is available, draw vertex:
                 if(vertexPaint != null) {
                     canvas.drawPoint(p.first.x, p.first.y, formatter.getVertexPaint());
@@ -227,13 +220,5 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
 
         path.rewind();
-    }
-
-    public PointLabeler getPointLabeler() {
-        return pointLabeler;
-    }
-
-    public void setPointLabeler(PointLabeler pointLabeler) {
-        this.pointLabeler = pointLabeler;
     }
 }

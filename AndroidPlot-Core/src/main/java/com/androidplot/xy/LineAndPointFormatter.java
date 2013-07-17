@@ -32,6 +32,14 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     private static final float DEFAULT_LINE_STROKE_WIDTH_DP   = 1.5f;
     private static final float DEFAULT_VERTEX_STROKE_WIDTH_DP = 4.5f;
 
+     // default implementation prints point's yVal:
+    private PointLabeler pointLabeler = new PointLabeler() {
+        @Override
+        public String getLabel(XYSeries series, int index) {
+            return series.getY(index) + "";
+        }
+    };
+
     public FillDirection getFillDirection() {
         return fillDirection;
     }
@@ -55,53 +63,15 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         initLinePaint(Color.BLACK);
     }
 
-    protected LineAndPointFormatter() {
-        this(Color.RED, Color.GREEN, Color.BLUE);
-    }
-
     /**
-     * Provided as a convenience to users; allows instantiation and xml configuration
-     * to take place in a single line
-     *
-     * @param ctx
-     * @param xmlCfgId Id of the xml config file within /res/xml
+     * Should only be used in conjunction with calls to configure()...
      */
-    public LineAndPointFormatter(Context ctx, int xmlCfgId) {
-        // prevent configuration of classes derived from this one:
-        if (getClass().equals(LineAndPointFormatter.class)) {
-            Configurator.configure(ctx, this, xmlCfgId);
-        }
-    }
-
-    /**
-     * Set corresponding parameter to null to disable the drawing of lines, vertexes or fill.
-     * Uses a default of FillDirection.BOTTOM.
-     * @param lineColor
-     * @param vertexColor
-     * @param fillColor
-     * @deprecated As of 0.5.1: Use {@link #LineAndPointFormatter(Integer, Integer, Integer, PointLabelFormatter)} instead.
-     */
-    @Deprecated
-    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor) {
-         this(lineColor, vertexColor, fillColor, (PointLabelFormatter) null);
+    public LineAndPointFormatter() {
+        this(Color.RED, Color.GREEN, Color.BLUE, null);
     }
 
     public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, PointLabelFormatter plf) {
         this(lineColor, vertexColor, fillColor, plf, FillDirection.BOTTOM);
-    }
-
-    /**
-     *
-     * @param lineColor
-     * @param vertexColor
-     * @param fillColor
-     * @param fillDir Determines which edge or origin of the plot is used to close the path for filling.
-     * @deprecated As of 0.5.1: Use
-     *             {@link #LineAndPointFormatter(Integer, Integer, Integer, PointLabelFormatter, FillDirection)} instead.
-     */
-    @Deprecated
-    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, FillDirection fillDir) {
-        this(lineColor, vertexColor, fillColor, null, fillDir);
     }
 
     public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, PointLabelFormatter plf, FillDirection fillDir) {
@@ -200,5 +170,13 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
 
     public void setPointLabelFormatter(PointLabelFormatter pointLabelFormatter) {
         this.pointLabelFormatter = pointLabelFormatter;
+    }
+    
+    public PointLabeler getPointLabeler() {
+        return pointLabeler;
+    }
+
+    public void setPointLabeler(PointLabeler pointLabeler) {
+        this.pointLabeler = pointLabeler;
     }
 }

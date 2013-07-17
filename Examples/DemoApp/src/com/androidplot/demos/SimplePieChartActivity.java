@@ -25,9 +25,6 @@ import com.androidplot.pie.PieChart;
 import com.androidplot.pie.PieRenderer;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
-import com.androidplot.xy.*;
-
-import java.util.Arrays;
 
 /**
  * The simplest possible example of using AndroidPlot to plot some data.
@@ -50,7 +47,7 @@ public class SimplePieChartActivity extends Activity
     {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.simple_pie_chart_example);
+        setContentView(R.layout.pie_chart);
 
         // initialize our XYPlot reference:
         pie = (PieChart) findViewById(R.id.mySimplePieChart);
@@ -82,26 +79,26 @@ public class SimplePieChartActivity extends Activity
         s3 = new Segment("s3", 10);
         s4 = new Segment("s4", 10);
 
-        EmbossMaskFilter emf = new EmbossMaskFilter(new float[]{1, 1, 1}, 0.4f, 10, 8.2f);
+        EmbossMaskFilter emf = new EmbossMaskFilter(
+                new float[]{1, 1, 1}, 0.4f, 10, 8.2f);
 
-
-        SegmentFormatter sf1 = new SegmentFormatter(
-                        Color.rgb(200, 150, 150), Color.BLACK);
+        SegmentFormatter sf1 = new SegmentFormatter();
+        sf1.configure(getApplicationContext(), R.xml.pie_segment_formatter1);
 
         sf1.getFillPaint().setMaskFilter(emf);
 
-        SegmentFormatter sf2 = new SegmentFormatter(
-                        Color.rgb(150, 200, 150), Color.BLACK);
+        SegmentFormatter sf2 = new SegmentFormatter();
+        sf2.configure(getApplicationContext(), R.xml.pie_segment_formatter2);
 
         sf2.getFillPaint().setMaskFilter(emf);
 
-        SegmentFormatter sf3 = new SegmentFormatter(
-                        Color.rgb(150, 150, 200), Color.BLACK);
+        SegmentFormatter sf3 = new SegmentFormatter();
+        sf3.configure(getApplicationContext(), R.xml.pie_segment_formatter3);
 
         sf3.getFillPaint().setMaskFilter(emf);
 
-        SegmentFormatter sf4 = new SegmentFormatter(
-                        Color.BLUE, Color.BLACK);
+        SegmentFormatter sf4 = new SegmentFormatter();
+        sf4.configure(getApplicationContext(), R.xml.pie_segment_formatter4);
 
         sf4.getFillPaint().setMaskFilter(emf);
 
@@ -109,6 +106,9 @@ public class SimplePieChartActivity extends Activity
         pie.addSeries(s2, sf2);
         pie.addSeries(s3, sf3);
         pie.addSeries(s4, sf4);
+
+        pie.getBorderPaint().setColor(Color.TRANSPARENT);
+        pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
     }
 
     protected void updateDonutText() {

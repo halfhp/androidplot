@@ -109,6 +109,7 @@ public class PixelUtils {
      * @param sp
      * @return Pixel value of sp.
      */
+    @SuppressWarnings("SameParameterValue")
     public static float spToPix(float sp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, metrics);
     }
@@ -181,7 +182,7 @@ public class PixelUtils {
         if (matcher.matches()) {
             // -- Match found.
             // -- Extract value.
-            float value = Float.valueOf(matcher.group(1)).floatValue();
+            float value = Float.valueOf(matcher.group(1));
             // -- Extract dimension units.
             String unit = matcher.group(3).toLowerCase();
             // -- Get Android dimension constant.

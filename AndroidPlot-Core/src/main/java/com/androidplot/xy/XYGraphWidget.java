@@ -17,9 +17,9 @@
 package com.androidplot.xy;
 
 import android.graphics.*;
-import android.util.Log;
 
 import com.androidplot.exception.PlotRenderException;
+import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.FontUtils;
@@ -34,6 +34,22 @@ import java.text.Format;
  * Displays graphical data annotated with domain and range tick markers.
  */
 public class XYGraphWidget extends Widget {
+
+    public float getRangeLabelOrientation() {
+        return rangeLabelOrientation;
+    }
+
+    public void setRangeLabelOrientation(float rangeLabelOrientation) {
+        this.rangeLabelOrientation = rangeLabelOrientation;
+    }
+
+    public float getDomainLabelOrientation() {
+        return domainLabelOrientation;
+    }
+
+    public void setDomainLabelOrientation(float domainLabelOrientation) {
+        this.domainLabelOrientation = domainLabelOrientation;
+    }
 
     /**
      * Will be used in a future version.
@@ -64,9 +80,10 @@ public class XYGraphWidget extends Widget {
     private int domainLabelTickExtension = 5;
     private int rangeLabelTickExtension = 5;
     private Paint gridBackgroundPaint;
-    private Paint gridLinePaint;
-    private Paint gridRangeLinePaint;
-    private Paint gridDomainLinePaint;
+    private Paint rangeGridLinePaint;
+    private Paint rangeSubGridLinePaint;
+    private Paint domainGridLinePaint;
+    private Paint domainSubGridLinePaint;
     private Paint domainLabelPaint;
     private Paint rangeLabelPaint;
     private Paint domainCursorPaint;
@@ -84,11 +101,15 @@ public class XYGraphWidget extends Widget {
     private RectF paddedGridRect;
     private float domainCursorPosition;
     private float rangeCursorPosition;
+    @SuppressWarnings("FieldCanBeLocal")
     private boolean drawCursorLabelEnabled = true;
     private boolean drawMarkersEnabled = true;
     
     private boolean rangeAxisLeft = true;
     private boolean domainAxisBottom = true;
+
+    private float rangeLabelOrientation;
+    private float domainLabelOrientation;
 
     // TODO: consider typing this manager with a special
     // axisLabelRegionFormatter
@@ -100,12 +121,13 @@ public class XYGraphWidget extends Widget {
         gridBackgroundPaint = new Paint();
         gridBackgroundPaint.setColor(Color.rgb(140, 140, 140));
         gridBackgroundPaint.setStyle(Paint.Style.FILL);
-        gridLinePaint = new Paint();
-        gridLinePaint.setColor(Color.rgb(180, 180, 180));
-        gridLinePaint.setAntiAlias(true);
-        gridLinePaint.setStyle(Paint.Style.STROKE);
-        gridRangeLinePaint = gridLinePaint;
-        gridDomainLinePaint = gridLinePaint;
+        rangeGridLinePaint = new Paint();
+        rangeGridLinePaint.setColor(Color.rgb(180, 180, 180));
+        rangeGridLinePaint.setAntiAlias(true);
+        rangeGridLinePaint.setStyle(Paint.Style.STROKE);
+        domainGridLinePaint = new Paint(rangeGridLinePaint);
+        domainSubGridLinePaint = new Paint(domainGridLinePaint);
+        rangeSubGridLinePaint = new Paint(rangeGridLinePaint);
         domainOriginLinePaint = new Paint();
         domainOriginLinePaint.setColor(Color.WHITE);
         domainOriginLinePaint.setAntiAlias(true);
@@ -147,8 +169,8 @@ public class XYGraphWidget extends Widget {
         axisValueLabelRegions = new ZHash<RectRegion, AxisValueLabelFormatter>();
     }
 
-    public XYGraphWidget(XYPlot plot, SizeMetrics sizeMetrics) {
-        super(sizeMetrics);
+    public XYGraphWidget(LayoutManager layoutManager, XYPlot plot, SizeMetrics sizeMetrics) {
+        super(layoutManager, sizeMetrics);
         this.plot = plot;
     }
 
@@ -392,30 +414,38 @@ public class XYGraphWidget extends Widget {
         AxisValueLabelFormatter rf = null;
         String txt = null;
         double v = value.doubleValue();
-        switch (axis) {
-            case DOMAIN :
-                rf = getAxisValueLabelFormatterForDomainVal(v);
-                txt = getFormattedDomainValue(value);
-                break;
-            case RANGE :
-                rf = getAxisValueLabelFormatterForRangeVal(v);
-                txt = getFormattedRangeValue(value);
-                break;
-        }
 
-        // if a matching region formatter was found, create a clone
-        // of labelPaint and use the formatter's color. Otherwise
-        // just use labelPaint:
-        Paint p = null;
-        if (rf != null) {
-            // p = rf.getPaint();
-            p = new Paint(labelPaint);
-            p.setColor(rf.getColor());
-            // p.setColor(Color.RED);
-        } else {
-            p = labelPaint;
+        int canvasState = canvas.save();
+        try {
+            switch (axis) {
+                case DOMAIN:
+                    rf = getAxisValueLabelFormatterForDomainVal(v);
+                    txt = getFormattedDomainValue(value);
+                    canvas.rotate(getDomainLabelOrientation(), xPix, yPix);
+                    break;
+                case RANGE:
+                    rf = getAxisValueLabelFormatterForRangeVal(v);
+                    txt = getFormattedRangeValue(value);
+                    canvas.rotate(getRangeLabelOrientation(), xPix, yPix);
+                    break;
+            }
+
+            // if a matching region formatter was found, create a clone
+            // of labelPaint and use the formatter's color. Otherwise
+            // just use labelPaint:
+            Paint p;
+            if (rf != null) {
+                // p = rf.getPaint();
+                p = new Paint(labelPaint);
+                p.setColor(rf.getColor());
+                // p.setColor(Color.RED);
+            } else {
+                p = labelPaint;
+            }
+            canvas.drawText(txt, xPix, yPix, p);
+        } finally {
+            canvas.restoreToCount(canvasState);
         }
-        canvas.drawText(txt, xPix, yPix, p);
     }
 
     private void drawDomainTick(Canvas canvas, float xPix, Number xVal,
@@ -432,7 +462,7 @@ public class XYGraphWidget extends Widget {
             }
             if (labelPaint != null) {
                 float fontHeight = FontUtils.getFontHeight(labelPaint);
-                float yPix = 0.0f;
+                float yPix;
                 if (domainAxisBottom){
                     yPix = gridRect.bottom + domainLabelTickExtension
                             + domainLabelVerticalOffset + fontHeight;
@@ -464,7 +494,7 @@ public class XYGraphWidget extends Widget {
                 }
             }
             if (labelPaint != null) {
-                float xPix = 0.0f;
+                float xPix;
                 if (rangeAxisLeft){
                     xPix = gridRect.left
                             - (rangeLabelTickExtension + rangeLabelHorizontalOffset);
@@ -485,9 +515,8 @@ public class XYGraphWidget extends Widget {
      * Draws the drid and domain/range labels for the plot.
      * 
      * @param canvas
-     * @throws com.androidplot.exception.PlotRenderException
      */
-    protected void drawGrid(Canvas canvas) throws PlotRenderException {
+    protected void drawGrid(Canvas canvas) {
 
         if (gridBackgroundPaint != null) {
             canvas.drawRect(gridRect, gridBackgroundPaint);
@@ -533,10 +562,10 @@ public class XYGraphWidget extends Widget {
                 if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
                     if (i % getTicksPerDomainLabel() == 0) {
                         drawDomainTick(canvas, xPix, xVal, domainLabelPaint,
-                                gridDomainLinePaint, false);
+                                domainGridLinePaint, false);
                     } else {
                         drawDomainTick(canvas, xPix, xVal, domainLabelPaint,
-                                gridDomainLinePaint, true);
+                                domainSubGridLinePaint, true);
                     }
                 }
                 i++;
@@ -556,10 +585,10 @@ public class XYGraphWidget extends Widget {
 
                     if (i % getTicksPerDomainLabel() == 0) {
                         drawDomainTick(canvas, xPix, xVal, domainLabelPaint,
-                                gridDomainLinePaint, false);
+                                domainGridLinePaint, false);
                     } else {
                         drawDomainTick(canvas, xPix, xVal, domainLabelPaint,
-                                gridDomainLinePaint, true);
+                                domainSubGridLinePaint, true);
                     }
                 }
                 i++;
@@ -608,10 +637,10 @@ public class XYGraphWidget extends Widget {
                 if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
                     if (i % getTicksPerRangeLabel() == 0) {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint,
-                                gridRangeLinePaint, false);
+                                rangeGridLinePaint, false);
                     } else {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint,
-                                gridRangeLinePaint, true);
+                                rangeSubGridLinePaint, true);
                     }
                 }
                 i++;
@@ -630,10 +659,10 @@ public class XYGraphWidget extends Widget {
                 if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
                     if (i % getTicksPerRangeLabel() == 0) {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint,
-                                gridRangeLinePaint, false);
+                                rangeGridLinePaint, false);
                     } else {
                         drawRangeTick(canvas, yPix, yVal, rangeLabelPaint,
-                                gridRangeLinePaint, true);
+                                rangeSubGridLinePaint, true);
                     }
                 }
                 i++;
@@ -882,88 +911,66 @@ public class XYGraphWidget extends Widget {
         this.rangeLabelPaint = rangeLabelPaint;
     }
 
-    public Paint getGridLinePaint() {
-        return gridLinePaint;
+    /**
+     * Get the paint used to draw the domain grid line.
+     */
+    public Paint getDomainGridLinePaint() {
+        return domainGridLinePaint;
     }
 
     /**
-     * Creates a copy of gridLinePaint to be used for drawing grid lines. The
-     * copied instance will have it's style attribute set to Paint.Style.STROKE.
-     * 
+     * Set the paint used to draw the domain grid line.
      * @param gridLinePaint
      */
-    public void setGridLinePaint(Paint gridLinePaint) {
-        if (gridLinePaint == null) {
-            this.gridLinePaint = null;
-        } else {
-            this.gridLinePaint = new Paint(gridLinePaint);
-            this.gridLinePaint.setStyle(Paint.Style.STROKE);
-        }
-        // make the same for domain and range
-        this.gridDomainLinePaint = this.gridLinePaint;
-        this.gridRangeLinePaint = this.gridLinePaint;
+    public void setDomainGridLinePaint(Paint gridLinePaint) {
+        this.domainGridLinePaint = gridLinePaint;
     }
 
     /**
-     * get the GridDomainLinePaint.
-     * 
-     * If the Domain and Range have the same paint then a copy is made to seperate them.
-     * 
+     * Get the paint used to draw the range grid line.
      */
-    public Paint getGridDomainLinePaint() {
-        if (gridDomainLinePaint == gridRangeLinePaint){
-            //need a copy as we look to be using them separately
-            this.gridDomainLinePaint = new Paint(gridRangeLinePaint);
-            this.gridDomainLinePaint.setStyle(Paint.Style.STROKE);
-        }
-        return gridDomainLinePaint;
+    public Paint getRangeGridLinePaint() {
+        return rangeGridLinePaint;
     }
 
     /**
-     * Creates a copy of gridDomainLinePaint to be used for drawing grid lines. The
-     * copied instance will have it's style attribute set to Paint.Style.STROKE.
-     * 
+     * Get the paint used to draw the domain grid line.
+     */
+    public Paint getDomainSubGridLinePaint() {
+        return domainSubGridLinePaint;
+    }
+    
+    /**
+     * Set the paint used to draw the domain grid line.
      * @param gridLinePaint
      */
-    public void setGridDomainLinePaint(Paint gridLinePaint) {
-        if (gridLinePaint == null) {
-            this.gridDomainLinePaint = null;
-        } else {
-            this.gridDomainLinePaint = new Paint(gridLinePaint);
-            this.gridDomainLinePaint.setStyle(Paint.Style.STROKE);
-        }
+    public void setDomainSubGridLinePaint(Paint gridLinePaint) {
+        this.domainSubGridLinePaint = gridLinePaint;
     }
 
     /**
-     * get the GridRangeLinePaint.
-     * 
-     * If the Domain and Range have the same paint then a copy is made to seperate them.
-     * 
-     */
-    public Paint getGridRangeLinePaint() {
-        if (gridDomainLinePaint == gridRangeLinePaint){
-            //need a copy as we look to be using them separately
-            this.gridDomainLinePaint = new Paint(gridRangeLinePaint);
-            this.gridDomainLinePaint.setStyle(Paint.Style.STROKE);
-        }
-        return gridRangeLinePaint;
-    }
-
-    /**
-     * Creates a copy of gridRangeLinePaint to be used for drawing grid lines. The
-     * copied instance will have it's style attribute set to Paint.Style.STROKE.
-     * 
+     * Set the Paint used to draw the range grid line.
      * @param gridLinePaint
      */
-    public void setGridRangeLinePaint(Paint gridLinePaint) {
-        if (gridLinePaint == null) {
-            this.gridRangeLinePaint = null;
-        } else {
-            this.gridRangeLinePaint = new Paint(gridLinePaint);
-            this.gridRangeLinePaint.setStyle(Paint.Style.STROKE);
-        }
+    public void setRangeGridLinePaint(Paint gridLinePaint) {
+        this.rangeGridLinePaint = gridLinePaint;
     }
 
+    /**
+     * Get the paint used to draw the range grid line.
+     */
+    public Paint getRangeSubGridLinePaint() {
+        return rangeSubGridLinePaint;
+    }
+
+    /**
+     * Set the Paint used to draw the range grid line.
+     * @param gridLinePaint
+     */
+    public void setRangeSubGridLinePaint(Paint gridLinePaint) {
+        this.rangeSubGridLinePaint = gridLinePaint;
+    }
+    
     // TODO: make a generic renderer queue.
 
     public Format getRangeValueFormat() {
@@ -1012,26 +1019,6 @@ public class XYGraphWidget extends Widget {
 
     public void setTicksPerDomainLabel(int ticksPerDomainLabel) {
         this.ticksPerDomainLabel = ticksPerDomainLabel;
-    }
-
-    /**
-     * Deprecated - use getTicksPerRangeLabel() instead.
-     * 
-     * @return
-     */
-    @Deprecated
-    public int getRangeTicksPerLabel() {
-        return ticksPerRangeLabel;
-    }
-
-    /**
-     * Deprecated - use setTicksPerRangeLabel() instead.
-     * 
-     * @param rangeTicksPerLabel
-     */
-    @Deprecated
-    public void setRangeTicksPerLabel(int rangeTicksPerLabel) {
-        this.ticksPerRangeLabel = rangeTicksPerLabel;
     }
 
     public void setGridPaddingTop(float gridPaddingTop) {
@@ -1177,13 +1164,6 @@ public class XYGraphWidget extends Widget {
     public void setDomainAxisBottom(boolean domainAxisBottom) {
         this.domainAxisBottom = domainAxisBottom;
     }
-
-    private class TickLabelArea {
-        private float size; // size in pixels
-        protected void draw(Canvas canvas) {
-            // TODO
-        }
-    }
     
     /*
      * set the position of the range axis labels.  Set the labelPaint textSizes before setting this.
@@ -1235,10 +1215,10 @@ public class XYGraphWidget extends Widget {
      * 
      * @param domainAxisBottom axis labels are on the bottom not the top of the plot.
      * @param domainAxisOverlay axis labels are overlaid on the plot, not external to it.
-     * @param tickSize the size of the tick extensions for none overlaid axis.
+     * @param tickSize the size of the tick extensions for non overlaid axis.
      * @param maxLableString Sample label representing the biggest size space needs to be allocated for.
      */
-    public void setDomainAxisPosition(boolean domainAxisBottom, boolean domainAxisOverlay, int tickSize, String maxLableString){
+    public void setDomainAxisPosition(boolean domainAxisBottom, boolean domainAxisOverlay, int tickSize, String maxLabelString){
         setDomainAxisBottom(domainAxisBottom);
         if (domainAxisOverlay) {
             setDomainLabelWidth(1);    // needs to be at least 1 to display grid line.
@@ -1246,8 +1226,7 @@ public class XYGraphWidget extends Widget {
             setDomainLabelTickExtension(0);
             Paint p = getDomainLabelPaint();
             if (p != null) {
-                float fontHeight = FontUtils.getFontHeight(p);
-                Rect r = FontUtils.getPackedStringDimensions(maxLableString,p);
+                Rect r = FontUtils.getPackedStringDimensions(maxLabelString,p);
                 if (domainAxisBottom){
                     setDomainLabelVerticalOffset(2 * r.top);
                 } else {
@@ -1256,12 +1235,11 @@ public class XYGraphWidget extends Widget {
             }
         } else {
             setDomainLabelWidth(1);    // needs to be at least 1 to display grid line.
-                                                                    // if we have a paint this gets bigger.
+                                       // if we have a paint this gets bigger.
             setDomainLabelTickExtension(tickSize);
             Paint p = getDomainLabelPaint();
             if (p != null) {
                 float fontHeight = FontUtils.getFontHeight(p);
-                Rect r = FontUtils.getPackedStringDimensions(maxLableString,p);
                 if (domainAxisBottom){
                     setDomainLabelVerticalOffset(-4.0f);
                 } else {

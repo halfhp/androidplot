@@ -17,6 +17,7 @@
 package com.androidplot.pie;
 
 import android.graphics.*;
+
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.SeriesRenderer;
 
@@ -42,30 +43,36 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     public PieRenderer(PieChart plot) {
         super(plot);
     }
+    
+    public float getRadius(RectF rect) {
+    	return  rect.width() < rect.height() ? rect.width() / 2 : rect.height() / 2;
+    }
 
     @Override
     public void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException {
 
-        float radius = plotArea.width() < plotArea.height() ? plotArea.width() / 2 : plotArea.height() / 2;
+        float radius = getRadius(plotArea);
         PointF origin = new PointF(plotArea.centerX(), plotArea.centerY());
-        float totalAngle = endDeg - startDeg;
-
-        double scale = calculateScale();
+        
+        double[] values = getValues();
+        double scale = calculateScale(values);
         float offset = startDeg;
         Set<Segment> segments = getPlot().getSeriesSet();
 
         //PointF lastRadial = calculateLineEnd(origin, radius, offset);
 
         RectF rec = new RectF(origin.x - radius, origin.y - radius, origin.x + radius, origin.y + radius);
-
+        
+        int i = 0;
         for (Segment segment : segments) {
             float lastOffset = offset;
-            float sweep = (float) scale * (segment.getValue().floatValue()) * totalAngle;
+            float sweep = (float) (scale * (values[i]) * 360);
             offset += sweep;
             //PointF radial = calculateLineEnd(origin, radius, offset);
             drawSegment(canvas, rec, segment, getPlot().getFormatter(segment, PieRenderer.class),
                     radius, lastOffset, sweep);
             //lastRadial = radial;
+            i++;
         }
     }
 
@@ -166,14 +173,25 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
      * Determines how many counts there are per cent of whatever the
      * pie chart is displaying as a fraction, 1 being 100%.
      */
-    private double calculateScale() {
+    private double calculateScale(double[] values) {
         double total = 0;
-        for (Segment seg : getPlot().getSeriesSet()) {
-            total += seg.getValue().doubleValue();
-        }
+        for (int i = 0; i < values.length; i++) {
+			total += values[i];
+		}
 
         return (1d / total);
     }
+    
+	private double[] getValues() {
+		Set<Segment> segments = getPlot().getSeriesSet();
+		double[] result = new double[segments.size()];
+		int i = 0;
+		for (Segment seg : getPlot().getSeriesSet()) {
+			result[i] = seg.getValue().doubleValue();
+			i++;
+		}
+		return result;
+	}
 
     private PointF calculateLineEnd(float x, float y, float rad, float deg) {
         return calculateLineEnd(new PointF(x, y), rad, deg);

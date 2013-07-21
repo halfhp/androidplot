@@ -110,8 +110,13 @@ public class XYLegendWidget extends Widget {
             canvas.drawRect(iconRect, iconBorderPaint);
         }
 
-        float centeredTextOriginY = getRectCenterY(cellRect) + (FontUtils.getFontHeight(textPaint)/2);
-                canvas.drawText(text, iconRect.right + 2, centeredTextOriginY, textPaint);
+    	float centeredTextOriginY = getRectCenterY(cellRect) + (FontUtils.getFontHeight(textPaint)/2);
+
+    	if (textPaint.getTextAlign().equals(Paint.Align.RIGHT)) {
+	        canvas.drawText(text, iconRect.left - 2, centeredTextOriginY, textPaint);
+        } else {
+	        canvas.drawText(text, iconRect.right + 2, centeredTextOriginY, textPaint);
+        }
     }
 
     protected void drawRegionLegendIcon(Canvas canvas, RectF rect, XYRegionFormatter formatter) {

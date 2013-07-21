@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.androidplot</groupId>
         <artifactId>androidplot</artifactId>
-        <version>0.6.0-SNAPSHOT</version>
+        <version>0.6.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>com.androidplot</groupId>
             <artifactId>androidplot-core</artifactId>
-            <version>0.6.0-SNAPSHOT</version>
+            <version>0.6.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

@@ -95,52 +95,65 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
                 throw new UnsupportedOperationException("Not yet implemented.");
         }
 
-        // vertices of the first radial:
-        PointF r1Outer = calculateLineEnd(cx, cy, rad, startAngle);
-        PointF r1Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle);
+        // do we have a pie chart of less than 100%
+        if(Math.abs(sweep - 360f) > Float.MIN_VALUE) {
+            // vertices of the first radial:
+            PointF r1Outer = calculateLineEnd(cx, cy, rad, startAngle);
+            PointF r1Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle);
 
-        // vertices of the second radial:
-        PointF r2Outer = calculateLineEnd(cx, cy, rad, startAngle + sweep);
-        PointF r2Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle + sweep);
+            // vertices of the second radial:
+            PointF r2Outer = calculateLineEnd(cx, cy, rad, startAngle + sweep);
+            PointF r2Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle + sweep);
 
-        Path clip = new Path();
+            Path clip = new Path();
 
-        //float outerStroke = f.getOuterEdgePaint().getStrokeWidth();
-        //float halfOuterStroke = outerStroke / 2;
+            //float outerStroke = f.getOuterEdgePaint().getStrokeWidth();
+            //float halfOuterStroke = outerStroke / 2;
 
-        // leave plenty of room on the outside for stroked borders;
-        // necessary because the clipping border is ugly
-        // and cannot be easily anti aliased.  Really we only care about masking off the
-        // radial edges.
-        clip.arcTo(new RectF(bounds.left - rad,
-                bounds.top - rad,
-                bounds.right + rad,
-                bounds.bottom + rad),
-                startAngle, sweep);
-        clip.lineTo(cx, cy);
-        clip.close();
-        canvas.clipPath(clip);
+            // leave plenty of room on the outside for stroked borders;
+            // necessary because the clipping border is ugly
+            // and cannot be easily anti aliased.  Really we only care about masking off the
+            // radial edges.
+            clip.arcTo(new RectF(bounds.left - rad,
+                    bounds.top - rad,
+                    bounds.right + rad,
+                    bounds.bottom + rad),
+                    startAngle, sweep);
+            clip.lineTo(cx, cy);
+            clip.close();
+            canvas.clipPath(clip);
 
-        Path p = new Path();
-        p.arcTo(bounds, startAngle, sweep);
-        p.lineTo(r2Inner.x, r2Inner.y);
+            Path p = new Path();
+            p.arcTo(bounds, startAngle, sweep);
+            p.lineTo(r2Inner.x, r2Inner.y);
 
-        // sweep back to original angle:
-        p.arcTo(new RectF(
-                cx - donutSizePx,
-                cy - donutSizePx,
-                cx + donutSizePx,
-                cy + donutSizePx),
-                startAngle + sweep, -sweep);
+            // sweep back to original angle:
+            p.arcTo(new RectF(
+                    cx - donutSizePx,
+                    cy - donutSizePx,
+                    cx + donutSizePx,
+                    cy + donutSizePx),
+                    startAngle + sweep, -sweep);
 
-        p.close();
+            p.close();
 
-        // fill segment:
-        canvas.drawPath(p, f.getFillPaint());
+            // fill segment:
+            canvas.drawPath(p, f.getFillPaint());
 
-        // draw radial lines
-        canvas.drawLine(r1Inner.x, r1Inner.y, r1Outer.x, r1Outer.y, f.getRadialEdgePaint());
-        canvas.drawLine(r2Inner.x, r2Inner.y, r2Outer.x, r2Outer.y, f.getRadialEdgePaint());
+            // draw radial lines
+            canvas.drawLine(r1Inner.x, r1Inner.y, r1Outer.x, r1Outer.y, f.getRadialEdgePaint());
+            canvas.drawLine(r2Inner.x, r2Inner.y, r2Outer.x, r2Outer.y, f.getRadialEdgePaint());
+        }
+        else {
+            canvas.save(Canvas.CLIP_SAVE_FLAG);
+            Path chart = new Path();
+            chart.addCircle(cx, cy, rad, Path.Direction.CW);
+            Path inside = new Path();
+            inside.addCircle(cx, cy, donutSizePx, Path.Direction.CW);
+            canvas.clipPath(inside, Region.Op.DIFFERENCE);
+            canvas.drawPath(chart, f.getFillPaint());
+            canvas.restore();
+        }
 
         // draw inner line:
         canvas.drawCircle(cx, cy, donutSizePx, f.getInnerEdgePaint());

@@ -83,14 +83,11 @@ public class BarPlotExampleActivity extends Activity
     Number[] series1Numbers = series1Numbers10;
     Number[] series2Numbers = series2Numbers10;
 
-    private MyBarFormatter formatter1 =
-            new MyBarFormatter(Color.argb(200, 100, 150, 100), Color.LTGRAY);
+    private MyBarFormatter formatter1;
 
-    private MyBarFormatter formatter2 =
-            new MyBarFormatter(Color.argb(200, 100, 100, 150), Color.LTGRAY);
+    private MyBarFormatter formatter2;
 
-    private MyBarFormatter selectionFormatter =
-            new MyBarFormatter(Color.YELLOW, Color.WHITE);
+    private MyBarFormatter selectionFormatter;
 
     private TextLabelWidget selectionWidget;
 
@@ -105,6 +102,10 @@ public class BarPlotExampleActivity extends Activity
 
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+
+        formatter1 = new MyBarFormatter(Color.argb(200, 100, 150, 100), Color.LTGRAY);
+        formatter2 = new MyBarFormatter(Color.argb(200, 100, 100, 150), Color.LTGRAY);
+        selectionFormatter = new MyBarFormatter(Color.YELLOW, Color.WHITE);
 
         selectionWidget = new TextLabelWidget(plot.getLayoutManager(), NO_SELECTION_TXT,
                 new SizeMetrics(

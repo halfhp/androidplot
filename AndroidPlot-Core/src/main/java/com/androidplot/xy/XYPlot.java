@@ -513,10 +513,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @param max
      */
     private Number ApplyUserMinMax(Number value, Number min, Number max) {
-        value = (((min == null) || (value.doubleValue() > min.doubleValue()))
+        value = (((min == null) || (value == null) || (value.doubleValue() > min.doubleValue()))
                 ? value
                 : min);
-        value = (((max == null) || (value.doubleValue() < max.doubleValue()))
+        value = (((max == null) || (value == null) || (value.doubleValue() < max.doubleValue()))
                 ? value
                 : max);
         return value;

@@ -106,7 +106,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
      * @return
      */
     @SuppressWarnings("UnusedParameters")
-    protected T getFormatter(int index, XYSeries series) {
+    public T getFormatter(int index, XYSeries series) {
         return getFormatter(series);
     }
     

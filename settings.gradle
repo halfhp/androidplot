@@ -1,0 +1,2 @@
+include ':AndroidPlot-Core'
+include ':Examples:DemoApp'

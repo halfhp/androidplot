@@ -410,9 +410,8 @@ public class BarPlotExampleActivity extends Activity
          * @param series XYSeries to which the point being rendered belongs.
          * @return
          */
-        //@Override
-        // TODO: figure out why using @Override screws up the Maven builds
-        protected MyBarFormatter getFormatter(int index, XYSeries series) { 
+        @Override
+        public MyBarFormatter getFormatter(int index, XYSeries series) { 
             if(selection != null &&
                     selection.second == series && 
                     selection.first == index) {

@@ -97,4 +97,9 @@ public class YPositionMetric extends PositionMetric<YLayoutStyle> {
                 throw new IllegalArgumentException("Unsupported LayoutType: " + this.getLayoutType());
         }
     }
+
+    @Override
+    public void setLayoutType(YLayoutStyle layoutType) {
+        super.setLayoutType(layoutType);
+    }
 }

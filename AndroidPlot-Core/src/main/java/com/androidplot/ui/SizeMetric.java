@@ -56,4 +56,8 @@ public class SizeMetric extends LayoutMetric<SizeLayoutType> {
         }
     }
 
+    @Override
+    public void setLayoutType(SizeLayoutType layoutType) {
+        super.setLayoutType(layoutType);
+    }
 }

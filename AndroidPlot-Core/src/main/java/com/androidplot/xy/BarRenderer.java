@@ -285,7 +285,9 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 	        		}
 	        		canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, formatter.getBorderPaint());
 	        		if(plf != null && pointLabeler != null) {
-	                    canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, b.intY + plf.vOffset, plf.getTextPaint());
+	                    //canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, b.intY + plf.vOffset, plf.getTextPaint());
+                        // b.intY should be replaced by top as Text label should be drawn on top of each bar
+                        canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, top + plf.vOffset, plf.getTextPaint());
 	                }
 		        	bottom = top;
 	        	}

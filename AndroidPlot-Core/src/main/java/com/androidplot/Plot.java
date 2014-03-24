@@ -317,7 +317,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
 
         layoutManager.onPostInit();
-        Log.d(TAG, "AndroidPlot RenderMode: " + renderMode);
+        //Log.d(TAG, "AndroidPlot RenderMode: " + renderMode);
         if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
             renderThread = new Thread(new Runnable() {
                 @Override

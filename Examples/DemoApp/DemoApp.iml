@@ -4,9 +4,10 @@
     <facet type="android" name="Android">
       <configuration>
         <option name="RUN_PROCESS_RESOURCES_MAVEN_TASK" value="false" />
-        <includeSystemProguardFile>false</includeSystemProguardFile>
+        <proGuardCfgFiles>
+          <file>file:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/tools/proguard/proguard-android.txt</file>
+        </proGuardCfgFiles>
         <includeAssetsFromLibraries>true</includeAssetsFromLibraries>
-        <resOverlayFolders />
       </configuration>
     </facet>
   </component>
@@ -14,7 +15,7 @@
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/r" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />

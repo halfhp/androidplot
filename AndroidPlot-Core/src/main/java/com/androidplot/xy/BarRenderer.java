@@ -38,6 +38,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 	private BarWidthStyle widthStyle = BarWidthStyle.FIXED_WIDTH;  // default Width Style
     private float barWidth = 5;
     private float barGap = 1;
+    private Comparator<Bar> barComparator = new BarComparator();
 
     public enum BarRenderStyle {
         OVERLAID,           // bars are overlaid in descending y-val order (largest val in back)
@@ -91,6 +92,13 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 			break;
         }
     }
+    
+    /**
+     * Sets a {@link Comparator} used for sorting bars.
+     */
+    public void setBarComparator(Comparator<Bar> barComparator) {
+      this.barComparator = barComparator;
+    }
 
     @Override
     public void doDrawLegendIcon(Canvas canvas, RectF rect, BarFormatter formatter) {
@@ -106,7 +114,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
      * @return
      */
     @SuppressWarnings("UnusedParameters")
-    protected T getFormatter(int index, XYSeries series) {
+    public T getFormatter(int index, XYSeries series) {
         return getFormatter(series);
     }
     
@@ -227,7 +235,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
     		 */
 			switch (renderStyle) {
 			case OVERLAID:
-				Collections.sort(barGroup.bars, new BarComparator());
+				Collections.sort(barGroup.bars, barComparator);
 				for (Bar b : barGroup.bars) {
 					BarFormatter formatter = b.formatter();
 			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
@@ -248,7 +256,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 			case SIDE_BY_SIDE:
 				int width = (int) barGroup.width / barGroup.bars.size();
 				int leftX = barGroup.leftX;
-				Collections.sort(barGroup.bars, new BarComparator());
+				Collections.sort(barGroup.bars, barComparator);
 				for (Bar b : barGroup.bars) {
 					BarFormatter formatter = b.formatter();
 			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
@@ -269,7 +277,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 				break;
 			case STACKED:
 				int bottom = (int) barGroup.plotArea.bottom;
-				Collections.sort(barGroup.bars, new BarComparator());
+				Collections.sort(barGroup.bars, barComparator);
 				for (Bar b : barGroup.bars) {
 					BarFormatter formatter = b.formatter();
 			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
@@ -285,7 +293,9 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 	        		}
 	        		canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, formatter.getBorderPaint());
 	        		if(plf != null && pointLabeler != null) {
-	                    canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, b.intY + plf.vOffset, plf.getTextPaint());
+	                    //canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, b.intY + plf.vOffset, plf.getTextPaint());
+                        // b.intY should be replaced by top as Text label should be drawn on top of each bar
+                        canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, top + plf.vOffset, plf.getTextPaint());
 	                }
 		        	bottom = top;
 	        	}
@@ -298,13 +308,13 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
     		
     }
     
-    private class Bar {
-		public XYSeries series;
-		public int seriesIndex;
-		public double yVal, xVal;
-		public int intX, intY;
-		public float pixX, pixY;
-		public BarGroup barGroup;
+    public class Bar {
+		public final XYSeries series;
+		public final int seriesIndex;
+		public final double yVal, xVal;
+		public final int intX, intY;
+		public final float pixX, pixY;
+		protected BarGroup barGroup;
     	
     	public Bar(XYSeries series, int seriesIndex, RectF plotArea) {
 			this.series = series;

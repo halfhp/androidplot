@@ -76,10 +76,10 @@ public class TextLabelWidget extends Widget {
      * Sets the dimensions of the widget to exactly contain the text contents
      */
     public void pack() {
-        Log.d(TAG, "Packing...");
+        //Log.d(TAG, "Packing...");
         Rect size = FontUtils.getStringDimensions(text, getLabelPaint());
         if(size == null) {
-            Log.w(TAG, "Attempt to pack empty text.");
+            //Log.w(TAG, "Attempt to pack empty text.");
             return;
         }
         switch(orientation) {
@@ -176,7 +176,7 @@ public class TextLabelWidget extends Widget {
     }
 
     public void setText(String text) {
-        Log.d(TAG, "Setting textLabel to: " + text);
+        //Log.d(TAG, "Setting textLabel to: " + text);
         this.text = text;
         if(autoPackEnabled) {
             pack();

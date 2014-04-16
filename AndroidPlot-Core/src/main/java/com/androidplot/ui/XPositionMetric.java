@@ -67,4 +67,9 @@ public class XPositionMetric extends PositionMetric<XLayoutStyle> {
                 throw new IllegalArgumentException("Unsupported LayoutType: " + this.getLayoutType());
         }
     }
+
+    @Override
+    public void setLayoutType(XLayoutStyle layoutType) {
+        super.setLayoutType(layoutType);
+    }
 }

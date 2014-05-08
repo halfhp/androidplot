@@ -70,6 +70,8 @@ public class ListViewActivity extends Activity {
             Plot p = (XYPlot) v.findViewById(R.id.xyplot);
             Random generator = new Random();
 
+            p.setTitle("plot" + pos);
+
             for (int k = 0; k < NUM_SERIES_PER_PLOT; k++) {
                 ArrayList<Number> nums = new ArrayList<Number>();
                 for (int j = 0; j < NUM_POINTS_PER_SERIES; j++) {
@@ -90,6 +92,7 @@ public class ListViewActivity extends Activity {
                         Color.rgb(new Double(rp * 255).intValue(), new Double(gp * 255).intValue(), new Double(bp * 255).intValue()),
                         null, null));
             }
+            p.redraw();
             return v;
         }
     }

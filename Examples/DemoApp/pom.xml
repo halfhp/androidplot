@@ -40,6 +40,8 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
+                    <!-- uprev to 3.8.x to work with Mvn 3.1.x and later.
+                        leaving at 3.6.0 until I can update the build server -->
                     <version>3.6.0</version>
                     <extensions>true</extensions>
                 </plugin>

@@ -111,47 +111,6 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-
-            
-            
-            <plugin>
-                <groupId>com.pyx4me</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
-                <version>2.0.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>proguard</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <obfuscate>true</obfuscate>
-                    <options>
-                        <option>-allowaccessmodification</option>
-                        <option>-keep public class * {public *;}</option>
-                        <option>-keepclassmembers enum * {public static **[] values();public static ** valueOf(java.lang.String);}</option>
-                        <option>-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod</option>
-                    </options>
-                    <!--<injar>${project.build.finalName}.jar</injar>
-                    <outjar>obfuscated/${project.build.finalName}-release.jar</outjar>-->
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                    <libs>
-                        <!--<lib>${java.home}/lib/rt.jar</lib>-->
-                        <lib>${path.to.rt.jar}</lib>
-                    </libs>
-                    <addMavenDescriptor>false</addMavenDescriptor>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.7</version>
-                <inherited>false</inherited>
-                <configuration>
-                    <skip>false</skip>
-                </configuration>
-            </plugin>
         </plugins>
      
     </build>

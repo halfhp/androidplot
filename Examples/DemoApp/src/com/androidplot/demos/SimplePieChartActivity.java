@@ -19,6 +19,8 @@ package com.androidplot.demos;
 import android.app.Activity;
 import android.graphics.*;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import com.androidplot.pie.PieChart;
@@ -51,6 +53,23 @@ public class SimplePieChartActivity extends Activity
 
         // initialize our XYPlot reference:
         pie = (PieChart) findViewById(R.id.mySimplePieChart);
+
+        // detect segment clicks:
+        pie.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                PointF click = new PointF(motionEvent.getX(), motionEvent.getY());
+                if(pie.getPieWidget().containsPoint(click)) {
+                    Segment segment = pie.getRenderer(PieRenderer.class).getContainingSegment(click);
+                    if(segment != null) {
+                        // handle the segment click...for now, just print
+                        // the clicked segment's title to the console:
+                        System.out.println("Clicked Segment: " + segment.getTitle());
+                    }
+                }
+                return false;
+            }
+        });
 
 
         donutSizeSeekBar = (SeekBar) findViewById(R.id.donutSizeSeekBar);

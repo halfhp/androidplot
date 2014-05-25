@@ -25,7 +25,7 @@
 
     <groupId>com.androidplot</groupId>
     <artifactId>androidplot</artifactId>
-    <version>0.6.1-SNAPSHOT</version>
+    <version>0.6.1</version>
     <name>AndroidPlot-Parent</name>
     <description>A charting library for the Android platform</description>
     <url>http://androidplot.com</url>
@@ -91,7 +91,7 @@
         <connection>scm:git:https://bitbucket.org/androidplot/androidplot.git</connection>
         <developerConnection>scm:git:https://bitbucket.org/androidplot/androidplot.git</developerConnection>
         <url>https://bitbucket.org/androidplot/androidplot.git</url>
-      <tag>HEAD</tag>
+      <tag>0.6.1</tag>
   </scm>
 
     <build>

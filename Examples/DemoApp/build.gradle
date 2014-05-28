@@ -7,19 +7,35 @@ dependencies {
 
 android {
     compileSdkVersion theCompileSdkVersion
-    buildToolsVersion "${theBuildToolsVersion}"
+    buildToolsVersion theBuildToolsVersion
 	
 	sourceSets {
 		main {
 			manifest.srcFile 'AndroidManifest.xml'
-			java.srcDirs = ['src/main/java/']
+			java.srcDirs = ['src']
 			resources.srcDirs = ['src']
 			aidl.srcDirs = ['src']
-			renderscript.srcDirs = ['src']
+			/*renderscript.srcDirs = ['src']*/
 			res.srcDirs = ['res']
 			assets.srcDirs = ['assets']
 		}
 		
 		instrumentTest.setRoot('test')
 	}
+
+    /**
+     * TODO: uncomment this and address all the lint issues.
+     */
+    lintOptions {
+        abortOnError false
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.8.+'
+    }
 }

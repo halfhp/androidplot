@@ -5,6 +5,7 @@
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="android" url="file://$PROJECT_DIR$/AndroidPlot-Core/src/AndroidManifest.xml" />
+    <file type="android" url="file://$PROJECT_DIR$/DemoApp" />
     <file type="android" url="file://$PROJECT_DIR$/Examples/DemoApp" />
     <file type="android" url="file://$PROJECT_DIR$/Tests/AndroidManifest.xml" />
   </component>
@@ -31,7 +32,6 @@
       <list>
         <option value="$PROJECT_DIR$/AndroidPlot-Lib/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/Examples/DemoApp/pom.xml" />
       </list>
     </option>
   </component>

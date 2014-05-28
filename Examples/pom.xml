@@ -34,20 +34,6 @@
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
         </dependency>
-        <!--<dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android</artifactId>
-            <version>2.1_r1</version>
-            <scope>provided</scope>
-        </dependency>-->
-        <!-- TODO: figure out how to use this dependency without breaking the clean target;
-        used as-is, the clean target can fail because the dependency is erased by maven.
-        <dependency>
-            <groupId>com.androidplot</groupId>
-            <artifactId>androidplot-core</artifactId>
-            <version>${applicationVersion}</version>
-        </dependency>
-        -->
     </dependencies>
 
     <build>
@@ -65,42 +51,14 @@
                         
                         <configuration>
                             <target name="build-examples">
-                                <!--
-                                <property name="key.store" value="test"/>
-                                <property name="key.alias" value="test"/>
-                                -->
-                                <!--<property name="sdk.dir" value="C:/android-sdk"/>-->
                                 <property environment="env"/>
                                 <property name="sdk.dir" value="${env.ANDROID_HOME}"/>
-                                <!-- todo: include only the release jar, not everything inside
-                                           the artifacts dir.-->
-                                <!--<property name="jar.libs.dir" value="../../AndroidPlot-Core/target/obfuscated/"/>-->
                                 <property name="build.compiler" value="extJavac"/>
                                 <property environment="env"/>
                                 <property name="sdk.dir" value="${env.ANDROID_HOME}"/>
-                                <!--<property name="apkeystore" value="${env.AP_KEYSTORE}"/>-->
-                                
+
                                 <!-- DemoApp-->
                                 <ant antfile="build.xml" target="debug" dir="DemoApp"/>
-
-                                <!-- DynamicXYPlotExample-->
-                                <ant antfile="build.xml" target="debug" dir="DynamicXYPlotExample"/>
-
-                                <!-- HelperExample-->
-                                <ant antfile="build.xml" target="debug" dir="HelperExample"/>
-
-                                <!-- OrientationSensorExample-->
-                                <ant antfile="build.xml" target="debug" dir="OrientationSensorExample"/>
-
-                                <!-- SimpleXYPlotExample-->
-                                <ant antfile="build.xml" target="debug" dir="SimpleXYPlotExample"/>
-
-                                <!-- StepChartExample-->
-                                <ant antfile="build.xml" target="debug" dir="StepChartExample"/>
-
-                                <!-- TimedXYPlotExample
-                                <ant antfile="build.xml" target="debug" dir="TimedXYPlotExample"/>
-                                -->
                             </target>
 
                         </configuration>
@@ -119,25 +77,6 @@
 
                                 <!-- DemoApp-->
                                 <ant antfile="build.xml" target="clean" dir="DemoApp"/>
-
-                                <!-- DynamicXYPlotExample-->
-                                <ant antfile="build.xml" target="clean" dir="DynamicXYPlotExample"/>
-
-                                <!-- HelperExample-->
-                                <ant antfile="build.xml" target="clean" dir="HelperExample"/>
-
-                                <!-- OrientationSensorExample-->
-                                <ant antfile="build.xml" target="clean" dir="OrientationSensorExample"/>
-
-                                <!-- SimpleXYPlotExample-->
-                                <ant antfile="build.xml" target="clean" dir="SimpleXYPlotExample"/>
-
-                                <!-- StepChartExample-->
-                                <ant antfile="build.xml" target="clean" dir="StepChartExample"/>
-                                
-                                <!-- TimedXYPlotExample
-                                <ant antfile="build.xml" target="clean" dir="TimedXYPlotExample"/>
--->
                             </tasks>
                         </configuration>
                     </execution>

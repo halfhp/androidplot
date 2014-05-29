@@ -52,7 +52,7 @@
 
         <!-- Profile used for production builds -->
         <profile>
-            <id>prod</id>
+            <id>sign</id>
             <build>
                 <plugins>
                     <plugin>

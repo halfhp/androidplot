@@ -26,6 +26,7 @@
     <!--<version>${applicationVersion}</version>-->
     <name>AndroidPlot-Core</name>
     <description>AndroidPlot core library</description>
+    <packaging>aar</packaging>
 
     <profiles>
         <profile>
@@ -47,6 +48,29 @@
             <properties>
                 <path.to.rt.jar>${java.home}/../Classes/classes.jar</path.to.rt.jar>
             </properties>
+        </profile>
+
+        <!-- Profile used for production builds -->
+        <profile>
+            <id>prod</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
@@ -71,20 +95,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -114,7 +124,7 @@
 					</execution>
 				</executions>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.0.2</version>
@@ -122,7 +132,7 @@
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
@@ -137,14 +147,14 @@
                      causes the androidplot-demoapp which depends on androidplot-core to get confused
                      as far as which artifact to use and fails to build.  For now producing a .aar is a two
                      step procedure: #1 run the package directive and #2 run android:aar afterwards. -->
-                <!--<executions>
+                <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>aar</goal>
                         </goals>
                     </execution>
-                </executions>-->
+                </executions>
             </plugin>
         </plugins>
      

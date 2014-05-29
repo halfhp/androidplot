@@ -4,6 +4,7 @@
     <entry_points version="2.0" />
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="android" url="file://$PROJECT_DIR$/AndroidPlot-Core" />
     <file type="android" url="file://$PROJECT_DIR$/Examples/DemoApp" />
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>

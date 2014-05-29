@@ -132,14 +132,19 @@
                         <platform>16</platform>
                     </sdk>
                 </configuration>
-                <executions>
+                <!-- It's considered BadPractice(tm) to produce multiple artifacts from a single pom and
+                     in fact implicitly tying the production of the .aar artifact to the package phase
+                     causes the androidplot-demoapp which depends on androidplot-core to get confused
+                     as far as which artifact to use and fails to build.  For now producing a .aar is a two
+                     step procedure: #1 run the package directive and #2 run android:aar afterwards. -->
+                <!--<executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>aar</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions>-->
             </plugin>
         </plugins>
      

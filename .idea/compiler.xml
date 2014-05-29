@@ -23,10 +23,13 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="androidplot-core" />
+        <module name="AndroidPlot-Core" />
         <module name="androidplot-demoapp" />
+        <module name="DemoApp" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="AndroidPlot-Core" target="1.6" />
       <module name="androidplot-core" target="1.6" />
     </bytecodeTargetLevel>
   </component>

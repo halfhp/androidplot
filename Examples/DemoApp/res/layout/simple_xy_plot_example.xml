@@ -16,23 +16,23 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:androidplot="http://schemas.android.com/apk/res-auto"
+              xmlns:ap="http://schemas.android.com/apk/res-auto"
               style="@style/sample_activity">
 
     <com.androidplot.xy.XYPlot
-            androidplot:title="A Simple XY Plot"
-            androidplot:rangeLabel="range"
-            androidplot:domainLabel="domain"
+            ap:plotLabel="A Simple XY Plot"
+            ap:rangeLabel="range"
+            ap:domainLabel="domain"
             android:id="@+id/mySimpleXYPlot"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
             androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
             androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
-            androidplot:graphMarginTop="20dp"
-            androidplot:graphMarginBottom="25dp"
-            androidplot:graphMarginLeft="15dp"
-            androidplot:graphMarginRight="10dp"
+            ap:graphMarginTop="20dp"
+            ap:graphMarginBottom="25dp"
+            ap:graphMarginLeft="15dp"
+            ap:graphMarginRight="10dp"
             androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
             androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
             androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"

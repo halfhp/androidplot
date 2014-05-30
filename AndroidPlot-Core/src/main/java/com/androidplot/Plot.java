@@ -373,36 +373,57 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
             Field styleableFieldInR = null;
             TypedArray typedAttrs = null;
+
+            final String appPkg = getContext().getPackageName();
+            Class styleableClass = null;
             try {
                 /**
-                 * Use reflection to safely check for the existence of styleable defs for Plot
-                 * and it's derivatives.  This safety check is necessary to avoid runtime exceptions
-                 * in apps that don't include Androidplot as a .aar and won't have access to
-                 * the resources defined in the core library.
+                 * Need to retrieve R$styleable.class dynamically to avoid exceptions
+                 * in environments where this class does not exist, such as .jar users
+                 * that have not merged the library's attrs.xml with their own.
                  */
-                String styleableName = getClass().getName().substring(BASE_PACKAGE.length());
-                styleableName = styleableName.replace('.', '_');
-                styleableFieldInR = R.styleable.class.getField(styleableName);
-            } catch (NoSuchFieldException e) {
+                styleableClass = Class.forName(appPkg + ".R$styleable");
+            } catch (ClassNotFoundException e) {
                 // nothing to do
             }
-            if (styleableFieldInR != null) {
-                try {
-                    // process derived class' attrs:
-                    int[] resIds = (int[]) styleableFieldInR.get(null);
-                    typedAttrs = getContext().obtainStyledAttributes(attrs, resIds, defStyle, 0);
-                    processAttrs(typedAttrs);
-                } catch (IllegalAccessException e) {
-                    // nothing to do
-                }
-            }
 
-            // if no derived class styleable was found, check for a base class styleable.
-            // otherwise, if the derived class styleable has already been parsed just use
-            // those since it also contains base attrs.
-            if(typedAttrs == null) {
+            if(styleableClass != null) {
+
+                /**
+                 * The Object cast below is an ugly hack to resolve an issue in IntelliJ & AndroidStudio:
+                 * http://stackoverflow.com/questions/18505973/android-studio-ambiguous-method-call-getclass
+                 */
+                String styleableName = ((Object) this).getClass()
+                        .getName().substring(BASE_PACKAGE.length());
+                styleableName = styleableName.replace('.', '_');
                 try {
-                    styleableFieldInR = R.styleable.class.getField(Plot.class.getSimpleName());
+                    /**
+                     * Use reflection to safely check for the existence of styleable defs for Plot
+                     * and it's derivatives.  This safety check is necessary to avoid runtime exceptions
+                     * in apps that don't include Androidplot as a .aar and won't have access to
+                     * the resources defined in the core library.
+                     */
+                    styleableFieldInR = styleableClass.getField(styleableName);
+                } catch (NoSuchFieldException e) {
+                    Log.d(TAG, "Styleable definition not found for: " + styleableName);
+                }
+                if (styleableFieldInR != null) {
+                    try {
+                        int[] resIds = (int[]) styleableFieldInR.get(null);
+                        typedAttrs = getContext().obtainStyledAttributes(attrs, resIds, defStyle, 0);
+                    } catch (IllegalAccessException e) {
+                        // nothing to do
+                    } finally {
+                        if (typedAttrs != null) {
+                            // apply derived class' attrs:
+                            processAttrs(typedAttrs);
+                            typedAttrs.recycle();
+                        }
+                    }
+                }
+
+                try {
+                    styleableFieldInR = styleableClass.getField(Plot.class.getSimpleName());
                     if (styleableFieldInR != null) {
                         int[] resIds = (int[]) styleableFieldInR.get(null);
                         typedAttrs = getContext().obtainStyledAttributes(attrs, resIds, defStyle, 0);
@@ -410,14 +431,14 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 } catch (IllegalAccessException e) {
                     // nothing to do
                 } catch (NoSuchFieldException e) {
-                    // nothing to do
+                    Log.d(TAG, "Styleable definition not found for: " + Plot.class.getSimpleName());
+                } finally {
+                    if (typedAttrs != null) {
+                        // apply base class' attrs:
+                        setTitle(typedAttrs.getString(R.styleable.Plot_plotLabel));
+                        typedAttrs.recycle();
+                    }
                 }
-            }
-
-            if(typedAttrs != null) {
-                // process base class' attrs and then recycle:
-                setTitle(typedAttrs.getString(R.styleable.Plot_title));
-                typedAttrs.recycle();
             }
 
             // then apply "configurator" attrs: (overrides any previously applied styleable attrs)

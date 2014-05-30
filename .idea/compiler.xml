@@ -2,39 +2,16 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
-    <excludeFromCompile>
-      <directory url="file://$PROJECT_DIR$/Examples/StepChartExample/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/Examples/SimpleXYPlotExample/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/Examples/TimeSeriesExample/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/Examples/OrientationSensorExample/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/Examples/DynamicXYPlotExample/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/Examples/HelperExample/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/Examples/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/Examples/DemoApp/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/Examples/TimedXYPlotExample/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/Examples/Quickstart/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/Examples/DemoApp/target/generated-sources/annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/Examples/DemoApp/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/AndroidPlot-Core/target/generated-sources/annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/AndroidPlot-Core/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/AndroidPlot-Core/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
-    </excludeFromCompile>
-    <resourceExtensions>
-      <entry name=".+\.(properties|xml|html|dtd|tld)" />
-      <entry name=".+\.(gif|png|jpeg|jpg)" />
-    </resourceExtensions>
+    <resourceExtensions />
     <wildcardResourcePatterns>
-      <entry name="?*.properties" />
-      <entry name="?*.xml" />
-      <entry name="?*.gif" />
-      <entry name="?*.png" />
-      <entry name="?*.jpeg" />
-      <entry name="?*.jpg" />
-      <entry name="?*.html" />
-      <entry name="?*.dtd" />
-      <entry name="?*.tld" />
-      <entry name="?*.ftl" />
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
     </wildcardResourcePatterns>
     <annotationProcessing>
       <profile default="true" name="Default" enabled="false">
@@ -46,10 +23,13 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="androidplot-core" />
+        <module name="AndroidPlot-Core" />
+        <module name="androidplot-demoapp" />
         <module name="DemoApp" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="AndroidPlot-Core" target="1.6" />
       <module name="androidplot-core" target="1.6" />
     </bytecodeTargetLevel>
   </component>

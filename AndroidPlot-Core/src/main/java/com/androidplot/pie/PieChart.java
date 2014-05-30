@@ -17,6 +17,7 @@
 package com.androidplot.pie;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
 import com.androidplot.ui.AnchorPosition;
@@ -78,7 +79,12 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
             loadAttrs(context, attrs);
         }*/
     }
-    
+
+    @Override
+    protected void processAttrs(TypedArray attrs) {
+        // TODO
+    }
+
     public PieWidget getPieWidget() {
         return pieWidget;
     }

@@ -49,6 +49,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private static final String XML_ATTR_PREFIX      = "androidplot";
     private static final String BASE_PACKAGE = "com.androidplot.";
 
+    private static final int DEFAULT_TITLE_WIDGET_TEXT_SIZE_SP = 10;
+
     public DisplayDimensions getDisplayDimensions() {
         return displayDims;
     }
@@ -309,6 +311,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         titleWidget.position(0, XLayoutStyle.RELATIVE_TO_CENTER, 0,
                 YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
 
+        // initialize attr defaults:
+        titleWidget.getLabelPaint().setTextSize(
+                PixelUtils.spToPix(DEFAULT_TITLE_WIDGET_TEXT_SIZE_SP));
+
         onPreInit();
         // make sure the title widget is always the topmost widget:
         layoutManager.moveToTop(titleWidget);
@@ -353,10 +359,21 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      * If a styleable is available for the derived class, this method will be invoked with those attrs.
      * The derived implementation is only responsible for setting derived class attributes, ie. it should
-     * not attempt to apply the Plot.title styleable attribute etc.
+     * not attempt to apply the Plot.title styleable attribute etc.  Do not invoke recycle() on attrs.
      * @param attrs Attrs for the derived class.
      */
     protected abstract void processAttrs(TypedArray attrs);
+
+    /**
+     * Apply base class attrs.
+     * @param attrs
+     */
+    private void processBaseAttrs(TypedArray attrs) {
+        setTitle(attrs.getString(R.styleable.Plot_plotLabel));
+        getTitleWidget().getLabelPaint().setTextSize(
+                attrs.getDimension(R.styleable.Plot_plotLabelTextSize,
+                        PixelUtils.spToPix(DEFAULT_TITLE_WIDGET_TEXT_SIZE_SP)));
+    }
 
     /**
      * Parse XML Attributes.  Should only be called once and at the end of the base class constructor.
@@ -434,8 +451,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                     Log.d(TAG, "Styleable definition not found for: " + Plot.class.getSimpleName());
                 } finally {
                     if (typedAttrs != null) {
-                        // apply base class' attrs:
-                        setTitle(typedAttrs.getString(R.styleable.Plot_plotLabel));
+                        // apply base attrs:
+                        processBaseAttrs(typedAttrs);
                         typedAttrs.recycle();
                     }
                 }

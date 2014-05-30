@@ -18,11 +18,14 @@
 <resources>
     <declare-styleable name="Plot">
         <attr name="plotLabel" format="string"/>
+        <attr name="plotLabelTextSize" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="xy.XYPlot" parent="@style/Plot">
         <attr name="domainLabel" format="string"/>
+        <attr name="domainLabelTextSize" format="dimension"/>
         <attr name="rangeLabel" format="string"/>
+        <attr name="rangeLabelTextSize" format="dimension"/>
         <attr name="graphMarginTop" format="dimension"/>
         <attr name="graphMarginBottom" format="dimension"/>
         <attr name="graphMarginLeft" format="dimension"/>

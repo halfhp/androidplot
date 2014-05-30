@@ -17,6 +17,7 @@
 package com.androidplot;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.*;
 import android.os.Build;
 import android.os.Looper;
@@ -36,6 +37,7 @@ import com.androidplot.util.PixelUtils;
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -45,9 +47,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         extends View implements Resizable{
     private static final String TAG = Plot.class.getName();
     private static final String XML_ATTR_PREFIX      = "androidplot";
-
-    private static final String ATTR_TITLE           = "title";
-    private static final String ATTR_RENDER_MODE     = "renderMode";
+    private static final String BASE_PACKAGE = "com.androidplot.";
 
     public DisplayDimensions getDisplayDimensions() {
         return displayDims;
@@ -224,7 +224,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     public Plot(Context context, String title, RenderMode mode) {
         super(context);
         this.renderMode = mode;
-        init(null, null);
+        init(null, null, 0);
         setTitle(title);
     }
 
@@ -246,7 +246,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Plot(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(context, attrs, 0);
     }
 
     /**
@@ -267,7 +267,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public Plot(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context, attrs);
+        init(context, attrs, defStyle);
     }
 
     /**
@@ -299,7 +299,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     protected abstract void onPreInit();
 
 
-    private void init(Context context, AttributeSet attrs) {
+    private void init(Context context, AttributeSet attrs, int defStyle) {
         PixelUtils.init(getContext());
         layoutManager = new LayoutManager();
         titleWidget = new TextLabelWidget(layoutManager, new SizeMetrics(25,
@@ -313,7 +313,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         // make sure the title widget is always the topmost widget:
         layoutManager.moveToTop(titleWidget);
         if(context != null && attrs != null) {
-            loadAttrs(attrs);
+            loadAttrs(attrs, defStyle);
         }
 
         layoutManager.onPostInit();
@@ -351,13 +351,76 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     /**
+     * If a styleable is available for the derived class, this method will be invoked with those attrs.
+     * The derived implementation is only responsible for setting derived class attributes, ie. it should
+     * not attempt to apply the Plot.title styleable attribute etc.
+     * @param attrs Attrs for the derived class.
+     */
+    protected abstract void processAttrs(TypedArray attrs);
+
+    /**
      * Parse XML Attributes.  Should only be called once and at the end of the base class constructor.
+     * The first-pass attempts to locate styleable attributes and apply those first.  After that,
+     * configurator-style attributes are applied, overriding any styleable attrs that may have
+     * been previously applied.
      *
      * @param attrs
      */
-    private void loadAttrs(AttributeSet attrs) {
+    private void loadAttrs(AttributeSet attrs, int defStyle) {
 
         if (attrs != null) {
+
+
+            Field styleableFieldInR = null;
+            TypedArray typedAttrs = null;
+            try {
+                /**
+                 * Use reflection to safely check for the existence of styleable defs for Plot
+                 * and it's derivatives.  This safety check is necessary to avoid runtime exceptions
+                 * in apps that don't include Androidplot as a .aar and won't have access to
+                 * the resources defined in the core library.
+                 */
+                String styleableName = getClass().getName().substring(BASE_PACKAGE.length());
+                styleableName = styleableName.replace('.', '_');
+                styleableFieldInR = R.styleable.class.getField(styleableName);
+            } catch (NoSuchFieldException e) {
+                // nothing to do
+            }
+            if (styleableFieldInR != null) {
+                try {
+                    // process derived class' attrs:
+                    int[] resIds = (int[]) styleableFieldInR.get(null);
+                    typedAttrs = getContext().obtainStyledAttributes(attrs, resIds, defStyle, 0);
+                    processAttrs(typedAttrs);
+                } catch (IllegalAccessException e) {
+                    // nothing to do
+                }
+            }
+
+            // if no derived class styleable was found, check for a base class styleable.
+            // otherwise, if the derived class styleable has already been parsed just use
+            // those since it also contains base attrs.
+            if(typedAttrs == null) {
+                try {
+                    styleableFieldInR = R.styleable.class.getField(Plot.class.getSimpleName());
+                    if (styleableFieldInR != null) {
+                        int[] resIds = (int[]) styleableFieldInR.get(null);
+                        typedAttrs = getContext().obtainStyledAttributes(attrs, resIds, defStyle, 0);
+                    }
+                } catch (IllegalAccessException e) {
+                    // nothing to do
+                } catch (NoSuchFieldException e) {
+                    // nothing to do
+                }
+            }
+
+            if(typedAttrs != null) {
+                // process base class' attrs and then recycle:
+                setTitle(typedAttrs.getString(R.styleable.Plot_title));
+                typedAttrs.recycle();
+            }
+
+            // then apply "configurator" attrs: (overrides any previously applied styleable attrs)
             // filter out androidplot prefixed attrs:
             HashMap<String, String> attrHash = new HashMap<String, String>();
             for (int i = 0; i < attrs.getAttributeCount(); i++) {

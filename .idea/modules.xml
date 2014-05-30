@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidPlot.iml" filepath="$PROJECT_DIR$/AndroidPlot.iml" />
       <module fileurl="file://$PROJECT_DIR$/AndroidPlot-Core/AndroidPlot-Core.iml" filepath="$PROJECT_DIR$/AndroidPlot-Core/AndroidPlot-Core.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" filepath="$PROJECT_DIR$/Examples/DemoApp/DemoApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/Examples/Examples.iml" filepath="$PROJECT_DIR$/Examples/Examples.iml" />
-      <module fileurl="file://$PROJECT_DIR$/androidplot.iml" filepath="$PROJECT_DIR$/androidplot.iml" />
     </modules>
   </component>
 </project>

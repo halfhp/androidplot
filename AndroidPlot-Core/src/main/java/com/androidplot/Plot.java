@@ -465,7 +465,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 String attrName = attrs.getAttributeName(i);
 
                 // case insensitive check to see if this attr begins with our prefix:
-                if (attrName.toUpperCase().startsWith(XML_ATTR_PREFIX.toUpperCase())) {
+                if (attrName != null && attrName.toUpperCase().startsWith(XML_ATTR_PREFIX.toUpperCase())) {
                     attrHash.put(attrName.substring(XML_ATTR_PREFIX.length() + 1), attrs.getAttributeValue(i));
                 }
             }

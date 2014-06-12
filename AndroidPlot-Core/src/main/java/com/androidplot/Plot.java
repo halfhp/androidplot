@@ -387,7 +387,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
         if (attrs != null) {
 
-
             Field styleableFieldInR = null;
             TypedArray typedAttrs = null;
 
@@ -400,12 +399,16 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                  * that have not merged the library's attrs.xml with their own.
                  */
                 styleableClass = Class.forName(appPkg + ".R$styleable");
+
             } catch (ClassNotFoundException e) {
-                // nothing to do
+                // when running as a preview in IntelliJ or AndroidStudio it seems that the package of R is
+                // something else; this fixes that issue:
+                if(isInEditMode()) {
+                    styleableClass = R.styleable.class;
+                }
             }
 
             if(styleableClass != null) {
-
                 /**
                  * The Object cast below is an ugly hack to resolve an issue in IntelliJ & AndroidStudio:
                  * http://stackoverflow.com/questions/18505973/android-studio-ambiguous-method-call-getclass
@@ -456,7 +459,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                         typedAttrs.recycle();
                     }
                 }
-            }
+            } /*else if(isInEditMode()) {
+                typedAttrs = getContext().obtainStyledAttributes(attrs, R.styleable.Plot, defStyle, 0);
+                processBaseAttrs(typedAttrs);
+                typedAttrs.recycle();
+            }*/
 
             // then apply "configurator" attrs: (overrides any previously applied styleable attrs)
             // filter out androidplot prefixed attrs:

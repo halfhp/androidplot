@@ -16,12 +16,14 @@
 
 package com.androidplot.xy;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.os.Build;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
 import com.androidplot.R;
@@ -32,6 +34,7 @@ import com.androidplot.util.PixelUtils;
 
 import java.text.Format;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -259,11 +262,20 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         yValueMarkers = new ArrayList<YValueMarker>();
 
         setDefaultBounds(new RectRegion(-1, 1, -1, 1));
+
+        // display some generic series data in editors that support it:
+        if(isInEditMode()) {
+            addSeries(new SimpleXYSeries(Arrays.asList(1, 2, 3, 3, 4), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Red"),
+                    new LineAndPointFormatter(Color.RED, null, null, null));
+            addSeries(new SimpleXYSeries(Arrays.asList(2, 1, 4, 2, 5), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Green"),
+                    new LineAndPointFormatter(Color.GREEN, null, null, null));
+            addSeries(new SimpleXYSeries(Arrays.asList(3, 3, 2, 3, 3), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Blue"),
+                    new LineAndPointFormatter(Color.BLUE, null, null, null));
+        }
     }
 
     @Override
     protected void processAttrs(TypedArray attrs) {
-
         String domainLabelAttr = attrs.getString(R.styleable.xy_XYPlot_domainLabel);
         if(domainLabelAttr != null) {
             setDomainLabel(domainLabelAttr);
@@ -297,6 +309,47 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         getGraphWidget().setMarginRight(attrs.getDimension(
                 R.styleable.xy_XYPlot_graphMarginRight,
                 getGraphWidget().getMarginRight()));
+
+        getGraphWidget().getDomainTickLabelPaint().setTextSize(attrs.getDimension(
+                R.styleable.xy_XYPlot_graphDomainTickLabelTextSize,
+                getGraphWidget().getDomainTickLabelPaint().getTextSize()));
+
+        getGraphWidget().getRangeTickLabelPaint().setTextSize(attrs.getDimension(
+                R.styleable.xy_XYPlot_graphRangeTickLabelTextSize,
+                getGraphWidget().getRangeTickLabelPaint().getTextSize()));
+
+        getGraphWidget().getDomainOriginTickLabelPaint().setTextSize(
+                attrs.getDimension(R.styleable.xy_XYPlot_graphDomainOriginTickLabelTextSize,
+                        getGraphWidget().getDomainOriginTickLabelPaint().getTextSize()));
+
+        getGraphWidget().getRangeOriginTickLabelPaint().setTextSize(
+                attrs.getDimension(R.styleable.xy_XYPlot_graphRangeOriginTickLabelTextSize,
+                        getGraphWidget().getRangeOriginTickLabelPaint().getTextSize()));
+
+        getLegendWidget().getTextPaint().setTextSize(
+                attrs.getDimension(R.styleable.xy_XYPlot_legendTextSize,
+                        getLegendWidget().getTextPaint().getTextSize()));
+
+        getLegendWidget().getIconSizeMetrics().getHeightMetric().setValue(
+                attrs.getDimension(R.styleable.xy_XYPlot_legendIconHeight,
+                        getLegendWidget().getIconSizeMetrics().getHeightMetric().getValue()));
+
+        getLegendWidget().getIconSizeMetrics().getWidthMetric().setValue(
+                attrs.getDimension(R.styleable.xy_XYPlot_legendIconWidth,
+                        getLegendWidget().getIconSizeMetrics().getWidthMetric().getValue()));
+
+        getLegendWidget().getHeightMetric().setValue(
+                attrs.getDimension(R.styleable.xy_XYPlot_legendHeight,
+                        getLegendWidget().getHeightMetric().getValue()));
+
+        getLegendWidget().getWidthMetric().setValue(
+                attrs.getDimension(R.styleable.xy_XYPlot_legendWidth,
+                        getLegendWidget().getWidthMetric().getValue()));
+
+        // while it's generally bad practice to retrieve an enum via ordinal value like this, i can think
+        // of no real-world scenario that would lead to a problem in this specific case:
+        getLegendWidget().setAnchor(AnchorPosition.values()[attrs.getInt(
+                R.styleable.xy_XYPlot_legendAnchorPosition, getLegendWidget().getAnchor().ordinal())]);
     }
 
     public void setGridPadding(float left, float top, float right, float bottom) {
@@ -331,7 +384,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
 
-    /**
+    /**                                                           `
      * Convenience method - wraps containsPoint(PointF).
      *
      * @param point

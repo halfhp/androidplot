@@ -48,30 +48,70 @@ public class XYGraphWidget extends Widget {
         this.domainLabelOrientation = domainLabelOrientation;
     }
 
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getDomainTickLabelPaintMap()}.
+     */
+    @Deprecated
     public Mapping<Paint, Number> getDomainLabelPaintMap() {
-        return domainLabelPaintMap;
+        return getDomainTickLabelPaintMap();
+    }
+
+    public Mapping<Paint, Number> getDomainTickLabelPaintMap() {
+        return domainTickLabelPaintMap;
+    }
+
+    /**
+     *
+     * @param domainLabelPaintMap
+     * @deprecated Since 0.6.2; Use {@link #setDomainTickLabelPaintMap(com.androidplot.util.Mapping)}.
+     */
+    @Deprecated
+    public void setDomainLabelPaintMap(Mapping<Paint, Number> domainLabelPaintMap) {
+        setDomainTickLabelPaintMap(domainLabelPaintMap);
     }
 
     /**
      * Set a mapping to override the Paint used to draw domain labels.  The mapping should
      * return null for values that should not be overridden.
-     * @param domainLabelPaintMap
+     * @param domainTickLabelPaintMap
      */
-    public void setDomainLabelPaintMap(Mapping<Paint, Number> domainLabelPaintMap) {
-        this.domainLabelPaintMap = domainLabelPaintMap;
+    public void setDomainTickLabelPaintMap(Mapping<Paint, Number> domainTickLabelPaintMap) {
+        this.domainTickLabelPaintMap = domainTickLabelPaintMap;
     }
 
+    public Mapping<Paint, Number> getRangeTickLabelPaintMap() {
+        return rangeTickLabelPaintMap;
+    }
+
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getRangeTickLabelPaintMap()}.
+     */
+    @Deprecated
     public Mapping<Paint, Number> getRangeLabelPaintMap() {
-        return rangeLabelPaintMap;
+        return rangeTickLabelPaintMap;
     }
 
     /**
      * Set a mapping to override the Paint used to draw range labels.  The mapping should
      * return null for values that should not be overridden.
-     * @param rangeLabelPaintMap
+     * @param rangeLabelTickPaintMap
      */
+    public void setRangeLabelTickPaintMap(Mapping<Paint, Number> rangeLabelTickPaintMap) {
+        this.rangeTickLabelPaintMap = rangeLabelTickPaintMap;
+    }
+
+    /**
+     *
+     * @param rangeLabelPaintMap
+     * @deprecated Since 0.6.2; Use {@link #setRangeLabelTickPaintMap(com.androidplot.util.Mapping)}.
+     */
+    @Deprecated
     public void setRangeLabelPaintMap(Mapping<Paint, Number> rangeLabelPaintMap) {
-        this.rangeLabelPaintMap = rangeLabelPaintMap;
+        setRangeLabelTickPaintMap(rangeLabelPaintMap);
     }
 
     /**
@@ -82,17 +122,23 @@ public class XYGraphWidget extends Widget {
     }
 
     private static final int MARKER_LABEL_SPACING = 2;
-    private static final int CURSOR_LABEL_SPACING = 2; // space between cursor
-    private static final String TAG = "AndroidPlot";
-                                                       // lines and label in
-                                                       // pixels
-    private float domainLabelWidth = 15; // how many pixels is the area
-                                         // allocated for domain labels
-    private float rangeLabelWidth = 41; // ...
-    private float domainLabelVerticalOffset = -5;
-    private float domainLabelHorizontalOffset = 0.0f;
-    private float rangeLabelHorizontalOffset = 1.0f;   // allows tweaking of text position
-    private float rangeLabelVerticalOffset = 0.0f;  // allows tweaking of text position
+
+    // space between cursor lines and label in pixels
+    private static final int CURSOR_LABEL_SPACING = 2;
+
+    // max size of domain tick labels  in pixels
+    private float domainTickLabelWidth = 15;
+
+    // ...
+    private float rangeTickLabelWidth = 41;
+    private float domainTickLabelVerticalOffset   = -5;
+    private float domainTickLabelHorizontalOffset = 0.0f;
+
+    // allows tweaking of text position
+    private float rangeTickLabelHorizontalOffset  = 1.0f;
+
+    // allows tweaking of text position
+    private float rangeTickLabelVerticalOffset    = 0.0f;
     
     private int ticksPerRangeLabel = 1;
     private int ticksPerDomainLabel = 1;
@@ -100,15 +146,15 @@ public class XYGraphWidget extends Widget {
     private float gridPaddingBottom = 0;
     private float gridPaddingLeft = 0;
     private float gridPaddingRight = 0;
-    private int domainLabelTickExtension = 5;
-    private int rangeLabelTickExtension = 5;
+    private int domainTickExtension = 5;
+    private int rangeTickExtension  = 5;
     private Paint gridBackgroundPaint;
     private Paint rangeGridLinePaint;
     private Paint rangeSubGridLinePaint;
     private Paint domainGridLinePaint;
     private Paint domainSubGridLinePaint;
-    private Paint domainLabelPaint;
-    private Paint rangeLabelPaint;
+    private Paint domainTickLabelPaint;
+    private Paint rangeTickLabelPaint;
     private Paint domainCursorPaint;
     private Paint rangeCursorPaint;
     private Paint cursorLabelPaint;
@@ -118,8 +164,8 @@ public class XYGraphWidget extends Widget {
     private Format domainValueFormat;
     private Paint domainOriginLinePaint;
     private Paint rangeOriginLinePaint;
-    private Paint domainOriginLabelPaint;
-    private Paint rangeOriginLabelPaint;
+    private Paint domainOriginTickLabelPaint;
+    private Paint rangeOriginTickLabelPaint;
     private RectF gridRect;
     private RectF paddedGridRect;
     private float domainCursorPosition;
@@ -134,52 +180,59 @@ public class XYGraphWidget extends Widget {
     private float rangeLabelOrientation;
     private float domainLabelOrientation;
 
-    private Mapping<Paint, Number> domainLabelPaintMap;
-    private Mapping<Paint, Number> rangeLabelPaintMap;
+    private Mapping<Paint, Number> domainTickLabelPaintMap;
+    private Mapping<Paint, Number> rangeTickLabelPaintMap;
 
-    // TODO: consider typing this manager with a special
-    // axisLabelRegionFormatter
-    // private ZHash<LineRegion, AxisValueLabelFormatter> domainLabelRegions;
-    // private ZHash<LineRegion, AxisValueLabelFormatter> rangeLabelRegions;
     private ZHash<RectRegion, AxisValueLabelFormatter> axisValueLabelRegions;
 
     {
         gridBackgroundPaint = new Paint();
         gridBackgroundPaint.setColor(Color.rgb(140, 140, 140));
         gridBackgroundPaint.setStyle(Paint.Style.FILL);
+
         rangeGridLinePaint = new Paint();
         rangeGridLinePaint.setColor(Color.rgb(180, 180, 180));
         rangeGridLinePaint.setAntiAlias(true);
         rangeGridLinePaint.setStyle(Paint.Style.STROKE);
+
         domainGridLinePaint = new Paint(rangeGridLinePaint);
         domainSubGridLinePaint = new Paint(domainGridLinePaint);
         rangeSubGridLinePaint = new Paint(rangeGridLinePaint);
+
         domainOriginLinePaint = new Paint();
         domainOriginLinePaint.setColor(Color.WHITE);
         domainOriginLinePaint.setAntiAlias(true);
+
         rangeOriginLinePaint = new Paint();
         rangeOriginLinePaint.setColor(Color.WHITE);
         rangeOriginLinePaint.setAntiAlias(true);
-        domainOriginLabelPaint = new Paint();
-        domainOriginLabelPaint.setColor(Color.WHITE);
-        domainOriginLabelPaint.setAntiAlias(true);
-        domainOriginLabelPaint.setTextAlign(Paint.Align.CENTER);
-        rangeOriginLabelPaint = new Paint();
-        rangeOriginLabelPaint.setColor(Color.WHITE);
-        rangeOriginLabelPaint.setAntiAlias(true);
-        rangeOriginLabelPaint.setTextAlign(Paint.Align.RIGHT);
-        domainLabelPaint = new Paint();
-        domainLabelPaint.setColor(Color.LTGRAY);
-        domainLabelPaint.setAntiAlias(true);
-        domainLabelPaint.setTextAlign(Paint.Align.CENTER);
-        rangeLabelPaint = new Paint();
-        rangeLabelPaint.setColor(Color.LTGRAY);
-        rangeLabelPaint.setAntiAlias(true);
-        rangeLabelPaint.setTextAlign(Paint.Align.RIGHT);
+
+        domainOriginTickLabelPaint = new Paint();
+        domainOriginTickLabelPaint.setColor(Color.WHITE);
+        domainOriginTickLabelPaint.setAntiAlias(true);
+        domainOriginTickLabelPaint.setTextAlign(Paint.Align.CENTER);
+
+        rangeOriginTickLabelPaint = new Paint();
+        rangeOriginTickLabelPaint.setColor(Color.WHITE);
+        rangeOriginTickLabelPaint.setAntiAlias(true);
+        rangeOriginTickLabelPaint.setTextAlign(Paint.Align.RIGHT);
+
+        domainTickLabelPaint = new Paint();
+        domainTickLabelPaint.setColor(Color.LTGRAY);
+        domainTickLabelPaint.setAntiAlias(true);
+        domainTickLabelPaint.setTextAlign(Paint.Align.CENTER);
+
+        rangeTickLabelPaint = new Paint();
+        rangeTickLabelPaint.setColor(Color.LTGRAY);
+        rangeTickLabelPaint.setAntiAlias(true);
+        rangeTickLabelPaint.setTextAlign(Paint.Align.RIGHT);
+
         domainCursorPaint = new Paint();
         domainCursorPaint.setColor(Color.YELLOW);
+
         rangeCursorPaint = new Paint();
         rangeCursorPaint.setColor(Color.YELLOW);
+
         cursorLabelPaint = new Paint();
         cursorLabelPaint.setColor(Color.YELLOW);
         cursorLabelBackgroundPaint = new Paint();
@@ -423,10 +476,10 @@ public class XYGraphWidget extends Widget {
     }
 
     private RectF getGridRect(RectF widgetRect) {
-        return new RectF(widgetRect.left + ((rangeAxisLeft)?rangeLabelWidth:1),
-                widgetRect.top + ((domainAxisBottom)?1:domainLabelWidth),
-                widgetRect.right - ((rangeAxisLeft)?1:rangeLabelWidth),
-                widgetRect.bottom - ((domainAxisBottom)?domainLabelWidth:1));
+        return new RectF(widgetRect.left + ((rangeAxisLeft)?rangeTickLabelWidth:1),
+                widgetRect.top + ((domainAxisBottom)?1:domainTickLabelWidth),
+                widgetRect.right - ((rangeAxisLeft)?1:rangeTickLabelWidth),
+                widgetRect.bottom - ((domainAxisBottom)?domainTickLabelWidth:1));
     }
 
     private RectF getPaddedGridRect(RectF gridRect) {
@@ -480,9 +533,9 @@ public class XYGraphWidget extends Widget {
             if (linePaint != null) {
                 if (domainAxisBottom){
                 canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom
-                        + domainLabelTickExtension, linePaint);
+                        + domainTickExtension, linePaint);
                 } else {
-                    canvas.drawLine(xPix, gridRect.top - domainLabelTickExtension, xPix,
+                    canvas.drawLine(xPix, gridRect.top - domainTickExtension, xPix,
                             gridRect.bottom , linePaint);
                 }
             }
@@ -490,20 +543,19 @@ public class XYGraphWidget extends Widget {
                 float fontHeight = FontUtils.getFontHeight(labelPaint);
                 float yPix;
                 if (domainAxisBottom){
-                    yPix = gridRect.bottom + domainLabelTickExtension
-                            + domainLabelVerticalOffset + fontHeight;
+                    yPix = gridRect.bottom + domainTickExtension
+                            + domainTickLabelVerticalOffset + fontHeight;
                 } else {
-                    yPix = gridRect.top - domainLabelTickExtension
-                            - domainLabelVerticalOffset;
+                    yPix = gridRect.top - domainTickExtension
+                            - domainTickLabelVerticalOffset;
                 }
-                drawTickText(canvas, XYAxisType.DOMAIN, xVal, xPix + domainLabelHorizontalOffset, yPix,
+                drawTickText(canvas, XYAxisType.DOMAIN, xVal,
+                        xPix + domainTickLabelHorizontalOffset, yPix,
                         labelPaint);
             }
         } else if (linePaint != null) {
-
             canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom,
                     linePaint);
-
         }
     }
 
@@ -512,23 +564,23 @@ public class XYGraphWidget extends Widget {
         if (!drawLineOnly) {
             if (linePaint != null) {
                 if (rangeAxisLeft){
-                canvas.drawLine(gridRect.left - rangeLabelTickExtension, yPix,
+                canvas.drawLine(gridRect.left - rangeTickExtension, yPix,
                         gridRect.right, yPix, linePaint);
                 } else {
                     canvas.drawLine(gridRect.left, yPix,
-                            gridRect.right + rangeLabelTickExtension, yPix, linePaint);
+                            gridRect.right + rangeTickExtension, yPix, linePaint);
                 }
             }
             if (labelPaint != null) {
                 float xPix;
                 if (rangeAxisLeft){
                     xPix = gridRect.left
-                            - (rangeLabelTickExtension + rangeLabelHorizontalOffset);
+                            - (rangeTickExtension + rangeTickLabelHorizontalOffset);
                 } else {
                     xPix = gridRect.right
-                            + (rangeLabelTickExtension + rangeLabelHorizontalOffset);
+                            + (rangeTickExtension + rangeTickLabelHorizontalOffset);
                 }
-                drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix - rangeLabelVerticalOffset,
+                drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix - rangeTickLabelVerticalOffset,
                         labelPaint);
             }
         } else if (linePaint != null) {
@@ -573,10 +625,10 @@ public class XYGraphWidget extends Widget {
                 domainOriginLinePaint.setTextAlign(Paint.Align.CENTER);
             }
 
-            Paint olp = domainLabelPaintMap != null ?
-                    domainLabelPaintMap.get(plot.getDomainOrigin()) : domainLabelPaint;
+            Paint olp = domainTickLabelPaintMap != null ?
+                    domainTickLabelPaintMap.get(plot.getDomainOrigin()) : domainTickLabelPaint;
             if(olp == null) {
-                olp = domainLabelPaint;
+                olp = domainTickLabelPaint;
             }
             drawDomainTick(canvas, domainOriginF, plot.getDomainOrigin()
                     .doubleValue(), olp, domainOriginLinePaint, false);
@@ -591,10 +643,10 @@ public class XYGraphWidget extends Widget {
                     - (i * domainStep.getStepPix())) {
                 xVal = plot.getDomainOrigin().doubleValue() - i
                         * domainStep.getStepVal();
-                Paint dlp = domainLabelPaintMap != null ?
-                        domainLabelPaintMap.get(xVal) : domainLabelPaint;
+                Paint dlp = domainTickLabelPaintMap != null ?
+                        domainTickLabelPaintMap.get(xVal) : domainTickLabelPaint;
                 if(dlp == null) {
-                    dlp = domainLabelPaint;
+                    dlp = domainTickLabelPaint;
                 }
                 if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
                     if (i % getTicksPerDomainLabel() == 0) {
@@ -617,10 +669,10 @@ public class XYGraphWidget extends Widget {
                 xVal = plot.getDomainOrigin().doubleValue() + i
                         * domainStep.getStepVal();
 
-                Paint dlp = domainLabelPaintMap != null ?
-                        domainLabelPaintMap.get(xVal) : domainLabelPaint;
+                Paint dlp = domainTickLabelPaintMap != null ?
+                        domainTickLabelPaintMap.get(xVal) : domainTickLabelPaint;
                 if(dlp == null) {
-                    dlp = domainLabelPaint;
+                    dlp = domainTickLabelPaint;
                 }
                 if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
 
@@ -661,10 +713,10 @@ public class XYGraphWidget extends Widget {
                 rangeOriginLinePaint.setTextAlign(Paint.Align.RIGHT);
             }
 
-            Paint olp = rangeLabelPaintMap != null ?
-                    rangeLabelPaintMap.get(plot.getRangeOrigin()) : rangeLabelPaint;
+            Paint olp = rangeTickLabelPaintMap != null ?
+                    rangeTickLabelPaintMap.get(plot.getRangeOrigin()) : rangeTickLabelPaint;
             if(olp == null) {
-                olp = rangeLabelPaint;
+                olp = rangeTickLabelPaint;
             }
             drawRangeTick(canvas, rangeOriginF, plot.getRangeOrigin()
                     .doubleValue(), olp,
@@ -680,10 +732,10 @@ public class XYGraphWidget extends Widget {
                 yVal = plot.getRangeOrigin().doubleValue() + i
                         * rangeStep.getStepVal();
 
-                Paint rlp = rangeLabelPaintMap != null ?
-                        rangeLabelPaintMap.get(yVal) : rangeLabelPaint;
+                Paint rlp = rangeTickLabelPaintMap != null ?
+                        rangeTickLabelPaintMap.get(yVal) : rangeTickLabelPaint;
                 if (rlp == null) {
-                    rlp = rangeLabelPaint;
+                    rlp = rangeTickLabelPaint;
                 }
                 if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
                     if (i % getTicksPerRangeLabel() == 0) {
@@ -708,10 +760,10 @@ public class XYGraphWidget extends Widget {
                 yVal = plot.getRangeOrigin().doubleValue() - i
                         * rangeStep.getStepVal();
 
-                Paint rlp = rangeLabelPaintMap != null ?
-                        rangeLabelPaintMap.get(yVal) : rangeLabelPaint;
+                Paint rlp = rangeTickLabelPaintMap != null ?
+                        rangeTickLabelPaintMap.get(yVal) : rangeTickLabelPaint;
                 if (rlp == null) {
-                    rlp = rangeLabelPaint;
+                    rlp = rangeTickLabelPaint;
                 }
                 if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
                     if (i % getTicksPerRangeLabel() == 0) {
@@ -896,52 +948,170 @@ public class XYGraphWidget extends Widget {
         canvas.drawPoint(point.x, point.y, paint);
     }
 
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getDomainTickLabelWidth()}.
+     */
+    @Deprecated
     public float getDomainLabelWidth() {
-        return domainLabelWidth;
+        return getDomainTickLabelWidth();
     }
 
+    public float getDomainTickLabelWidth() {
+        return domainTickLabelWidth;
+    }
+
+    /**
+     *
+     * @param domainLabelWidth
+     * @deprecated Since 0.6.2; Use {@link #setDomainTickLabelWidth(float)}.
+     */
+    @Deprecated
     public void setDomainLabelWidth(float domainLabelWidth) {
-        this.domainLabelWidth = domainLabelWidth;
+        setDomainTickLabelWidth(domainLabelWidth);
     }
 
+    public void setDomainTickLabelWidth(float domainTickLabelWidth) {
+        this.domainTickLabelWidth = domainTickLabelWidth;
+    }
+
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getRangeTickLabelWidth()}.
+     */
+    @Deprecated
     public float getRangeLabelWidth() {
-        return rangeLabelWidth;
+        return getRangeTickLabelWidth();
     }
 
+    public float getRangeTickLabelWidth() {
+        return rangeTickLabelWidth;
+    }
+
+    /**
+     *
+     * @param rangeLabelWidth
+     * @deprecated Since 0.6.2; Use {@link #setRangeTickLabelWidth(float)}.
+     */
     public void setRangeLabelWidth(float rangeLabelWidth) {
-        this.rangeLabelWidth = rangeLabelWidth;
+        setRangeTickLabelWidth(rangeLabelWidth);
     }
 
+    public void setRangeTickLabelWidth(float rangeTickLabelWidth) {
+        this.rangeTickLabelWidth = rangeTickLabelWidth;
+    }
+
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getDomainTickLabelVerticalOffset()}.
+     */
+    @Deprecated
     public float getDomainLabelVerticalOffset() {
-        return domainLabelVerticalOffset;
+        return getDomainTickLabelVerticalOffset();
     }
 
+    public float getDomainTickLabelVerticalOffset() {
+        return domainTickLabelVerticalOffset;
+    }
+
+    /**
+     *
+     * @param domainLabelVerticalOffset
+     * @deprecated Since 0.6.2; Use {@link #setDomainTickLabelVerticalOffset(float)}.
+     */
     public void setDomainLabelVerticalOffset(float domainLabelVerticalOffset) {
-        this.domainLabelVerticalOffset = domainLabelVerticalOffset;
+        setDomainTickLabelVerticalOffset(domainLabelVerticalOffset);
     }
 
+    public void setDomainTickLabelVerticalOffset(float domainTickLabelVerticalOffset) {
+        this.domainTickLabelVerticalOffset = domainTickLabelVerticalOffset;
+    }
+
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getDomainTickLabelHorizontalOffset()}.
+     */
+    @Deprecated
     public float getDomainLabelHorizontalOffset() {
-        return domainLabelHorizontalOffset;
+        return getDomainTickLabelHorizontalOffset();
     }
 
+    public float getDomainTickLabelHorizontalOffset() {
+        return domainTickLabelHorizontalOffset;
+    }
+
+    /**
+     *
+     * @param domainLabelHorizontalOffset
+     * @deprecated Since 0.6.2; Use {@link #setDomainTickLabelHorizontalOffset(float)}.
+     */
+    @Deprecated
     public void setDomainLabelHorizontalOffset(float domainLabelHorizontalOffset) {
-        this.domainLabelHorizontalOffset = domainLabelHorizontalOffset;
+        setDomainTickLabelHorizontalOffset(domainLabelHorizontalOffset);
     }
 
+    public void setDomainTickLabelHorizontalOffset(float domainTickLabelHorizontalOffset) {
+        this.domainTickLabelHorizontalOffset = domainTickLabelHorizontalOffset;
+    }
+
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getRangeTickLabelHorizontalOffset()}.
+     */
+    @Deprecated
     public float getRangeLabelHorizontalOffset() {
-        return rangeLabelHorizontalOffset;
+        return getRangeTickLabelHorizontalOffset();
     }
 
+    public float getRangeTickLabelHorizontalOffset() {
+        return rangeTickLabelHorizontalOffset;
+    }
+
+    /**
+     *
+     * @param rangeLabelHorizontalOffset
+     * @deprecated Since 0.6.2; Use {@link #setRangeTickLabelHorizontalOffset(float)}.
+     */
+    @Deprecated
     public void setRangeLabelHorizontalOffset(float rangeLabelHorizontalOffset) {
-        this.rangeLabelHorizontalOffset = rangeLabelHorizontalOffset;
+        setRangeTickLabelHorizontalOffset(rangeLabelHorizontalOffset);
     }
 
+    public void setRangeTickLabelHorizontalOffset(float rangeTickLabelHorizontalOffset) {
+        this.rangeTickLabelHorizontalOffset = rangeTickLabelHorizontalOffset;
+    }
+
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getRangeTickLabelVerticalOffset()}.
+     */
+    @Deprecated
     public float getRangeLabelVerticalOffset() {
-        return rangeLabelVerticalOffset;
+        return getRangeTickLabelVerticalOffset();
     }
 
+    public float getRangeTickLabelVerticalOffset() {
+        return rangeTickLabelVerticalOffset;
+    }
+
+    /**
+     *
+     * @param rangeLabelVerticalOffset
+     * @deprecated Since 0.6.2; Use {@link #setRangeTickLabelVerticalOffset(float)}.
+     */
+    @Deprecated
     public void setRangeLabelVerticalOffset(float rangeLabelVerticalOffset) {
-        this.rangeLabelVerticalOffset = rangeLabelVerticalOffset;
+        setRangeTickLabelVerticalOffset(rangeLabelVerticalOffset);
+    }
+
+    public void setRangeTickLabelVerticalOffset(float rangeTickLabelVerticalOffset) {
+        this.rangeTickLabelVerticalOffset = rangeTickLabelVerticalOffset;
     }
 
     public Paint getGridBackgroundPaint() {
@@ -952,20 +1122,60 @@ public class XYGraphWidget extends Widget {
         this.gridBackgroundPaint = gridBackgroundPaint;
     }
 
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getDomainTickLabelPaint()}.
+     */
+    @Deprecated
     public Paint getDomainLabelPaint() {
-        return domainLabelPaint;
+        return getDomainTickLabelPaint();
     }
 
+    public Paint getDomainTickLabelPaint() {
+        return domainTickLabelPaint;
+    }
+
+    /**
+     *
+     * @param domainLabelPaint
+     * @deprecated Since 0.6.2; Use {@link #setDomainTickLabelPaint(android.graphics.Paint)}.
+     */
+    @Deprecated
     public void setDomainLabelPaint(Paint domainLabelPaint) {
-        this.domainLabelPaint = domainLabelPaint;
+        setDomainTickLabelPaint(domainLabelPaint);
     }
 
+    public void setDomainTickLabelPaint(Paint domainTickLabelPaint) {
+        this.domainTickLabelPaint = domainTickLabelPaint;
+    }
+
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getRangeTickLabelPaint()}.
+     */
+    @Deprecated
     public Paint getRangeLabelPaint() {
-        return rangeLabelPaint;
+        return getRangeTickLabelPaint();
     }
 
+    public Paint getRangeTickLabelPaint() {
+        return rangeTickLabelPaint;
+    }
+
+    /**
+     *
+     * @param rangeLabelPaint
+     * @deprecated Since 0.6.2; Use {@link #setRangeTickLabelPaint(android.graphics.Paint)}.
+     */
+    @Deprecated
     public void setRangeLabelPaint(Paint rangeLabelPaint) {
-        this.rangeLabelPaint = rangeLabelPaint;
+        setRangeTickLabelPaint(rangeLabelPaint);
+    }
+
+    public void setRangeTickLabelPaint(Paint rangeTickLabelPaint) {
+        this.rangeTickLabelPaint = rangeTickLabelPaint;
     }
 
     /**
@@ -1046,20 +1256,60 @@ public class XYGraphWidget extends Widget {
         this.domainValueFormat = domainValueFormat;
     }
 
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getDomainTickExtension()}.
+     */
+    @Deprecated
     public int getDomainLabelTickExtension() {
-        return domainLabelTickExtension;
+        return getDomainTickExtension();
     }
 
+    public int getDomainTickExtension() {
+        return domainTickExtension;
+    }
+
+    /**
+     *
+     * @param domainLabelTickExtension
+     * @deprecated Since 0.6.2; Use {@link #setDomainTickExtension(int)}.
+     */
+    @Deprecated
     public void setDomainLabelTickExtension(int domainLabelTickExtension) {
-        this.domainLabelTickExtension = domainLabelTickExtension;
+        setDomainTickExtension(domainLabelTickExtension);
     }
 
+    public void setDomainTickExtension(int domainTickExtension) {
+        this.domainTickExtension = domainTickExtension;
+    }
+
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getRangeTickExtension()}.
+     */
+    @Deprecated
     public int getRangeLabelTickExtension() {
-        return rangeLabelTickExtension;
+        return getRangeTickExtension();
     }
 
+    public int getRangeTickExtension() {
+        return rangeTickExtension;
+    }
+
+    /**
+     *
+     * @param rangeLabelTickExtension
+     * @deprecated Since 0.6.2; Use {@link #setRangeTickExtension(int)}.
+     */
+    @Deprecated
     public void setRangeLabelTickExtension(int rangeLabelTickExtension) {
-        this.rangeLabelTickExtension = rangeLabelTickExtension;
+        setRangeTickExtension(rangeTickExtension);
+    }
+
+    public void setRangeTickExtension(int rangeTickExtension) {
+        this.rangeTickExtension = rangeTickExtension;
     }
 
     public int getTicksPerRangeLabel() {
@@ -1133,20 +1383,59 @@ public class XYGraphWidget extends Widget {
         this.rangeOriginLinePaint = rangeOriginLinePaint;
     }
 
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getDomainOriginTickLabelPaint()}.
+     */
     public Paint getDomainOriginLabelPaint() {
-        return domainOriginLabelPaint;
+        return getDomainOriginTickLabelPaint();
     }
 
+    public Paint getDomainOriginTickLabelPaint() {
+        return domainOriginTickLabelPaint;
+    }
+
+    /**
+     *
+     * @param domainOriginLabelPaint
+     * @deprecated Since 0.6.2; Use {@link #setDomainOriginTickLabelPaint(android.graphics.Paint)}.
+     */
+    @Deprecated
     public void setDomainOriginLabelPaint(Paint domainOriginLabelPaint) {
-        this.domainOriginLabelPaint = domainOriginLabelPaint;
+        setDomainOriginTickLabelPaint(domainOriginLabelPaint);
     }
 
+    public void setDomainOriginTickLabelPaint(Paint domainOriginTickLabelPaint) {
+        this.domainOriginTickLabelPaint = domainOriginTickLabelPaint;
+    }
+
+    /**
+     *
+     * @return
+     * @deprecated Since 0.6.2; Use {@link #getRangeOriginTickLabelPaint()}.
+     */
+    @Deprecated
     public Paint getRangeOriginLabelPaint() {
-        return rangeOriginLabelPaint;
+        return getRangeOriginTickLabelPaint();
     }
 
+    public Paint getRangeOriginTickLabelPaint() {
+        return rangeOriginTickLabelPaint;
+    }
+
+    /**
+     *
+     * @param rangeOriginLabelPaint
+     * @deprecated Since 0.6.2; Use {@link #setRangeOriginTickLabelPaint(android.graphics.Paint)}.
+     */
+    @Deprecated
     public void setRangeOriginLabelPaint(Paint rangeOriginLabelPaint) {
-        this.rangeOriginLabelPaint = rangeOriginLabelPaint;
+        setRangeOriginTickLabelPaint(rangeOriginLabelPaint);
+    }
+
+    public void setRangeOriginTickLabelPaint(Paint rangeOriginTickLabelPaint) {
+        this.rangeOriginTickLabelPaint = rangeOriginTickLabelPaint;
     }
 
     public void setCursorPosition(float x, float y) {

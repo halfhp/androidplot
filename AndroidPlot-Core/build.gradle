@@ -3,6 +3,12 @@ apply plugin: 'android-library'
 android {
     compileSdkVersion theCompileSdkVersion
     buildToolsVersion theBuildToolsVersion
+
+    defaultConfig {
+        versionCode 1
+        versionName "6.2"
+        minSdkVersion 4
+    }
 	
 	sourceSets {
 		main {

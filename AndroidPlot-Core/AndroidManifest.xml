@@ -1,4 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.androidplot"
-    android:versionCode="1"
-    android:versionName="1.0" />
+<!-- This file has been intentionally left empty; values should be
+set in android.defaultConfig in build.gradle wherever possible.-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.androidplot"/>

@@ -19,9 +19,11 @@ package com.androidplot.pie;
 import android.graphics.*;
 
 import com.androidplot.exception.PlotRenderException;
+import com.androidplot.ui.SeriesAndFormatterPair;
 import com.androidplot.ui.SeriesRenderer;
+import com.androidplot.ui.RenderStack;
 
-import java.util.Set;
+import java.util.List;
 
 public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormatter> {
 
@@ -43,13 +45,17 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     public PieRenderer(PieChart plot) {
         super(plot);
     }
-    
+
     public float getRadius(RectF rect) {
     	return  rect.width() < rect.height() ? rect.width() / 2 : rect.height() / 2;
     }
 
     @Override
-    public void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException {
+    public void onRender(Canvas canvas, RectF plotArea, Segment series, SegmentFormatter formatter, RenderStack stack) throws PlotRenderException {
+
+        // This renderer renders all series in one shot, so exclude any remaining series
+        // from causing subsequent invocations of onRender:
+        stack.disable(getClass());
 
         float radius = getRadius(plotArea);
         PointF origin = new PointF(plotArea.centerX(), plotArea.centerY());
@@ -57,21 +63,15 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         double[] values = getValues();
         double scale = calculateScale(values);
         float offset = startDeg;
-        Set<Segment> segments = getPlot().getSeriesSet();
-
-        //PointF lastRadial = calculateLineEnd(origin, radius, offset);
 
         RectF rec = new RectF(origin.x - radius, origin.y - radius, origin.x + radius, origin.y + radius);
         
         int i = 0;
-        for (Segment segment : segments) {
+        for (SeriesAndFormatterPair<Segment, ? extends SegmentFormatter> sfPair : getSeriesList()) {
             float lastOffset = offset;
             float sweep = (float) (scale * (values[i]) * 360);
             offset += sweep;
-            //PointF radial = calculateLineEnd(origin, radius, offset);
-            drawSegment(canvas, rec, segment, getPlot().getFormatter(segment, getClass()),
-                    radius, lastOffset, sweep);
-            //lastRadial = radial;
+            drawSegment(canvas, rec, sfPair.getSeries(), sfPair.getFormatter(), radius, lastOffset, sweep);
             i++;
         }
     }
@@ -106,9 +106,6 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
             PointF r2Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle + sweep);
 
             Path clip = new Path();
-
-            //float outerStroke = f.getOuterEdgePaint().getStrokeWidth();
-            //float halfOuterStroke = outerStroke / 2;
 
             // leave plenty of room on the outside for stroked borders;
             // necessary because the clipping border is ugly
@@ -196,11 +193,11 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     }
     
 	protected double[] getValues() {
-		Set<Segment> segments = getPlot().getSeriesSet();
-		double[] result = new double[segments.size()];
+        List<SeriesAndFormatterPair<Segment, ? extends SegmentFormatter>> seriesList = getSeriesList();
+		double[] result = new double[seriesList.size()];
 		int i = 0;
-		for (Segment seg : getPlot().getSeriesSet()) {
-			result[i] = seg.getValue().doubleValue();
+		for (SeriesAndFormatterPair<Segment, ? extends SegmentFormatter> sfPair : seriesList) {
+			result[i] = sfPair.getSeries().getValue().doubleValue();
 			i++;
 		}
 		return result;
@@ -263,18 +260,18 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 
         // find the segment whose starting and ending angle (degs) contains
         // the angle calculated above
-        Set<Segment> segments = getPlot().getSeriesSet();
+        List<SeriesAndFormatterPair<Segment, ? extends SegmentFormatter>> seriesList = getSeriesList();
         int i = 0;
         double[] values = getValues();
         double scale = calculateScale(values);
         float offset = startDeg;
-        for (Segment segment : segments) {
+        for (SeriesAndFormatterPair<Segment, ? extends SegmentFormatter> sfPair : seriesList) {
             float lastOffset = offset;
             float sweep = (float) (scale * (values[i]) * 360);
             offset += sweep;
 
             if(angle >= lastOffset && angle <= offset) {
-                return segment;
+                return sfPair.getSeries();
             }
             i++;
         }

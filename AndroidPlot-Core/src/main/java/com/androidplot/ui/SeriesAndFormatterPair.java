@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 AndroidPlot.com
+ * Copyright 2014 AndroidPlot.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,38 +14,28 @@
  *    limitations under the License.
  */
 
-package com.androidplot.pie;
+package com.androidplot.ui;
 
 import com.androidplot.Series;
 
 /**
- * An implementation of Series representing a segment in a pie chart.
+ * Defines an association between a Series and a Formatter.
  */
-public class Segment implements Series {
+public class SeriesAndFormatterPair<SeriesType extends Series, FormatterType extends Formatter> {
 
-    private String title;
+    private final SeriesType series;
+    private final FormatterType formatter;
 
-    private Number value;
-
-    public Segment(String title, Number value) {
-        this.title = title;
-        this.setValue(value);
+    public SeriesAndFormatterPair(SeriesType series, FormatterType formatter) {
+        this.series = series;
+        this.formatter = formatter;
     }
 
-    @Override
-    public String getTitle() {
-        return title;
+    public SeriesType getSeries() {
+        return series;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Number getValue() {
-        return value;
-    }
-
-    public void setValue(Number value) {
-        this.value = value;
+    public FormatterType getFormatter() {
+        return formatter;
     }
 }

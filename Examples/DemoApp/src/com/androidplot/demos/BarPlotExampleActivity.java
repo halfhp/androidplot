@@ -40,16 +40,10 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 
 import com.androidplot.LineRegion;
-import com.androidplot.ui.AnchorPosition;
-import com.androidplot.ui.SeriesRenderer;
-import com.androidplot.ui.SizeLayoutType;
-import com.androidplot.ui.SizeMetrics;
-import com.androidplot.ui.TextOrientationType;
+import com.androidplot.ui.*;
 import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.*;
-import com.androidplot.ui.XLayoutStyle;
-import com.androidplot.ui.YLayoutStyle;
 
 /**
  * The simplest possible example of using AndroidPlot to plot some data.
@@ -277,11 +271,7 @@ public class BarPlotExampleActivity extends Activity
     private void updatePlot() {
     	
     	// Remove all current series from each plot
-        Iterator<XYSeries> iterator1 = plot.getSeriesSet().iterator();
-        while(iterator1.hasNext()) { 
-        	XYSeries setElement = iterator1.next();
-        	plot.removeSeries(setElement);
-        }
+        plot.clear();
 
         // Setup our Series with the selected number of elements
         series1 = new SimpleXYSeries(Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Us");
@@ -321,8 +311,10 @@ public class BarPlotExampleActivity extends Activity
             double xDistance = 0;
             double yDistance = 0;
 
+
             // find the closest value to the selection:
-            for (XYSeries series : plot.getSeriesSet()) {
+            for (SeriesAndFormatterPair<XYSeries, ? extends XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
+                XYSeries series = sfPair.getSeries();
                 for (int i = 0; i < series.size(); i++) {
                     Number thisX = series.getX(i);
                     Number thisY = series.getY(i);
@@ -406,7 +398,7 @@ public class BarPlotExampleActivity extends Activity
 
         /**
          * Implementing this method to allow us to inject our
-         * special selection formatter.
+         * special selection getFormatter.
          * @param index index of the point being rendered.
          * @param series XYSeries to which the point being rendered belongs.
          * @return

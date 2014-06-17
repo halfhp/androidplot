@@ -71,19 +71,19 @@ public class StepRenderer extends XYSeriesRenderer<StepFormatter> {
     }
 
     @Override
-    public void doDrawLegendIcon(Canvas canvas, RectF rect, String text, StepFormatter formatter) {
+    public void doDrawLegendIcon(Canvas canvas, RectF rect, String text, StepFormatter getFormatter) {
         // horizontal icon:
         float centerY = rect.centerY();
         float centerX = rect.centerX();
-        canvas.drawLine(rect.left, rect.top, rect.right, rect.bottom, formatter.getLinePaint());
-        canvas.drawPoint(centerX, centerY, formatter.getVertexPaint());
-        //canvas.drawRect(rect, formatter.getLinePaint());
+        canvas.drawLine(rect.left, rect.top, rect.right, rect.bottom, getFormatter.getLinePaint());
+        canvas.drawPoint(centerX, centerY, getFormatter.getVertexPaint());
+        //canvas.drawRect(rect, getFormatter.getLinePaint());
 
     }
 
 
-    private void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, StepFormatter formatter) throws PlotRenderException {
-        beginSeries(canvas, plotArea, formatter);
+    private void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, StepFormatter getFormatter) throws PlotRenderException {
+        beginSeries(canvas, plotArea, getFormatter);
         //XYDataset series = bundle.getDataset();
         //int seriesIndex = bundle.getSeriesIndex();
         PointF thisPoint;
@@ -108,9 +108,9 @@ public class StepRenderer extends XYSeriesRenderer<StepFormatter> {
             } else {
                 thisPoint = null;
             }
-            drawPoint(canvas, thisPoint, plotArea, formatter);
+            drawPoint(canvas, thisPoint, plotArea, getFormatter);
         }
-        endSeries(canvas, plotArea, formatter);
+        endSeries(canvas, plotArea, getFormatter);
     }
 
     private void beginSeries(Canvas canvas, RectF plotArea, StepFormatter format) throws PlotRenderException {

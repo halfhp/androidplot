@@ -24,15 +24,20 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.androidplot.exception.PlotRenderException;
+import com.androidplot.ui.RenderStack;
+import com.androidplot.ui.SeriesAndFormatterPair;
+import com.androidplot.util.PixelUtils;
 import com.androidplot.util.ValPixConverter;
 
 /**
- * Renders a point as a Bar
+ * Renders the points in an XYSeries as bars.
  */
-public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
+public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRenderer<FormatterType> {
 
     private BarRenderStyle renderStyle = BarRenderStyle.OVERLAID;  // default Render Style
 	private BarWidthStyle widthStyle = BarWidthStyle.FIXED_WIDTH;  // default Width Style
@@ -111,49 +116,54 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
      * Can be overridden to return other BarFormatters as a result of touch events etc.
      * @param index index of the point being rendered.
      * @param series XYSeries to which the point being rendered belongs.
-     * @return
+     * @return The desired getFormatter or null to use the default.
      */
     @SuppressWarnings("UnusedParameters")
-    public T getFormatter(int index, XYSeries series) {
-        return getFormatter(series);
+    public FormatterType getFormatter(int index, XYSeries series) {
+        return null;
     }
-    
-    public void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException {
-        
-    	List<XYSeries> sl = getPlot().getSeriesListForRenderer(this.getClass());
+
+    @Override
+    public void onRender(Canvas canvas, RectF plotArea, XYSeries series,
+                         FormatterType barFormatter, RenderStack stack) throws PlotRenderException {
+
+        // get all the series associated with this renderer:
+        List<SeriesAndFormatterPair<XYSeries, ? extends FormatterType>> sfPairList = getSeriesList();
+
+        // this renderer uses special element-by-element z-indexing that results in
+        // all series associated with the renderer being rendered in a single pass, so
+        // we need to exclude the rest of the series on the render stack from being redrawn later:
+        stack.disable(getClass());
     	
     	TreeMap<Number, BarGroup> axisMap = new TreeMap<Number, BarGroup>();
     	
         // dont try to render anything if there's nothing to render.
-        if(sl == null) return;
+        if(sfPairList == null) return;
 
         /* 
          * Build the axisMap (yVal,BarGroup)... a TreeMap of BarGroups
          * BarGroups represent a point on the X axis where a single or group of bars need to be drawn.
          */
-        
-        // For each Series
-        for(XYSeries series : sl) { 
+        for(SeriesAndFormatterPair<XYSeries, ? extends FormatterType> thisPair : sfPairList) {
         	BarGroup barGroup;
         	
             // For each value in the series
-            for(int i = 0; i < series.size(); i++) {
+            for(int i = 0; i < thisPair.getSeries().size(); i++) {
             	
-               	if (series.getX(i) != null) {
+               	if (thisPair.getSeries().getX(i) != null) {
 
             		// get a new bar object
-            		Bar b = new Bar(series,i,plotArea);
+            		Bar bar = new Bar(thisPair.getSeries(), thisPair.getFormatter(),i,plotArea);
 	            	
             		// Find or create the barGroup
-	            	if (axisMap.containsKey(b.intX)) {
-	            		barGroup = axisMap.get(b.intX);
+	            	if (axisMap.containsKey(bar.intX)) {
+	            		barGroup = axisMap.get(bar.intX);
 	            	} else {
-	            		barGroup = new BarGroup(b.intX,plotArea);
-	            		axisMap.put(b.intX, barGroup);
+	            		barGroup = new BarGroup(bar.intX,plotArea);
+	            		axisMap.put(bar.intX, barGroup);
 	            	}
-	            	barGroup.addBar(b);
+	            	barGroup.addBar(bar);
             	}
-            	
             }
         }
 
@@ -179,16 +189,10 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 			gap = rough_width / 2;
 		}
 
-		//Log.d("PARAMTER","PLOT_WIDTH=" + plotArea.width());
-		//Log.d("PARAMTER","BAR_GROUPS=" + axisMap.size());
-		//Log.d("PARAMTER","ROUGH_WIDTH=" + rough_width);
-		//Log.d("PARAMTER","GAP=" + gap);
-
 		/* 
 		 * Calculate the dimensions of each barGroup and then draw each bar within it according to
 		 * the Render Style and Width Style. 
 		 */
-		
 		for(Number key : axisMap.keySet()) {
 
 			BarGroup barGroup = axisMap.get(key);
@@ -240,55 +244,55 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 			switch (renderStyle) {
 			case OVERLAID:
 				Collections.sort(barGroup.bars, barComparator);
-				for (Bar b : barGroup.bars) {
-					BarFormatter formatter = b.formatter();
+				for (Bar bar : barGroup.bars) {
+					BarFormatter formatter = bar.getFormatter();
 			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
 			        PointLabeler pointLabeler = null;
                 	if (formatter != null) {
                 		pointLabeler = formatter.getPointLabeler();
                 	}
 
-                	if (b.yVal<rangeOrigin){ // falling bar
-                		if (b.barGroup.width >= 2) {
-                			canvas.drawRect(b.barGroup.leftX, basePositionY, b.barGroup.rightX, b.intY, formatter.getFillPaint());
+                	if (bar.yVal<rangeOrigin){ // falling bar
+                		if (bar.barGroup.width >= 2) {
+                			canvas.drawRect(bar.barGroup.leftX, basePositionY, bar.barGroup.rightX, bar.intY, formatter.getFillPaint());
                 		}
-                		canvas.drawRect(b.barGroup.leftX, basePositionY, b.barGroup.rightX, b.intY, formatter.getBorderPaint());
+                		canvas.drawRect(bar.barGroup.leftX, basePositionY, bar.barGroup.rightX, bar.intY, formatter.getBorderPaint());
                 	} else { // rising bar
-                		if (b.barGroup.width >= 2) {
-                			canvas.drawRect(b.barGroup.leftX, b.intY, b.barGroup.rightX, basePositionY, formatter.getFillPaint());
+                		if (bar.barGroup.width >= 2) {
+                			canvas.drawRect(bar.barGroup.leftX, bar.intY, bar.barGroup.rightX, basePositionY, formatter.getFillPaint());
                 		}
-                		canvas.drawRect(b.barGroup.leftX, b.intY, b.barGroup.rightX, basePositionY, formatter.getBorderPaint());
+                		canvas.drawRect(bar.barGroup.leftX, bar.intY, bar.barGroup.rightX, basePositionY, formatter.getBorderPaint());
                 	}
 	        		if(plf != null && pointLabeler != null) {
-	                    canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, b.intY + plf.vOffset, plf.getTextPaint());
+	                    canvas.drawText(pointLabeler.getLabel(bar.series, bar.seriesIndex), bar.intX + plf.hOffset, bar.intY + plf.vOffset, plf.getTextPaint());
 	                }
 	        	}
 				break;
 			case SIDE_BY_SIDE:
-				int width = (int) barGroup.width / barGroup.bars.size();
+				int width = barGroup.width / barGroup.bars.size();
 				int leftX = barGroup.leftX;
 				Collections.sort(barGroup.bars, barComparator);
-				for (Bar b : barGroup.bars) {
-					BarFormatter formatter = b.formatter();
+				for (Bar bar : barGroup.bars) {
+					BarFormatter formatter = bar.getFormatter();
 			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
 			        PointLabeler pointLabeler = null;
                 	if (formatter != null) {
                 		pointLabeler = formatter.getPointLabeler();
                 	}
 
-                	if (b.yVal<rangeOrigin){ // falling value
-                		if (b.barGroup.width >= 2) {
-                			canvas.drawRect(leftX, basePositionY, leftX + width, b.intY, formatter.getFillPaint());
+                	if (bar.yVal<rangeOrigin){ // falling value
+                		if (bar.barGroup.width >= 2) {
+                			canvas.drawRect(leftX, basePositionY, leftX + width, bar.intY, formatter.getFillPaint());
                 		}
-                		canvas.drawRect(leftX, basePositionY, leftX + width, b.intY, formatter.getBorderPaint());
+                		canvas.drawRect(leftX, basePositionY, leftX + width, bar.intY, formatter.getBorderPaint());
                 	} else { // rising bar
-                		if (b.barGroup.width >= 2) {
-                			canvas.drawRect(leftX, b.intY, leftX + width, basePositionY, formatter.getFillPaint());
+                		if (bar.barGroup.width >= 2) {
+                			canvas.drawRect(leftX, bar.intY, leftX + width, basePositionY, formatter.getFillPaint());
                 		}
-                		canvas.drawRect(leftX, b.intY, leftX + width, basePositionY, formatter.getBorderPaint());
+                		canvas.drawRect(leftX, bar.intY, leftX + width, basePositionY, formatter.getBorderPaint());
                 	}
 	        		if(plf != null && pointLabeler != null) {
-	                    canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), leftX + width/2 + plf.hOffset, b.intY + plf.vOffset, plf.getTextPaint());
+	                    canvas.drawText(pointLabeler.getLabel(bar.series, bar.seriesIndex), leftX + width/2 + plf.hOffset, bar.intY + plf.vOffset, plf.getTextPaint());
 	                }
 	        		leftX = leftX + width;
 	        	}
@@ -297,7 +301,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 				int bottom = (int) barGroup.plotArea.bottom;
 				Collections.sort(barGroup.bars, barComparator);
 				for (Bar b : barGroup.bars) {
-					BarFormatter formatter = b.formatter();
+					BarFormatter formatter = b.getFormatter();
 			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
 			        PointLabeler pointLabeler = null;
                 	if (formatter != null) {
@@ -305,10 +309,10 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
                 	}
 	        		int height = (int) b.barGroup.plotArea.bottom - b.intY;
 	        		int top = bottom - height;
-	        		//Log.d("BAR", "top=" + top + " bottom=" + bottom + " height=" + height); 
 	    			if (b.barGroup.width >= 2) {
 	        			canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, formatter.getFillPaint());
 	        		}
+
 	        		canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, formatter.getBorderPaint());
 	        		if(plf != null && pointLabeler != null) {
 	                    //canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, b.intY + plf.vOffset, plf.getTextPaint());
@@ -321,21 +325,21 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 			default:
 				break;
 			}
-			
 		}
-    		
     }
     
     public class Bar {
-		public final XYSeries series;
+        public final XYSeries series;
+        private final FormatterType formatter;
 		public final int seriesIndex;
 		public final double yVal, xVal;
 		public final int intX, intY;
 		public final float pixX, pixY;
 		protected BarGroup barGroup;
     	
-    	public Bar(XYSeries series, int seriesIndex, RectF plotArea) {
+    	public Bar(XYSeries series, FormatterType formatter, int seriesIndex, RectF plotArea) {
 			this.series = series;
+            this.formatter = formatter;
 			this.seriesIndex = seriesIndex;
 			
 			this.xVal = series.getX(seriesIndex).doubleValue();
@@ -352,9 +356,11 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 				this.intY = (int) pixY;
 			}
 		}
-    	public BarFormatter formatter() {
-    		return getFormatter(seriesIndex, series);
-    	}
+
+        public FormatterType getFormatter() {
+            FormatterType f =  BarRenderer.this.getFormatter(seriesIndex, series);
+            return f != null ? f : formatter;
+        }
     }
     
     private class BarGroup {
@@ -379,6 +385,7 @@ public class BarRenderer<T extends BarFormatter> extends XYSeriesRenderer<T> {
 
     @SuppressWarnings("WeakerAccess")
     public class BarComparator implements Comparator<Bar>{
+
         @Override
         public int compare(Bar bar1, Bar bar2) {
 			switch (renderStyle) {

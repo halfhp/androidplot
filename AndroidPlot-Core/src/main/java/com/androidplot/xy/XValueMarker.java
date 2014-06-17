@@ -25,7 +25,7 @@ public class XValueMarker extends ValueMarker<YPositionMetric> {
     /**
      *
      * @param value
-     * @param text Set to null to use the plot's default formatter.
+     * @param text Set to null to use the plot's default getFormatter.
      */
     public XValueMarker(Number value, String text) {
         super(value, text, new YPositionMetric(3, YLayoutStyle.ABSOLUTE_FROM_TOP));
@@ -34,7 +34,7 @@ public class XValueMarker extends ValueMarker<YPositionMetric> {
     /**
      *
      * @param value
-     * @param text Set to null to use the plot's default formatter.
+     * @param text Set to null to use the plot's default getFormatter.
      * @param textPosition
      * @param linePaint
      * @param textPaint
@@ -47,7 +47,7 @@ public class XValueMarker extends ValueMarker<YPositionMetric> {
     /**
      *
      * @param value
-     * @param text Set to null to use the plot's default formatter.
+     * @param text Set to null to use the plot's default getFormatter.
      * @param textPosition
      * @param linePaint
      * @param textPaint

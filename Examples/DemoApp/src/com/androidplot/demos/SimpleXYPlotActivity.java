@@ -58,7 +58,7 @@ public class SimpleXYPlotActivity extends Activity
         // same as above
         XYSeries series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series2");
 
-        // Create a formatter to use for drawing a series using LineAndPointRenderer
+        // Create a getFormatter to use for drawing a series using LineAndPointRenderer
         // and configure it from xml:
         LineAndPointFormatter series1Format = new LineAndPointFormatter();
         series1Format.setPointLabelFormatter(new PointLabelFormatter());

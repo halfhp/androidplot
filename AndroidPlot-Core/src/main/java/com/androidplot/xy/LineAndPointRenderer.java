@@ -19,10 +19,10 @@ package com.androidplot.xy;
 import android.graphics.*;
 import android.util.Pair;
 import com.androidplot.exception.PlotRenderException;
+import com.androidplot.ui.RenderStack;
 import com.androidplot.util.ValPixConverter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Renders a point as a line with the vertices marked.  Requires 2 or more points to
@@ -35,17 +35,8 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     }
 
     @Override
-    public void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException {
-
-
-        List<XYSeries> seriesList = getPlot().getSeriesListForRenderer(this.getClass());
-        if (seriesList != null) {
-            for (XYSeries series : seriesList) {
-                //synchronized(series) {
-                    drawSeries(canvas, plotArea, series, getFormatter(series));
-                //}
-            }
-        }
+    public void onRender(Canvas canvas, RectF plotArea, XYSeries series, FormatterType formatter, RenderStack stack) throws PlotRenderException {
+        drawSeries(canvas, plotArea, series, formatter);
     }
 
     @Override
@@ -82,7 +73,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         PointF firstPoint = null;
         Paint  linePaint = formatter.getLinePaint();
 
-        //PointF lastDrawn = null;
         Path path = null;
         ArrayList<Pair<PointF, Integer>> points = new ArrayList<Pair<PointF, Integer>>(series.size());
         for (int i = 0; i < series.size(); i++) {
@@ -99,7 +89,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                         getPlot().getCalculatedMinY(),
                         getPlot().getCalculatedMaxY());
                 points.add(new Pair<PointF, Integer>(thisPoint, i));
-                //appendToPath(path, thisPoint, lastPoint);
             } else {
                 thisPoint = null;
             }

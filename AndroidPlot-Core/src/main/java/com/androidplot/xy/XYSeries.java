@@ -22,7 +22,7 @@ import com.androidplot.Series;
 /**
  * Represents a two dimensional series of data represented as xy values.
  */
-public interface XYSeries extends Series<Pair<Number, Number>> {
+public interface XYSeries extends Series {
 
     /**
      * @return Number of elements in this Series.

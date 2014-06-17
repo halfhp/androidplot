@@ -29,7 +29,6 @@ import com.androidplot.ui.*;
 import com.androidplot.ui.Formatter;
 import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TextLabelWidget;
-import com.androidplot.ui.widget.Widget;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.Configurator;
 import com.androidplot.util.DisplayDimensions;
@@ -53,6 +52,21 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     public DisplayDimensions getDisplayDimensions() {
         return displayDims;
+    }
+
+    /**
+     * Used for caching renderer instances.  Note that once a renderer is initialized it remains initialized
+     * for the life of the application; does not and should not be destroyed until the application exits.
+     */
+    public HashMap<Class<? extends RendererType>, RendererType> getRenderers() {
+        return renderers;
+    }
+
+    /**
+     * Associates lists series and getFormatter pairs with the class of the Renderer used to render them.
+     */
+    public ArrayList<SeriesAndFormatterPair<SeriesType, FormatterType>> getSeriesRegistry() {
+        return seriesRegistry;
     }
 
     public enum BorderStyle {
@@ -123,16 +137,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     // used to get rid of flickering when drawing offScreenBitmap to the visible Canvas.
     private final Object renderSynch = new Object();
 
-    /**
-     * Used for caching renderer instances.  Note that once a renderer is initialized it remains initialized
-     * for the life of the application; does not and should not be destroyed until the application exits.
-     */
-    private LinkedList<RendererType> renderers;
+    private HashMap<Class<? extends RendererType>, RendererType> renderers;
 
-    /**
-     * Associates lists series and formatter pairs with the class of the Renderer used to render them.
-     */
-    private LinkedHashMap<Class, SeriesAndFormatterList<SeriesType,FormatterType>> seriesRegistry;
+    private ArrayList<SeriesAndFormatterPair<SeriesType, FormatterType>> seriesRegistry;
 
     private final ArrayList<PlotListener> listeners;
 
@@ -142,8 +149,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     {
         listeners = new ArrayList<PlotListener>();
-        seriesRegistry = new LinkedHashMap<Class, SeriesAndFormatterList<SeriesType,FormatterType>>();
-        renderers = new LinkedList<RendererType>();
+        seriesRegistry = new ArrayList<SeriesAndFormatterPair<SeriesType, FormatterType>>();
+        renderers = new HashMap<Class<? extends RendererType>, RendererType>();
+
         borderPaint = new Paint();
         borderPaint.setColor(Color.rgb(150, 150, 150));
         borderPaint.setStyle(Paint.Style.STROKE);
@@ -505,20 +513,21 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     /**
+     * Add a new Series to the Plot.
      * @param series
+     * @param formatter
+     * @return True if the series was added or false if the series / getFormatter pair already exists in the registry.
      */
     public synchronized boolean addSeries(SeriesType series, FormatterType formatter) {
         Class rendererClass = formatter.getRendererClass();
-        SeriesAndFormatterList<SeriesType, FormatterType> sfList = seriesRegistry.get(rendererClass);
-        
-        // if there is no list for this renderer type, we need to getInstance one:
-        if(sfList == null) {
-            // make sure there is not already an instance of this renderer available:
-            if(getRenderer(rendererClass) == null) {
-                renderers.add((RendererType) formatter.getRendererInstance(this));
-            }
-            sfList = new SeriesAndFormatterList<SeriesType,FormatterType>();
-            seriesRegistry.put(rendererClass, sfList);
+
+        if(getSeries(series, rendererClass) != null) {
+            return false;
+        }
+
+        // initialize the Renderer if necessary:
+        if(!getRenderers().containsKey(rendererClass)) {
+            getRenderers().put(rendererClass, (RendererType) formatter.getRendererInstance(this));
         }
 
         // if this series implements PlotListener, add it as a listener:
@@ -526,42 +535,77 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             addListener((PlotListener)series);
         }
 
-        // do nothing if this series already associated with the renderer:
-        if(sfList.contains(series)) {
-            return false;
-        } else {
-            sfList.add(series, formatter);
-            return true;
-        }
+        getSeriesRegistry().add(new SeriesAndFormatterPair<SeriesType, FormatterType>(series, formatter));
+        return true;
     }
 
-    public synchronized boolean removeSeries(SeriesType series, Class rendererClass) {
-        boolean result = seriesRegistry.get(rendererClass).remove(series);
-        if(seriesRegistry.get(rendererClass).size() <= 0) {
-            seriesRegistry.remove(rendererClass);
+    /**
+     *
+     * @param series
+     * @param rendererClass
+     * @return The {@link com.androidplot.ui.SeriesAndFormatterPair} that matches the series and rendererClass params, or null if one is not found.
+     */
+    protected SeriesAndFormatterPair<SeriesType, FormatterType> getSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
+        for(SeriesAndFormatterPair<SeriesType, FormatterType> thisPair : getSeriesRegistry()) {
+            if(thisPair.getSeries() == series && thisPair.getFormatter().getRendererClass() == rendererClass) {
+                return thisPair;
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param series
+     * @return A List of {@link com.androidplot.ui.SeriesAndFormatterPair} instances that reference series.
+     */
+    protected List<SeriesAndFormatterPair<SeriesType, FormatterType>> getSeries(SeriesType series) {
+        List<SeriesAndFormatterPair<SeriesType, FormatterType>> results =
+                new ArrayList<SeriesAndFormatterPair<SeriesType, FormatterType>>();
+        for(SeriesAndFormatterPair<SeriesType, FormatterType> thisPair : getSeriesRegistry()) {
+            if(thisPair.getSeries() == series) {
+                results.add(thisPair);
+            }
+        }
+        return results;
+    }
+
+    /**
+     *
+     * Remove a series for a specific Renderer only.  Use {@link #removeSeries(Series)} to remove the series
+     * from the plot completely.
+     * @param series
+     * @param rendererClass
+     * @return The SeriesAndFormatterPair that was removed or null if nothing was removed.
+     */
+    public synchronized SeriesAndFormatterPair<SeriesType, FormatterType> removeSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
+
+        List<SeriesAndFormatterPair<SeriesType, FormatterType>> results = getSeries(series);
+        SeriesAndFormatterPair<SeriesType, FormatterType> result = null;
+        for(SeriesAndFormatterPair<SeriesType, FormatterType> thisPair : results) {
+            if(thisPair.getFormatter().getRendererClass() == rendererClass) {
+                result = thisPair;
+                getSeriesRegistry().remove(result);
+                break;
+            }
         }
 
-        // if series implements PlotListener, remove it from listeners:
-        if(series instanceof PlotListener) {
+        // if series implements PlotListener and is not assigned to any other renderers remove it as a listener:
+        if(series instanceof PlotListener && results.size() == 1) {
             removeListener((PlotListener) series);
         }
+
         return result;
     }
 
     /**
-     * Remove all occorrences of series from all renderers
+     * Remove all occurrences of series regardless of the associated Renderer.
      * @param series
      */
     public synchronized void removeSeries(SeriesType series) {
 
-        // remove all occurrences of series from all renderers:
-        for(Class rendererClass : seriesRegistry.keySet()) {
-            seriesRegistry.get(rendererClass).remove(series);
-        }       
-
-        // remove empty SeriesAndFormatterList instances from the registry:
-        for(Iterator<SeriesAndFormatterList<SeriesType,FormatterType>> it = seriesRegistry.values().iterator(); it.hasNext();) {
-            if(it.next().size() <= 0) {
+        for(Iterator<SeriesAndFormatterPair<SeriesType, FormatterType>> it = getSeriesRegistry().iterator(); it.hasNext();) {
+            if(it.next().getSeries() == series) {
                 it.remove();
             }
         }
@@ -573,65 +617,35 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     /**
-     * Remove all series from all renderers
+     * Remove all series from the plot.
      */
     public void clear() {
-        for(Iterator<SeriesAndFormatterList<SeriesType,FormatterType>> it = seriesRegistry.values().iterator(); it.hasNext();) {
+        for(Iterator<SeriesAndFormatterPair<SeriesType, FormatterType>> it = getSeriesRegistry().iterator(); it.hasNext();) {
             it.next();
             it.remove();
         }
     }
 
     public boolean isEmpty() {
-        return seriesRegistry.isEmpty();
-    }
-
-    public FormatterType getFormatter(SeriesType series, Class rendererClass) {
-        return seriesRegistry.get(rendererClass).getFormatter(series);
-    }
-
-    public SeriesAndFormatterList<SeriesType,FormatterType> getSeriesAndFormatterListForRenderer(Class rendererClass) {
-        return seriesRegistry.get(rendererClass);
+        return getSeriesRegistry().isEmpty();
     }
 
     /**
-     * Returns a list of all series assigned to the various renderers within the Plot.
-     * The returned List will contain no duplicates.
-     * @return
+     *
+     * @param series
+     * @param rendererClass
+     * @return The Formatter instance corresponding to the specified  series / renderer pair.
      */
-    public Set<SeriesType> getSeriesSet() {
-        Set<SeriesType> seriesSet = new LinkedHashSet<SeriesType>();
-        for (SeriesRenderer renderer : getRendererList()) {
-            List<SeriesType> seriesList = getSeriesListForRenderer(renderer.getClass());
-            if (seriesList != null) {
-                for (SeriesType series : seriesList) {
-                    seriesSet.add(series);
-                }
-            }
-        }
-        return seriesSet;
+    public FormatterType getFormatter(SeriesType series, Class rendererClass) {
+        return getSeries(series, rendererClass).getFormatter();
     }
 
-    public List<SeriesType> getSeriesListForRenderer(Class rendererClass) {
-        SeriesAndFormatterList<SeriesType,FormatterType> lst = seriesRegistry.get(rendererClass);
-        if(lst == null) {
-            return null;
-        } else {
-            return lst.getSeriesList();
-        }
-    }
-
-    public RendererType getRenderer(Class rendererClass) {
-        for(RendererType renderer : renderers) {
-            if(renderer.getClass() == rendererClass) {
-                return renderer;
-            }
-        }
-        return null;
+    public RendererType getRenderer(Class<? extends RendererType> rendererClass) {
+        return getRenderers().get(rendererClass);
     }
 
     public List<RendererType> getRendererList() {
-        return renderers;
+        return new ArrayList<RendererType>(getRenderers().values());
     }
 
     public void setMarkupEnabled(boolean enabled) {

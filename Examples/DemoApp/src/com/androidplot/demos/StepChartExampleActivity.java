@@ -65,7 +65,7 @@ public class StepChartExampleActivity extends Activity
         mySimpleXYPlot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
         mySimpleXYPlot.getGraphWidget().setMarginRight(5);
 
-        // Create a formatter to use for drawing a series using LineAndPointRenderer:
+        // Create a getFormatter to use for drawing a series using LineAndPointRenderer:
         LineAndPointFormatter series1Format = new LineAndPointFormatter(
                 Color.rgb(0, 100, 0),                   // line color
                 Color.rgb(0, 100, 0),                   // point color
@@ -101,7 +101,7 @@ public class StepChartExampleActivity extends Activity
         // get rid of decimal points in our domain labels:
         mySimpleXYPlot.setDomainValueFormat(new DecimalFormat("0"));
 
-        // create a custom formatter to draw our state names as range tick labels:
+        // create a custom getFormatter to draw our state names as range tick labels:
         mySimpleXYPlot.setRangeValueFormat(new Format() {
             @Override
             public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {

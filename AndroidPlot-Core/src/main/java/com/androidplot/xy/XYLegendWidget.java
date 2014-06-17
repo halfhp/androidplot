@@ -18,7 +18,7 @@ package com.androidplot.xy;
 
 import android.graphics.*;
 import com.androidplot.ui.LayoutManager;
-import com.androidplot.ui.SeriesAndFormatterList;
+import com.androidplot.ui.SeriesAndFormatterPair;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.TableModel;
 import com.androidplot.ui.widget.Widget;
@@ -148,34 +148,21 @@ public class XYLegendWidget extends Widget {
 
     @Override
     protected synchronized void doOnDraw(Canvas canvas, RectF widgetRect) {
-        // TODO: a good amount of iterating could be avoided if
-        // we create a temporary list of all the legend items up here.
         if(plot.isEmpty()) {
             return;
         }
-
-        //Hashtable<XYRegionFormatter, XYSeriesRenderer> regionRendererLookup = new Hashtable<XYRegionFormatter, XYSeriesRenderer>();
 
         // Keep an alphabetically sorted list of regions:
         TreeSet<Map.Entry<XYRegionFormatter, String>> sortedRegions = new TreeSet<Map.Entry<XYRegionFormatter, String>>(new RegionEntryComparator());
 
         // Calculate the number of cells needed to draw the Legend:
-        int seriesCount = 0;
+        int seriesCount = plot.getSeriesRegistry().size();
+
         for(XYSeriesRenderer renderer : plot.getRendererList()) {
-
-            SeriesAndFormatterList sfl = plot.getSeriesAndFormatterListForRenderer(renderer.getClass());
-            if(sfl != null) {
-                seriesCount += sfl.size();
-            }
-
-            // Figure out how many regions need to be added to the legend:
             Hashtable<XYRegionFormatter, String> urf = renderer.getUniqueRegionFormatters();
-            /*for(XYRegionFormatter xyf : urf.keySet()) {
-                regionRendererLookup.put(xyf, renderer);
-            }*/
             sortedRegions.addAll(urf.entrySet());
-            //sortedRegions.addAll(renderer.getUniqueRegionFormatters().entrySet());
         }
+
         seriesCount += sortedRegions.size();
 
         // Create an iterator specially created to draw the number of cells we calculated:
@@ -184,18 +171,11 @@ public class XYLegendWidget extends Widget {
         RectF cellRect;
 
         // draw each series legend item:
-        for(XYSeriesRenderer renderer : plot.getRendererList()) {
-            SeriesAndFormatterList<XYSeries,XYSeriesFormatter> sfl = plot.getSeriesAndFormatterListForRenderer(renderer.getClass());
-
-            if (sfl != null) {
-                // maxIndex is only used if it has been determined.
-                // if it is 0 then it could not be determined.
-                for (int i = 0; i < sfl.size() && it.hasNext(); i++) {
-                    cellRect = it.next();
-                    XYSeriesFormatter formatter = sfl.getFormatter(i);
-                    drawSeriesLegendCell(canvas, renderer, formatter, cellRect, sfl.getSeries(i).getTitle());
-                }
-            }
+        for(SeriesAndFormatterPair<XYSeries, XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
+            cellRect = it.next();
+            XYSeriesFormatter format = sfPair.getFormatter();
+            drawSeriesLegendCell(canvas, plot.getRenderer(sfPair.getFormatter().getRendererClass()),
+                    format, cellRect, sfPair.getSeries().getTitle());
         }
 
         // draw each region legend item:

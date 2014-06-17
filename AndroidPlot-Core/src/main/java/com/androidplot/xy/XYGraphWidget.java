@@ -20,6 +20,7 @@ import android.graphics.*;
 
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.LayoutManager;
+import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.*;
@@ -185,6 +186,8 @@ public class XYGraphWidget extends Widget {
 
     private ZHash<RectRegion, AxisValueLabelFormatter> axisValueLabelRegions;
 
+    private RenderStack<? extends XYSeries, ? extends XYSeriesFormatter> renderStack;
+
     {
         gridBackgroundPaint = new Paint();
         gridBackgroundPaint.setColor(Color.rgb(140, 140, 140));
@@ -251,6 +254,7 @@ public class XYGraphWidget extends Widget {
     public XYGraphWidget(LayoutManager layoutManager, XYPlot plot, SizeMetrics sizeMetrics) {
         super(layoutManager, sizeMetrics);
         this.plot = plot;
+        renderStack = new RenderStack(plot);
     }
 
     public ZIndexable<RectRegion> getAxisValueLabelRegions() {
@@ -305,20 +309,20 @@ public class XYGraphWidget extends Widget {
 
     /*
      * public void addRangeLabelRegion(LineRegion region,
-     * AxisValueLabelFormatter formatter) { rangeLabelRegions.addToTop(region,
-     * formatter); }
+     * AxisValueLabelFormatter getFormatter) { rangeLabelRegions.addToTop(region,
+     * getFormatter); }
      * 
      * public boolean removeRangeLabelRegion(LineRegion region) { return
      * rangeLabelRegions.remove(region); }
      */
 
     /**
-     * Returns the formatter associated with the first (bottom) Region
+     * Returns the getFormatter associated with the first (bottom) Region
      * containing x and y.
      * 
      * @param x
      * @param y
-     * @return the formatter associated with the first (bottom) region
+     * @return the getFormatter associated with the first (bottom) region
      *         containing x and y. null otherwise.
      */
     public AxisValueLabelFormatter getAxisValueLabelFormatterForVal(double x,
@@ -352,7 +356,7 @@ public class XYGraphWidget extends Widget {
     }
 
     /**
-     * Returns the formatter associated with the first (bottom-most) Region
+     * Returns the getFormatter associated with the first (bottom-most) Region
      * containing value.
      * 
      * @param value
@@ -362,7 +366,7 @@ public class XYGraphWidget extends Widget {
      * public AxisValueLabelFormatter getXYAxisFormatterForRangeVal(double
      * value) { return getRegionContainingVal(rangeLabelRegions, value); }
      *//**
-     * Returns the formatter associated with the first (bottom-most) Region
+     * Returns the getFormatter associated with the first (bottom-most) Region
      * containing value.
      * 
      * @param value
@@ -509,8 +513,8 @@ public class XYGraphWidget extends Widget {
                     break;
             }
 
-            // if a matching region formatter was found, create a clone
-            // of labelPaint and use the formatter's color. Otherwise
+            // if a matching region getFormatter was found, create a clone
+            // of labelPaint and use the getFormatter's color. Otherwise
             // just use labelPaint:
             Paint p;
             if (rf != null) {
@@ -929,16 +933,18 @@ public class XYGraphWidget extends Widget {
      * @throws PlotRenderException
      */
     protected void drawData(Canvas canvas) throws PlotRenderException {
-        // TODO: iterate through a XYSeriesRenderer list
-
-        // int canvasState = canvas.save();
         try {
             canvas.save(Canvas.ALL_SAVE_FLAG);
             canvas.clipRect(gridRect, android.graphics.Region.Op.INTERSECT);
-            for (XYSeriesRenderer renderer : plot.getRendererList()) {
-                renderer.render(canvas, paddedGridRect);
+            renderStack.sync();
+
+            for(RenderStack.StackElement thisElement : renderStack.getElements()) {
+                if(thisElement.isEnabled()) {
+                    plot.getRenderer(thisElement.getPair().getFormatter().getRendererClass()).
+                            render(canvas, paddedGridRect, thisElement.getPair(), renderStack);
+                }
             }
-            // canvas.restoreToCount(canvasState);
+
         } finally {
             canvas.restore();
         }

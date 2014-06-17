@@ -23,8 +23,12 @@ import com.androidplot.Series;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.Plot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class SeriesRenderer
         <PlotType extends Plot, SeriesType extends Series, SeriesFormatterType extends Formatter> {
+
     private PlotType plot;
 
     public SeriesRenderer(PlotType plot) {
@@ -39,18 +43,32 @@ public abstract class SeriesRenderer
         this.plot = plot;
     }
 
-    public SeriesAndFormatterList<SeriesType,SeriesFormatterType> getSeriesAndFormatterList() {
-        return plot.getSeriesAndFormatterListForRenderer(getClass());
-    }
-
     public SeriesFormatterType getFormatter(SeriesType series) {
         return (SeriesFormatterType) plot.getFormatter(series, getClass());
     }
 
-    public void render(Canvas canvas, RectF plotArea) throws PlotRenderException {
-        onRender(canvas, plotArea);
+    /**
+     *
+     * @param canvas
+     * @param plotArea
+     * @param sfPair The series / getFormatter pair to be rendered
+     * @throws PlotRenderException
+     */
+    public void render(Canvas canvas, RectF plotArea, SeriesAndFormatterPair<SeriesType, SeriesFormatterType> sfPair, RenderStack stack) throws PlotRenderException {
+        onRender(canvas, plotArea, sfPair.getSeries(), sfPair.getFormatter(), stack);
     }
-    public abstract void onRender(Canvas canvas, RectF plotArea) throws PlotRenderException;
+
+    /**
+     *
+     * @param canvas
+     * @param plotArea
+     * @param series The series to be rendered
+     * @param formatter The getFormatter that should be used to render the series
+     * @param stack Ordered list of all series being renderered.  May be manipulated by the Renderer
+     *              to gain effect.
+     * @throws PlotRenderException
+     */
+    public abstract void onRender(Canvas canvas, RectF plotArea, SeriesType series, SeriesFormatterType formatter, RenderStack stack) throws PlotRenderException;
 
     /**
      * Draw the legend icon in the rect passed in.
@@ -60,14 +78,30 @@ public abstract class SeriesRenderer
     protected abstract void doDrawLegendIcon(Canvas canvas, RectF rect, SeriesFormatterType formatter);
 
     public void drawSeriesLegendIcon(Canvas canvas, RectF rect, SeriesFormatterType formatter) {
-        //int state = canvas.save(Canvas.CLIP_SAVE_FLAG);
         try {
             canvas.save(Canvas.ALL_SAVE_FLAG);
             canvas.clipRect(rect, Region.Op.INTERSECT);
             doDrawLegendIcon(canvas, rect, formatter);
-            //canvas.restoreToCount(state);
         } finally {
             canvas.restore();
         }
+    }
+
+    /**
+     *
+     * @return A List of all {@link com.androidplot.ui.SeriesAndFormatterPair} instances currently associated
+     * with this Renderer.
+     */
+    public List<SeriesAndFormatterPair<SeriesType, ? extends SeriesFormatterType>> getSeriesList() {
+        List<SeriesAndFormatterPair<SeriesType, ? extends SeriesFormatterType>> results =
+                new ArrayList<SeriesAndFormatterPair<SeriesType, ? extends SeriesFormatterType>>();
+
+        ArrayList<SeriesAndFormatterPair> pairList = getPlot().getSeriesRegistry();
+        for(SeriesAndFormatterPair thisPair : pairList) {
+            if(thisPair.getFormatter().getRendererClass() == getClass()) {
+                results.add(thisPair);
+            }
+        }
+        return results;
     }
 }

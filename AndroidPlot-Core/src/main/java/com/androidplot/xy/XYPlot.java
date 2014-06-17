@@ -443,7 +443,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         calculatedMaxY = userMaxY;
 
         // next we go through each series to update our min/max values:
-        for (final XYSeries series : getSeriesSet()) {
+        for (SeriesAndFormatterPair<? extends XYSeries, ? extends XYSeriesFormatter> thisPair : getSeriesRegistry()) {
+            XYSeries series = thisPair.getSeries();
             // step through each point in each series:
             for (int i = 0; i < series.size(); i++) {
                 Number thisX = series.getX(i);
@@ -504,7 +505,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 updateRangeMinMaxForOriginModel();
                 break;
             case EDGE:
-            	if (getSeriesSet().size() > 0) {
+            	if (getSeriesRegistry().size() > 0) {
 	                updateRangeMinMaxForEdgeModel();
 	                calculatedMinY = ApplyUserMinMax(calculatedMinY,
 	                        rangeBottomMin, rangeBottomMax);

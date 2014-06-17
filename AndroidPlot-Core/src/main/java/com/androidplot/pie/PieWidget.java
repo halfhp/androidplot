@@ -21,9 +21,7 @@ import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.widget.Widget;
-
-import java.util.ArrayList;
-import java.util.Set;
+import com.androidplot.ui.RenderStack;
 
 /**
  * Visualizes data as a pie chart.
@@ -31,17 +29,22 @@ import java.util.Set;
 public class PieWidget extends Widget {
 
     private PieChart pieChart;
+    private RenderStack<? extends Segment, ? extends SegmentFormatter> renderStack;
 
     public PieWidget(LayoutManager layoutManager, PieChart pieChart, SizeMetrics metrics) {
         super(layoutManager, metrics);
         this.pieChart = pieChart;
+        renderStack = new RenderStack(pieChart);
     }
 
     @Override
     protected void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
-
-        for(PieRenderer renderer : pieChart.getRendererList()) {
-            renderer.render(canvas, widgetRect);
+        renderStack.sync();
+        for(RenderStack.StackElement thisElement : renderStack.getElements()) {
+            if(thisElement.isEnabled()) {
+                pieChart.getRenderer(thisElement.getPair().getFormatter().getRendererClass()).
+                        render(canvas, widgetRect, thisElement.getPair(), renderStack);
+            }
         }
     }
 }

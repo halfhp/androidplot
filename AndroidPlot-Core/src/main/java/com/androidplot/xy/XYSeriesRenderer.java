@@ -16,15 +16,17 @@
 
 package com.androidplot.xy;
 
-import android.graphics.Canvas;
-import android.graphics.RectF;
-import com.androidplot.exception.PlotRenderException;
-import com.androidplot.ui.SeriesAndFormatterList;
+import com.androidplot.ui.SeriesAndFormatterPair;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.ZIndexable;
 
 import java.util.Hashtable;
+import java.util.List;
 
+/**
+ * Base class for all Renderers that render XYSeries data.
+ * @param <XYFormatterType>
+ */
 public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter>
         extends SeriesRenderer<XYPlot, XYSeries, XYFormatterType> {
 
@@ -32,21 +34,20 @@ public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter
         super(plot);
     }
 
+    /**
+     * TODO: get rid of this method!
+     * @return Map of all unique XYRegionFormatters to region labels.
+     */
     public Hashtable<XYRegionFormatter, String> getUniqueRegionFormatters() {
 
         Hashtable<XYRegionFormatter, String> found = new Hashtable<XYRegionFormatter, String>();
-        SeriesAndFormatterList<XYSeries, XYFormatterType> sfl = getSeriesAndFormatterList();
-
-        if (sfl != null) {
-            for (XYFormatterType xyf : sfl.getFormatterList()) {
-                ZIndexable<RectRegion> regionIndexer = xyf.getRegions();
-                for (RectRegion region : regionIndexer.elements()) {
-                    XYRegionFormatter f = xyf.getRegionFormatter(region);
-                    found.put(f, region.getLabel());
-                }
+        for(SeriesAndFormatterPair<XYSeries, ? extends XYFormatterType> sfPair : getSeriesList()) {
+            ZIndexable<RectRegion> regionIndexer = sfPair.getFormatter().getRegions();
+            for (RectRegion region : regionIndexer.elements()) {
+                XYRegionFormatter f = sfPair.getFormatter().getRegionFormatter(region);
+                found.put(f, region.getLabel());
             }
         }
-
         return found;
     }
 }

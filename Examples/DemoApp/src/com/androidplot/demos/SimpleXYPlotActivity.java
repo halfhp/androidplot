@@ -35,11 +35,6 @@ public class SimpleXYPlotActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        // fun little snippet that prevents users from taking screenshots
-        // on ICS+ devices :-)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                                 WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.simple_xy_plot_example);
 
         // initialize our XYPlot reference:

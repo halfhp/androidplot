@@ -15,7 +15,8 @@
   ~    limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -40,19 +41,19 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
             <comments>A business-friendly OSS license</comments>
-          </license>
+        </license>
     </licenses>
     <developers>
         <developer>
-          <id>Nick</id>
-          <name>Nick Fellows</name>
-          <email>nick@androidplot.com</email>
-          <organization>AndroidPlot</organization>
-          <organizationUrl>http://androidplot.com</organizationUrl>
-          <roles>
-            <role>architect</role>
-            <role>developer</role>
-          </roles>
+            <id>Nick</id>
+            <name>Nick Fellows</name>
+            <email>nick@androidplot.com</email>
+            <organization>AndroidPlot</organization>
+            <organizationUrl>http://androidplot.com</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
         </developer>
         <developer>
             <id>Tim</id>
@@ -79,8 +80,8 @@
         <connection>scm:git:https://bitbucket.org/androidplot/androidplot.git</connection>
         <developerConnection>scm:git:https://bitbucket.org/androidplot/androidplot.git</developerConnection>
         <url>https://bitbucket.org/androidplot/androidplot.git</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
         <plugins>

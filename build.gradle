@@ -7,10 +7,6 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-}
-
 ext {
     theBuildToolsVersion = '19.0.0'
     theSupportLibraryVersion = '19.0.0'

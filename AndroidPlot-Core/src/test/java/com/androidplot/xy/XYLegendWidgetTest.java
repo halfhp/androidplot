@@ -79,7 +79,8 @@ public class XYLegendWidgetTest {
         plot.addSeries(s1, new LineAndPointFormatter(
                 Color.RED, Color.GREEN, Color.BLUE, (PointLabelFormatter)null));
 
-        assertEquals(1, plot.getSeriesSet().size());
+        //assertEquals(1, plot.getSeriesSet().size());
+        assertEquals(1, plot.getSeriesRegistry().size());
 
         Deencapsulation.invoke(plot, "onSizeChanged", 100, 100, 100, 100);
         plot.redraw();
@@ -88,14 +89,14 @@ public class XYLegendWidgetTest {
         Deencapsulation.invoke(plot, "onDraw", new Canvas());
 
         plot.removeSeries(s1);
-        assertEquals(0, plot.getSeriesSet().size());
+        //assertEquals(0, plot.getSeriesSet().size());
+        assertEquals(0, plot.getSeriesRegistry().size());
         plot.addSeries(s1, new BarFormatter(Color.RED, Color.GREEN));
         plot.redraw();
 
         // throws NullPointerException before fix
         // for ANDROIDPLOT-166 was applied.
         Deencapsulation.invoke(plot, "onDraw", new Canvas());
-
     }
 
 }

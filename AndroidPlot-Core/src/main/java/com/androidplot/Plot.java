@@ -636,7 +636,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param rendererClass
      * @return The Formatter instance corresponding to the specified  series / renderer pair.
      */
-    public FormatterType getFormatter(SeriesType series, Class rendererClass) {
+    public FormatterType getFormatter(SeriesType series, Class<? extends RendererType> rendererClass) {
         return getSeries(series, rendererClass).getFormatter();
     }
 

@@ -8,6 +8,7 @@ android {
         versionCode 1
         versionName "6.2"
         minSdkVersion 4
+        testPackageName "com.androidplot"
     }
 	
 	sourceSets {
@@ -19,9 +20,16 @@ android {
 			renderscript.srcDirs = ['src']
 			res.srcDirs = ['res']
 			/*assets.srcDirs = ['assets']*/
+
 		}
-		
-		instrumentTest.setRoot('src/test/java')
+
+        androidTest {
+            java.srcDirs = ['src/test/java/']
+        }
+
+        //androidTest.setRoot('src/test/java')
+        //unitTest.setRoot('/src/test/java')
+		//instrumentTest.setRoot('src/test/java')
 	}
 
     /**
@@ -30,4 +38,34 @@ android {
     lintOptions {
         abortOnError false
     }
+}
+
+sourceSets {
+    unitTest {
+        java.srcDirs = ['src/test/java/']
+        //resources.srcDir file('src/test/resources')
+    }
+}
+
+configurations {
+    unitTestCompile.extendsFrom runtime
+    unitTestRuntime.extendsFrom unitTestCompile
+}
+
+task unitTest(type:Test, dependsOn: assemble) {
+    description = "run unit tests"
+    testClassesDir = project.sourceSets.unitTest.output.classesDir
+    classpath = project.sourceSets.unitTest.runtimeClasspath
+}
+
+build.dependsOn unitTest
+
+
+dependencies {
+    unitTestCompile files("$buildDir/classes/debug")
+    unitTestCompile group: 'mockit', name: 'jmockit', version: '0.999.3'
+    androidTestCompile group: 'mockit', name: 'jmockit', version: '0.999.3'
+    unitTestCompile group: 'junit', name: 'junit', version: '4.8.1'
+    androidTestCompile group: 'junit', name: 'junit', version: '4.8.1'
+    unitTestCompile 'com.google.android:android:4.0.1.2'
 }

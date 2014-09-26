@@ -23,6 +23,7 @@ import com.androidplot.ui.RenderStack;
 import com.androidplot.util.ValPixConverter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Renders a point as a line with the vertices marked.  Requires 2 or more points to
@@ -93,48 +94,96 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 thisPoint = null;
             }
 
-            if(linePaint != null && thisPoint != null) {
+            // don't need to do any of this if the line isnt going to be drawn:
+            if(linePaint != null && formatter.getInterpolationParams() == null) {
+                if (thisPoint != null) {
 
-                // record the first point of the new Path
-                if(firstPoint == null) {
-                    path = new Path();
-                    firstPoint = thisPoint;
-                    // create our first point at the bottom/x position so filling
-                    // will look good
-                    path.moveTo(firstPoint.x, firstPoint.y);
-                }
+                    // record the first point of the new Path
+                    if (firstPoint == null) {
+                        path = new Path();
+                        firstPoint = thisPoint;
+                        // create our first point at the bottom/x position so filling
+                        // will look good
+                        path.moveTo(firstPoint.x, firstPoint.y);
+                    }
 
-                if(lastPoint != null) {
-                    appendToPath(path, thisPoint, lastPoint);
-                }
+                    if (lastPoint != null) {
+                        appendToPath(path, thisPoint, lastPoint);
+                    }
 
-                lastPoint = thisPoint;
-            } else {
-                if(lastPoint != null) {
-                    renderPath(canvas, plotArea, path, firstPoint, lastPoint, formatter);
+                    lastPoint = thisPoint;
+                } else {
+                    if (lastPoint != null) {
+                        renderPath(canvas, plotArea, path, firstPoint, lastPoint, formatter);
+                    }
+                    firstPoint = null;
+                    lastPoint = null;
                 }
-                firstPoint = null;
-                lastPoint = null;
             }
         }
-        if(linePaint != null && firstPoint != null) {
-            renderPath(canvas, plotArea, path, firstPoint, lastPoint, formatter);
-        }
+        if(linePaint != null) {
+            if(formatter.getInterpolationParams() != null) {
+                List<XYPair> interpolatedPoints = getInterpolator(
+                        formatter.getInterpolationParams()).interpolate(series,
+                        formatter.getInterpolationParams());
+                firstPoint = convertPoint(interpolatedPoints.get(0), plotArea);
+                lastPoint = convertPoint(interpolatedPoints.get(interpolatedPoints.size()-1), plotArea);
+                path = new Path();
+                path.moveTo(firstPoint.x, firstPoint.y);
+                for(int i = 1; i < interpolatedPoints.size(); i++) {
+                    //PointF thisPoint = points.get(i).first;
+                    thisPoint = convertPoint(interpolatedPoints.get(i), plotArea);
+                    path.lineTo(thisPoint.x, thisPoint.y);
+                }
+            }
 
-        // TODO: benchmark this against drawPoints(float[]);
+            if(firstPoint != null) {
+                renderPath(canvas, plotArea, path, firstPoint, lastPoint, formatter);
+            }
+        }
+        renderPoints(canvas, plotArea, series, points, formatter);
+    }
+
+    /**
+     * TODO: retrieve from a persistent registry
+     * @param params
+     * @return An interpol
+     */
+    protected Interpolator getInterpolator(InterpolationParams params) {
+        try {
+            return (Interpolator) params.getInterpolatorClass().newInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected PointF convertPoint(XYPair coord, RectF plotArea) {
+        return ValPixConverter.valToPix(
+                coord.x.doubleValue(),
+                coord.y.doubleValue(),
+                plotArea,
+                getPlot().getCalculatedMinX(),
+                getPlot().getCalculatedMaxX(),
+                getPlot().getCalculatedMinY(),
+                getPlot().getCalculatedMaxY());
+    }
+
+    protected void renderPoints(Canvas canvas, RectF plotArea, XYSeries series, List<Pair<PointF, Integer>> points, LineAndPointFormatter formatter) {
         Paint vertexPaint = formatter.getVertexPaint();
         PointLabelFormatter plf = formatter.getPointLabelFormatter();
         if (vertexPaint != null || plf != null) {
             for (Pair<PointF, Integer> p : points) {
-            	PointLabeler pointLabeler = formatter.getPointLabeler();
- 
+                PointLabeler pointLabeler = formatter.getPointLabeler();
+
                 // if vertexPaint is available, draw vertex:
-                if(vertexPaint != null) {
+                if (vertexPaint != null) {
                     canvas.drawPoint(p.first.x, p.first.y, formatter.getVertexPaint());
                 }
 
                 // if textPaint and pointLabeler are available, draw point's text label:
-                if(plf != null && pointLabeler != null) {
+                if (plf != null && pointLabeler != null) {
                     canvas.drawText(pointLabeler.getLabel(series, p.second), p.first.x + plf.hOffset, p.first.y + plf.vOffset, plf.getTextPaint());
                 }
             }

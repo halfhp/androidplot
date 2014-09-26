@@ -16,11 +16,9 @@
 
 package com.androidplot.xy;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
-import com.androidplot.util.Configurator;
 import com.androidplot.util.PixelUtils;
 
 /**
@@ -57,6 +55,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     protected Paint linePaint;
     protected Paint vertexPaint;
     protected Paint fillPaint;
+    protected InterpolationParams interpolationParams;
     private PointLabelFormatter pointLabelFormatter;
 
     {
@@ -178,5 +177,13 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
 
     public void setPointLabeler(PointLabeler pointLabeler) {
         this.pointLabeler = pointLabeler;
+    }
+
+    public InterpolationParams getInterpolationParams() {
+        return interpolationParams;
+    }
+
+    public void setInterpolationParams(InterpolationParams params) {
+        this.interpolationParams = params;
     }
 }

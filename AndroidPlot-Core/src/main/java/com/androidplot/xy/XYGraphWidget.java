@@ -149,6 +149,8 @@ public class XYGraphWidget extends Widget {
     private float gridPaddingRight = 0;
     private int domainTickExtension = 5;
     private int rangeTickExtension  = 5;
+    private int domainLabelSubTickExtension = 0;
+    private int rangeLabelSubTickExtension = 0;
     private Paint gridBackgroundPaint;
     private Paint rangeGridLinePaint;
     private Paint rangeSubGridLinePaint;
@@ -174,9 +176,14 @@ public class XYGraphWidget extends Widget {
     @SuppressWarnings("FieldCanBeLocal")
     private boolean drawCursorLabelEnabled = true;
     private boolean drawMarkersEnabled = true;
-    
+
     private boolean rangeAxisLeft = true;
     private boolean domainAxisBottom = true;
+
+    private boolean rangeTick = true;
+    private boolean rangeSubTick = true;
+    private boolean domainTick = true;
+    private boolean domainSubTick = true;
 
     private float rangeLabelOrientation;
     private float domainLabelOrientation;
@@ -266,7 +273,7 @@ public class XYGraphWidget extends Widget {
      * possible to add multiple Region instances which overlap, in which cast
      * the last region to be added will be used. It is up to the developer to
      * guard against this often undesireable situation.
-     * 
+     *
      * @param region
      * @param formatter
      */
@@ -279,11 +286,11 @@ public class XYGraphWidget extends Widget {
      * Convenience method - wraps addAxisValueLabelRegion, using
      * Double.POSITIVE_INFINITY and Double.NEGATIVE_INFINITY to mask off range
      * axis value labels.
-     * 
+     *
      * @param min
      * @param max
      * @param formatter
-     * 
+     *
      */
     public void addDomainAxisValueLabelRegion(double min, double max,
             AxisValueLabelFormatter formatter) {
@@ -296,7 +303,7 @@ public class XYGraphWidget extends Widget {
      * Convenience method - wraps addAxisValueLabelRegion, using
      * Double.POSITIVE_INFINITY and Double.NEGATIVE_INFINITY to mask off domain
      * axis value labels.
-     * 
+     *
      * @param min
      * @param max
      * @param formatter
@@ -311,7 +318,7 @@ public class XYGraphWidget extends Widget {
      * public void addRangeLabelRegion(LineRegion region,
      * AxisValueLabelFormatter getFormatter) { rangeLabelRegions.addToTop(region,
      * getFormatter); }
-     * 
+     *
      * public boolean removeRangeLabelRegion(LineRegion region) { return
      * rangeLabelRegions.remove(region); }
      */
@@ -319,7 +326,7 @@ public class XYGraphWidget extends Widget {
     /**
      * Returns the getFormatter associated with the first (bottom) Region
      * containing x and y.
-     * 
+     *
      * @param x
      * @param y
      * @return the getFormatter associated with the first (bottom) region
@@ -358,7 +365,7 @@ public class XYGraphWidget extends Widget {
     /**
      * Returns the getFormatter associated with the first (bottom-most) Region
      * containing value.
-     * 
+     *
      * @param value
      * @return
      */
@@ -368,7 +375,7 @@ public class XYGraphWidget extends Widget {
      *//**
      * Returns the getFormatter associated with the first (bottom-most) Region
      * containing value.
-     * 
+     *
      * @param value
      * @return
      */
@@ -386,7 +393,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Returns a RectF representing the grid area last drawn by this plot.
-     * 
+     *
      * @return
      */
     public RectF getGridRect() {
@@ -402,7 +409,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Convenience method. Wraps getYVal(float)
-     * 
+     *
      * @param point
      * @return
      */
@@ -412,7 +419,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Converts a y pixel to a y value.
-     * 
+     *
      * @param yPix
      * @return
      */
@@ -428,7 +435,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Convenience method. Wraps getXVal(float)
-     * 
+     *
      * @param point
      * @return
      */
@@ -438,7 +445,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Converts an x pixel into an x value.
-     * 
+     *
      * @param xPix
      * @return
      */
@@ -534,13 +541,13 @@ public class XYGraphWidget extends Widget {
     private void drawDomainTick(Canvas canvas, float xPix, Number xVal,
             Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         if (!drawLineOnly) {
-            if (linePaint != null) {
+            if (linePaint != null && (domainTick || domainTickExtension > 0)) {
                 if (domainAxisBottom){
-                canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom
-                        + domainTickExtension, linePaint);
+                    canvas.drawLine(xPix, domainTick ? gridRect.top : gridRect.bottom,
+                            xPix, gridRect.bottom + domainTickExtension, linePaint);
                 } else {
-                    canvas.drawLine(xPix, gridRect.top - domainTickExtension, xPix,
-                            gridRect.bottom , linePaint);
+                    canvas.drawLine(xPix, gridRect.top - domainTickExtension,
+                            xPix, domainTick ? gridRect.bottom : gridRect.top, linePaint);
                 }
             }
             if (labelPaint != null) {
@@ -557,21 +564,26 @@ public class XYGraphWidget extends Widget {
                         xPix + domainTickLabelHorizontalOffset, yPix,
                         labelPaint);
             }
-        } else if (linePaint != null) {
-            canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom,
-                    linePaint);
+        } else if (linePaint != null && (domainSubTick || domainLabelSubTickExtension > 0)) {
+            if (domainAxisBottom){
+                canvas.drawLine(xPix, domainSubTick ? gridRect.top : gridRect.bottom,
+                        xPix, gridRect.bottom + domainLabelSubTickExtension, linePaint);
+            } else {
+                canvas.drawLine(xPix, gridRect.top - domainLabelSubTickExtension,
+                        xPix, domainSubTick ? gridRect.bottom : gridRect.top, linePaint);
+            }
         }
     }
 
     public void drawRangeTick(Canvas canvas, float yPix, Number yVal,
             Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         if (!drawLineOnly) {
-            if (linePaint != null) {
+            if (linePaint != null && (rangeTick || rangeTickExtension > 0)) {
                 if (rangeAxisLeft){
                 canvas.drawLine(gridRect.left - rangeTickExtension, yPix,
-                        gridRect.right, yPix, linePaint);
+                        rangeTick ? gridRect.right : gridRect.left, yPix, linePaint);
                 } else {
-                    canvas.drawLine(gridRect.left, yPix,
+                    canvas.drawLine(rangeTick ? gridRect.left : gridRect.right, yPix,
                             gridRect.right + rangeTickExtension, yPix, linePaint);
                 }
             }
@@ -587,15 +599,20 @@ public class XYGraphWidget extends Widget {
                 drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix - rangeTickLabelVerticalOffset,
                         labelPaint);
             }
-        } else if (linePaint != null) {
-            canvas.drawLine(gridRect.left, yPix, gridRect.right, yPix,
-                    linePaint);
+        } else if (linePaint != null && (rangeSubTick || rangeLabelSubTickExtension > 0)) {
+            if (rangeAxisLeft){
+                canvas.drawLine(gridRect.left - rangeLabelSubTickExtension, yPix,
+                        rangeSubTick ? gridRect.right : gridRect.left, yPix, linePaint);
+            } else {
+                canvas.drawLine(rangeTick ? gridRect.left : gridRect.right, yPix,
+                        gridRect.right + rangeLabelSubTickExtension, yPix, linePaint);
+            }
         }
     }
 
     /**
      * Draws the drid and domain/range labels for the plot.
-     * 
+     *
      * @param canvas
      */
     protected void drawGrid(Canvas canvas) {
@@ -785,7 +802,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Renders the text associated with user defined markers
-     * 
+     *
      * @param canvas
      * @param text
      * @param marker
@@ -928,7 +945,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Draws lines and points for each element in the series.
-     * 
+     *
      * @param canvas
      * @throws PlotRenderException
      */
@@ -1212,7 +1229,7 @@ public class XYGraphWidget extends Widget {
     public Paint getDomainSubGridLinePaint() {
         return domainSubGridLinePaint;
     }
-    
+
     /**
      * Set the paint used to draw the domain grid line.
      * @param gridLinePaint
@@ -1243,7 +1260,7 @@ public class XYGraphWidget extends Widget {
     public void setRangeSubGridLinePaint(Paint gridLinePaint) {
         this.rangeSubGridLinePaint = gridLinePaint;
     }
-    
+
     // TODO: make a generic renderer queue.
 
     public Format getRangeValueFormat() {
@@ -1304,6 +1321,14 @@ public class XYGraphWidget extends Widget {
         return rangeTickExtension;
     }
 
+    public int getDomainLabelSubTickExtension() {
+        return domainLabelSubTickExtension;
+    }
+
+    public void setDomainLabelSubTickExtension(int domainLabelSubTickExtension) {
+        this.domainLabelSubTickExtension = domainLabelSubTickExtension;
+    }
+
     /**
      *
      * @param rangeLabelTickExtension
@@ -1316,6 +1341,14 @@ public class XYGraphWidget extends Widget {
 
     public void setRangeTickExtension(int rangeTickExtension) {
         this.rangeTickExtension = rangeTickExtension;
+    }
+
+    public int getRangeLabelSubTickExtension() {
+        return rangeLabelSubTickExtension;
+    }
+
+    public void setRangeLabelSubTickExtension(int rangeLabelSubTickExtension) {
+        this.rangeLabelSubTickExtension = rangeLabelSubTickExtension;
     }
 
     public int getTicksPerRangeLabel() {
@@ -1516,7 +1549,39 @@ public class XYGraphWidget extends Widget {
     public void setDomainAxisBottom(boolean domainAxisBottom) {
         this.domainAxisBottom = domainAxisBottom;
     }
-    
+
+    public boolean isRangeTick() {
+        return rangeTick;
+    }
+
+    public void setRangeTick(boolean rangeTick) {
+        this.rangeTick = rangeTick;
+    }
+
+    public boolean isRangeSubTick() {
+        return rangeSubTick;
+    }
+
+    public void setRangeSubTick(boolean rangeSubTick) {
+        this.rangeSubTick = rangeSubTick;
+    }
+
+    public boolean isDomainTick() {
+        return domainTick;
+    }
+
+    public void setDomainTick(boolean domainTick) {
+        this.domainTick = domainTick;
+    }
+
+    public boolean isDomainSubTick() {
+        return domainSubTick;
+    }
+
+    public void setDomainSubTick(boolean domainSubTick) {
+        this.domainSubTick = domainSubTick;
+    }
+
     /*
      * set the position of the range axis labels.  Set the labelPaint textSizes before setting this.
      * This call sets the various vertical and horizontal offsets and widths to good defaults.

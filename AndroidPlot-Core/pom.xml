@@ -20,12 +20,13 @@
     <parent>
         <groupId>com.androidplot</groupId>
         <artifactId>androidplot</artifactId>
-        <version>0.6.1-SNAPSHOT</version>
+        <version>0.6.2-SNAPSHOT</version>
     </parent>
     <artifactId>androidplot-core</artifactId>
     <!--<version>${applicationVersion}</version>-->
     <name>AndroidPlot-Core</name>
     <description>AndroidPlot core library</description>
+    <packaging>aar</packaging>
 
     <profiles>
         <profile>
@@ -48,6 +49,29 @@
                 <path.to.rt.jar>${java.home}/../Classes/classes.jar</path.to.rt.jar>
             </properties>
         </profile>
+
+        <!-- Profile used for production builds -->
+        <profile>
+            <id>sign</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <!--<repositories>
@@ -58,20 +82,31 @@
         </repository></repositories>
 -->
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                    <artifactId>android-maven-plugin</artifactId>
+                    <!-- uprev to 3.8.x to work with Mvn 3.1.x and later.
+                        leaving at 3.6.0 until I can update the build server -->
+                    <version>3.9.0-rc.2</version>
+                    <extensions>true</extensions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <excludes>
+                        <!-- R.class and it's inner classes
+                             should not be in the jar version of the library -->
+                        <exclude>**/R.class</exclude>
+                        <exclude>**/R$*.class</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -102,7 +137,7 @@
 					</execution>
 				</executions>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.0.2</version>
@@ -110,47 +145,29 @@
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
-            </plugin>
-
-            
-            
+            </plugin>-->
             <plugin>
-                <groupId>com.pyx4me</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
-                <version>2.0.4</version>
+                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <configuration>
+                    <sdk>
+                        <!-- platform or api level (api level 4 = platform 1.6)-->
+                        <platform>16</platform>
+                    </sdk>
+                </configuration>
+                <!-- It's considered BadPractice(tm) to produce multiple artifacts from a single pom and
+                     in fact implicitly tying the production of the .aar artifact to the package phase
+                     causes the androidplot-demoapp which depends on androidplot-core to get confused
+                     as far as which artifact to use and fails to build.  For now producing a .aar is a two
+                     step procedure: #1 run the package directive and #2 run android:aar afterwards. -->
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>proguard</goal>
+                            <goal>aar</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <obfuscate>true</obfuscate>
-                    <options>
-                        <option>-allowaccessmodification</option>
-                        <option>-keep public class * {public *;}</option>
-                        <option>-keepclassmembers enum * {public static **[] values();public static ** valueOf(java.lang.String);}</option>
-                        <option>-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod</option>
-                    </options>
-                    <!--<injar>${project.build.finalName}.jar</injar>
-                    <outjar>obfuscated/${project.build.finalName}-release.jar</outjar>-->
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                    <libs>
-                        <!--<lib>${java.home}/lib/rt.jar</lib>-->
-                        <lib>${path.to.rt.jar}</lib>
-                    </libs>
-                    <addMavenDescriptor>false</addMavenDescriptor>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.7</version>
-                <inherited>false</inherited>
-                <configuration>
-                    <skip>false</skip>
-                </configuration>
             </plugin>
         </plugins>
      

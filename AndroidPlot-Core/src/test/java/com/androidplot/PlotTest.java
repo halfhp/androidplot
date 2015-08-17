@@ -17,6 +17,7 @@
 package com.androidplot;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.*;
 import android.os.Handler;
 import android.util.Log;
@@ -153,6 +154,11 @@ public class PlotTest {
 
         @Override
         protected void onPreInit() {
+
+        }
+
+        @Override
+        protected void processAttrs(TypedArray attrs) {
 
         }
 

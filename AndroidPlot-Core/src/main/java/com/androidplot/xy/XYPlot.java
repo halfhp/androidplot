@@ -17,12 +17,14 @@
 package com.androidplot.xy;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
+import com.androidplot.R;
 import com.androidplot.ui.*;
 import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TextLabelWidget;
@@ -116,10 +118,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     private static final int DEFAULT_LEGEND_WIDGET_H_DP = 10;
     private static final int DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP = 7;
+
     private static final int DEFAULT_GRAPH_WIDGET_H_DP = 18;
     private static final int DEFAULT_GRAPH_WIDGET_W_DP = 10;
+
     private static final int DEFAULT_DOMAIN_LABEL_WIDGET_H_DP = 10;
     private static final int DEFAULT_DOMAIN_LABEL_WIDGET_W_DP = 80;
+
     private static final int DEFAULT_RANGE_LABEL_WIDGET_H_DP = 50;
     private static final int DEFAULT_RANGE_LABEL_WIDGET_W_DP = 10;
 
@@ -127,13 +132,20 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private static final int DEFAULT_LEGEND_WIDGET_X_OFFSET_DP = 40;
     private static final int DEFAULT_GRAPH_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_GRAPH_WIDGET_X_OFFSET_DP = 0;
+
     private static final int DEFAULT_DOMAIN_LABEL_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_DOMAIN_LABEL_WIDGET_X_OFFSET_DP = 20;
+    private static final int DEFAULT_DOMAIN_LABEL_WIDGET_TEXT_SIZE_SP = 20;
+
     private static final int DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP = 0;
+    private static final int DEFAULT_RANGE_LABEL_WIDGET_TEXT_SIZE_SP = 20;
 
     private static final int DEFAULT_GRAPH_WIDGET_TOP_MARGIN_DP = 3;
+    private static final int DEFAULT_GRAPH_WIDGET_BOTTOM_MARGIN_DP = 3;
+    private static final int DEFAULT_GRAPH_WIDGET_LEFT_MARGIN_DP = 3;
     private static final int DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN_DP = 3;
+
     private static final int DEFAULT_PLOT_LEFT_MARGIN_DP = 2;
     private static final int DEFAULT_PLOT_RIGHT_MARGIN_DP = 2;
     private static final int DEFAULT_PLOT_BOTTOM_MARGIN_DP = 2;
@@ -233,6 +245,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         getLayoutManager().moveToTop(getTitleWidget());
         getLayoutManager().moveToTop(getLegendWidget());
         graphWidget.setMarginTop(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_TOP_MARGIN_DP));
+        graphWidget.setMarginBottom(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_BOTTOM_MARGIN_DP));
+        graphWidget.setMarginLeft(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_LEFT_MARGIN_DP));
         graphWidget.setMarginRight(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN_DP));
 
         getDomainLabelWidget().pack();
@@ -247,6 +261,43 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         setDefaultBounds(new RectRegion(-1, 1, -1, 1));
     }
 
+    @Override
+    protected void processAttrs(TypedArray attrs) {
+
+        String domainLabelAttr = attrs.getString(R.styleable.xy_XYPlot_domainLabel);
+        if(domainLabelAttr != null) {
+            setDomainLabel(domainLabelAttr);
+        }
+
+        String rangeLabelAttr = attrs.getString(R.styleable.xy_XYPlot_rangeLabel);
+        if(rangeLabelAttr != null) {
+            setRangeLabel(rangeLabelAttr);
+        }
+
+        getDomainLabelWidget().getLabelPaint().setTextSize(
+                attrs.getDimension(R.styleable.xy_XYPlot_domainLabelTextSize,
+                getDomainLabelWidget().getLabelPaint().getTextSize()));
+
+        getRangeLabelWidget().getLabelPaint().setTextSize(
+                attrs.getDimension(R.styleable.xy_XYPlot_rangeLabelTextSize,
+                        getRangeLabelWidget().getLabelPaint().getTextSize()));
+
+        getGraphWidget().setMarginTop(attrs.getDimension(
+                R.styleable.xy_XYPlot_graphMarginTop,
+                getGraphWidget().getMarginTop()));
+
+        getGraphWidget().setMarginBottom(attrs.getDimension(
+                R.styleable.xy_XYPlot_graphMarginBottom,
+                getGraphWidget().getMarginBottom()));
+
+        getGraphWidget().setMarginLeft(attrs.getDimension(
+                R.styleable.xy_XYPlot_graphMarginLeft,
+                getGraphWidget().getMarginLeft()));
+
+        getGraphWidget().setMarginRight(attrs.getDimension(
+                R.styleable.xy_XYPlot_graphMarginRight,
+                getGraphWidget().getMarginRight()));
+    }
 
     public void setGridPadding(float left, float top, float right, float bottom) {
         getGraphWidget().setGridPaddingTop(top);

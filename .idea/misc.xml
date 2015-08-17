@@ -4,97 +4,24 @@
     <entry_points version="2.0" />
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="android" url="file://$PROJECT_DIR$/AndroidPlot-Core/src/AndroidManifest.xml" />
+    <file type="android" url="file://$PROJECT_DIR$/AndroidPlot-Core" />
     <file type="android" url="file://$PROJECT_DIR$/Examples/DemoApp" />
-    <file type="android" url="file://$PROJECT_DIR$/Tests/AndroidManifest.xml" />
-  </component>
-  <component name="IdProvider" IDEtalkID="96A70927FCB4C9DA89E754C51C667B37" />
-  <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" />
-    <option name="OPTION_SCOPE" value="protected" />
-    <option name="OPTION_HIERARCHY" value="true" />
-    <option name="OPTION_NAVIGATOR" value="true" />
-    <option name="OPTION_INDEX" value="true" />
-    <option name="OPTION_SEPARATE_INDEX" value="true" />
-    <option name="OPTION_DOCUMENT_TAG_USE" value="false" />
-    <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="false" />
-    <option name="OPTION_DOCUMENT_TAG_VERSION" value="false" />
-    <option name="OPTION_DOCUMENT_TAG_DEPRECATED" value="true" />
-    <option name="OPTION_DEPRECATED_LIST" value="true" />
-    <option name="OTHER_OPTIONS" value="" />
-    <option name="HEAP_SIZE" />
-    <option name="LOCALE" />
-    <option name="OPEN_IN_BROWSER" value="true" />
+    <file type="web" url="file://$PROJECT_DIR$" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/AndroidPlot-Lib/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/Examples/DemoApp/pom.xml" />
       </list>
     </option>
-  </component>
-  <component name="ProjectResources">
-    <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
-  </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="Maven Android 4.1 Platform" project-jdk-type="Android SDK">
-    <output url="file://$PROJECT_DIR$/out" />
-  </component>
-  <component name="RegexUtilComponent" text="1900-01-01 2007/08/13 1900.01.01 1900 01 01 1900-01.01 1900 13 01 1900 02 31" flags="0" regex="(19|20)\d\d([- /.])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])" mode="0" />
-  <component name="SvnBranchConfigurationManager">
-    <option name="myConfigurationMap">
-      <map>
-        <entry key="$PROJECT_DIR$">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="branchUrls">
-                <list>
-                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches" />
-                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags" />
-                </list>
-              </option>
-              <option name="trunkUrl" value="https://bridalveil.jira.com/svn/ANDROIDPLOT/trunk" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/AndroidPlot-Core">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="branchUrls">
-                <list>
-                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches" />
-                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags" />
-                </list>
-              </option>
-              <option name="trunkUrl" value="https://bridalveil.jira.com/svn/ANDROIDPLOT/trunk" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/Examples/DemoApp">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="trunkUrl" value="https://androidplot.jira.com/svn/ANDROIDPLOT/trunk/Examples/DemoApp" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/Examples/OrientationSensorExample">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="branchUrls">
-                <list>
-                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/branches" />
-                  <option value="https://bridalveil.jira.com/svn/ANDROIDPLOT/tags" />
-                </list>
-              </option>
-              <option name="trunkUrl" value="https://bridalveil.jira.com/svn/ANDROIDPLOT/trunk" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-      </map>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </set>
     </option>
-    <option name="mySupportsUserInfoFilter" value="true" />
   </component>
-  <component name="WebServicesPlugin" addRequiredLibraries="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/classes" />
+  </component>
 </project>
 

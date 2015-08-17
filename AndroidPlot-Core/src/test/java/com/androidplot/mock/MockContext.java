@@ -24,13 +24,11 @@ import android.content.res.Resources;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import mockit.Instantiation;
 import mockit.Mock;
 import mockit.MockClass;
 

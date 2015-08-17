@@ -69,7 +69,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
             float sweep = (float) (scale * (values[i]) * 360);
             offset += sweep;
             //PointF radial = calculateLineEnd(origin, radius, offset);
-            drawSegment(canvas, rec, segment, getPlot().getFormatter(segment, PieRenderer.class),
+            drawSegment(canvas, rec, segment, getPlot().getFormatter(segment, getClass()),
                     radius, lastOffset, sweep);
             //lastRadial = radial;
             i++;
@@ -186,7 +186,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
      * Determines how many counts there are per cent of whatever the
      * pie chart is displaying as a fraction, 1 being 100%.
      */
-    private double calculateScale(double[] values) {
+    protected double calculateScale(double[] values) {
         double total = 0;
         for (int i = 0; i < values.length; i++) {
 			total += values[i];
@@ -195,7 +195,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         return (1d / total);
     }
     
-	private double[] getValues() {
+	protected double[] getValues() {
 		Set<Segment> segments = getPlot().getSeriesSet();
 		double[] result = new double[segments.size()];
 		int i = 0;
@@ -206,11 +206,11 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 		return result;
 	}
 
-    private PointF calculateLineEnd(float x, float y, float rad, float deg) {
+    protected PointF calculateLineEnd(float x, float y, float rad, float deg) {
         return calculateLineEnd(new PointF(x, y), rad, deg);
     }
 
-    private PointF calculateLineEnd(PointF origin, float rad, float deg) {
+    protected PointF calculateLineEnd(PointF origin, float rad, float deg) {
 
         double radians = deg * Math.PI / 180F;
         double x = rad * Math.cos(radians);
@@ -236,12 +236,64 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         donutMode = mode;
         donutSize = size;
     }
+
+    /**
+     * Retrieve the segment containing the specified point.  This current implementation
+     * only matches against angle; clicks outside of the pie/donut inner/outer boundaries
+     * will still trigger a match on the segment whose begining and ending angle contains
+     * the angle of the line drawn between the pie chart's center point and the clicked point.
+     * @param point The clicked point
+     * @return Segment containing the clicked point.
+     */
+    public Segment getContainingSegment(PointF point) {
+
+        RectF plotArea = getPlot().getPieWidget().getWidgetDimensions().marginatedRect;
+        // figure out the angle in degrees of the line between the clicked point
+        // and the origin of the plotArea:
+        PointF origin = new PointF(plotArea.centerX(), plotArea.centerY());
+        float dx = point.x - origin.x;
+        float dy = point.y - origin.y;
+        double theta = Math.atan2(dy, dx);
+        double angle = (theta * (180f/Math.PI));
+        if(angle < 0) {
+            // convert angle to 0-360 range with 0 being in the
+            // traditional "westerly" orientation:
+            angle += 360;
+        }
+
+        // find the segment whose starting and ending angle (degs) contains
+        // the angle calculated above
+        Set<Segment> segments = getPlot().getSeriesSet();
+        int i = 0;
+        double[] values = getValues();
+        double scale = calculateScale(values);
+        float offset = startDeg;
+        for (Segment segment : segments) {
+            float lastOffset = offset;
+            float sweep = (float) (scale * (values[i]) * 360);
+            offset += sweep;
+
+            if(angle >= lastOffset && angle <= offset) {
+                return segment;
+            }
+            i++;
+        }
+        return null;
+    }
     
     public void setStartDeg(float deg) {
         startDeg = deg;
     }
+
+    public float getStartDeg() {
+        return startDeg;
+    }
     
     public void setEndDeg(float deg) {
         endDeg = deg;
+    }
+
+    public float getEndDeg() {
+        return endDeg;
     }
 }

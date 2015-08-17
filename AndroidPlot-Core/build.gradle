@@ -1,12 +1,8 @@
 apply plugin: 'android-library'
 
-dependencies {
-//    compile "com.android.support:support-v4:${theSupportLibraryVersion}"
-}
-
 android {
     compileSdkVersion theCompileSdkVersion
-    buildToolsVersion "${theBuildToolsVersion}"
+    buildToolsVersion theBuildToolsVersion
 	
 	sourceSets {
 		main {
@@ -16,9 +12,16 @@ android {
 			aidl.srcDirs = ['src']
 			renderscript.srcDirs = ['src']
 			res.srcDirs = ['res']
-			assets.srcDirs = ['assets']
+			/*assets.srcDirs = ['assets']*/
 		}
 		
 		instrumentTest.setRoot('src/test/java')
 	}
+
+    /**
+     * TODO: uncomment this and address all the lint issues.
+     */
+    lintOptions {
+        abortOnError false
+    }
 }

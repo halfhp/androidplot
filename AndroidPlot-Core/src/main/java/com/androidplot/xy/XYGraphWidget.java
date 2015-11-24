@@ -589,7 +589,7 @@ public class XYGraphWidget extends Widget {
             }
 
             Paint olp = domainLabelPaintMap != null ?
-                    domainLabelPaintMap.get(plot.getDomainOrigin()) : domainLabelPaint;
+                    domainLabelPaintMap.get(plot.getDomainOrigin()) : domainOriginLabelPaint;
             if(olp == null) {
                 olp = domainLabelPaint;
             }
@@ -677,7 +677,7 @@ public class XYGraphWidget extends Widget {
             }
 
             Paint olp = rangeLabelPaintMap != null ?
-                    rangeLabelPaintMap.get(plot.getRangeOrigin()) : rangeLabelPaint;
+                    rangeLabelPaintMap.get(plot.getRangeOrigin()) : rangeOriginLabelPaint;
             if(olp == null) {
                 olp = rangeLabelPaint;
             }

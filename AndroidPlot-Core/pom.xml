@@ -185,10 +185,16 @@
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
+            <groupId>org.robolectric</groupId>
+            <artifactId>robolectric</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <!--<dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-        </dependency>
+        </dependency>-->
         <!--<dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>

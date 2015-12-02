@@ -17,22 +17,12 @@
 package com.androidplot.ui;
 
 import android.graphics.RectF;
-import com.androidplot.mock.MockRectF;
-import com.androidplot.ui.FixedTableModel;
-import com.androidplot.ui.TableOrder;
-import mockit.*;
-import org.junit.Before;
+import com.androidplot.test.AndroidplotTest;
 import org.junit.Test;
-
 import java.util.Iterator;
-
 import static junit.framework.Assert.*;
 
-public class FixedTableModelTest {
-    @Before
-    public void setUp() throws Exception {
-        Mockit.setUpMocks(MockRectF.class);
-    }
+public class FixedTableModelTest extends AndroidplotTest {
 
     @Test
     public void testConstructor() throws Exception {

@@ -47,14 +47,12 @@ public class XYStepCalculatorTest {
         XYStep step = XYStepCalculator.getStep(XYStepMode.SUBDIVIDE, plotSize, numSegments, minVal, maxVal);
 
         assertEquals(plotSize/(numSegments-1), step.getStepPix());
-        //assertEquals(10, step.getStepVal());
 
         // make sure large values dont break anything:
         minVal = 1000000000;
         maxVal = 2000000000;
         step = XYStepCalculator.getStep(XYStepMode.SUBDIVIDE, plotSize, numSegments, minVal, maxVal);
         assertEquals(plotSize/(numSegments-1), step.getStepPix());
-
     }
     
     @Test

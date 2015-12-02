@@ -16,17 +16,11 @@
 
 package com.androidplot.util;
 
-import mockit.Mockit;
 import org.junit.Test;
 import java.util.regex.Pattern;
 import static junit.framework.Assert.assertTrue;
-import com.androidplot.mock.MockContext;
 
 public class PixelUtilsTest {
-    @org.junit.Before
-    public void setUp() throws Exception {
-        Mockit.setUpMocks(MockContext.class);
-    }
 
     @org.junit.After
     public void tearDown() throws Exception {

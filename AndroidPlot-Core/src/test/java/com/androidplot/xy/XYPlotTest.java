@@ -16,36 +16,22 @@
 
 package com.androidplot.xy;
 
-import android.content.Context;
 import android.graphics.*;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
 import com.androidplot.Plot;
-import com.androidplot.PlotTest;
-import com.androidplot.mock.MockContext;
-import com.androidplot.mock.MockPaint;
-import com.androidplot.ui.widget.TextLabelWidget;
+import com.androidplot.test.AndroidplotTest;
 import com.androidplot.util.Configurator;
-import com.androidplot.util.FontUtils;
-import com.androidplot.util.PixelUtils;
-import mockit.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.robolectric.RuntimeEnvironment;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-@UsingMocksAndStubs({Log.class,View.class,Context.class,Handler.class,Paint.class,Color.class,
-        Rect.class, RectF.class,FontUtils.class, PixelUtils.class, Canvas.class})
-
-public class XYPlotTest {
+public class XYPlotTest extends AndroidplotTest {
 
     XYPlot plot;  // testing
     
@@ -55,14 +41,8 @@ public class XYPlotTest {
 
     @Before
     public void setUp() throws Exception {
-        Mockit.setUpMocks(MockPaint.class,MockContext.class);
-        new MockUp<View>() {
-            @Mock int getWidth() { return 100;}
-            @Mock int getHeight() { return 100;}
 
-        };
-
-        plot = new XYPlot(null, "test");
+        plot = new XYPlot(getContext(), "test");
         numList1 = Arrays.asList(0, 1, 3, 5, 10, 15, 25, 50, 75, 100); // 10 elements
         numList2 = Arrays.asList(-100, 0, 1, 3, 5, 10, 15, 25, 50, 75, 100, 200); // 12 elements
         series1 = new SimpleXYSeries(numList1, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
@@ -89,7 +69,6 @@ public class XYPlotTest {
         plot.addSeries(series1, new LineAndPointFormatter());
         plot.centerOnDomainOrigin(5);
         plot.calculateMinMaxVals();
-        //plot.updateMinMaxVals();
 
         assertEquals(10.0, plot.getCalculatedMaxX()); // symmetry is @ 10, not 9
         assertEquals(0.0, plot.getCalculatedMinX());
@@ -459,7 +438,7 @@ public class XYPlotTest {
     @Test
     public void testConfigure() throws Exception {
         //Context context = Mockit.setUpMock(new MockContext());
-        Context context = new MockContext.MockContext2();
+        //Context context = new MockContext.MockContext2();
         HashMap<String, String> params = new HashMap<String, String>();
         String param1 = "this is a test.";
         String param2 = Plot.RenderMode.USE_BACKGROUND_THREAD.toString();
@@ -469,7 +448,7 @@ public class XYPlotTest {
         params.put("backgroundPaint.color", param3);
         params.put("graphWidget.domainLabelPaint.color", param3);
 
-        Configurator.configure(context, plot, params);
+        Configurator.configure(RuntimeEnvironment.application, plot, params);
         assertEquals(param1, plot.getTitle());
         assertEquals(Plot.RenderMode.USE_BACKGROUND_THREAD, plot.getRenderMode());
         assertEquals(Color.parseColor(param3), plot.getBackgroundPaint().getColor());

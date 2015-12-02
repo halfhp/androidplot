@@ -24,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class LineRegionTest {
+
     @Before
     public void setUp() throws Exception {
 

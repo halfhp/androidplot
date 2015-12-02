@@ -16,15 +16,11 @@
 
 package com.androidplot.xy;
 
-import android.util.Pair;
-import mockit.UsingMocksAndStubs;
 import org.junit.Test;
 
 import java.util.Arrays;
 
 import static junit.framework.Assert.assertEquals;
-
-@UsingMocksAndStubs({Pair.class})
 
 public class SimpleXYSeriesTest {
 

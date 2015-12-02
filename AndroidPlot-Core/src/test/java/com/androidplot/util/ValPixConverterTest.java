@@ -16,7 +16,6 @@
 
 package com.androidplot.util;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -32,23 +31,6 @@ public class ValPixConverterTest {
     public void tearDown() throws Exception {
 
     }
-
-    /*
-    @org.junit.Test
-    public void testIndexToPix() throws Exception {
-        int sizeInPix = 100;
-        int itemCount = 10;
-        assertEquals(10.0f, ValPixConverter.indexToPix(1, itemCount, sizeInPix));
-
-        try {
-           ValPixConverter.indexToPix(100, 10, 100);
-            fail("IndexOutOfBoundsException expected.");
-        } catch(IndexOutOfBoundsException ex) {
-
-        }
-
-    }
-    */
 
     @org.junit.Test
     public void testValToPix() throws Exception {
@@ -127,17 +109,11 @@ public class ValPixConverterTest {
         try {
             ValPixConverter.pixToVal(-5, 0, 0, 0, true);
             fail("IllegalArgumentException expected.");
-        } catch(IllegalArgumentException ex) {
-            
-        }
-        
-
+        } catch(IllegalArgumentException ex) {}
     }
-
     
     @Test
     public void testValPerPix() {
-        //double result = ;
         assertEquals(1.0, ValPixConverter.valPerPix(0, 100, 100));
         double expected = 200d/100;
         assertEquals(expected, ValPixConverter.valPerPix(100, 300, 100));

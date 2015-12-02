@@ -16,58 +16,40 @@
 
 package com.androidplot;
 
-import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.*;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import com.androidplot.mock.MockContext;
-import com.androidplot.mock.MockPaint;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesAndFormatterPair;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.Formatter;
-//import mockit.*;
-import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.util.Configurator;
-import com.androidplot.util.FontUtils;
-import com.androidplot.util.PixelUtils;
 import mockit.*;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@UsingMocksAndStubs({Log.class, View.class,Handler.class,Paint.class,Color.class,
-        RectF.class, Rect.class, FontUtils.class, Canvas.class,
-        PixelUtils.class,Context.class})
-
+@RunWith(RobolectricTestRunner.class)
 public class PlotTest {
 
     static class MockPlotListener implements PlotListener {
 
-        @Override
         public void onBeforeDraw(Plot source, Canvas canvas) {}
 
-        @Override
         public void onAfterDraw(Plot source, Canvas canvas) {}
     }
 
     static class MockSeries implements Series {
-        @Override
+
         public String getTitle() {
             return null;
         }
@@ -75,14 +57,14 @@ public class PlotTest {
     }
 
     static class MockSeries2 implements Series {
-        @Override
+
         public String getTitle() {
             return null;
         }
     }
 
     static class MockSeries3 implements Series {
-        @Override
+
         public String getTitle() {
             return null;
         }
@@ -149,8 +131,8 @@ public class PlotTest {
 
     //@MockClass(realClass = Plot.class)
     public static class MockPlot extends Plot<MockSeries, Formatter, SeriesRenderer> {
-        public MockPlot(Context context, String title) {
-            super(context, title);
+        public MockPlot(String title) {
+            super(RuntimeEnvironment.application, title);
         }
 
         @Override
@@ -175,10 +157,10 @@ public class PlotTest {
         }*/
     }
 
-    @Before
+    /*@Before
     public void setUp() throws Exception {
         Mockit.setUpMocks(MockPaint.class,MockContext.class);
-    }
+    }*/
 
     @After
     public void tearDown() throws Exception {
@@ -187,10 +169,10 @@ public class PlotTest {
 
     @Test
     public void testAddSeries() throws Exception {
-        Context context = Mockit.setUpMock(new MockContext());
+        //Context context = Mockit.setUpMock(new MockContext());
         //Plot plot = Mockit.setUpMock(Plot.class, new MockPlot(context, "MockPlot"));
         //Plot plot = Mockit.setUpMock(new MockPlot());
-        Plot plot = new MockPlot(context, "MockPlot");
+        Plot plot = new MockPlot("MockPlot");
 
         MockSeries m1 = new MockSeries();
         Class cl = MockRenderer1.class;
@@ -233,8 +215,8 @@ public class PlotTest {
     @Test
     public void testRemoveSeries() throws Exception {
 
-        Context context = Mockit.setUpMock(new MockContext());
-        Plot plot = new MockPlot(context, "MockPlot");
+        //Context context = Mockit.setUpMock(new MockContext());
+        Plot plot = new MockPlot("MockPlot");
         ArrayList<SeriesAndFormatterPair<MockSeries, MockFormatter1>> registry =
                 Deencapsulation.getField(plot, "seriesRegistry");
 
@@ -316,8 +298,8 @@ public class PlotTest {
 
     @Test
     public void testGetFormatter() throws Exception {
-        Context context = Mockit.setUpMock(new MockContext());
-        Plot plot = new MockPlot(context, "MockPlot");
+        //Context context = Mockit.setUpMock(new MockContext());
+        Plot plot = new MockPlot("MockPlot");
         ArrayList<SeriesAndFormatterPair<MockSeries, MockFormatter1>> registry =
                 Deencapsulation.getField(plot, "seriesRegistry");
 
@@ -353,8 +335,8 @@ public class PlotTest {
     @Test
     public void testGetRendererList() throws Exception {
 
-        Context context = Mockit.setUpMock(new MockContext());
-        Plot plot = new MockPlot(context, "MockPlot");
+        //Context context = Mockit.setUpMock(new MockContext());
+        Plot plot = new MockPlot("MockPlot");
         //LinkedHashMap<Class<SeriesRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
         MockSeries m1 = new MockSeries();
@@ -378,8 +360,8 @@ public class PlotTest {
 
     @Test
     public void testAddListener() throws Exception {
-        Context context = Mockit.setUpMock(new MockContext());
-        Plot plot = new MockPlot(context, "MockPlot");
+        //Context context = Mockit.setUpMock(new MockContext());
+        Plot plot = new MockPlot("MockPlot");
         ArrayList<PlotListener> listeners = Deencapsulation.getField(plot, "listeners");
         //LinkedHashMap<Class<SeriesRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
@@ -406,8 +388,8 @@ public class PlotTest {
 
     @Test
     public void testRemoveListener() throws Exception {
-        Context context = Mockit.setUpMock(new MockContext());
-        Plot plot = new MockPlot(context, "MockPlot");
+        //Context context = Mockit.setUpMock(new MockContext());
+        Plot plot = new MockPlot("MockPlot");
         ArrayList<PlotListener> listeners = Deencapsulation.getField(plot, "listeners");
         //LinkedHashMap<Class<SeriesRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
@@ -461,8 +443,8 @@ public class PlotTest {
     @Test
     public void testConfigure() throws Exception {
         //Context context = Mockit.setUpMock(new MockContext.MockContext2());
-        Context context = new MockContext.MockContext2();
-        Plot plot = new MockPlot(context, "MockPlot");
+        //Context context = new MockContext.MockContext2();
+        Plot plot = new MockPlot("MockPlot");
 
         HashMap<String, String> params = new HashMap<String, String>();
         String param1 = "this is a test.";
@@ -477,7 +459,7 @@ public class PlotTest {
         //Method m = Plot.class.getDeclaredMethod("configure", params.getClass());
         //m.setAccessible(true);
         //m.invoke(plot, params);
-        Configurator.configure(context, plot, params);
+        Configurator.configure(RuntimeEnvironment.application, plot, params);
 
         assertEquals(param1, plot.getTitle());
         assertEquals(Plot.RenderMode.USE_BACKGROUND_THREAD, plot.getRenderMode());

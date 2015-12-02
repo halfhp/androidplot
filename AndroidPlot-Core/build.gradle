@@ -1,71 +1,34 @@
-apply plugin: 'android-library'
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion theCompileSdkVersion
-    buildToolsVersion theBuildToolsVersion
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
         versionCode 1
         versionName "6.2"
         minSdkVersion 4
-        testPackageName "com.androidplot"
+        targetSdkVersion 19
+        testApplicationId "com.androidplot.test"
+        //testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
-	
-	sourceSets {
-		main {
-			manifest.srcFile 'AndroidManifest.xml'
-			java.srcDirs = ['src/main/java/']
-			resources.srcDirs = ['src']
-			aidl.srcDirs = ['src']
-			renderscript.srcDirs = ['src']
-			res.srcDirs = ['res']
-			/*assets.srcDirs = ['assets']*/
-
-		}
-
-        androidTest {
-            java.srcDirs = ['src/test/java/']
-        }
-
-        //androidTest.setRoot('src/test/java')
-        //unitTest.setRoot('/src/test/java')
-		//instrumentTest.setRoot('src/test/java')
-	}
 
     /**
-     * TODO: uncomment this and address all the lint issues.
+     * TODO: enable and address lint issues.
      */
     lintOptions {
         abortOnError false
     }
 }
 
-sourceSets {
-    unitTest {
-        java.srcDirs = ['src/test/java/']
-        //resources.srcDir file('src/test/resources')
-    }
-}
-
-configurations {
-    unitTestCompile.extendsFrom runtime
-    unitTestRuntime.extendsFrom unitTestCompile
-}
-
-task unitTest(type:Test, dependsOn: assemble) {
-    description = "run unit tests"
-    testClassesDir = project.sourceSets.unitTest.output.classesDir
-    classpath = project.sourceSets.unitTest.runtimeClasspath
-}
-
-build.dependsOn unitTest
-
-
 dependencies {
-    unitTestCompile files("$buildDir/classes/debug")
-    unitTestCompile group: 'mockit', name: 'jmockit', version: '0.999.3'
-    androidTestCompile group: 'mockit', name: 'jmockit', version: '0.999.3'
-    unitTestCompile group: 'junit', name: 'junit', version: '4.8.1'
-    androidTestCompile group: 'junit', name: 'junit', version: '4.8.1'
-    unitTestCompile 'com.google.android:android:4.0.1.2'
+    testCompile group: 'org.jmockit', name: 'jmockit', version: '1.20'
+    testCompile group: 'junit', name: 'junit', version: '4.8.1'
+    testCompile "org.robolectric:robolectric:3.0"
 }

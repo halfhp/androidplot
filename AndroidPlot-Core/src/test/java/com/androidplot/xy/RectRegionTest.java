@@ -16,6 +16,7 @@
 
 package com.androidplot.xy;
 
+import com.androidplot.test.AndroidplotTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class RectRegionTest {
+public class RectRegionTest extends AndroidplotTest{
+
     @Before
     public void setUp() throws Exception {
 

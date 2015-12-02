@@ -17,23 +17,16 @@
 package com.androidplot.ui;
 
 import android.graphics.RectF;
-import com.androidplot.mock.MockRectF;
-import com.androidplot.ui.DynamicTableModel;
-import com.androidplot.ui.TableModel;
-import com.androidplot.ui.TableOrder;
-import mockit.*;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.Iterator;
 
 import static junit.framework.Assert.assertEquals;
 
+@RunWith(RobolectricTestRunner.class)
 public class DynamicTableModelTest {
-    @Before
-    public void setUp() throws Exception {
-        Mockit.setUpMocks(MockRectF.class);
-    }
 
     @Test
     public void testConstructor() throws Exception {

@@ -1,3 +1,4 @@
 <!-- This file has been intentionally left empty; values should be
 set in android.defaultConfig in build.gradle wherever possible.-->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.androidplot"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.androidplot">
+</manifest>

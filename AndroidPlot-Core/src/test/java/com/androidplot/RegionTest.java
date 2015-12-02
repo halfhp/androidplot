@@ -48,11 +48,9 @@ public class RegionTest {
         line1.setMaxVal(15);
         assertTrue(line1.intersects(line2));
 
-        //l1end = 30;
         line1.setMaxVal(30);
         assertTrue(line1.intersects(line2));
 
-        //l1start = 21;
         line1.setMinVal(21);
         assertFalse(line1.intersects(line2));
     }

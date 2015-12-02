@@ -16,28 +16,17 @@
 
 package com.androidplot.xy;
 
-import android.content.Context;
 import android.graphics.*;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import com.androidplot.util.FontUtils;
-import com.androidplot.util.PixelUtils;
+import com.androidplot.test.AndroidplotTest;
 import com.androidplot.util.ValPixConverter;
-import mockit.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.robolectric.RuntimeEnvironment;
 
 import static junit.framework.Assert.assertEquals;
 
-@UsingMocksAndStubs({Log.class,View.class,Handler.class,Paint.class,Color.class, Rect.class, RectF.class,
-        FontUtils.class, PixelUtils.class, Canvas.class})
-
-public class XYSeriesRendererTest {
-
-    @MockClass(realClass = Context.class)
-    public static class MockContext {}
+public class XYSeriesRendererTest extends AndroidplotTest {
 
     @Before
     public void setUp() throws Exception {
@@ -49,28 +38,10 @@ public class XYSeriesRendererTest {
 
     }
 
-
     @Test
     public void testDataToGridCorrelation() throws Exception {
-        Context context = Mockit.setUpMock(new MockContext());
-        //RectF gridRect = Mockit.setUpMock(new MockRectF());
-        //Mockit.setUpMock(RectF.class, new MockRectF());
-        //@MockClass(realClass = RectF.class)
-        new MockUp<RectF>()
-        {
-            final float left = 5;
-            final float top = 5;
-            final float right = 104;
-            final float bottom = 104;
-
-            @Mock void $init() {}
-
-            @Mock float width() {return 100;}
-            @Mock float height() {return 100;}
-
-        };
-        RectF gridRect = new RectF();
-        XYPlot plot = new XYPlot(context, "Test");
+        RectF gridRect = new RectF(5, 5, 105, 105);
+        XYPlot plot = new XYPlot(RuntimeEnvironment.application, "Test");
         plot.setDomainStepMode(XYStepMode.SUBDIVIDE);
         plot.setDomainStepValue(10);
         plot.setDomainBoundaries(0, 100, BoundaryMode.FIXED);
@@ -78,20 +49,18 @@ public class XYSeriesRendererTest {
         plot.calculateMinMaxVals();
         XYStep domainStep = XYStepCalculator.getStep(plot, XYAxisType.DOMAIN, gridRect, plot.getCalculatedMinX().doubleValue(), plot.getCalculatedMaxX().doubleValue());
 
-        float width = gridRect.width();
-
         int x = 0;
-        float val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false) + (gridRect.left);
+        float val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false);
 
         assertEquals(val, domainStep.getStepPix()*x);
 
         x = 1;
-        val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false) + (gridRect.left);
+        val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false);
 
         assertEquals(val, domainStep.getStepPix()*x);
 
         x = 9;
-        val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false) + (gridRect.left);
+        val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false);
 
         assertEquals(val, domainStep.getStepPix()*x);
     }

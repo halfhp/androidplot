@@ -2,7 +2,7 @@ apply plugin: 'android-sdk-manager'
 apply plugin: 'android'
 
 dependencies {
-	compile project(':AndroidPlot-Core')
+	compile project(':androidplot-core')
 }
 
 android {

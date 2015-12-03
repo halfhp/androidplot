@@ -8,9 +8,10 @@ build
 .metadata
 AndroidPlot-Core/target
 AndroidPlot-Core/.settings
-Examples/DemoApp/.settings
-Examples/DemoApp/bin
-/Examples/DemoApp/gen
-Examples/DemoApp/target
+DemoApp/.settings
+DemoApp/bin
+DemoApp/gen
+DemoApp/target
 .idea/libraries
 .idea/*.xml
+**/R.java

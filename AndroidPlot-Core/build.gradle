@@ -1,22 +1,18 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-}
-
+apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.2'
+    compileSdkVersion theCompileSdkVersion
+    buildToolsVersion theBuildToolsVersion
 
     defaultConfig {
-        versionCode 1
-        versionName "6.2"
-        minSdkVersion 4
-        targetSdkVersion 19
+        versionCode theVersionCode
+        versionName theVersionName
+        minSdkVersion theMinSdkVersion
+        targetSdkVersion theTargetSdkVersion
         testApplicationId "com.androidplot.test"
-        //testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
 
     /**
@@ -27,8 +23,96 @@ android {
     }
 }
 
+group = 'com.androidplot'
+version = theVersionName
+
+def siteUrl = 'http://androidplot.com'
+def gitUrl = 'https://bitbucket.org/androidplot/androidplot.git'
+
 dependencies {
     testCompile group: 'org.jmockit', name: 'jmockit', version: '1.20'
     testCompile group: 'junit', name: 'junit', version: '4.8.1'
     testCompile "org.robolectric:robolectric:3.0"
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    failOnError false
+    options {
+        links "http://docs.oracle.com/javase/7/docs/api/"
+        linksOffline "http://d.android.com/reference","${android.sdkDirectory}/docs/reference"
+    }
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name 'Androidplot Core Library'
+                description = "Androidplot is a library for creating dynamic and static charts within your Android application."
+                url siteUrl
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'halfhp'
+                        name 'Nick Fellows'
+                        email 'halfhp@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+
+                }
+            }
+        }
+    }
+}
+
+bintray {
+
+    // these environment vars must be set when deploying to bintray.
+    // note: BINTRAY_PASSWORD is actually the api key, but naming it 'password'
+    // tells the CI environment to obfuscate the value in public logs.
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_PASSWORD')
+
+
+    configurations = ['archives']
+    pkg {
+        version {
+            name = theVersionName
+        }
+        repo = "maven"
+        name = "androidplot"
+        issueTrackerUrl = "https://androidplot.jira.com"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+    }
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
 }

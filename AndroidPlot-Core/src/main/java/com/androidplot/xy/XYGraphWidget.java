@@ -634,7 +634,7 @@ public class XYGraphWidget extends Widget {
             }
 
             Paint olp = domainTickLabelPaintMap != null ?
-                    domainTickLabelPaintMap.get(plot.getDomainOrigin()) : domainTickLabelPaint;
+                    domainTickLabelPaintMap.get(plot.getDomainOrigin()) : domainOriginTickLabelPaint;
             if(olp == null) {
                 olp = domainTickLabelPaint;
             }
@@ -722,7 +722,7 @@ public class XYGraphWidget extends Widget {
             }
 
             Paint olp = rangeTickLabelPaintMap != null ?
-                    rangeTickLabelPaintMap.get(plot.getRangeOrigin()) : rangeTickLabelPaint;
+                    rangeTickLabelPaintMap.get(plot.getRangeOrigin()) : rangeOriginTickLabelPaint;
             if(olp == null) {
                 olp = rangeTickLabelPaint;
             }
@@ -940,8 +940,13 @@ public class XYGraphWidget extends Widget {
         try {
             canvas.save(Canvas.ALL_SAVE_FLAG);
             canvas.clipRect(gridRect, android.graphics.Region.Op.INTERSECT);
-            for (XYSeriesRenderer renderer : plot.getRendererList()) {
-                renderer.render(canvas, paddedGridRect);
+            renderStack.sync();
+
+            for(RenderStack.StackElement thisElement : renderStack.getElements()) {
+                if(thisElement.isEnabled()) {
+                    plot.getRenderer(thisElement.getPair().getFormatter().getRendererClass()).
+                            render(canvas, paddedGridRect, thisElement.getPair(), renderStack);
+                }
             }
 
         } finally {

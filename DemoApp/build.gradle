@@ -1,41 +1,26 @@
+apply plugin: 'android-sdk-manager'
 apply plugin: 'android'
 
 dependencies {
 	compile project(':AndroidPlot-Core')
-//    compile "com.android.support:support-v4:${theSupportLibraryVersion}"
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.2'
-	
-	/*sourceSets {
-		main {
-			manifest.srcFile 'AndroidManifest.xml'
-			java.srcDirs = ['src']
-			resources.srcDirs = ['src']
-			aidl.srcDirs = ['src']
-			*//*renderscript.srcDirs = ['src']*//*
-			res.srcDirs = ['res']
-			assets.srcDirs = ['assets']
-		}
-		
-		instrumentTest.setRoot('test')
-	}*/
+    compileSdkVersion theCompileSdkVersion
+    buildToolsVersion theBuildToolsVersion
+
+    defaultConfig {
+        versionCode theVersionCode
+        versionName theVersionName
+        minSdkVersion theMinSdkVersion
+        targetSdkVersion theTargetSdkVersion
+        applicationId "com.androidplot.demos"
+    }
 
     /**
      * TODO: uncomment this and address all the lint issues.
      */
     lintOptions {
         abortOnError false
-    }
-}
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }

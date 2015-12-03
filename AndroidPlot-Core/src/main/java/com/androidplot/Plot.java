@@ -40,7 +40,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * Base class for all other Plot implementations..
+ * Base class for all Plot implementations.
  */
 public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends SeriesRenderer>
         extends View implements Resizable{
@@ -689,6 +689,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     @Override
     protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
         synchronized(renderSynch) {
             keepRunning = false;
             renderSynch.notify();

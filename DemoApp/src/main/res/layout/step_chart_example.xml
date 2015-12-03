@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              style="@style/sample_activity"
+    >
+
+    <com.androidplot.xy.XYPlot
+    android:id="@+id/stepChartExamplePlot"
+    style="@style/plotStyle1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    androidplot.title="HTTP Server State (15  Sec)"
+    androidplot.domainLabel="time (secs)"
+    androidplot.rangeLabel="server state"
+    androidplot.markupEnabled="false"
+    renderMode="use_main_thread"
+    />
+</LinearLayout>
+

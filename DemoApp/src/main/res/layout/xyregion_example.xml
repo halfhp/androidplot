@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+        >
+
+    <com.androidplot.xy.XYPlot
+            android:id="@+id/xyRegionExamplePlot"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            androidPlot.title="Batting Practice Stats"
+            androidPlot.domainLabel="Pitch #"
+            androidPlot.rangeLabel="Distance"
+            androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
+            androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
+            androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
+            androidPlot.graphWidget.marginTop="20dp"
+            androidPlot.graphWidget.marginLeft="35dp"
+            androidPlot.graphWidget.marginBottom="25dp"
+            androidPlot.graphWidget.marginRight="10dp"
+            androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
+            androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
+            androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+            androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+            androidPlot.legendWidget.textPaint.textSize="12dp"
+            androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp"
+            androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp"
+            androidPlot.legendWidget.heightMetric.value="40dp"
+            androidPlot.legendWidget.widthMetric.value="40dp"
+            android:layout_weight="1"
+            />
+
+    <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+        <CheckBox android:id="@+id/s1CheckBox"
+                  android:text="Tim"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/s2CheckBox"
+                  android:text="Nick"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/s3CheckBox"
+                  android:text="Joe"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/s4CheckBox"
+                  android:text="James"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+        <CheckBox android:id="@+id/r1CheckBox"
+                  android:text="R1"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/r2CheckBox"
+                  android:text="R2"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/r3CheckBox"
+                  android:text="R3"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/r4CheckBox"
+                  android:text="R4"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+        <CheckBox android:id="@+id/r5CheckBox"
+                  android:text="R5"
+                  android:checked="true"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"/>
+    </LinearLayout>
+
+</LinearLayout>
+

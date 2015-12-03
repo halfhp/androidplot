@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+
+    <LinearLayout android:orientation="horizontal"
+                  android:gravity="center"
+                  android:layout_weight="1"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content">
+
+        <com.androidplot.xy.XYPlot
+                android:id="@+id/aprLevelsPlot"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="0dp"
+                android:layout_weight="3"
+                android:layout_marginTop="10px"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                androidPlot.backgroundPaint.color="#000000"
+                androidPlot.borderPaint.color="#000000"
+                androidplot.renderMode="use_background_thread"
+                androidPlot.title="Levels"
+                androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
+                androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
+                androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
+                androidPlot.graphWidget.backgroundPaint.color="#000000"
+                androidPlot.graphWidget.gridBackgroundPaint.color="#000000"
+                androidPlot.graphWidget.domainGridLinePaint.color="#00000000"
+                androidPlot.graphWidget.domainOriginLinePaint.color="#00000000"
+                androidPlot.graphWidget.domainOriginLabelPaint.color="#00000000"
+                androidPlot.graphWidget.marginTop="20dp"
+                androidPlot.graphWidget.marginLeft="15dp"
+                androidPlot.graphWidget.marginBottom="25dp"
+                androidPlot.graphWidget.marginRight="10dp"
+                androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                androidPlot.legendWidget.textPaint.textSize="10dp"
+                androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp"
+                androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp"
+                androidPlot.legendWidget.heightMetric.value="25dp"
+                />
+        <com.androidplot.xy.XYPlot
+                android:id="@+id/aprHistoryPlot"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="10px"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                androidPlot.backgroundPaint.color="#000000"
+                androidPlot.borderPaint.color="#000000"
+                androidplot.renderMode="use_background_thread"
+                androidPlot.title="History"
+                androidPlot.domainLabel="Domain"
+                androidPlot.rangeLabel="Range"
+                androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
+                androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
+                androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
+                androidPlot.graphWidget.backgroundPaint.color="#000000"
+                androidPlot.graphWidget.gridBackgroundPaint.color="#000000"
+                androidPlot.graphWidget.marginTop="20dp"
+                androidPlot.graphWidget.marginLeft="15dp"
+                androidPlot.graphWidget.marginBottom="25dp"
+                androidPlot.graphWidget.marginRight="10dp"
+                androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
+                androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
+                androidPlot.legendWidget.textPaint.textSize="@dimen/legend_text_font_size"
+                androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp"
+                androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp"
+                androidPlot.legendWidget.heightMetric.value="25dp"
+                />
+
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+                  android:gravity="center"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content">
+        <CheckBox android:id="@+id/hwAccelerationCb"
+                  android:visibility="gone"
+                  android:text="HW Acceleration"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"/>
+
+        <CheckBox android:id="@+id/showFpsCb"
+                  android:text="Show FPS"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>

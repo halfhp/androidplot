@@ -64,7 +64,8 @@ public class XYGraphWidget extends Widget {
     }
 
     /**
-     *
+     * Set a mapping to override the Paint used to draw domain labels.  The mapping should
+     * return null for values that should not be overridden.
      * @param domainLabelPaintMap
      * @deprecated Since 0.6.2; Use {@link #setDomainTickLabelPaintMap(com.androidplot.util.Mapping)}.
      */
@@ -252,9 +253,6 @@ public class XYGraphWidget extends Widget {
         setMarginBottom(4);
         rangeValueFormat = new DecimalFormat("0.0");
         domainValueFormat = new DecimalFormat("0.0");
-        // domainLabelRegions = new ZHash<LineRegion,
-        // AxisValueLabelFormatter>();
-        // rangeLabelRegions = new ZHash<LineRegion, AxisValueLabelFormatter>();
         axisValueLabelRegions = new ZHash<RectRegion, AxisValueLabelFormatter>();
     }
 
@@ -273,7 +271,7 @@ public class XYGraphWidget extends Widget {
      * possible to add multiple Region instances which overlap, in which cast
      * the last region to be added will be used. It is up to the developer to
      * guard against this often undesireable situation.
-     *
+     * 
      * @param region
      * @param formatter
      */
@@ -286,11 +284,11 @@ public class XYGraphWidget extends Widget {
      * Convenience method - wraps addAxisValueLabelRegion, using
      * Double.POSITIVE_INFINITY and Double.NEGATIVE_INFINITY to mask off range
      * axis value labels.
-     *
+     * 
      * @param min
      * @param max
      * @param formatter
-     *
+     * 
      */
     public void addDomainAxisValueLabelRegion(double min, double max,
             AxisValueLabelFormatter formatter) {
@@ -303,7 +301,7 @@ public class XYGraphWidget extends Widget {
      * Convenience method - wraps addAxisValueLabelRegion, using
      * Double.POSITIVE_INFINITY and Double.NEGATIVE_INFINITY to mask off domain
      * axis value labels.
-     *
+     * 
      * @param min
      * @param max
      * @param formatter
@@ -314,22 +312,13 @@ public class XYGraphWidget extends Widget {
                 Double.NEGATIVE_INFINITY, min, max, null), formatter);
     }
 
-    /*
-     * public void addRangeLabelRegion(LineRegion region,
-     * AxisValueLabelFormatter getFormatter) { rangeLabelRegions.addToTop(region,
-     * getFormatter); }
-     *
-     * public boolean removeRangeLabelRegion(LineRegion region) { return
-     * rangeLabelRegions.remove(region); }
-     */
-
     /**
-     * Returns the getFormatter associated with the first (bottom) Region
+     * Returns the formatter associated with the first (bottom) Region
      * containing x and y.
-     *
+     * 
      * @param x
      * @param y
-     * @return the getFormatter associated with the first (bottom) region
+     * @return the formatter associated with the first (bottom) region
      *         containing x and y. null otherwise.
      */
     public AxisValueLabelFormatter getAxisValueLabelFormatterForVal(double x,
@@ -363,9 +352,9 @@ public class XYGraphWidget extends Widget {
     }
 
     /**
-     * Returns the getFormatter associated with the first (bottom-most) Region
+     * Returns the formatter associated with the first (bottom-most) Region
      * containing value.
-     *
+     * 
      * @param value
      * @return
      */
@@ -373,9 +362,9 @@ public class XYGraphWidget extends Widget {
      * public AxisValueLabelFormatter getXYAxisFormatterForRangeVal(double
      * value) { return getRegionContainingVal(rangeLabelRegions, value); }
      *//**
-     * Returns the getFormatter associated with the first (bottom-most) Region
+     * Returns the formatter associated with the first (bottom-most) Region
      * containing value.
-     *
+     * 
      * @param value
      * @return
      */
@@ -393,7 +382,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Returns a RectF representing the grid area last drawn by this plot.
-     *
+     * 
      * @return
      */
     public RectF getGridRect() {
@@ -409,7 +398,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Convenience method. Wraps getYVal(float)
-     *
+     * 
      * @param point
      * @return
      */
@@ -419,7 +408,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Converts a y pixel to a y value.
-     *
+     * 
      * @param yPix
      * @return
      */
@@ -435,7 +424,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Convenience method. Wraps getXVal(float)
-     *
+     * 
      * @param point
      * @return
      */
@@ -445,7 +434,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Converts an x pixel into an x value.
-     *
+     * 
      * @param xPix
      * @return
      */
@@ -520,15 +509,13 @@ public class XYGraphWidget extends Widget {
                     break;
             }
 
-            // if a matching region getFormatter was found, create a clone
-            // of labelPaint and use the getFormatter's color. Otherwise
+            // if a matching region formatter was found, create a clone
+            // of labelPaint and use the formatter's color. Otherwise
             // just use labelPaint:
             Paint p;
             if (rf != null) {
-                // p = rf.getPaint();
                 p = new Paint(labelPaint);
                 p.setColor(rf.getColor());
-                // p.setColor(Color.RED);
             } else {
                 p = labelPaint;
             }
@@ -612,7 +599,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Draws the drid and domain/range labels for the plot.
-     *
+     * 
      * @param canvas
      */
     protected void drawGrid(Canvas canvas) {
@@ -802,7 +789,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Renders the text associated with user defined markers
-     *
+     * 
      * @param canvas
      * @param text
      * @param marker
@@ -945,7 +932,7 @@ public class XYGraphWidget extends Widget {
 
     /**
      * Draws lines and points for each element in the series.
-     *
+     * 
      * @param canvas
      * @throws PlotRenderException
      */
@@ -953,13 +940,8 @@ public class XYGraphWidget extends Widget {
         try {
             canvas.save(Canvas.ALL_SAVE_FLAG);
             canvas.clipRect(gridRect, android.graphics.Region.Op.INTERSECT);
-            renderStack.sync();
-
-            for(RenderStack.StackElement thisElement : renderStack.getElements()) {
-                if(thisElement.isEnabled()) {
-                    plot.getRenderer(thisElement.getPair().getFormatter().getRendererClass()).
-                            render(canvas, paddedGridRect, thisElement.getPair(), renderStack);
-                }
+            for (XYSeriesRenderer renderer : plot.getRendererList()) {
+                renderer.render(canvas, paddedGridRect);
             }
 
         } finally {
@@ -1229,7 +1211,7 @@ public class XYGraphWidget extends Widget {
     public Paint getDomainSubGridLinePaint() {
         return domainSubGridLinePaint;
     }
-
+    
     /**
      * Set the paint used to draw the domain grid line.
      * @param gridLinePaint
@@ -1260,7 +1242,7 @@ public class XYGraphWidget extends Widget {
     public void setRangeSubGridLinePaint(Paint gridLinePaint) {
         this.rangeSubGridLinePaint = gridLinePaint;
     }
-
+    
     // TODO: make a generic renderer queue.
 
     public Format getRangeValueFormat() {
@@ -1549,7 +1531,7 @@ public class XYGraphWidget extends Widget {
     public void setDomainAxisBottom(boolean domainAxisBottom) {
         this.domainAxisBottom = domainAxisBottom;
     }
-
+    
     public boolean isRangeTick() {
         return rangeTick;
     }

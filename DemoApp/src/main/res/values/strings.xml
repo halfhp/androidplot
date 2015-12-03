@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AndroidPlot Demo</string>
+
+    <string name="sxy_title">A Simple XY Plot</string>
+
+    <string name="ts_title">Time Series</string>
+    <string name="ts_plot1_title">Yearly UFO Sightings</string>
+</resources>

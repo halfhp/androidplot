@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.androidplot.demos"
+      android:versionCode="8"
+      android:versionName="0.6.0.1">
+    <uses-sdk android:minSdkVersion="6" android:targetSdkVersion="16"/>
+
+    <!-- We must disable hardware acceleration otherwise some lines will not appear in our plots. -->
+    <application android:label="AndroidPlot API DemoApp"
+                 android:icon="@drawable/icon">
+        <activity android:name=".MainActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".SimplePieChartActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".SimpleXYPlotActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".BarPlotExampleActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".DynamicXYPlotActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".OrientationSensorExampleActivity"
+                  android:label="@string/app_name"
+                  android:screenOrientation="landscape">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".StepChartExampleActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".TouchZoomExampleActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ListViewActivity" android:label="ListView Example"/>
+        <activity android:name=".XYRegionExampleActivity" android:label="XYRegion Example">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".TimeSeriesActivity"/>
+		<activity android:name=".DualScaleXYPlotExampleActivity"/>
+        <activity android:name=".XYPlotWithBgImgActivity"/>
+        
+        <!-- receiver for demo app widget -->
+        <receiver
+                android:icon="@drawable/icon"
+                android:label="Example Widget"
+                android:name="com.androidplot.demos.widget.DemoAppWidgetProvider" >
+            <intent-filter >
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                    android:name="android.appwidget.provider"
+                    android:resource="@xml/demo_app_widget_provider_info" />
+        </receiver>
+    </application>
+</manifest> 

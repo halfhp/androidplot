@@ -20,7 +20,7 @@ import android.content.res.TypedArray;
 import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
-import com.androidplot.ui.SeriesAndFormatterPair;
+import com.androidplot.ui.SeriesAndFormatter;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.Formatter;
 import com.androidplot.util.Configurator;
@@ -181,7 +181,7 @@ public class PlotTest {
 
         plot.addSeries(m1, new MockFormatter1());
 
-        ArrayList<SeriesAndFormatterPair<MockSeries, MockFormatter1>> registry =
+        ArrayList<SeriesAndFormatter<MockSeries, MockFormatter1>> registry =
                 Deencapsulation.getField(plot, "seriesRegistry");
         assertEquals(1, registry.size());
         //assertEquals(1, registry.get(cl).size());
@@ -217,7 +217,7 @@ public class PlotTest {
 
         //Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot("MockPlot");
-        ArrayList<SeriesAndFormatterPair<MockSeries, MockFormatter1>> registry =
+        ArrayList<SeriesAndFormatter<MockSeries, MockFormatter1>> registry =
                 Deencapsulation.getField(plot, "seriesRegistry");
 
         MockSeries m1 = new MockSeries();
@@ -300,7 +300,7 @@ public class PlotTest {
     public void testGetFormatter() throws Exception {
         //Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot("MockPlot");
-        ArrayList<SeriesAndFormatterPair<MockSeries, MockFormatter1>> registry =
+        ArrayList<SeriesAndFormatter<MockSeries, MockFormatter1>> registry =
                 Deencapsulation.getField(plot, "seriesRegistry");
 
         MockSeries m1 = new MockSeries();

@@ -51,10 +51,11 @@ public abstract class SeriesRenderer
      *
      * @param canvas
      * @param plotArea
-     * @param sfPair The series / getFormatter pair to be rendered
+     * @param sfPair The series / formatter pair to be rendered
      * @throws PlotRenderException
      */
-    public void render(Canvas canvas, RectF plotArea, SeriesAndFormatterPair<SeriesType, SeriesFormatterType> sfPair, RenderStack stack) throws PlotRenderException {
+    public void render(Canvas canvas, RectF plotArea, SeriesAndFormatter<SeriesType,
+            SeriesFormatterType> sfPair, RenderStack stack) throws PlotRenderException {
         onRender(canvas, plotArea, sfPair.getSeries(), sfPair.getFormatter(), stack);
     }
 
@@ -68,7 +69,8 @@ public abstract class SeriesRenderer
      *              to gain effect.
      * @throws PlotRenderException
      */
-    public abstract void onRender(Canvas canvas, RectF plotArea, SeriesType series, SeriesFormatterType formatter, RenderStack stack) throws PlotRenderException;
+    public abstract void onRender(Canvas canvas, RectF plotArea, SeriesType series,
+                                  SeriesFormatterType formatter, RenderStack stack) throws PlotRenderException;
 
     /**
      * Draw the legend icon in the rect passed in.
@@ -89,15 +91,14 @@ public abstract class SeriesRenderer
 
     /**
      *
-     * @return A List of all {@link com.androidplot.ui.SeriesAndFormatterPair} instances currently associated
+     * @return A List of all {@link SeriesAndFormatter} instances currently associated
      * with this Renderer.
      */
-    public List<SeriesAndFormatterPair<SeriesType, ? extends SeriesFormatterType>> getSeriesList() {
-        List<SeriesAndFormatterPair<SeriesType, ? extends SeriesFormatterType>> results =
-                new ArrayList<SeriesAndFormatterPair<SeriesType, ? extends SeriesFormatterType>>();
+    public List<SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType>> getSeriesList() {
+        List<SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType>> results = new ArrayList<>();
+        ArrayList<SeriesAndFormatter> sfList = getPlot().getSeriesRegistry();
 
-        ArrayList<SeriesAndFormatterPair> pairList = getPlot().getSeriesRegistry();
-        for(SeriesAndFormatterPair thisPair : pairList) {
+        for(SeriesAndFormatter thisPair : sfList) {
             if(thisPair.getFormatter().getRendererClass() == getClass()) {
                 results.add(thisPair);
             }

@@ -33,7 +33,7 @@ public interface ZIndexable<ElementType> {
      * @param element
      * @return
      */
-    public boolean moveToTop(ElementType element);
+    boolean moveToTop(ElementType element);
 
 
     /**
@@ -42,7 +42,7 @@ public interface ZIndexable<ElementType> {
      * @param reference
      * @return
      */
-    public boolean moveAbove(ElementType objectToMove, ElementType reference);
+    boolean moveAbove(ElementType objectToMove, ElementType reference);
 
 
     /**
@@ -52,14 +52,14 @@ public interface ZIndexable<ElementType> {
      * @param reference
      * @return
      */
-    public boolean moveBeneath(ElementType objectToMove, ElementType reference);
+    boolean moveBeneath(ElementType objectToMove, ElementType reference);
 
     /**
      * Move beneath all other elements
      * @param key
      * @return
      */
-    public boolean moveToBottom(ElementType key);
+    boolean moveToBottom(ElementType key);
 
 
     /**
@@ -67,27 +67,14 @@ public interface ZIndexable<ElementType> {
      * @param key
      * @return
      */
-    public boolean moveUp(ElementType key);
+    boolean moveUp(ElementType key);
 
     /**
      * Move down by one element
      * @param key
      * @return
      */
-    public boolean moveDown(ElementType key);
+    boolean moveDown(ElementType key);
 
-    public List<ElementType> elements();
-
-
-    /**
-     * Add beneath all other elements
-     * @param element
-     */
-    //public void addToBottom(ElementType element);
-
-    /**
-     * Add above all other elements
-     * @param element
-     */
-    //public void addToTop(ElementType element);
+    List<ElementType> elements();
 }

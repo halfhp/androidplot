@@ -8,10 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Utility class for invoking Plot.redraw() on a backgorund thread
+ * Utility class for invoking Plot.redraw() on a background thread
  * at a set frequency.
  */
 public class Redrawer implements Runnable {
+
+    private static final int ONE_SECOND_MS = 1000;
 
     private static final String TAG = Redrawer.class.getName();
 
@@ -105,7 +107,7 @@ public class Redrawer implements Runnable {
      * @param refreshRate Refresh rate in Hz.
      */
     public void setMaxRefreshRate(float refreshRate) {
-        sleepTime = (long)(1000 / refreshRate);
+        sleepTime = (long)(ONE_SECOND_MS / refreshRate);
         Log.d(TAG, "Set Redrawer refresh rate to " +
                 refreshRate + "( " + sleepTime + " ms)");
     }

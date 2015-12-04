@@ -18,7 +18,7 @@ package com.androidplot.xy;
 
 import android.graphics.*;
 import com.androidplot.ui.LayoutManager;
-import com.androidplot.ui.SeriesAndFormatterPair;
+import com.androidplot.ui.SeriesAndFormatter;
 import com.androidplot.ui.SizeMetrics;
 import com.androidplot.ui.TableModel;
 import com.androidplot.ui.widget.Widget;
@@ -171,7 +171,7 @@ public class XYLegendWidget extends Widget {
         RectF cellRect;
 
         // draw each series legend item:
-        for(SeriesAndFormatterPair<XYSeries, XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
+        for(SeriesAndFormatter<XYSeries, XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
             cellRect = it.next();
             XYSeriesFormatter format = sfPair.getFormatter();
             drawSeriesLegendCell(canvas, plot.getRenderer(sfPair.getFormatter().getRendererClass()),

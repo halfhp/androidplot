@@ -65,7 +65,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      * Associates lists series and getFormatter pairs with the class of the Renderer used to render them.
      */
-    public ArrayList<SeriesAndFormatterPair<SeriesType, FormatterType>> getSeriesRegistry() {
+    public ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> getSeriesRegistry() {
         return seriesRegistry;
     }
 
@@ -125,7 +125,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private BorderStyle borderStyle = Plot.BorderStyle.SQUARE;
     private float borderRadiusX = 15;
     private float borderRadiusY = 15;
-    private boolean drawBorderEnabled = true;
     private Paint borderPaint;
     private Paint backgroundPaint;
     private LayoutManager layoutManager;
@@ -139,7 +138,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     private HashMap<Class<? extends RendererType>, RendererType> renderers;
 
-    private ArrayList<SeriesAndFormatterPair<SeriesType, FormatterType>> seriesRegistry;
+    private ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> seriesRegistry;
 
     private final ArrayList<PlotListener> listeners;
 
@@ -148,9 +147,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private boolean isIdle = true;
 
     {
-        listeners = new ArrayList<PlotListener>();
-        seriesRegistry = new ArrayList<SeriesAndFormatterPair<SeriesType, FormatterType>>();
-        renderers = new HashMap<Class<? extends RendererType>, RendererType>();
+        listeners = new ArrayList<>();
+        seriesRegistry = new ArrayList<>();
+        renderers = new HashMap<>();
 
         borderPaint = new Paint();
         borderPaint.setColor(Color.rgb(150, 150, 150));
@@ -331,7 +330,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
 
         layoutManager.onPostInit();
-        //Log.d(TAG, "AndroidPlot RenderMode: " + renderMode);
         if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
             renderThread = new Thread(new Runnable() {
                 @Override
@@ -358,7 +356,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                             }
                         }
                     }
-                    System.out.println("AndroidPlot render thread finished.");
                 }
             });
         }
@@ -467,13 +464,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                         typedAttrs.recycle();
                     }
                 }
-            } /*else if(isInEditMode()) {
-                typedAttrs = getContext().obtainStyledAttributes(attrs, R.styleable.Plot, defStyle, 0);
-                processBaseAttrs(typedAttrs);
-                typedAttrs.recycle();
-            }*/
+            }
 
-            // then apply "configurator" attrs: (overrides any previously applied styleable attrs)
+            // apply "configurator" attrs: (overrides any previously applied styleable attrs)
             // filter out androidplot prefixed attrs:
             HashMap<String, String> attrHash = new HashMap<String, String>();
             for (int i = 0; i < attrs.getAttributeCount(); i++) {
@@ -516,7 +509,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * Add a new Series to the Plot.
      * @param series
      * @param formatter
-     * @return True if the series was added or false if the series / getFormatter pair already exists in the registry.
+     * @return True if the series was added or false if the series / formatter pair already exists in the registry.
      */
     public synchronized boolean addSeries(SeriesType series, FormatterType formatter) {
         Class rendererClass = formatter.getRendererClass();
@@ -535,7 +528,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             addListener((PlotListener)series);
         }
 
-        getSeriesRegistry().add(new SeriesAndFormatterPair<SeriesType, FormatterType>(series, formatter));
+        getSeriesRegistry().add(new SeriesAndFormatter<>(series, formatter));
         return true;
     }
 
@@ -543,10 +536,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      *
      * @param series
      * @param rendererClass
-     * @return The {@link com.androidplot.ui.SeriesAndFormatterPair} that matches the series and rendererClass params, or null if one is not found.
+     * @return The {@link SeriesAndFormatter} that matches the series and rendererClass params, or null if one is not found.
      */
-    protected SeriesAndFormatterPair<SeriesType, FormatterType> getSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
-        for(SeriesAndFormatterPair<SeriesType, FormatterType> thisPair : getSeriesRegistry()) {
+    protected SeriesAndFormatter<SeriesType, FormatterType> getSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
+        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : getSeriesRegistry()) {
             if(thisPair.getSeries() == series && thisPair.getFormatter().getRendererClass() == rendererClass) {
                 return thisPair;
             }
@@ -557,12 +550,12 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      *
      * @param series
-     * @return A List of {@link com.androidplot.ui.SeriesAndFormatterPair} instances that reference series.
+     * @return A List of {@link SeriesAndFormatter} instances that reference series.
      */
-    protected List<SeriesAndFormatterPair<SeriesType, FormatterType>> getSeries(SeriesType series) {
-        List<SeriesAndFormatterPair<SeriesType, FormatterType>> results =
-                new ArrayList<SeriesAndFormatterPair<SeriesType, FormatterType>>();
-        for(SeriesAndFormatterPair<SeriesType, FormatterType> thisPair : getSeriesRegistry()) {
+    protected List<SeriesAndFormatter<SeriesType, FormatterType>> getSeries(SeriesType series) {
+        List<SeriesAndFormatter<SeriesType, FormatterType>> results =
+                new ArrayList<SeriesAndFormatter<SeriesType, FormatterType>>();
+        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : getSeriesRegistry()) {
             if(thisPair.getSeries() == series) {
                 results.add(thisPair);
             }
@@ -578,11 +571,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param rendererClass
      * @return The SeriesAndFormatterPair that was removed or null if nothing was removed.
      */
-    public synchronized SeriesAndFormatterPair<SeriesType, FormatterType> removeSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
+    public synchronized SeriesAndFormatter<SeriesType, FormatterType> removeSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
 
-        List<SeriesAndFormatterPair<SeriesType, FormatterType>> results = getSeries(series);
-        SeriesAndFormatterPair<SeriesType, FormatterType> result = null;
-        for(SeriesAndFormatterPair<SeriesType, FormatterType> thisPair : results) {
+        List<SeriesAndFormatter<SeriesType, FormatterType>> results = getSeries(series);
+        SeriesAndFormatter<SeriesType, FormatterType> result = null;
+        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : results) {
             if(thisPair.getFormatter().getRendererClass() == rendererClass) {
                 result = thisPair;
                 getSeriesRegistry().remove(result);
@@ -604,7 +597,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public synchronized void removeSeries(SeriesType series) {
 
-        for(Iterator<SeriesAndFormatterPair<SeriesType, FormatterType>> it = getSeriesRegistry().iterator(); it.hasNext();) {
+        for(Iterator<SeriesAndFormatter<SeriesType, FormatterType>> it = getSeriesRegistry().iterator(); it.hasNext();) {
             if(it.next().getSeries() == series) {
                 it.remove();
             }
@@ -620,7 +613,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * Remove all series from the plot.
      */
     public void clear() {
-        for(Iterator<SeriesAndFormatterPair<SeriesType, FormatterType>> it = getSeriesRegistry().iterator(); it.hasNext();) {
+        for(Iterator<SeriesAndFormatter<SeriesType, FormatterType>> it = getSeriesRegistry().iterator(); it.hasNext();) {
             it.next();
             it.remove();
         }
@@ -778,7 +771,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 }
             } catch (PlotRenderException e) {
                 Log.e(TAG, "Exception while rendering Plot.", e);
-                e.printStackTrace();
             } catch (Exception e) {
                 Log.e(TAG, "Exception while rendering Plot.", e);
             }
@@ -815,24 +807,20 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @throws PlotRenderException
      */
     protected void drawBorder(Canvas canvas, RectF dims) {
-        switch (borderStyle) {
-            case ROUNDED:
-                canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, borderPaint);
-                break;
-            case SQUARE:
-                canvas.drawRect(dims, borderPaint);
-                break;
-            default:
-        }
+        drawRect(canvas, dims, borderPaint);
     }
 
     protected void drawBackground(Canvas canvas, RectF dims) {
+        drawRect(canvas, dims, backgroundPaint);
+    }
+
+    protected void drawRect(Canvas canvas, RectF dims, Paint paint) {
         switch (borderStyle) {
             case ROUNDED:
-                canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, backgroundPaint);
+                canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, paint);
                 break;
             case SQUARE:
-                canvas.drawRect(dims, backgroundPaint);
+                canvas.drawRect(dims, paint);
                 break;
             default:
         }

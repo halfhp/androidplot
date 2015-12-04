@@ -25,11 +25,6 @@ import java.util.List;
  */
 public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolator.Params> {
 
-    /*@Override
-    public List<XYPair> interpolate(XYSeries series, InterpolationParams params) {
-        return null;
-    }*/
-
     public enum Type {
         Uniform,
         Centripetal
@@ -71,11 +66,11 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
      * Wraps a normal XYSeries, inserting a new point at the beginning and end of the series.
      */
     static class ExtrapolatedXYSeries implements XYSeries {
-        private final XYPair first;
-        private final XYPair last;
+        private final XY first;
+        private final XY last;
         private final XYSeries series;
 
-        public ExtrapolatedXYSeries(XYSeries series, XYPair first, XYPair last) {
+        public ExtrapolatedXYSeries(XYSeries series, XY first, XY last) {
             this.series = series;
             this.first = first;
             this.last = last;
@@ -115,21 +110,19 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
     }
 
     /**
-     * This method will calculate the Catmull-Rom interpolation curve, returning
-     * it as a list of Coord coordinate objects.  This method in particular
-     * adds the first and last control points which are not visible, but required
+     * This method will calculate the Catmull-Rom interpolation curve, returning it as a list of Coord coordinate
+     * objects.  This method in particular adds the first and last control points which are not visible, but required
      * for calculating the spline.
      *
-     * @param series The list of original straight line points to calculate
-     *               an interpolation from.
+     * @param series The list of original straight line points to calculate an interpolation from.
      * @return The list of interpolated coordinates.
      * @throws java.lang.IllegalArgumentException if pointsPerSegment is less than 2.
      */
-    //public static List<XYPair> interpolate(XYSeries series, int pointsPerSegment, CatmullRomType curveType) {
     @Override
-    public List<XYPair> interpolate(XYSeries series, Params params) {
+    public List<XY> interpolate(XYSeries series, Params params) {
         if (params.getPointPerSegment() < 2) {
-            throw new IllegalArgumentException("The pointsPerSegment parameter must be greater than 2, since 2 points is just the linear segment.");
+            throw new IllegalArgumentException(
+                    "pointsPerSegment must be greater than 2, since 2 points is just the linear segment.");
         }
 
         // Cannot interpolate curves given only two points.  Two points
@@ -147,7 +140,7 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
         double y1 = series.getY(0).doubleValue() - dy;
 
         // Actually create the start point from the extrapolated values.
-        XYPair start = new XYPair(x1, y1);
+        XY start = new XY(x1, y1);
 
         // Repeat for the end control point.
         int n = series.size() -1;
@@ -155,7 +148,7 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
         dy = series.getY(n).doubleValue() - series.getY(n - 1).doubleValue();
         double xn = series.getX(n).doubleValue() + dx;
         double yn = series.getY(n).doubleValue() + dy;
-        XYPair end = new XYPair(xn, yn);
+        XY end = new XY(xn, yn);
 
         // TODO: figure out whether this extra control-point synthesis is
         // TODO: really necessary and either remove the above or fix the below.
@@ -169,14 +162,14 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
         ExtrapolatedXYSeries extrapolatedXYSeries = new ExtrapolatedXYSeries(series, start, end);
 
         // Dimension a result list of coordinates.
-        List<XYPair> result = new ArrayList<XYPair>();
+        List<XY> result = new ArrayList<>();
 
         // When looping, remember that each cycle requires 4 points, starting
         // with i and ending with i+3.  So we don't loop through all the points.
         for (int i = 0; i < extrapolatedXYSeries.size() - 3; i++) {
 
             // Actually calculate the Catmull-Rom curve for one segment.
-            List<XYPair> points = interpolate(extrapolatedXYSeries, i, params);
+            List<XY> points = interpolate(extrapolatedXYSeries, i, params);
 
             // Since the middle points are added twice, once for each bordering
             // segment, we only add the 0 index result point for the first
@@ -203,15 +196,13 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
      * @return the list of coordinates that define the CatmullRom curve
      * between the points defined by index+1 and index+2.
      */
-    public List<XYPair> interpolate(XYSeries series, int index, Params params) {
-        List<XYPair> result = new ArrayList<XYPair>();
+    public List<XY> interpolate(XYSeries series, int index, Params params) {
+        List<XY> result = new ArrayList<>();
         double[] x = new double[4];
         double[] y = new double[4];
         double[] time = new double[4];
         for (int i = 0; i < 4; i++) {
-            //x[i] = points.get(index + i).X;
             x[i] = series.getX(index + i).doubleValue();
-            //y[i] = points.get(index + i).Y;
             y[i] = series.getY(index + i).doubleValue();
             time[i] = i;
         }
@@ -235,13 +226,13 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
         }
 
         int segments = params.getPointPerSegment() - 1;
-        result.add(new XYPair(series.getX(index + 1), series.getY(index + 1)));
+        result.add(new XY(series.getX(index + 1), series.getY(index + 1)));
         for (int i = 1; i < segments; i++) {
             double xi = interpolate(x, time, tstart + (i * (tend - tstart)) / segments);
             double yi = interpolate(y, time, tstart + (i * (tend - tstart)) / segments);
-            result.add(new XYPair(xi, yi));
+            result.add(new XY(xi, yi));
         }
-        result.add(new XYPair(series.getX(index + 2), series.getY(index + 2)));
+        result.add(new XY(series.getX(index + 2), series.getY(index + 2)));
         return result;
     }
 

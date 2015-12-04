@@ -17,14 +17,13 @@
 package com.androidplot.xy;
 
 /**
- * Alternative to using Android's Pair class so that backwards compatibility with
- * API level 4 is maintained.
+ * A pair of x/y coordinates
  */
-public class XYPair {
+public class XY {
     public Number x;
     public Number y;
 
-    public XYPair(Number x, Number y) {
+    public XY(Number x, Number y) {
         this.x = x;
         this.y = y;
     }

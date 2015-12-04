@@ -21,12 +21,12 @@ import com.androidplot.Series;
 /**
  * Defines an association between a Series and a Formatter.
  */
-public class SeriesAndFormatterPair<SeriesType extends Series, FormatterType extends Formatter> {
+public class SeriesAndFormatter<SeriesType extends Series, FormatterType extends Formatter> {
 
     private final SeriesType series;
     private final FormatterType formatter;
 
-    public SeriesAndFormatterPair(SeriesType series, FormatterType formatter) {
+    public SeriesAndFormatter(SeriesType series, FormatterType formatter) {
         this.series = series;
         this.formatter = formatter;
     }

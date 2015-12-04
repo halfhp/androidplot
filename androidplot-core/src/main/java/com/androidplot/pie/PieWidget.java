@@ -42,8 +42,8 @@ public class PieWidget extends Widget {
         renderStack.sync();
         for(RenderStack.StackElement thisElement : renderStack.getElements()) {
             if(thisElement.isEnabled()) {
-                pieChart.getRenderer(thisElement.getPair().getFormatter().getRendererClass()).
-                        render(canvas, widgetRect, thisElement.getPair(), renderStack);
+                pieChart.getRenderer(thisElement.get().getFormatter().getRendererClass()).
+                        render(canvas, widgetRect, thisElement.get(), renderStack);
             }
         }
     }

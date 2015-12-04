@@ -27,5 +27,5 @@ public interface Mapping<Key, Value> {
      * @param value
      * @return The Key associated with the specified value.
      */
-    public Key get(Value value);
+    Key get(Value value);
 }

@@ -944,8 +944,8 @@ public class XYGraphWidget extends Widget {
 
             for(RenderStack.StackElement thisElement : renderStack.getElements()) {
                 if(thisElement.isEnabled()) {
-                    plot.getRenderer(thisElement.getPair().getFormatter().getRendererClass()).
-                            render(canvas, paddedGridRect, thisElement.getPair(), renderStack);
+                    plot.getRenderer(thisElement.get().getFormatter().getRendererClass()).
+                            render(canvas, paddedGridRect, thisElement.get(), renderStack);
                 }
             }
 

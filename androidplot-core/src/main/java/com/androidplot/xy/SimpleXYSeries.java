@@ -17,8 +17,6 @@
 package com.androidplot.xy;
 
 import android.graphics.Canvas;
-import android.util.Log;
-import android.util.Pair;
 import com.androidplot.Plot;
 import com.androidplot.PlotListener;
 
@@ -111,7 +109,6 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
         lock.writeLock().lock();
         try {
             // empty the current values:
-            //xVals.clear();
             xVals = null;
             yVals.clear();
 
@@ -127,10 +124,6 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
                     for(Number n : model) {
                         yVals.add(n);
                     }
-                    /*for (int i = 0; i < model.size(); i++) {
-                        //xVals.add(i);
-                        yVals.add(model.get(i));
-                    }*/
                     break;
 
                 // xy interleaved array:
@@ -212,15 +205,15 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
 
     /**
      *
-     * @return Pair<Number, Number> with first equal to x-val and second equal to y-val.
+     * @return {@link XY} with first equal to x-val and second equal to y-val.
      */
-    public Pair<Number, Number> removeFirst() {
+    public XY removeFirst() {
         lock.writeLock().lock();
         try {
             if (size() <= 0) {
                 throw new NoSuchElementException();
             }
-            return new Pair<Number, Number>(xVals != null ? xVals.removeFirst() : 0, yVals.removeFirst());
+            return new XY(xVals != null ? xVals.removeFirst() : 0, yVals.removeFirst());
         } finally {
             lock.writeLock().unlock();
         }
@@ -240,15 +233,15 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
 
     /**
      *
-     * @return Pair<Number, Number> with first equal to x-val and second equal to y-val.
+     * @return {@link XY} with first equal to x-val and second equal to y-val.
      */
-    public Pair<Number, Number> removeLast() {
+    public XY removeLast() {
         lock.writeLock().lock();
         try {
             if (size() <= 0) {
                 throw new NoSuchElementException();
             }
-            return new Pair<Number, Number>(xVals != null ? xVals.removeLast() : yVals.size() - 1, yVals.removeLast());
+            return new XY(xVals != null ? xVals.removeLast() : yVals.size() - 1, yVals.removeLast());
         } finally {
             lock.writeLock().unlock();
         }

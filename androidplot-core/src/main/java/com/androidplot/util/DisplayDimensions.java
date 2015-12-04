@@ -19,9 +19,11 @@ package com.androidplot.util;
 import android.graphics.RectF;
 
 /**
- * Convenience class for managing BoxModel data
+ * Convenience class for managing {@link com.androidplot.ui.BoxModel} data
  */
 public class DisplayDimensions {
+
+    private static final int ONE = 1;
 
     public final RectF canvasRect;
     public final RectF marginatedRect;
@@ -31,7 +33,7 @@ public class DisplayDimensions {
     private static final RectF initRect;
 
     static {
-        initRect = new RectF(1, 1, 1, 1);
+        initRect = new RectF(ONE, ONE, ONE, ONE);
     }
 
     public DisplayDimensions() {

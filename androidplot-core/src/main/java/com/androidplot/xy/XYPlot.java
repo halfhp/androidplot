@@ -16,14 +16,12 @@
 
 package com.androidplot.xy;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.os.Build;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
 import com.androidplot.R;
@@ -31,7 +29,6 @@ import com.androidplot.ui.*;
 import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.util.PixelUtils;
-
 import java.text.Format;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -138,11 +135,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     private static final int DEFAULT_DOMAIN_LABEL_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_DOMAIN_LABEL_WIDGET_X_OFFSET_DP = 20;
-    private static final int DEFAULT_DOMAIN_LABEL_WIDGET_TEXT_SIZE_SP = 20;
 
     private static final int DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP = 0;
-    private static final int DEFAULT_RANGE_LABEL_WIDGET_TEXT_SIZE_SP = 20;
 
     private static final int DEFAULT_GRAPH_WIDGET_TOP_MARGIN_DP = 3;
     private static final int DEFAULT_GRAPH_WIDGET_BOTTOM_MARGIN_DP = 3;
@@ -258,8 +253,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         setPlotMarginRight(PixelUtils.dpToPix(DEFAULT_PLOT_RIGHT_MARGIN_DP));
         setPlotMarginBottom(PixelUtils.dpToPix(DEFAULT_PLOT_BOTTOM_MARGIN_DP));
 
-        xValueMarkers = new ArrayList<XValueMarker>();
-        yValueMarkers = new ArrayList<YValueMarker>();
+        xValueMarkers = new ArrayList<>();
+        yValueMarkers = new ArrayList<>();
 
         setDefaultBounds(new RectRegion(-1, 1, -1, 1));
 
@@ -443,7 +438,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         calculatedMaxY = userMaxY;
 
         // next we go through each series to update our min/max values:
-        for (SeriesAndFormatterPair<? extends XYSeries, ? extends XYSeriesFormatter> thisPair : getSeriesRegistry()) {
+        for (SeriesAndFormatter<? extends XYSeries, ? extends XYSeriesFormatter> thisPair : getSeriesRegistry()) {
             XYSeries series = thisPair.getSeries();
             // step through each point in each series:
             for (int i = 0; i < series.size(); i++) {
@@ -489,7 +484,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 updateDomainMinMaxForOriginModel();
                 break;
             case EDGE:
-                updateDomainMinMaxForEdgeModel();
+                calculatedMaxX = getCalculatedUpperBoundary(domainUpperBoundaryMode, prevMaxX, calculatedMaxX);
+                calculatedMinX = getCalculatedLowerBoundary(domainLowerBoundaryMode, prevMinX, calculatedMinX);
                 calculatedMinX = ApplyUserMinMax(calculatedMinX, domainLeftMin,
                         domainLeftMax);
                 calculatedMaxX = ApplyUserMinMax(calculatedMaxX,
@@ -506,7 +502,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 break;
             case EDGE:
             	if (getSeriesRegistry().size() > 0) {
-	                updateRangeMinMaxForEdgeModel();
+                    calculatedMaxY = getCalculatedUpperBoundary(rangeUpperBoundaryMode, prevMaxY, calculatedMaxY);
+                    calculatedMinY = getCalculatedLowerBoundary(rangeLowerBoundaryMode, prevMinY, calculatedMinY);
 	                calculatedMinY = ApplyUserMinMax(calculatedMinY,
 	                        rangeBottomMin, rangeBottomMax);
 	                calculatedMaxY = ApplyUserMinMax(calculatedMaxY, rangeTopMin,
@@ -522,92 +519,49 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         calculatedRangeOrigin = this.userRangeOrigin != null ? userRangeOrigin : getCalculatedMinY();
     }
 
-    /**
-     * Should ONLY be called from updateMinMax.
-     * Results are undefined otherwise.
-     */
-    private void updateDomainMinMaxForEdgeModel() {
-        switch (domainUpperBoundaryMode) {
+    protected Number getCalculatedUpperBoundary(BoundaryMode mode, Number previousMax, Number calculatedMax) {
+        switch (mode) {
             case FIXED:
                 break;
             case AUTO:
                 break;
             case GROW:
-                if (!(prevMaxX == null || (calculatedMaxX.doubleValue() > prevMaxX.doubleValue()))) {
-                    calculatedMaxX = prevMaxX;
+                if (!(previousMax == null || calculatedMax.doubleValue() > previousMax.doubleValue())) {
+                    calculatedMax = previousMax;
                 }
                 break;
             case SHRINNK:
-                if (!(prevMaxX == null || calculatedMaxX.doubleValue() < prevMaxX.doubleValue())) {
-                    calculatedMaxX = prevMaxX;
+                if (!(previousMax == null || calculatedMax.doubleValue() < previousMax.doubleValue())) {
+                    calculatedMax = previousMax;
                 }
                 break;
             default:
-                throw new UnsupportedOperationException(
-                        "DomainUpperBoundaryMode not yet implemented: " + domainUpperBoundaryMode);
+                throw new UnsupportedOperationException("BoundaryMode not supported: " + mode);
         }
-
-        switch (domainLowerBoundaryMode) {
-            case FIXED:
-                break;
-            case AUTO:
-                break;
-            case GROW:
-                if (!(prevMinX == null || calculatedMinX.doubleValue() < prevMinX.doubleValue())) {
-                    calculatedMinX = prevMinX;
-                }
-                break;
-            case SHRINNK:
-                if (!(prevMinX == null || calculatedMinX.doubleValue() > prevMinX.doubleValue())) {
-                    calculatedMinX = prevMinX;
-                }
-                break;
-            default:
-                throw new UnsupportedOperationException(
-                        "DomainLowerBoundaryMode not supported: " + domainLowerBoundaryMode);
-        }
+        return calculatedMax;
     }
 
-    public void updateRangeMinMaxForEdgeModel() {
-        switch (rangeUpperBoundaryMode) {
+    protected Number getCalculatedLowerBoundary(BoundaryMode mode, Number previousMin, Number calculatedMin) {
+        switch (mode) {
             case FIXED:
                 break;
             case AUTO:
                 break;
             case GROW:
-                if (!(prevMaxY == null || calculatedMaxY.doubleValue() > prevMaxY.doubleValue())) {
-                    calculatedMaxY = prevMaxY;
+                if (!(previousMin == null || calculatedMin.doubleValue() < previousMin.doubleValue())) {
+                    return previousMin;
                 }
                 break;
             case SHRINNK:
-                if (!(prevMaxY == null || calculatedMaxY.doubleValue() < prevMaxY.doubleValue())) {
-                    calculatedMaxY = prevMaxY;
+                if (!(previousMin == null || calculatedMin.doubleValue() > previousMin.doubleValue())) {
+                    return previousMin;
                 }
                 break;
             default:
                 throw new UnsupportedOperationException(
-                        "RangeUpperBoundaryMode not supported: " + rangeUpperBoundaryMode);
+                        "BoundaryMode not supported: " + mode);
         }
-
-        switch (rangeLowerBoundaryMode) {
-            case FIXED:
-                break;
-            case AUTO:
-                break;
-            case GROW:
-                if (!(prevMinY == null || calculatedMinY.doubleValue() < prevMinY.doubleValue())) {
-                    calculatedMinY = prevMinY;
-                }
-                break;
-            case SHRINNK:
-                if (!(prevMinY == null || calculatedMinY.doubleValue() > prevMinY.doubleValue())) {
-                    calculatedMinY = prevMinY;
-                }
-                break;
-            default:
-                throw new UnsupportedOperationException(
-                        "RangeLowerBoundaryMode not supported: " + rangeLowerBoundaryMode);
-        }
+        return calculatedMin;
     }
 
     /**
@@ -653,15 +607,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         domainOriginExtent = extent;
         domainOriginBoundaryMode = mode;
 
-        if (domainOriginBoundaryMode == BoundaryMode.FIXED) {
-            double domO = userDomainOrigin.doubleValue();
-            double domE = domainOriginExtent.doubleValue();
-            userMaxX = domO + domE;
-            userMinX = domO - domE;
-        } else {
-            userMaxX = null;
-            userMinX = null;
-        }
+        Number[] minMax = getOriginMinMax(domainOriginBoundaryMode, userDomainOrigin, domainOriginExtent);
+        userMinX = minMax[0];
+        userMaxX = minMax[1];
     }
 
     /**
@@ -691,15 +639,26 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         rangeOriginExtent = extent;
         rangeOriginBoundaryMode = mode;
 
-        if (rangeOriginBoundaryMode == BoundaryMode.FIXED) {
-            double raO = userRangeOrigin.doubleValue();
-            double raE = rangeOriginExtent.doubleValue();
-            userMaxY = raO + raE;
-            userMinY = raO - raE;
-        } else {
-            userMaxY = null;
-            userMinY = null;
+        Number[] minMax = getOriginMinMax(rangeOriginBoundaryMode, userRangeOrigin, rangeOriginExtent);
+        userMinY = minMax[0];
+        userMaxY = minMax[1];
+    }
+
+    /**
+     *
+     * @param mode
+     * @param origin
+     * @param extent
+     * @return result[0] is min, result[1] is max
+     */
+    protected Number[] getOriginMinMax(BoundaryMode mode, Number origin, Number extent) {
+        if (mode == BoundaryMode.FIXED) {
+            double o = origin.doubleValue();
+            double e = extent.doubleValue();
+            return new Number[] {o - e, o + e};
+
         }
+        return new Number[] {null, null};
     }
 
     /**
@@ -1011,11 +970,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     protected synchronized void setUserMaxX(Number boundary) {
-        // Ifor 12/10/2011
-        // you want null for auto grow and shrink
-        //if(boundary == null) {
-        //    throw new NullPointerException("Boundary value cannot be null.");
-        //}
         this.userMaxX = boundary;
     }
 
@@ -1036,11 +990,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     protected synchronized void setUserMinX(Number boundary) {
-        // Ifor 12/10/2011
-        // you want null for auto grow and shrink
-        //if(boundary == null) {
-        //    throw new NullPointerException("Boundary value cannot be null.");
-        //}
         this.userMinX = boundary;
     }
 
@@ -1054,7 +1003,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         setUserMinX((mode == BoundaryMode.FIXED) ? boundary : null);
         setDomainLowerBoundaryMode(mode);
         setDomainFramingModel(XYFramingModel.EDGE);
-        //updateMinMaxVals();
     }
 
     protected synchronized void setRangeUpperBoundaryMode(BoundaryMode mode) {
@@ -1062,11 +1010,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     protected synchronized void setUserMaxY(Number boundary) {
-        // Ifor 12/10/2011
-        // you want null for auto grow and shrink
-        //if(boundary == null) {
-        //    throw new NullPointerException("Boundary value cannot be null.");
-        //}
         this.userMaxY = boundary;
     }
 
@@ -1087,11 +1030,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     protected synchronized void setUserMinY(Number boundary) {
-        // Ifor 12/10/2011
-        // you want null for auto grow and shrink
-        //if(boundary == null) {
-        //    throw new NullPointerException("Boundary value cannot be null.");
-        //}
         this.userMinY = boundary;
     }
 

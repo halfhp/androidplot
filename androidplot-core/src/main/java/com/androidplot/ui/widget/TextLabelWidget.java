@@ -49,9 +49,6 @@ public class TextLabelWidget extends Widget {
 
     public TextLabelWidget(LayoutManager layoutManager, SizeMetrics sizeMetrics, TextOrientationType orientation) {
         super(layoutManager, new SizeMetrics(0, SizeLayoutType.ABSOLUTE, 0, SizeLayoutType.ABSOLUTE));
-        //this.plot = plot;
-        //this.setWidth(labelPaint.measureText(plot.getTitle()));
-        //this.setHeight(labelPaint.getFontMetrics().top);
         setSize(sizeMetrics);
         this.orientation = orientation;
     }

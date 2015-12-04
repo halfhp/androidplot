@@ -73,7 +73,8 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         this(lineColor, vertexColor, fillColor, plf, FillDirection.BOTTOM);
     }
 
-    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, PointLabelFormatter plf, FillDirection fillDir) {
+    public LineAndPointFormatter(Integer lineColor, Integer vertexColor,
+                                 Integer fillColor, PointLabelFormatter plf, FillDirection fillDir) {
         initLinePaint(lineColor);
         initVertexPaint(vertexColor);
         initFillPaint(fillColor);

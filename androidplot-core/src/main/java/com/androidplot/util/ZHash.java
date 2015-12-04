@@ -20,20 +20,17 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Concrete implementation of ZIndexable.  Provides fast element retrieval via hash key.  Also provides
+ * An implementation of {@link ZIndexable}.  Provides fast element retrieval via hash key in addition to
  * mutable ordering (z indexing) of elements.
  */
 public class ZHash<KeyType, ValueType> implements ZIndexable<KeyType> {
 
     private HashMap<KeyType, ValueType> hash;
-    //private LinkedList<KeyType> zlist;
-    //private ListOrganizer<KeyType> listOrganizer;
     private ZLinkedList<KeyType> zlist;
 
     {
-        hash = new HashMap<KeyType, ValueType>();
-        zlist = new ZLinkedList<KeyType>();
-        //listOrganizer = new ListOrganizer<KeyType>(zlist);
+        hash = new HashMap<>();
+        zlist = new ZLinkedList<>();
     }
 
     public int size() {
@@ -58,11 +55,9 @@ public class ZHash<KeyType, ValueType> implements ZIndexable<KeyType> {
     public synchronized void addToTop(KeyType key, ValueType value) {
         if(hash.containsKey(key)) {
             hash.put(key, value);
-           //throw new IllegalArgumentException("Key already exists in series structure...duplicates not permitted.");
         } else {
             hash.put(key, value);
             zlist.addToTop(key);
-            //zlist.addToTop(key);
         }
     }
 
@@ -75,11 +70,9 @@ public class ZHash<KeyType, ValueType> implements ZIndexable<KeyType> {
     public synchronized void addToBottom(KeyType key, ValueType value) {
         if(hash.containsKey(key)) {
             hash.put(key, value);
-           //throw new IllegalArgumentException("Key already exists in series structure...duplicates not permitted.");
         } else {
             hash.put(key, value);
             zlist.addToBottom(key);
-            //zlist.addToBottom(key);
         }
     }
 

@@ -19,7 +19,7 @@ package com.androidplot.pie;
 import android.graphics.*;
 
 import com.androidplot.exception.PlotRenderException;
-import com.androidplot.ui.SeriesAndFormatterPair;
+import com.androidplot.ui.SeriesAndFormatter;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.RenderStack;
 
@@ -67,7 +67,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         RectF rec = new RectF(origin.x - radius, origin.y - radius, origin.x + radius, origin.y + radius);
         
         int i = 0;
-        for (SeriesAndFormatterPair<Segment, ? extends SegmentFormatter> sfPair : getSeriesList()) {
+        for (SeriesAndFormatter<Segment, ? extends SegmentFormatter> sfPair : getSeriesList()) {
             float lastOffset = offset;
             float sweep = (float) (scale * (values[i]) * 360);
             offset += sweep;
@@ -193,10 +193,10 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     }
     
 	protected double[] getValues() {
-        List<SeriesAndFormatterPair<Segment, ? extends SegmentFormatter>> seriesList = getSeriesList();
+        List<SeriesAndFormatter<Segment, ? extends SegmentFormatter>> seriesList = getSeriesList();
 		double[] result = new double[seriesList.size()];
 		int i = 0;
-		for (SeriesAndFormatterPair<Segment, ? extends SegmentFormatter> sfPair : seriesList) {
+		for (SeriesAndFormatter<Segment, ? extends SegmentFormatter> sfPair : seriesList) {
 			result[i] = sfPair.getSeries().getValue().doubleValue();
 			i++;
 		}
@@ -260,12 +260,12 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 
         // find the segment whose starting and ending angle (degs) contains
         // the angle calculated above
-        List<SeriesAndFormatterPair<Segment, ? extends SegmentFormatter>> seriesList = getSeriesList();
+        List<SeriesAndFormatter<Segment, ? extends SegmentFormatter>> seriesList = getSeriesList();
         int i = 0;
         double[] values = getValues();
         double scale = calculateScale(values);
         float offset = startDeg;
-        for (SeriesAndFormatterPair<Segment, ? extends SegmentFormatter> sfPair : seriesList) {
+        for (SeriesAndFormatter<Segment, ? extends SegmentFormatter> sfPair : seriesList) {
             float lastOffset = offset;
             float sweep = (float) (scale * (values[i]) * 360);
             offset += sweep;

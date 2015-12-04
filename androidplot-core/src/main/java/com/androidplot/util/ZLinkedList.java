@@ -21,14 +21,7 @@ import java.util.List;
 
 public class ZLinkedList<Type> extends LinkedList<Type> implements ZIndexable<Type> {
 
-    //private LinkedList<Type> list;
-    private ListOrganizer<Type> organizer;
-
-    {
-        //list = new LinkedList<Type>();
-        organizer = new ListOrganizer<Type>(this);
-    }
-
+    private ListOrganizer<Type> organizer = new ListOrganizer<>(this);
 
     @Override
     public boolean moveToTop(Type element) {

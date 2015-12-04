@@ -16,8 +16,6 @@
 
 package com.androidplot.xy;
 
-import android.util.Pair;
-
 import java.util.List;
 
 /**
@@ -26,5 +24,5 @@ import java.util.List;
 public interface Interpolator<ParamsType extends InterpolationParams> {
 
 
-    public List<XYPair> interpolate(XYSeries series, ParamsType params);
+    List<XY> interpolate(XYSeries series, ParamsType params);
 }

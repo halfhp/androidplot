@@ -21,6 +21,8 @@ import android.graphics.Rect;
 
 public class FontUtils {
 
+    private static final int ZERO = 0;
+
     /**
      * Determines the height of the tallest character that can be drawn by paint.
      * @param paint
@@ -40,7 +42,7 @@ public class FontUtils {
      */
     public static Rect getPackedStringDimensions(String text, Paint paint) {
         Rect size = new Rect();
-        paint.getTextBounds(text, 0, text.length(), size);
+        paint.getTextBounds(text, ZERO, text.length(), size);
         return size;
     }
 
@@ -54,10 +56,10 @@ public class FontUtils {
      */
     public static Rect getStringDimensions(String text, Paint paint) {
         Rect size = new Rect();
-        if(text == null || text.length() == 0) {
+        if(text == null || text.length() == ZERO) {
             return null;
         }
-        paint.getTextBounds(text, 0, text.length(), size);
+        paint.getTextBounds(text, ZERO, text.length(), size);
         size.bottom = size.top + (int) getFontHeight(paint);
         return size;
     }

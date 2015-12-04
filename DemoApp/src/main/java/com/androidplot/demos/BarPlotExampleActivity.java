@@ -21,7 +21,6 @@ import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.Arrays;
-import java.util.Iterator;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -313,7 +312,7 @@ public class BarPlotExampleActivity extends Activity
 
 
             // find the closest value to the selection:
-            for (SeriesAndFormatterPair<XYSeries, ? extends XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
+            for (SeriesAndFormatter<XYSeries, ? extends XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
                 XYSeries series = sfPair.getSeries();
                 for (int i = 0; i < series.size(); i++) {
                     Number thisX = series.getX(i);

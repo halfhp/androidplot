@@ -23,6 +23,10 @@ import java.util.List;
  * @param <ElementType>
  */
 public class ListOrganizer<ElementType> implements ZIndexable<ElementType> {
+
+    private static final int ZERO = 0;
+    private static final int ONE = 1;
+
     private List<ElementType> list;
 
     public ListOrganizer(List<ElementType> list) {
@@ -47,10 +51,8 @@ public class ListOrganizer<ElementType> implements ZIndexable<ElementType> {
 
         list.remove(objectToMove);
         int refIndex = list.indexOf(reference);
-        list.add(refIndex + 1, objectToMove);
+        list.add(refIndex + ONE, objectToMove);
         return true;
-        //widgetOrder.remove(element);
-
     }
 
     public boolean moveBeneath(ElementType objectToMove, ElementType reference) {
@@ -66,42 +68,38 @@ public class ListOrganizer<ElementType> implements ZIndexable<ElementType> {
     }
 
     public boolean moveToBottom(ElementType key) {
-
-        //int widgetIndex = widgetOrder.indexOf(key);
         list.remove(key);
-        //list.add(list.size(), key);
-        list.add(0, key);
+        list.add(ZERO, key);
         return true;
-        //widgetOrder.remove(key);
     }
 
     public boolean moveUp(ElementType key) {
         int widgetIndex = list.indexOf(key);
-        if(widgetIndex == -1) {
+        if(widgetIndex == - ONE) {
             // key not found:
             return false;
         }
-        if(widgetIndex >= list.size()-1) {
+        if(widgetIndex >= list.size() - ONE) {
             // already at the top:
             return true;
         }
 
-        ElementType widgetAbove = list.get(widgetIndex+1);
+        ElementType widgetAbove = list.get(widgetIndex + ONE);
         return moveAbove(key, widgetAbove);
     }
 
     public boolean moveDown(ElementType key) {
         int widgetIndex = list.indexOf(key);
-        if(widgetIndex == -1) {
+        if(widgetIndex == - ONE) {
             // key not found:
             return false;
         }
-        if(widgetIndex <= 0) {
+        if(widgetIndex <= ZERO) {
             // already at the bottom:
             return true;
         }
 
-        ElementType widgetBeneath = list.get(widgetIndex-1);
+        ElementType widgetBeneath = list.get(widgetIndex - ONE);
         return moveBeneath(key, widgetBeneath);
     }
 
@@ -111,7 +109,7 @@ public class ListOrganizer<ElementType> implements ZIndexable<ElementType> {
     }
 
     public void addToBottom(ElementType element) {
-        list.add(0, element);
+        list.add(ZERO, element);
     }
 
     public void addToTop(ElementType element) {

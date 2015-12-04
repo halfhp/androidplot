@@ -40,20 +40,20 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
      * An element on the render stack.
      */
     public class StackElement<SeriesType extends Series, FormatterType extends Formatter> {
-        private SeriesAndFormatterPair<SeriesType, FormatterType> pair;
+        private SeriesAndFormatter<SeriesType, FormatterType> seriesAndFormatter;
         private boolean isEnabled = true;
 
-        public StackElement(SeriesAndFormatterPair<SeriesType, FormatterType> pair) {
-            setPair(pair);
+        public StackElement(SeriesAndFormatter<SeriesType, FormatterType> seriesAndFormatter) {
+            set(seriesAndFormatter);
         }
 
 
-        public SeriesAndFormatterPair<SeriesType, FormatterType> getPair() {
-            return pair;
+        public SeriesAndFormatter<SeriesType, FormatterType> get() {
+            return seriesAndFormatter;
         }
 
-        public void setPair(SeriesAndFormatterPair<SeriesType, FormatterType> pair) {
-            this.pair = pair;
+        public void set(SeriesAndFormatter<SeriesType, FormatterType> seriesAndFormatter) {
+            this.seriesAndFormatter = seriesAndFormatter;
         }
 
         public boolean isEnabled() {
@@ -72,7 +72,7 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
 
     public RenderStack(Plot plot) {
         this.plot = plot;
-        elements = new ArrayList<StackElement<SeriesType, FormatterType>>(plot.getSeriesRegistry().size());
+        elements = new ArrayList<>(plot.getSeriesRegistry().size());
     }
 
     /**
@@ -84,9 +84,9 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
          * TODO: rendering performance *might* be improved by reusing StackElement instances but I'm skeptical...
          */
         getElements().clear();
-        List<SeriesAndFormatterPair<SeriesType, FormatterType>> pairList = plot.getSeriesRegistry();
-        for(SeriesAndFormatterPair<SeriesType, FormatterType> thisPair: pairList) {
-            getElements().add(new StackElement<SeriesType, FormatterType>(thisPair));
+        List<SeriesAndFormatter<SeriesType, FormatterType>> pairList = plot.getSeriesRegistry();
+        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair: pairList) {
+            getElements().add(new StackElement<>(thisPair));
         }
     }
 
@@ -97,7 +97,7 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
      */
     public void disable(Class<? extends SeriesRenderer> rendererClass) {
         for(RenderStack.StackElement element : getElements()) {
-            if(element.getPair().getFormatter().getRendererClass() == rendererClass) {
+            if(element.get().getFormatter().getRendererClass() == rendererClass) {
                 element.setEnabled(false);
             }
         }

@@ -24,14 +24,11 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
-import com.androidplot.ui.SeriesAndFormatterPair;
-import com.androidplot.util.PixelUtils;
+import com.androidplot.ui.SeriesAndFormatter;
 import com.androidplot.util.ValPixConverter;
 
 /**
@@ -128,7 +125,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRen
                          FormatterType barFormatter, RenderStack stack) throws PlotRenderException {
 
         // get all the series associated with this renderer:
-        List<SeriesAndFormatterPair<XYSeries, ? extends FormatterType>> sfPairList = getSeriesList();
+        List<SeriesAndFormatter<XYSeries, ? extends FormatterType>> sfPairList = getSeriesList();
 
         // this renderer uses special element-by-element z-indexing that results in
         // all series associated with the renderer being rendered in a single pass, so
@@ -144,7 +141,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRen
          * Build the axisMap (yVal,BarGroup)... a TreeMap of BarGroups
          * BarGroups represent a point on the X axis where a single or group of bars need to be drawn.
          */
-        for(SeriesAndFormatterPair<XYSeries, ? extends FormatterType> thisPair : sfPairList) {
+        for(SeriesAndFormatter<XYSeries, ? extends FormatterType> thisPair : sfPairList) {
         	BarGroup barGroup;
         	
             // For each value in the series

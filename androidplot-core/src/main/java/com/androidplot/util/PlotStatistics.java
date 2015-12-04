@@ -30,13 +30,7 @@ import com.androidplot.PlotListener;
  * be invalid.
  */
 public class PlotStatistics implements PlotListener {
-    long minRenderTimeMs;
-    long maxRenderTimeMs;
-    long avgRenderTimeMs;
-    long fps;
     long updateDelayMs;
-
-
     long longestRenderMs = 0;
     long shortestRenderMs = 0;
     long lastStart = 0;

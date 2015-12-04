@@ -16,12 +16,11 @@
 
 package com.androidplot.xy;
 
-import com.androidplot.ui.SeriesAndFormatterPair;
+import com.androidplot.ui.SeriesAndFormatter;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.ZIndexable;
 
 import java.util.Hashtable;
-import java.util.List;
 
 /**
  * Base class for all Renderers that render XYSeries data.
@@ -41,7 +40,7 @@ public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter
     public Hashtable<XYRegionFormatter, String> getUniqueRegionFormatters() {
 
         Hashtable<XYRegionFormatter, String> found = new Hashtable<XYRegionFormatter, String>();
-        for(SeriesAndFormatterPair<XYSeries, ? extends XYFormatterType> sfPair : getSeriesList()) {
+        for(SeriesAndFormatter<XYSeries, ? extends XYFormatterType> sfPair : getSeriesList()) {
             ZIndexable<RectRegion> regionIndexer = sfPair.getFormatter().getRegions();
             for (RectRegion region : regionIndexer.elements()) {
                 XYRegionFormatter f = sfPair.getFormatter().getRegionFormatter(region);

@@ -1,5 +1,5 @@
 # Androidplot
-A library for creating dynamic and static charts in Android apps. It’s designed from the ground up for Android, compatible with all versions of Android from 1.6 onward and is used 500+ apps on Google Play.
+A library for creating dynamic and static charts in Android apps. It’s designed from the ground up for Android, compatible with all versions of Android from 1.6 onward and is used by over [500 apps](http://www.appbrain.com/stats/libraries/details/androidplot/androidplot) on Google Play.
 
 ## Important Links
 ##### Website http://androidplot.com

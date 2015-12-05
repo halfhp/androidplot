@@ -1,11 +1,9 @@
 # Androidplot
 A library for creating dynamic and static charts in Android apps. It’s designed from the ground up for Android, compatible with all versions of Android from 1.6 onward and is used by over [500 apps](http://www.appbrain.com/stats/libraries/details/androidplot/androidplot) on Google Play.
 
-## Important Links
 ##### Website http://androidplot.com
 ##### Bitbucket Repo: (Primary) https://bitbucket.org/androidplot/androidplot
 ##### Github Repo: https://github.com/halfhp/androidplot
-##### Issue Tracker: https://androidplot.jira.com
 
 ## Demo App
 https://play.google.com/store/apps/details?id=com.androidplot.demos&hl=en
@@ -24,6 +22,9 @@ http://androidplot.com/docs/quickstart
 
 #### Documentation
 http://androidplot.com/docs/
+
+## Bugs
+We use Jira as our issue tracker - report bugs on https://androidplot.jira.com
 
 ## Help
 Technical questions should be posted using the [androidplot tag](http://stackoverflow.com/questions/tagged/androidplot) on Stack Overflow.  For everything else use the [Google Groups forum](https://groups.google.com/d/forum/androidplot).

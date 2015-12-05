@@ -29,47 +29,49 @@ public interface BoxModelable {
      * @param boundsRect
      * @return
      */
-    public RectF getMarginatedRect(RectF boundsRect);
+    RectF getMarginatedRect(RectF boundsRect);
 
     /**
      * Returns a RectF instance describing the inner edge of the padding layer.
      * @param marginRect
      * @return
      */
-    public RectF getPaddedRect(RectF marginRect);
+    RectF getPaddedRect(RectF marginRect);
 
 
-    public void setMargins(float left, float top, float right, float bottom);
+    void setMargins(float left, float top, float right, float bottom);
 
-    public void setPadding(float left, float top, float right, float bottom);
+    void setPadding(float left, float top, float right, float bottom);
 
-    public float getMarginLeft();
+    float getMarginLeft();
 
-    public void setMarginLeft(float marginLeft);
+    void setMarginLeft(float marginLeft);
 
-    public float getMarginTop();
+    float getMarginTop();
 
-    public void setMarginTop(float marginTop);
+    void setMarginTop(float marginTop);
 
-    public float getMarginRight();
+    float getMarginRight();
 
-    public void setMarginRight(float marginRight);
+    void setMarginRight(float marginRight);
 
-    public float getMarginBottom();
+    float getMarginBottom();
 
-    public float getPaddingLeft();
+    void setMarginBottom(float marginBottm);
 
-    public void setPaddingLeft(float paddingLeft);
+    float getPaddingLeft();
 
-    public float getPaddingTop();
+    void setPaddingLeft(float paddingLeft);
 
-    public void setPaddingTop(float paddingTop);
+    float getPaddingTop();
 
-    public float getPaddingRight();
+    void setPaddingTop(float paddingTop);
 
-    public void setPaddingRight(float paddingRight);
+    float getPaddingRight();
 
-    public float getPaddingBottom();
+    void setPaddingRight(float paddingRight);
 
-    public void setPaddingBottom(float paddingBottom);
+    float getPaddingBottom();
+
+    void setPaddingBottom(float paddingBottom);
 }

@@ -19,7 +19,7 @@
 
     <!-- values  must match the ordinal of its corresponding
     element in the AnchorPosition enum.  -->
-    <attr name="legendAnchorPosition">
+    <attr name="legendAnchorPosition" format="enum">
         <enum name="top_middle" value="0"/>
         <enum name="left_top" value="1"/>
         <enum name="left_middle" value="2"/>
@@ -31,29 +31,99 @@
         <enum name="center" value="8"/>
     </attr>
 
+    <attr name="legendHeightSizeLayoutType" format="enum">
+        <enum name="absolute" value="0"/>
+        <enum name="relative" value="1"/>
+        <enum name="fill" value="2"/>
+    </attr>
+
+    <attr name="legendWidthSizeLayoutType" format="enum">
+        <enum name="absolute" value="0"/>
+        <enum name="relative" value="1"/>
+        <enum name="fill" value="2"/>
+    </attr>
+
+    <attr name="legendIconHeightSizeLayoutType" format="enum">
+        <enum name="absolute" value="0"/>
+        <enum name="relative" value="1"/>
+        <enum name="fill" value="2"/>
+    </attr>
+
+    <attr name="legendIconWidthSizeLayoutType" format="enum">
+        <enum name="absolute" value="0"/>
+        <enum name="relative" value="1"/>
+        <enum name="fill" value="2"/>
+    </attr>
+
+    <attr name="legendLayoutStyleX" format="enum">
+        <enum name="absolute_from_left" value="0"/>
+        <enum name="absolute_from_right" value="1"/>
+        <enum name="absolute_from_center" value="2"/>
+        <enum name="relative_from_left" value="3"/>
+        <enum name="relative_from_right" value="4"/>
+        <enum name="relative_from_center" value="5"/>
+    </attr>
+
+    <attr name="legendLayoutStyleY" format="enum">
+        <enum name="absolute_from_top" value="0"/>
+        <enum name="absolute_from_bottom" value="1"/>
+        <enum name="absolute_from_center" value="2"/>
+        <enum name="relative_from_top" value="3"/>
+        <enum name="relative_from_bottom" value="4"/>
+        <enum name="relative_from_center" value="5"/>
+    </attr>
+
     <declare-styleable name="Plot">
-        <attr name="plotLabel" format="string"/>
-        <attr name="plotLabelTextSize" format="dimension"/>
+        <attr name="label" format="string"/>
+        <attr name="labelTextSize" format="dimension"/>
+        <attr name="labelTextColor" format="color"/>
+        <attr name="backgroundColor" format="color"/>
+        <attr name="borderColor" format="color"/>
+        <attr name="borderThickness" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="xy.XYPlot" parent="@style/Plot">
         <attr name="domainLabel" format="string"/>
+        <attr name="domainLabelTextColor" format="color"/>
         <attr name="domainLabelTextSize" format="dimension"/>
         <attr name="rangeLabel" format="string"/>
+        <attr name="rangeLabelTextColor" format="color"/>
         <attr name="rangeLabelTextSize" format="dimension"/>
         <attr name="graphMarginTop" format="dimension"/>
         <attr name="graphMarginBottom" format="dimension"/>
         <attr name="graphMarginLeft" format="dimension"/>
         <attr name="graphMarginRight" format="dimension"/>
-        <attr name="graphRangeTickLabelTextSize" format="dimension"/>
-        <attr name="graphDomainTickLabelTextSize" format="dimension"/>
-        <attr name="graphRangeOriginTickLabelTextSize" format="dimension"/>
-        <attr name="graphDomainOriginTickLabelTextSize" format="dimension"/>
-        <attr name="legendHeight" format="dimension"/>
-        <attr name="legendWidth" format="dimension"/>
+        <attr name="graphPaddingTop" format="dimension"/>
+        <attr name="graphPaddingBottom" format="dimension"/>
+        <attr name="graphPaddingLeft" format="dimension"/>
+        <attr name="graphPaddingRight" format="dimension"/>
+        <attr name="graphBackgroundColor" format="color"/>
+        <attr name="graphDomainLineColor" format="color"/>
+        <attr name="graphRangeLineColor" format="color"/>
+        <attr name="rangeTickLabelTextSize" format="dimension"/>
+        <attr name="domainTickLabelTextSize" format="dimension"/>
+        <attr name="rangeTickLabelTextColor" format="color"/>
+        <attr name="domainTickLabelTextColor" format="color"/>
+        <attr name="rangeOriginTickLabelTextSize" format="dimension"/>
+        <attr name="domainOriginTickLabelTextSize" format="dimension"/>
+        <attr name="rangeOriginTickLabelTextColor" format="color"/>
+        <attr name="domainOriginTickLabelTextColor" format="color"/>
+        <attr name="gridBackgroundColor" format="color"/>
+        <attr name="legendHeightSizeLayoutType"/>
+        <attr name="legendWidthSizeLayoutType"/>
+        <attr name="legendHeight" format="dimension|float"/>
+        <attr name="legendWidth" format="dimension|float"/>
         <attr name="legendTextSize" format="dimension"/>
-        <attr name="legendIconHeight" format="dimension"/>
-        <attr name="legendIconWidth" format="dimension"/>
+        <attr name="legendTextColor" format="color"/>
+        <attr name="legendIconHeightSizeLayoutType"/>
+        <attr name="legendIconWidthSizeLayoutType"/>
+        <attr name="legendIconHeight" format="dimension|float"/>
+        <attr name="legendIconWidth" format="dimension|float"/>
+        <attr name="legendPositionX" format="dimension|float"/>
+        <attr name="legendPositionY" format="dimension|float"/>
+        <attr name="legendLayoutStyleX"/>
+        <attr name="legendLayoutStyleY"/>
         <attr name="legendAnchorPosition"/>
+        <attr name="legendVisible" format="boolean"/>
     </declare-styleable>
 </resources>

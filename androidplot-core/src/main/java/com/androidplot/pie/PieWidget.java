@@ -19,7 +19,7 @@ package com.androidplot.pie;
 import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.LayoutManager;
-import com.androidplot.ui.SizeMetrics;
+import com.androidplot.ui.Size;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.ui.RenderStack;
 
@@ -31,7 +31,7 @@ public class PieWidget extends Widget {
     private PieChart pieChart;
     private RenderStack<? extends Segment, ? extends SegmentFormatter> renderStack;
 
-    public PieWidget(LayoutManager layoutManager, PieChart pieChart, SizeMetrics metrics) {
+    public PieWidget(LayoutManager layoutManager, PieChart pieChart, Size metrics) {
         super(layoutManager, metrics);
         this.pieChart = pieChart;
         renderStack = new RenderStack(pieChart);

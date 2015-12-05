@@ -101,7 +101,7 @@ public class BarPlotExampleActivity extends Activity
         selectionFormatter = new MyBarFormatter(Color.YELLOW, Color.WHITE);
 
         selectionWidget = new TextLabelWidget(plot.getLayoutManager(), NO_SELECTION_TXT,
-                new SizeMetrics(
+                new Size(
                         PixelUtils.dpToPix(100), SizeLayoutType.ABSOLUTE,
                         PixelUtils.dpToPix(100), SizeLayoutType.ABSOLUTE),
                 TextOrientationType.HORIZONTAL);

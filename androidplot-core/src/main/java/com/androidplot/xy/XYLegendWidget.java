@@ -19,7 +19,7 @@ package com.androidplot.xy;
 import android.graphics.*;
 import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.SeriesAndFormatter;
-import com.androidplot.ui.SizeMetrics;
+import com.androidplot.ui.Size;
 import com.androidplot.ui.TableModel;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.FontUtils;
@@ -52,7 +52,7 @@ public class XYLegendWidget extends Widget {
     private boolean drawIconBackgroundEnabled = true;
     private boolean drawIconBorderEnabled = true;
 
-    private SizeMetrics iconSizeMetrics;
+    private Size iconSize;
     private static final RegionEntryComparator regionEntryComparator = new RegionEntryComparator();
     //private RectF iconRect = new RectF(0, 0, ICON_WIDTH_DEFAULT, ICON_HEIGHT_DEFAULT);
 
@@ -67,13 +67,13 @@ public class XYLegendWidget extends Widget {
     }
 
     public XYLegendWidget(LayoutManager layoutManager, XYPlot plot,
-                          SizeMetrics widgetSizeMetrics,
+                          Size widgetSize,
                           TableModel tableModel,
-                          SizeMetrics iconSizeMetrics) {
-        super(layoutManager, widgetSizeMetrics);
+                          Size iconSize) {
+        super(layoutManager, widgetSize);
         this.plot = plot;
         setTableModel(tableModel);
-        this.iconSizeMetrics = iconSizeMetrics;
+        this.iconSize = iconSize;
     }
 
     public synchronized void setTableModel(TableModel tableModel) {
@@ -82,7 +82,7 @@ public class XYLegendWidget extends Widget {
 
     private RectF getIconRect(RectF cellRect) {
         float cellRectCenterY = cellRect.top + (cellRect.height()/2);
-        RectF iconRect = iconSizeMetrics.getRectF(cellRect);
+        RectF iconRect = iconSize.getRectF(cellRect);
 
         // center the icon rect vertically
         float centeredIconOriginY = cellRectCenterY - (iconRect.height()/2);
@@ -218,16 +218,16 @@ public class XYLegendWidget extends Widget {
         return tableModel;
     }
 
-    public SizeMetrics getIconSizeMetrics() {
-        return iconSizeMetrics;
+    public Size getIconSize() {
+        return iconSize;
     }
 
     /**
      * Set the size of each legend's icon.  Note that when using relative sizing,
      * the size is calculated against the countaining cell's size, not the plot's size.
-     * @param iconSizeMetrics
+     * @param iconSize
      */
-    public void setIconSizeMetrics(SizeMetrics iconSizeMetrics) {
-        this.iconSizeMetrics = iconSizeMetrics;
+    public void setIconSize(Size iconSize) {
+        this.iconSize = iconSize;
     }
 }

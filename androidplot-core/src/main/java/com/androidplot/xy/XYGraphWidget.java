@@ -21,7 +21,7 @@ import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.RenderStack;
-import com.androidplot.ui.SizeMetrics;
+import com.androidplot.ui.Size;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.*;
 
@@ -32,6 +32,8 @@ import java.text.Format;
  * Displays graphical data annotated with domain and range tick markers.
  */
 public class XYGraphWidget extends Widget {
+
+    private static final float DEFAULT_TICK_LABEL_TEXT_SIZE_PX = PixelUtils.spToPix(15); // 15sp
 
     public float getRangeLabelOrientation() {
         return rangeLabelOrientation;
@@ -222,21 +224,25 @@ public class XYGraphWidget extends Widget {
         domainOriginTickLabelPaint.setColor(Color.WHITE);
         domainOriginTickLabelPaint.setAntiAlias(true);
         domainOriginTickLabelPaint.setTextAlign(Paint.Align.CENTER);
+        domainOriginTickLabelPaint.setTextSize(DEFAULT_TICK_LABEL_TEXT_SIZE_PX);
 
         rangeOriginTickLabelPaint = new Paint();
         rangeOriginTickLabelPaint.setColor(Color.WHITE);
         rangeOriginTickLabelPaint.setAntiAlias(true);
         rangeOriginTickLabelPaint.setTextAlign(Paint.Align.RIGHT);
+        rangeOriginTickLabelPaint.setTextSize(DEFAULT_TICK_LABEL_TEXT_SIZE_PX);
 
         domainTickLabelPaint = new Paint();
         domainTickLabelPaint.setColor(Color.LTGRAY);
         domainTickLabelPaint.setAntiAlias(true);
         domainTickLabelPaint.setTextAlign(Paint.Align.CENTER);
+        domainTickLabelPaint.setTextSize(DEFAULT_TICK_LABEL_TEXT_SIZE_PX);
 
         rangeTickLabelPaint = new Paint();
         rangeTickLabelPaint.setColor(Color.LTGRAY);
         rangeTickLabelPaint.setAntiAlias(true);
         rangeTickLabelPaint.setTextAlign(Paint.Align.RIGHT);
+        rangeTickLabelPaint.setTextSize(DEFAULT_TICK_LABEL_TEXT_SIZE_PX);
 
         domainCursorPaint = new Paint();
         domainCursorPaint.setColor(Color.YELLOW);
@@ -256,8 +262,8 @@ public class XYGraphWidget extends Widget {
         axisValueLabelRegions = new ZHash<RectRegion, AxisValueLabelFormatter>();
     }
 
-    public XYGraphWidget(LayoutManager layoutManager, XYPlot plot, SizeMetrics sizeMetrics) {
-        super(layoutManager, sizeMetrics);
+    public XYGraphWidget(LayoutManager layoutManager, XYPlot plot, Size size) {
+        super(layoutManager, size);
         this.plot = plot;
         renderStack = new RenderStack(plot);
     }

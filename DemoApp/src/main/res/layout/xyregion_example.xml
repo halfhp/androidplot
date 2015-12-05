@@ -24,10 +24,10 @@
             androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
             androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
             androidPlot.legendWidget.textPaint.textSize="12dp"
-            androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="15dp"
-            androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp"
-            androidPlot.legendWidget.heightMetric.value="40dp"
-            androidPlot.legendWidget.widthMetric.value="40dp"
+            androidPlot.legendWidget.iconSizeMetrics.height.value="15dp"
+            androidPlot.legendWidget.iconSizeMetrics.width.value="15dp"
+            androidPlot.legendWidget.height.value="40dp"
+            androidPlot.legendWidget.width.value="40dp"
             android:layout_weight="1"
             />
 

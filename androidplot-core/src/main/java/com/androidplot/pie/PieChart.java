@@ -22,7 +22,7 @@ import android.util.AttributeSet;
 import com.androidplot.Plot;
 import com.androidplot.ui.AnchorPosition;
 import com.androidplot.ui.SizeLayoutType;
-import com.androidplot.ui.SizeMetrics;
+import com.androidplot.ui.Size;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
@@ -59,7 +59,7 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
         pieWidget = new PieWidget(
                 getLayoutManager(),
                 this,
-                new SizeMetrics(
+                new Size(
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_H_DP),
                         SizeLayoutType.FILL,
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_W_DP),

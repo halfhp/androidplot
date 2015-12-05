@@ -16,8 +16,6 @@
 
 package com.androidplot.ui;
 
-import android.graphics.Canvas;
-import android.graphics.RectF;
 import com.androidplot.util.DisplayDimensions;
 
 /**

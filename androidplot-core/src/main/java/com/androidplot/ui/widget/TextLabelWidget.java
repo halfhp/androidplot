@@ -17,7 +17,6 @@
 package com.androidplot.ui.widget;
 
 import android.graphics.*;
-import android.util.Log;
 import com.androidplot.ui.*;
 import com.androidplot.util.FontUtils;
 
@@ -38,23 +37,23 @@ public class TextLabelWidget extends Widget {
         labelPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public TextLabelWidget(LayoutManager layoutManager, SizeMetrics sizeMetrics) {
-        this(layoutManager, sizeMetrics, TextOrientationType.HORIZONTAL);
+    public TextLabelWidget(LayoutManager layoutManager, Size size) {
+        this(layoutManager, size, TextOrientationType.HORIZONTAL);
     }
 
-    public TextLabelWidget(LayoutManager layoutManager, String title, SizeMetrics sizeMetrics, TextOrientationType orientation) {
-        this(layoutManager, sizeMetrics, orientation);
+    public TextLabelWidget(LayoutManager layoutManager, String title, Size size, TextOrientationType orientation) {
+        this(layoutManager, size, orientation);
         setText(title);
     }
 
-    public TextLabelWidget(LayoutManager layoutManager, SizeMetrics sizeMetrics, TextOrientationType orientation) {
-        super(layoutManager, new SizeMetrics(0, SizeLayoutType.ABSOLUTE, 0, SizeLayoutType.ABSOLUTE));
-        setSize(sizeMetrics);
+    public TextLabelWidget(LayoutManager layoutManager, Size size, TextOrientationType orientation) {
+        super(layoutManager, new Size(0, SizeLayoutType.ABSOLUTE, 0, SizeLayoutType.ABSOLUTE));
+        setSize(size);
         this.orientation = orientation;
     }
 
     @Override
-    protected void onMetricsChanged(SizeMetrics olds, SizeMetrics news) {
+    protected void onMetricsChanged(Size olds, Size news) {
         if(autoPackEnabled) {
             pack();
         }
@@ -81,11 +80,11 @@ public class TextLabelWidget extends Widget {
         }
         switch(orientation) {
             case HORIZONTAL:
-                setSize(new SizeMetrics(size.height(), SizeLayoutType.ABSOLUTE, size.width()+2, SizeLayoutType.ABSOLUTE));
+                setSize(new Size(size.height(), SizeLayoutType.ABSOLUTE, size.width()+2, SizeLayoutType.ABSOLUTE));
                 break;
             case VERTICAL_ASCENDING:
             case VERTICAL_DESCENDING:
-                setSize(new SizeMetrics(size.width(), SizeLayoutType.ABSOLUTE, size.height()+2, SizeLayoutType.ABSOLUTE));
+                setSize(new Size(size.width(), SizeLayoutType.ABSOLUTE, size.height()+2, SizeLayoutType.ABSOLUTE));
                 break;
         }
         refreshLayout();

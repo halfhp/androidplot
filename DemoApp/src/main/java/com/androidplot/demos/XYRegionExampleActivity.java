@@ -246,8 +246,8 @@ public class XYRegionExampleActivity extends Activity {
 
         // adjust the legend size so there is enough room
         // to draw the new legend grid:
-        //plot.getLegendWidget().getHeightMetric().setLayoutType(SizeLayoutType.ABSOLUTE);
-        //plot.getLegendWidget().getWidthMetric().setLayoutType(SizeLayoutType.ABSOLUTE);
+        //plot.getLegendWidget().getHeight().setLayoutType(SizeLayoutType.ABSOLUTE);
+        //plot.getLegendWidget().getWidth().setLayoutType(SizeLayoutType.ABSOLUTE);
         //plot.getLegendWidget().setSize(
         //    new SizeMetrics(70, SizeLayoutType.ABSOLUTE, 80, SizeLayoutType.ABSOLUTE));
 

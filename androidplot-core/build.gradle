@@ -103,7 +103,7 @@ bintray {
         version {
             name = theVersionName
         }
-        repo = "maven"
+        repo = "androidplot"
         name = "com.androidplot:androidplot-core"
         issueTrackerUrl = "https://androidplot.jira.com"
         websiteUrl = siteUrl

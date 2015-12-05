@@ -34,7 +34,7 @@ public abstract class Widget implements BoxModelable, Resizable {
     private Paint backgroundPaint;
     private boolean clippingEnabled = true;
     private BoxModel boxModel = new BoxModel();
-    private SizeMetrics sizeMetrics;
+    private Size size;
     private DisplayDimensions plotDimensions = new DisplayDimensions();
     private DisplayDimensions widgetDimensions = new DisplayDimensions();
     private boolean isVisible = true;
@@ -42,14 +42,14 @@ public abstract class Widget implements BoxModelable, Resizable {
     private LayoutManager layoutManager;
 
     public Widget(LayoutManager layoutManager, SizeMetric heightMetric, SizeMetric widthMetric) {
-        this(layoutManager, new SizeMetrics(heightMetric, widthMetric));
+        this(layoutManager, new Size(heightMetric, widthMetric));
     }
 
-    public Widget(LayoutManager layoutManager, SizeMetrics sizeMetrics) {
+    public Widget(LayoutManager layoutManager, Size size) {
         this.layoutManager = layoutManager;
-        SizeMetrics oldSize = this.sizeMetrics;
-        setSize(sizeMetrics);
-        onMetricsChanged(oldSize, sizeMetrics);
+        Size oldSize = this.size;
+        setSize(size);
+        onMetricsChanged(oldSize, size);
     }
 
     public DisplayDimensions getWidgetDimensions() {
@@ -96,7 +96,7 @@ public abstract class Widget implements BoxModelable, Resizable {
      * @param oldSize
      * @param newSize
      */
-    protected void onMetricsChanged(SizeMetrics oldSize, SizeMetrics newSize) {
+    protected void onMetricsChanged(Size oldSize, Size newSize) {
     }
 
     /**
@@ -117,41 +117,45 @@ public abstract class Widget implements BoxModelable, Resizable {
         return widgetDimensions.canvasRect.contains(point.x, point.y);
     }
 
-    public void setSize(SizeMetrics sizeMetrics) {
-        this.sizeMetrics = sizeMetrics;
+    public void setSize(Size size) {
+        this.size = size;
+    }
+
+    public Size getSize() {
+        return this.size;
     }
 
 
     public void setWidth(float width) {
-        sizeMetrics.getWidthMetric().setValue(width);
+        size.getWidth().setValue(width);
     }
 
     public void setWidth(float width, SizeLayoutType layoutType) {
-        sizeMetrics.getWidthMetric().set(width, layoutType);
+        size.getWidth().set(width, layoutType);
     }
 
     public void setHeight(float height) {
-        sizeMetrics.getHeightMetric().setValue(height);
+        size.getHeight().setValue(height);
     }
 
     public void setHeight(float height, SizeLayoutType layoutType) {
-        sizeMetrics.getHeightMetric().set(height, layoutType);
+        size.getHeight().set(height, layoutType);
     }
 
     public SizeMetric getWidthMetric() {
-        return sizeMetrics.getWidthMetric();
+        return size.getWidth();
     }
 
     public SizeMetric getHeightMetric() {
-        return sizeMetrics.getHeightMetric();
+        return size.getHeight();
     }
 
     public float getWidthPix(float size) {
-        return sizeMetrics.getWidthMetric().getPixelValue(size);
+        return this.size.getWidth().getPixelValue(size);
     }
 
     public float getHeightPix(float size) {
-        return sizeMetrics.getHeightMetric().getPixelValue(size);
+        return this.size.getHeight().getPixelValue(size);
     }
 
     public RectF getMarginatedRect(RectF widgetRect) {
@@ -162,26 +166,32 @@ public abstract class Widget implements BoxModelable, Resizable {
         return boxModel.getPaddedRect(widgetMarginRect);
     }
 
+    @Override
     public void setMarginRight(float marginRight) {
         boxModel.setMarginRight(marginRight);
     }
 
+    @Override
     public void setMargins(float left, float top, float right, float bottom) {
         boxModel.setMargins(left, top, right, bottom);
     }
 
+    @Override
     public void setPadding(float left, float top, float right, float bottom) {
         boxModel.setPadding(left, top, right, bottom);
     }
 
+    @Override
     public float getMarginTop() {
         return boxModel.getMarginTop();
     }
 
+    @Override
     public void setMarginTop(float marginTop) {
         boxModel.setMarginTop(marginTop);
     }
 
+    @Override
     public float getMarginBottom() {
         return boxModel.getMarginBottom();
     }
@@ -226,19 +236,23 @@ public abstract class Widget implements BoxModelable, Resizable {
         boxModel.setPaddingBottom(paddingBottom);
     }
 
+    @Override
     @SuppressWarnings("SameParameterValue")
     public void setMarginBottom(float marginBottom) {
         boxModel.setMarginBottom(marginBottom);
     }
 
+    @Override
     public float getMarginLeft() {
         return boxModel.getMarginLeft();
     }
 
+    @Override
     public void setMarginLeft(float marginLeft) {
         boxModel.setMarginLeft(marginLeft);
     }
 
+    @Override
     public float getMarginRight() {
         return boxModel.getMarginRight();
     }

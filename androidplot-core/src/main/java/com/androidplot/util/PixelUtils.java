@@ -74,6 +74,7 @@ public class PixelUtils {
      * @return Pixel value of dp.
      */
     public static float dpToPix(float dp) {
+        checkMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, metrics);
 
     }
@@ -85,6 +86,7 @@ public class PixelUtils {
      */
     @SuppressWarnings("SameParameterValue")
     public static float spToPix(float sp) {
+        checkMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, metrics);
     }
 
@@ -95,6 +97,7 @@ public class PixelUtils {
      * @return Number of pixels fraction represents on the current device's display.
      */
     public static float fractionToPixH(float fraction) {
+        checkMetrics();
         return metrics.heightPixels * fraction;
 
     }
@@ -105,6 +108,7 @@ public class PixelUtils {
      * @return Number of pixels fraction represents on the current device's display.
      */
     public static float fractionToPixW(float fraction) {
+        checkMetrics();
         return metrics.widthPixels * fraction;
     }
 
@@ -170,6 +174,15 @@ public class PixelUtils {
         public InternalDimension(float value, int unit) {
             this.value = value;
             this.unit = unit;
+        }
+    }
+
+    /**
+     * Safety check to hopefully help clarify what could otherwise be a confusing NPE.
+     */
+    private static void checkMetrics() {
+        if(metrics == null) {
+            throw new RuntimeException("PixelUtils not initialized; call PixelUtils.init(Context) before using.");
         }
     }
 }

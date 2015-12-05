@@ -30,6 +30,7 @@ import com.androidplot.ui.Formatter;
 import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.ui.SeriesRenderer;
+import com.androidplot.util.AttrUtils;
 import com.androidplot.util.Configurator;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.util.PixelUtils;
@@ -311,7 +312,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private void init(Context context, AttributeSet attrs, int defStyle) {
         PixelUtils.init(getContext());
         layoutManager = new LayoutManager();
-        titleWidget = new TextLabelWidget(layoutManager, new SizeMetrics(25,
+        titleWidget = new TextLabelWidget(layoutManager, new Size(25,
                 SizeLayoutType.ABSOLUTE, 100,
                 SizeLayoutType.ABSOLUTE),
                 TextOrientationType.HORIZONTAL);
@@ -374,10 +375,19 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param attrs
      */
     private void processBaseAttrs(TypedArray attrs) {
-        setTitle(attrs.getString(R.styleable.Plot_plotLabel));
+        setTitle(attrs.getString(R.styleable.Plot_label));
         getTitleWidget().getLabelPaint().setTextSize(
-                attrs.getDimension(R.styleable.Plot_plotLabelTextSize,
+                attrs.getDimension(R.styleable.Plot_labelTextSize,
                         PixelUtils.spToPix(DEFAULT_TITLE_WIDGET_TEXT_SIZE_SP)));
+
+        getTitleWidget().getLabelPaint().setColor(attrs.getColor(
+                R.styleable.Plot_labelTextColor, getTitleWidget().getLabelPaint().getColor()));
+
+        getBackgroundPaint().setColor(
+                attrs.getColor(R.styleable.Plot_backgroundColor, getBackgroundPaint().getColor()));
+
+        AttrUtils.configureLinePaint(attrs, getBorderPaint(),
+                R.styleable.Plot_borderColor, R.styleable.Plot_borderThickness);
     }
 
     /**
@@ -414,12 +424,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             }
 
             if(styleableClass != null) {
-                /**
-                 * The Object cast below is an ugly hack to resolve an issue in IntelliJ & AndroidStudio:
-                 * http://stackoverflow.com/questions/18505973/android-studio-ambiguous-method-call-getclass
-                 */
-                String styleableName = ((Object) this).getClass()
-                        .getName().substring(BASE_PACKAGE.length());
+                String styleableName = getClass().getName().substring(BASE_PACKAGE.length());
                 styleableName = styleableName.replace('.', '_');
                 try {
                     /**

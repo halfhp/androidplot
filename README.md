@@ -28,6 +28,9 @@ http://androidplot.com/docs/
 ## Help
 Technical questions should be posted using the [androidplot tag](http://stackoverflow.com/questions/tagged/androidplot) on Stack Overflow.  For everything else use the [Google Groups forum](https://groups.google.com/d/forum/androidplot).
 
+## Contribute
+http://androidplot.com/docs/working-with-androidplot-source/
+
 ## License
     Copyright 2015 AndroidPlot.com
 

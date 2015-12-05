@@ -7,6 +7,9 @@ A library for creating dynamic and static charts in Android apps. It’s designe
 ##### Github Repo: https://github.com/halfhp/androidplot
 ##### Issue Tracker: https://androidplot.jira.com
 
+## Demo App
+https://play.google.com/store/apps/details?id=com.androidplot.demos&hl=en
+
 ## Usage
 To use the library in your gradle project add the following to your `build.gradle`:
 

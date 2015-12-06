@@ -17,7 +17,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:ap="http://schemas.android.com/apk/res-auto"
-              style="@style/sample_activity">
+              android:layout_height="match_parent"
+              android:layout_width="match_parent">
 
     <com.androidplot.xy.XYPlot
         android:id="@+id/mySimpleXYPlot"
@@ -26,20 +27,20 @@
         ap:label="A Simple XY Plot"
         ap:rangeLabel="range"
         ap:domainLabel="domain"
-        ap:labelTextSize="@dimen/title_font_size"
-        ap:rangeLabelTextSize="@dimen/range_label_font_size"
-        ap:domainLabelTextSize="@dimen/domain_label_font_size"
+        ap:labelTextSize="20sp"
+        ap:rangeLabelTextSize="13sp"
+        ap:domainLabelTextSize="13sp"
         ap:graphMarginTop="20dp"
         ap:graphMarginBottom="25dp"
         ap:graphMarginLeft="15dp"
         ap:graphMarginRight="10dp"
-        ap:rangeTickLabelTextSize="@dimen/range_tick_label_font_size"
-        ap:rangeOriginTickLabelTextSize="@dimen/range_tick_label_font_size"
-        ap:domainTickLabelTextSize="@dimen/domain_tick_label_font_size"
-        ap:domainOriginTickLabelTextSize="@dimen/domain_tick_label_font_size"
-        ap:legendTextSize="@dimen/legend_text_font_size"
+        ap:rangeTickLabelTextSize="15sp"
+        ap:rangeOriginTickLabelTextSize="15sp"
+        ap:domainTickLabelTextSize="15sp"
+        ap:domainOriginTickLabelTextSize="15sp"
+        ap:legendTextSize="15sp"
         ap:legendIconHeight="15dp"
         ap:legendIconWidth="15dp"
-        ap:legendHeight="25"
+        ap:legendHeight="25dp"
         ap:legendAnchorPosition="right_bottom"/>
 </LinearLayout>

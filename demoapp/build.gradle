@@ -19,6 +19,7 @@ apply plugin: 'android'
 
 dependencies {
 	compile project(':androidplot-core')
+    compile 'com.crittercism:crittercism-android-agent:5.4.0'
 }
 
 android {

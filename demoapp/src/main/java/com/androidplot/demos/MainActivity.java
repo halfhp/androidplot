@@ -19,16 +19,27 @@ package com.androidplot.demos;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import com.crittercism.app.Crittercism;
 
-public class MainActivity extends Activity
-{
-    /** Called when the activity is first created. */
+public class MainActivity extends Activity {
+
+    private static final String TAG = MainActivity.class.getName();
+
+    // DO *NOT* CHANGE THIS LINE! (CI-MATCH-POPULATE)
+    private static final String CRITTERCISM_APP_ID = null;
+
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(CRITTERCISM_APP_ID != null) {
+            Log.d(TAG, "Crittercism initialized.");
+            Crittercism.initialize(getApplicationContext(), "CRITTERCISM_APP_ID");
+        }
+
         setContentView(R.layout.main);
 
         Button startSimplePieExButton = (Button) findViewById(R.id.startSimplePieExButton);

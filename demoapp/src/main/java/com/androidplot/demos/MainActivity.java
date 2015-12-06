@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
 
         if(CRITTERCISM_APP_ID != null) {
             Log.d(TAG, "Crittercism initialized.");
-            Crittercism.initialize(getApplicationContext(), "CRITTERCISM_APP_ID");
+            Crittercism.initialize(getApplicationContext(), CRITTERCISM_APP_ID);
         }
 
         setContentView(R.layout.main);

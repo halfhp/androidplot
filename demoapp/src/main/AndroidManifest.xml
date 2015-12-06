@@ -17,14 +17,14 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.androidplot.demos">
 
+    <!-- Used by Crittercism to report crashes -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+
     <!-- We must disable hardware acceleration otherwise some lines will not appear in our plots. -->
     <application android:label="AndroidPlot API DemoApp"
                  android:icon="@drawable/icon">
-
-        <!-- Used by Crittercism to report crashes -->
-        <uses-permission android:name="android.permission.INTERNET"/>
-        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-        <uses-permission android:name="android.permission.GET_TASKS"/>
 
         <activity android:name=".MainActivity"
                   android:label="@string/app_name">

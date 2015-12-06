@@ -44,13 +44,15 @@ public class SimpleXYPlotActivity extends Activity
         Number[] series2Numbers = {4, 6, 3, 8, 2, 10};
 
         // Turn the above arrays into XYSeries':
+        // (Y_VALS_ONLY means use the element index as the x value)
         XYSeries series1 = new SimpleXYSeries(
-                Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
-                "Series1");                             // Set the display title of the series
+                Arrays.asList(series1Numbers),
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
+                "Series1");
 
         // same as above
-        XYSeries series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series2");
+        XYSeries series2 = new SimpleXYSeries(Arrays.asList(series2Numbers),
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series2");
 
         // Create a getFormatter to use for drawing a series using LineAndPointRenderer
         // and configure it from xml:

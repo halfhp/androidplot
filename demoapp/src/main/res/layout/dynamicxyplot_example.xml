@@ -16,6 +16,7 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ap="http://schemas.android.com/apk/res-auto"
               style="@style/sample_activity">
 
     <com.androidplot.xy.XYPlot
@@ -37,10 +38,10 @@
     androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
     androidPlot.graphWidget.domainLabelPaint.textSize="@dimen/domain_tick_label_font_size"
     androidPlot.graphWidget.domainOriginLabelPaint.textSize="@dimen/domain_tick_label_font_size"
-    androidPlot.legendWidget.textPaint.textSize="@dimen/legend_text_font_size"
-    androidPlot.legendWidget.iconSizeMetrics.height.value="15dp"
-    androidPlot.legendWidget.iconSizeMetrics.width.value="15dp"
-    androidPlot.legendWidget.height.value="25dp"
-    androidPlot.legendWidget.positionMetrics.anchor="right_bottom"/>
+    ap:legendTextSize="15sp"
+    ap:legendIconHeight="15dp"
+    ap:legendIconWidth="15dp"
+    ap:legendHeight="25dp"
+    ap:legendAnchorPosition="right_bottom"/>
 
 </LinearLayout>

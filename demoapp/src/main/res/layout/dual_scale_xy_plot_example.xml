@@ -16,37 +16,40 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ap="http://schemas.android.com/apk/res-auto"
               style="@style/sample_activity"
               android:orientation="vertical">
 
-    <RelativeLayout 
-           android:id="@+id/sectionGraph" 
-	       android:layout_width="fill_parent"
-	       android:layout_height="fill_parent"
-	       android:layout_weight="1"
-	       android:layout_marginTop="0px"
-	       android:layout_marginBottom="0px"
-	       android:layout_marginLeft="0px"
-	       android:layout_marginRight="0px">
-	       
-				<com.androidplot.xy.XYPlot
-			    	android:id="@+id/mySimpleXYPlot_L"
-			        android:layout_width="fill_parent"
-			        android:layout_height="fill_parent"
-			        androidPlot.title="A Simple XY Plot"
-			        androidPlot.graphWidget.gridLinePaint.color="#000000"/>
-				<com.androidplot.xy.XYPlot
-			    	android:id="@+id/mySimpleXYPlot_R"
-			        android:layout_width="fill_parent"
-			        android:layout_height="fill_parent"
-			        androidPlot.title="A Simple XY Plot"
-			        androidPlot.graphWidget.gridLinePaint.color="#000000"/>
-   	
-   	</RelativeLayout>
-    
-    <Button android:id="@+id/toggleSeries2"
-            style="@style/toc_button"
-            android:text="Toggle position of Series2"
-            android:enabled="true"/>
+    <RelativeLayout
+        android:id="@+id/sectionGraph"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:layout_marginTop="0px"
+        android:layout_marginBottom="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginRight="0px">
+
+        <com.androidplot.xy.XYPlot
+            style="@style/simple_xy"
+            android:id="@+id/mySimpleXYPlot_L"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            ap:label="A Simple XY Plot"/>
+
+        <com.androidplot.xy.XYPlot
+            style="@style/simple_xy"
+            android:id="@+id/mySimpleXYPlot_R"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            ap:label="A Simple XY Plot"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/toggleSeries2"
+        style="@style/toc_button"
+        android:text="Toggle position of Series2"
+        android:enabled="true"/>
 
 </LinearLayout>

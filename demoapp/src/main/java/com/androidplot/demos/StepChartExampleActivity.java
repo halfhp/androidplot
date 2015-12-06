@@ -53,18 +53,6 @@ public class StepChartExampleActivity extends Activity
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
                 "Thread #1");
 
-        //mySimpleXYPlot.getLayoutManager().remove(mySimpleXYPlot.getLegendWidget());
-
-
-        mySimpleXYPlot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
-        mySimpleXYPlot.getGraphWidget().getDomainGridLinePaint().setColor(Color.BLACK);
-        mySimpleXYPlot.getGraphWidget().getDomainGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
-        mySimpleXYPlot.getGraphWidget().getRangeGridLinePaint().setColor(Color.BLACK);
-        mySimpleXYPlot.getGraphWidget().getRangeGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
-        mySimpleXYPlot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
-        mySimpleXYPlot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
-        mySimpleXYPlot.getGraphWidget().setMarginRight(5);
-
         // Create a getFormatter to use for drawing a series using LineAndPointRenderer:
         LineAndPointFormatter series1Format = new LineAndPointFormatter(
                 Color.rgb(0, 100, 0),                   // line color
@@ -89,14 +77,6 @@ public class StepChartExampleActivity extends Activity
         mySimpleXYPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
         mySimpleXYPlot.setTicksPerRangeLabel(1);
         mySimpleXYPlot.setTicksPerDomainLabel(5);
-
-        // customize our domain/range labels
-        //mySimpleXYPlot.setDomainLabel("Time (Secs)");
-        //mySimpleXYPlot.setRangeLabel("Server State");
-
-        //mySimpleXYPlot.getGraphWidget().getGridLinePaint().setAlpha(0);
-      
-
 
         // get rid of decimal points in our domain labels:
         mySimpleXYPlot.setDomainValueFormat(new DecimalFormat("0"));
@@ -131,10 +111,5 @@ public class StepChartExampleActivity extends Activity
                 return null;
             }
         });
-
-        // by default, AndroidPlot displays developer guides to aid in laying out your plot.
-        // To get rid of them call disableAllMarkup():
-        //mySimpleXYPlot.disableAllMarkup();
-
     }
 }

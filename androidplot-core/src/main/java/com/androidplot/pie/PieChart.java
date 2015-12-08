@@ -20,9 +20,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
+import com.androidplot.R;
 import com.androidplot.ui.AnchorPosition;
 import com.androidplot.ui.SizeLayoutType;
 import com.androidplot.ui.Size;
+import com.androidplot.util.AttrUtils;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
@@ -82,7 +84,10 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
     @Override
     protected void processAttrs(TypedArray attrs) {
-        // TODO
+
+        // borderPaint
+        AttrUtils.configureLinePaint(attrs, getBorderPaint(),
+                R.styleable.pie_PieChart_pieBorderColor, R.styleable.pie_PieChart_pieBorderThickness);
     }
 
     public PieWidget getPieWidget() {

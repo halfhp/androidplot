@@ -17,6 +17,11 @@
 
 <resources>
 
+    <attr name="renderMode" format="enum">
+        <enum name="use_background_thread" value="0"/>
+        <enum name="use_main_thread" value="0"/>
+    </attr>
+
     <!-- values  must match the ordinal of its corresponding
     element in the AnchorPosition enum.  -->
     <attr name="legendAnchorPosition" format="enum">
@@ -73,7 +78,9 @@
         <enum name="relative_from_center" value="5"/>
     </attr>
 
+    <!-- Plot -->
     <declare-styleable name="Plot">
+        <attr name="renderMode"/>
         <attr name="label" format="string"/>
         <attr name="labelTextSize" format="dimension"/>
         <attr name="labelTextColor" format="color"/>
@@ -82,6 +89,7 @@
         <attr name="borderThickness" format="dimension"/>
     </declare-styleable>
 
+    <!-- XYPlot -->
     <declare-styleable name="xy.XYPlot" parent="@style/Plot">
         <attr name="domainLabel" format="string"/>
         <attr name="domainLabelTextColor" format="color"/>
@@ -89,6 +97,8 @@
         <attr name="rangeLabel" format="string"/>
         <attr name="rangeLabelTextColor" format="color"/>
         <attr name="rangeLabelTextSize" format="dimension"/>
+
+        <!-- graph widget margin / padding -->
         <attr name="graphMarginTop" format="dimension"/>
         <attr name="graphMarginBottom" format="dimension"/>
         <attr name="graphMarginLeft" format="dimension"/>
@@ -97,7 +107,20 @@
         <attr name="graphPaddingBottom" format="dimension"/>
         <attr name="graphPaddingLeft" format="dimension"/>
         <attr name="graphPaddingRight" format="dimension"/>
+        <attr name="gridMarginTop" format="dimension"/>
+
+        <!-- grid rect margin / padding -->
+        <attr name="gridMarginBottom" format="dimension"/>
+        <attr name="gridMarginLeft" format="dimension"/>
+        <attr name="gridMarginRight" format="dimension"/>
+        <attr name="gridPaddingTop" format="dimension"/>
+        <attr name="gridPaddingBottom" format="dimension"/>
+        <attr name="gridPaddingLeft" format="dimension"/>
+        <attr name="gridPaddingRight" format="dimension"/>
+
         <attr name="graphBackgroundColor" format="color"/>
+        <attr name="graphDomainLineThickness" format="dimension"/>
+        <attr name="graphRangeLineThickness" format="dimension"/>
         <attr name="graphDomainLineColor" format="color"/>
         <attr name="graphRangeLineColor" format="color"/>
         <attr name="rangeTickLabelTextSize" format="dimension"/>
@@ -125,5 +148,11 @@
         <attr name="legendLayoutStyleY"/>
         <attr name="legendAnchorPosition"/>
         <attr name="legendVisible" format="boolean"/>
+    </declare-styleable>
+
+    <!-- TODO: PieChart -->
+    <declare-styleable name="pie.PieChart" parent="@style/Plot">
+        <attr name="pieBorderColor" format="color"/>
+        <attr name="pieBorderThickness" format="dimension"/>
     </declare-styleable>
 </resources>

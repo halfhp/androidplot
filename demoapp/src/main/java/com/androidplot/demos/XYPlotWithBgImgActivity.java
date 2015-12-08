@@ -121,7 +121,7 @@ public class XYPlotWithBgImgActivity extends Activity {
         );
         plot.getGraphWidget().getGridBackgroundPaint().setShader(lg);*/
 
-        RectF rect = plot.getGraphWidget().getGridRect();
+        RectF rect = plot.getGraphWidget().getGridDimensions().marginatedRect;
         BitmapShader myShader = new BitmapShader(
                 Bitmap.createScaledBitmap(
                         BitmapFactory.decodeResource(

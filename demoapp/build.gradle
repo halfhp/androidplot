@@ -29,7 +29,7 @@ android {
     defaultConfig {
         versionCode theVersionCode
         versionName theVersionName
-        minSdkVersion theMinSdkVersion
+        minSdkVersion 11
         targetSdkVersion theTargetSdkVersion
         applicationId "com.androidplot.demos"
     }

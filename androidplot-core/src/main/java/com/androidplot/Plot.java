@@ -375,6 +375,15 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param attrs
      */
     private void processBaseAttrs(TypedArray attrs) {
+
+        // renderMode
+        RenderMode renderMode = RenderMode.values()
+                [attrs.getInt(R.styleable.Plot_renderMode, getRenderMode().ordinal())];
+        if(renderMode != getRenderMode()) {
+            setRenderMode(renderMode);
+        }
+
+        // title
         setTitle(attrs.getString(R.styleable.Plot_label));
         getTitleWidget().getLabelPaint().setTextSize(
                 attrs.getDimension(R.styleable.Plot_labelTextSize,

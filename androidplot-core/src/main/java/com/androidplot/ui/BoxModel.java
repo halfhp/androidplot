@@ -33,11 +33,12 @@ public class BoxModel implements BoxModelable{
     private float paddingTop;
     private float paddingRight;
     private float paddingBottom;
-    //private RectF marginRect;
-    //private RectF paddingRect;
 
+    /**
+     * Default with 0 for all padding / margin values
+     */
     public BoxModel() {
-        
+        // nothing to do
     }
 
     @SuppressWarnings("SameParameterValue")

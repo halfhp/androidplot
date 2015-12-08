@@ -94,7 +94,7 @@ public class BarPlotExampleActivity extends Activity
         setContentView(R.layout.bar_plot_example);
 
         // initialize our XYPlot reference:
-        plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+        plot = (XYPlot) findViewById(R.id.plot);
 
         formatter1 = new MyBarFormatter(Color.argb(200, 100, 150, 100), Color.LTGRAY);
         formatter2 = new MyBarFormatter(Color.argb(200, 100, 100, 150), Color.LTGRAY);
@@ -123,7 +123,7 @@ public class BarPlotExampleActivity extends Activity
         // reduce the number of range labels
         plot.setTicksPerRangeLabel(3);
         plot.setRangeLowerBoundary(0, BoundaryMode.FIXED);
-        plot.getGraphWidget().setGridPadding(30, 10, 30, 0);
+        plot.getGraphWidget().getGridBox().setPadding(30, 10, 30, 0);
 
         plot.setTicksPerDomainLabel(2);
 
@@ -301,7 +301,7 @@ public class BarPlotExampleActivity extends Activity
 
         // make sure the point lies within the graph area.  we use gridrect
         // because it accounts for margins and padding as well. 
-        if (plot.getGraphWidget().getGridRect().contains(point.x, point.y)) {
+        if (plot.getGraphWidget().getGridDimensions().marginatedRect.contains(point.x, point.y)) {
             Number x = plot.getXVal(point);
             Number y = plot.getYVal(point);
 

@@ -289,12 +289,19 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         AttrUtils.configureTextPaint(attrs, getRangeLabelWidget().getLabelPaint(),
                 R.styleable.xy_XYPlot_rangeLabelTextColor, R.styleable.xy_XYPlot_rangeLabelTextSize);
 
-        // graphBox
+        // graphWidget
         AttrUtils.configureBoxModelable(attrs, getGraphWidget(),
                 R.styleable.xy_XYPlot_graphMarginTop, R.styleable.xy_XYPlot_graphMarginBottom,
                 R.styleable.xy_XYPlot_graphMarginLeft, R.styleable.xy_XYPlot_graphMarginRight,
                 R.styleable.xy_XYPlot_graphPaddingTop, R.styleable.xy_XYPlot_graphPaddingBottom,
                 R.styleable.xy_XYPlot_graphPaddingLeft, R.styleable.xy_XYPlot_graphPaddingRight);
+
+        // gridRect
+        AttrUtils.configureBoxModelable(attrs, getGraphWidget().getGridBox(),
+                R.styleable.xy_XYPlot_gridMarginTop, R.styleable.xy_XYPlot_gridMarginBottom,
+                R.styleable.xy_XYPlot_gridMarginLeft, R.styleable.xy_XYPlot_gridMarginRight,
+                R.styleable.xy_XYPlot_gridPaddingTop, R.styleable.xy_XYPlot_gridPaddingBottom,
+                R.styleable.xy_XYPlot_gridPaddingLeft, R.styleable.xy_XYPlot_gridPaddingRight);
 
         // domainTickLabelPaint
         AttrUtils.configureTextPaint(attrs, getGraphWidget().getDomainTickLabelPaint(),
@@ -340,29 +347,21 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 R.styleable.xy_XYPlot_legendAnchorPosition,
                 R.styleable.xy_XYPlot_legendVisible);
 
-        // while it's generally bad practice to retrieve an enum via ordinal value like this, i can think
-        // of no real-world scenario that would lead to a problem in this specific case:
-        //getLegendWidget().setAnchor(AnchorPosition.values()[attrs.getInt(
-        //        R.styleable.xy_XYPlot_legendAnchorPosition, getLegendWidget().getAnchor().ordinal())]);
+        AttrUtils.configureLinePaint(attrs, getGraphWidget().getDomainGridLinePaint(),
+                R.styleable.xy_XYPlot_graphDomainLineColor, R.styleable.xy_XYPlot_graphDomainLineThickness);
+
+        AttrUtils.configureLinePaint(attrs, getGraphWidget().getRangeGridLinePaint(),
+                R.styleable.xy_XYPlot_graphRangeLineColor, R.styleable.xy_XYPlot_graphRangeLineThickness);
 
         getGraphWidget().getBackgroundPaint().setColor(attrs.getColor(
                 R.styleable.xy_XYPlot_graphBackgroundColor, getGraphWidget().getBackgroundPaint().getColor()));
-
-        getGraphWidget().getDomainGridLinePaint().setColor(attrs.getColor(
-                R.styleable.xy_XYPlot_graphDomainLineColor, getGraphWidget().getDomainGridLinePaint().getColor()));
-
-        getGraphWidget().getRangeGridLinePaint().setColor(attrs.getColor(
-                R.styleable.xy_XYPlot_graphRangeLineColor, getGraphWidget().getRangeGridLinePaint().getColor()));
 
         getGraphWidget().getGridBackgroundPaint().setColor(attrs.getColor(
                 R.styleable.xy_XYPlot_gridBackgroundColor, getGraphWidget().getGridBackgroundPaint().getColor()));
     }
 
     public void setGridPadding(float left, float top, float right, float bottom) {
-        getGraphWidget().setGridPaddingTop(top);
-        getGraphWidget().setGridPaddingBottom(bottom);
-        getGraphWidget().setGridPaddingLeft(left);
-        getGraphWidget().setGridPaddingRight(right);
+        getGraphWidget().getGridBox().setPadding(left, top, right, bottom);
     }
 
     @Override
@@ -383,8 +382,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @return
      */
     public boolean containsPoint(float x, float y) {
-        if (getGraphWidget().getGridRect() != null) {
-            return getGraphWidget().getGridRect().contains(x, y);
+        if (getGraphWidget().getGridDimensions().marginatedRect != null) {
+            return getGraphWidget().getGridDimensions().marginatedRect.contains(x, y);
         }
         return false;
     }

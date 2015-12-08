@@ -21,7 +21,7 @@
 
     <com.androidplot.xy.XYPlot
             style="@style/simple_xy"
-            android:id="@+id/mySimpleXYPlot"
+            android:id="@+id/plot"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             androidPlot.title="ScrollZoom Example"

@@ -21,7 +21,6 @@ import java.util.Random;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -63,7 +62,7 @@ public class TouchZoomExampleActivity extends Activity implements OnTouchListene
                 mySimpleXYPlot.redraw();
             }
         });
-        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+        mySimpleXYPlot = (XYPlot) findViewById(R.id.plot);
         mySimpleXYPlot.setOnTouchListener(this);
         mySimpleXYPlot.getGraphWidget().setTicksPerRangeLabel(2);
         mySimpleXYPlot.getGraphWidget().setTicksPerDomainLabel(2);

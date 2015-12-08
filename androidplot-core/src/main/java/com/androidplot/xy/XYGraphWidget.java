@@ -19,6 +19,7 @@ package com.androidplot.xy;
 import android.graphics.*;
 
 import com.androidplot.exception.PlotRenderException;
+import com.androidplot.ui.BoxModel;
 import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.Size;
@@ -118,6 +119,14 @@ public class XYGraphWidget extends Widget {
         setRangeLabelTickPaintMap(rangeLabelPaintMap);
     }
 
+    public BoxModel getGridBox() {
+        return gridBox;
+    }
+
+    public void setGridBox(BoxModel gridBox) {
+        this.gridBox = gridBox;
+    }
+
     /**
      * Will be used in a future version.
      */
@@ -146,10 +155,10 @@ public class XYGraphWidget extends Widget {
     
     private int ticksPerRangeLabel = 1;
     private int ticksPerDomainLabel = 1;
-    private float gridPaddingTop = 0;
-    private float gridPaddingBottom = 0;
-    private float gridPaddingLeft = 0;
-    private float gridPaddingRight = 0;
+
+    private BoxModel gridBox = new BoxModel();
+    private DisplayDimensions gridDimensions;
+
     private int domainTickExtension = 5;
     private int rangeTickExtension  = 5;
     private int domainLabelSubTickExtension = 0;
@@ -172,8 +181,7 @@ public class XYGraphWidget extends Widget {
     private Paint rangeOriginLinePaint;
     private Paint domainOriginTickLabelPaint;
     private Paint rangeOriginTickLabelPaint;
-    private RectF gridRect;
-    private RectF paddedGridRect;
+
     private float domainCursorPosition;
     private float rangeCursorPosition;
     @SuppressWarnings("FieldCanBeLocal")
@@ -357,43 +365,6 @@ public class XYGraphWidget extends Widget {
         return null;
     }
 
-    /**
-     * Returns the formatter associated with the first (bottom-most) Region
-     * containing value.
-     * 
-     * @param value
-     * @return
-     */
-    /*
-     * public AxisValueLabelFormatter getXYAxisFormatterForRangeVal(double
-     * value) { return getRegionContainingVal(rangeLabelRegions, value); }
-     *//**
-     * Returns the formatter associated with the first (bottom-most) Region
-     * containing value.
-     * 
-     * @param value
-     * @return
-     */
-    /*
-     * public AxisValueLabelFormatter getXYAxisFormatterForDomainVal(double
-     * value) { return getRegionContainingVal(domainLabelRegions, value); }
-     */
-
-    /*
-     * private AxisValueLabelFormatter getRegionContainingVal(ZHash<LineRegion,
-     * AxisValueLabelFormatter> zhash, double val) { for (LineRegion r :
-     * zhash.elements()) { if (r.contains(val)) { return
-     * rangeLabelRegions.get(r); } } // nothing found return null; }
-     */
-
-    /**
-     * Returns a RectF representing the grid area last drawn by this plot.
-     * 
-     * @return
-     */
-    public RectF getGridRect() {
-        return paddedGridRect;
-    }
     private String getFormattedRangeValue(Number value) {
         return rangeValueFormat.format(value);
     }
@@ -423,9 +394,9 @@ public class XYGraphWidget extends Widget {
                 || plot.getCalculatedMaxY() == null) {
             return null;
         }
-        return ValPixConverter.pixToVal(yPix - paddedGridRect.top, plot
+        return ValPixConverter.pixToVal(yPix - gridDimensions.paddedRect.top, plot
                 .getCalculatedMinY().doubleValue(), plot.getCalculatedMaxY()
-                .doubleValue(), paddedGridRect.height(), true);
+                .doubleValue(), gridDimensions.paddedRect.height(), true);
     }
 
     /**
@@ -449,23 +420,19 @@ public class XYGraphWidget extends Widget {
                 || plot.getCalculatedMaxX() == null) {
             return null;
         }
-        return ValPixConverter.pixToVal(xPix - paddedGridRect.left, plot
+        return ValPixConverter.pixToVal(xPix - gridDimensions.paddedRect.left, plot
                 .getCalculatedMinX().doubleValue(), plot.getCalculatedMaxX()
-                .doubleValue(), paddedGridRect.width(), false);
+                .doubleValue(), gridDimensions.paddedRect.width(), false);
     }
 
     @Override
     protected void doOnDraw(Canvas canvas, RectF widgetRect)
             throws PlotRenderException {
-        gridRect = getGridRect(widgetRect); // used for drawing the background
-                                            // of the grid
-        paddedGridRect = getPaddedGridRect(gridRect); // used for drawing lines
-                                                      // etc.
-        //Log.v(TAG, "gridRect :" + gridRect);
-        //Log.v(TAG, "paddedGridRect :" + paddedGridRect);
-        // if (!plot.isEmpty()) {
+
+        calculateGridDimensions(widgetRect);
+
         // don't draw if we have no space to draw into
-        if ((paddedGridRect.height() > 0.0f) && (paddedGridRect.width() > 0.0f)) {
+        if ((gridDimensions.paddedRect.height() > 0.0f) && (gridDimensions.paddedRect.width() > 0.0f)) {
             if (plot.getCalculatedMinX() != null
                     && plot.getCalculatedMaxX() != null
                     && plot.getCalculatedMinY() != null
@@ -478,20 +445,20 @@ public class XYGraphWidget extends Widget {
                 }
             }
         }
-        // }
     }
 
-    private RectF getGridRect(RectF widgetRect) {
-        return new RectF(widgetRect.left + ((rangeAxisLeft)?rangeTickLabelWidth:1),
+    private void calculateGridDimensions(RectF widgetRect) {
+        RectF r = new RectF(widgetRect.left + ((rangeAxisLeft)?rangeTickLabelWidth:1),
                 widgetRect.top + ((domainAxisBottom)?1:domainTickLabelWidth),
                 widgetRect.right - ((rangeAxisLeft)?1:rangeTickLabelWidth),
                 widgetRect.bottom - ((domainAxisBottom)?domainTickLabelWidth:1));
-    }
 
-    private RectF getPaddedGridRect(RectF gridRect) {
-        return new RectF(gridRect.left + gridPaddingLeft, gridRect.top
-                + gridPaddingTop, gridRect.right - gridPaddingRight,
-                gridRect.bottom - gridPaddingBottom);
+        // don't calculate if nothing has changed:
+        if(gridDimensions == null || !RectFUtils.areIdentical(r, gridDimensions.canvasRect)) {
+            RectF mRect = gridBox.getMarginatedRect(r);
+            RectF pRect = gridBox.getPaddedRect(mRect);
+            gridDimensions = new DisplayDimensions(r, mRect, pRect);
+        }
     }
 
     private void drawTickText(Canvas canvas, XYAxisType axis, Number value,
@@ -533,6 +500,8 @@ public class XYGraphWidget extends Widget {
 
     private void drawDomainTick(Canvas canvas, float xPix, Number xVal,
             Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
+
+        final RectF gridRect = gridDimensions.paddedRect;
         if (!drawLineOnly) {
             if (linePaint != null && (domainTick || domainTickExtension > 0)) {
                 if (domainAxisBottom){
@@ -570,6 +539,7 @@ public class XYGraphWidget extends Widget {
 
     public void drawRangeTick(Canvas canvas, float yPix, Number yVal,
             Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
+        final RectF gridRect = gridDimensions.paddedRect;
         if (!drawLineOnly) {
             if (linePaint != null && (rangeTick || rangeTickExtension > 0)) {
                 if (rangeAxisLeft){
@@ -609,9 +579,9 @@ public class XYGraphWidget extends Widget {
      * @param canvas
      */
     protected void drawGrid(Canvas canvas) {
-
+        final RectF paddedGridRect = gridDimensions.paddedRect;
         if (gridBackgroundPaint != null) {
-            canvas.drawRect(gridRect, gridBackgroundPaint);
+            canvas.drawRect(gridDimensions.paddedRect, gridBackgroundPaint);
         }
 
         float domainOriginF;
@@ -804,18 +774,19 @@ public class XYGraphWidget extends Widget {
      */
     private void drawMarkerText(Canvas canvas, String text, ValueMarker marker,
             float x, float y) {
+        final RectF paddedRect = gridDimensions.paddedRect;
         x += MARKER_LABEL_SPACING;
         y -= MARKER_LABEL_SPACING;
         RectF textRect = new RectF(FontUtils.getStringDimensions(text,
                 marker.getTextPaint()));
         textRect.offsetTo(x, y - textRect.height());
 
-        if (textRect.right > paddedGridRect.right) {
-            textRect.offset(-(textRect.right - paddedGridRect.right), 0);
+        if (textRect.right > paddedRect.right) {
+            textRect.offset(-(textRect.right - paddedRect.right), 0);
         }
 
-        if (textRect.top < paddedGridRect.top) {
-            textRect.offset(0, paddedGridRect.top - textRect.top);
+        if (textRect.top < paddedRect.top) {
+            textRect.offset(0, paddedRect.top - textRect.top);
         }
 
         canvas.drawText(text, textRect.left, textRect.bottom,
@@ -826,20 +797,21 @@ public class XYGraphWidget extends Widget {
     protected void drawMarkers(Canvas canvas) {
         for (YValueMarker marker : plot.getYValueMarkers()) {
 
+            final RectF paddedRect = gridDimensions.paddedRect;
+
             if (marker.getValue() != null) {
                 double yVal = marker.getValue().doubleValue();
                 float yPix = ValPixConverter.valToPix(yVal, plot
                         .getCalculatedMinY().doubleValue(), plot
-                        .getCalculatedMaxY().doubleValue(), paddedGridRect
+                        .getCalculatedMaxY().doubleValue(), paddedRect
                         .height(), true);
-                yPix += paddedGridRect.top;
-                canvas.drawLine(paddedGridRect.left, yPix,
-                        paddedGridRect.right, yPix, marker.getLinePaint());
+                yPix += paddedRect.top;
+                canvas.drawLine(paddedRect.left, yPix,
+                        paddedRect.right, yPix, marker.getLinePaint());
 
-                // String text = getFormattedRangeValue(yVal);
                 float xPix = marker.getTextPosition().getPixelValue(
-                        paddedGridRect.width());
-                xPix += paddedGridRect.left;
+                        paddedRect.width());
+                xPix += paddedRect.left;
 
                 if (marker.getText() != null) {
                     drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
@@ -852,20 +824,22 @@ public class XYGraphWidget extends Widget {
         }
 
         for (XValueMarker marker : plot.getXValueMarkers()) {
+
+            final RectF paddedRect = gridDimensions.paddedRect;
+
             if (marker.getValue() != null) {
                 double xVal = marker.getValue().doubleValue();
                 float xPix = ValPixConverter.valToPix(xVal, plot
                         .getCalculatedMinX().doubleValue(), plot
-                        .getCalculatedMaxX().doubleValue(), paddedGridRect
+                        .getCalculatedMaxX().doubleValue(), paddedRect
                         .width(), false);
-                xPix += paddedGridRect.left;
-                canvas.drawLine(xPix, paddedGridRect.top, xPix,
-                        paddedGridRect.bottom, marker.getLinePaint());
+                xPix += paddedRect.left;
+                canvas.drawLine(xPix, paddedRect.top, xPix,
+                        paddedRect.bottom, marker.getLinePaint());
 
-                // String text = getFormattedDomainValue(xVal);
                 float yPix = marker.getTextPosition().getPixelValue(
-                        paddedGridRect.height());
-                yPix += paddedGridRect.top;
+                        paddedRect.height());
+                yPix += paddedRect.top;
                 if (marker.getText() != null) {
                     drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
                 } else {
@@ -878,25 +852,27 @@ public class XYGraphWidget extends Widget {
     }
 
     protected void drawCursors(Canvas canvas) {
+
+        final RectF paddedRect = gridDimensions.paddedRect;
         boolean hasDomainCursor = false;
         // draw the domain cursor:
         if (domainCursorPaint != null
-                && domainCursorPosition <= paddedGridRect.right
-                && domainCursorPosition >= paddedGridRect.left) {
+                && domainCursorPosition <= paddedRect.right
+                && domainCursorPosition >= paddedRect.left) {
             hasDomainCursor = true;
-            canvas.drawLine(domainCursorPosition, paddedGridRect.top,
-                    domainCursorPosition, paddedGridRect.bottom,
+            canvas.drawLine(domainCursorPosition, paddedRect.top,
+                    domainCursorPosition, paddedRect.bottom,
                     domainCursorPaint);
         }
 
         boolean hasRangeCursor = false;
         // draw the range cursor:
         if (rangeCursorPaint != null
-                && rangeCursorPosition >= paddedGridRect.top
-                && rangeCursorPosition <= paddedGridRect.bottom) {
+                && rangeCursorPosition >= paddedRect.top
+                && rangeCursorPosition <= paddedRect.bottom) {
             hasRangeCursor = true;
-            canvas.drawLine(paddedGridRect.left, rangeCursorPosition,
-                    paddedGridRect.right, rangeCursorPosition, rangeCursorPaint);
+            canvas.drawLine(paddedRect.left, rangeCursorPosition,
+                    paddedRect.right, rangeCursorPosition, rangeCursorPaint);
         }
 
         if (drawCursorLabelEnabled && cursorLabelPaint != null
@@ -913,17 +889,15 @@ public class XYGraphWidget extends Widget {
                     - cursorRect.height());
 
             // if we are too close to the right edge of the plot, we will move
-            // the
-            // label to the left side of our cursor:
-            if (cursorRect.right >= paddedGridRect.right) {
+            // the label to the left side of our cursor:
+            if (cursorRect.right >= paddedRect.right) {
                 cursorRect.offsetTo(domainCursorPosition - cursorRect.width(),
                         cursorRect.top);
             }
 
             // same thing for the top edge of the plot:
-            // dunno why but these rects can have negative values for top and
-            // bottom.
-            if (cursorRect.top <= paddedGridRect.top) {
+            // dunno why but these rects can have negative values for top and bottom.
+            if (cursorRect.top <= paddedRect.top) {
                 cursorRect.offsetTo(cursorRect.left, rangeCursorPosition);
             }
 
@@ -945,13 +919,13 @@ public class XYGraphWidget extends Widget {
     protected void drawData(Canvas canvas) throws PlotRenderException {
         try {
             canvas.save(Canvas.ALL_SAVE_FLAG);
-            canvas.clipRect(gridRect, android.graphics.Region.Op.INTERSECT);
+            canvas.clipRect(gridDimensions.marginatedRect, android.graphics.Region.Op.INTERSECT);
             renderStack.sync();
 
             for(RenderStack.StackElement thisElement : renderStack.getElements()) {
                 if(thisElement.isEnabled()) {
                     plot.getRenderer(thisElement.get().getFormatter().getRendererClass()).
-                            render(canvas, paddedGridRect, thisElement.get(), renderStack);
+                            render(canvas, gridDimensions.paddedRect, thisElement.get(), renderStack);
                 }
             }
 
@@ -1360,45 +1334,6 @@ public class XYGraphWidget extends Widget {
         this.ticksPerDomainLabel = ticksPerDomainLabel;
     }
 
-    public void setGridPaddingTop(float gridPaddingTop) {
-        this.gridPaddingTop = gridPaddingTop;
-    }
-
-    public float getGridPaddingBottom() {
-        return gridPaddingBottom;
-    }
-
-    public void setGridPaddingBottom(float gridPaddingBottom) {
-        this.gridPaddingBottom = gridPaddingBottom;
-    }
-
-    public float getGridPaddingLeft() {
-        return gridPaddingLeft;
-    }
-
-    public void setGridPaddingLeft(float gridPaddingLeft) {
-        this.gridPaddingLeft = gridPaddingLeft;
-    }
-
-    public float getGridPaddingRight() {
-        return gridPaddingRight;
-    }
-
-    public void setGridPaddingRight(float gridPaddingRight) {
-        this.gridPaddingRight = gridPaddingRight;
-    }
-
-    public float getGridPaddingTop() {
-        return gridPaddingTop;
-    }
-
-    public void setGridPadding(float left, float top, float right, float bottom) {
-        setGridPaddingLeft(left);
-        setGridPaddingTop(top);
-        setGridPaddingRight(right);
-        setGridPaddingBottom(bottom);
-    }
-
     public Paint getDomainOriginLinePaint() {
         return domainOriginLinePaint;
     }
@@ -1658,5 +1593,9 @@ public class XYGraphWidget extends Widget {
                 setDomainLabelWidth(fontHeight + getDomainLabelTickExtension());
             }
         }
+    }
+
+    public DisplayDimensions getGridDimensions() {
+        return gridDimensions;
     }
 }

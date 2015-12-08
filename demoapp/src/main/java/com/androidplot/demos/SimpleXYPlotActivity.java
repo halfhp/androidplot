@@ -25,7 +25,7 @@ import com.androidplot.xy.*;
 import java.util.Arrays;
 
 /**
- * A straightforward example of using AndroidPlot to plot some data.
+ * A simple XYPlot
  */
 public class SimpleXYPlotActivity extends Activity
 {

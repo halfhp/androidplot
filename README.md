@@ -5,7 +5,7 @@ A library for creating dynamic and static charts in Android apps. It’s designe
 ##### Bitbucket Repo: (Primary) https://bitbucket.org/androidplot/androidplot
 ##### Github Repo: https://github.com/halfhp/androidplot
 
-![image](http://androidplot.com/wp-content/gallery/plot-examples/device-2013-07-04-110827_0.png)
+![image](http://androidplot.com/wp-content/uploads/2012/11/simplexyscreen.png)
 
 ## Demo App
 [Play Store Listing](https://play.google.com/store/apps/details?id=com.androidplot.demos&hl=en)

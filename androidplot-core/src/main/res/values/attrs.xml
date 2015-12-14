@@ -22,6 +22,18 @@
         <enum name="use_main_thread" value="0"/>
     </attr>
 
+    <attr name="domainStepMode" format="enum">
+        <enum name="subdivide" value="0"/>
+        <enum name="increment_by_val" value="1"/>
+        <enum name="increment_by_pixels" value="2"/>
+    </attr>
+
+    <attr name="rangeStepMode" format="enum">
+        <enum name="subdivide" value="0"/>
+        <enum name="increment_by_val" value="1"/>
+        <enum name="increment_by_pixels" value="2"/>
+    </attr>
+
     <!-- values  must match the ordinal of its corresponding
     element in the AnchorPosition enum.  -->
     <attr name="domainLabelAnchorPosition" format="enum">
@@ -176,18 +188,24 @@
     <!-- XYPlot -->
     <declare-styleable name="xy.XYPlot" parent="@style/Plot">
 
+        <attr name="domainStepMode"/>
+        <attr name="domainStep" format="dimension|float|integer"/>
+
+        <attr name="rangeStepMode"/>
+        <attr name="rangeStep" format="dimension|float|integer"/>
+
         <!-- domain label -->
         <attr name="domainLabel" format="string"/>
         <attr name="domainLabelTextColor" format="color"/>
         <attr name="domainLabelTextSize" format="dimension"/>
         <attr name="domainLabelHeightSizeLayoutType"/>
         <attr name="domainLabelWidthSizeLayoutType"/>
-        <attr name="domainLabelHeight" format="dimension|float"/>
-        <attr name="domainLabelWidth" format="dimension|float"/>
+        <attr name="domainLabelHeight" format="dimension|float|integer"/>
+        <attr name="domainLabelWidth" format="dimension|float|integer"/>
         <attr name="domainLabelLayoutStyleX"/>
         <attr name="domainLabelLayoutStyleY"/>
-        <attr name="domainLabelPositionX" format="dimension|float"/>
-        <attr name="domainLabelPositionY" format="dimension|float"/>
+        <attr name="domainLabelPositionX" format="dimension|float|integer"/>
+        <attr name="domainLabelPositionY" format="dimension|float|integer"/>
         <attr name="domainLabelAnchorPosition"/>
         <attr name="domainLabelVisible" format="boolean"/>
 
@@ -197,12 +215,12 @@
         <attr name="rangeLabelTextSize" format="dimension"/>
         <attr name="rangeLabelHeightSizeLayoutType"/>
         <attr name="rangeLabelWidthSizeLayoutType"/>
-        <attr name="rangeLabelHeight" format="dimension|float"/>
-        <attr name="rangeLabelWidth" format="dimension|float"/>
+        <attr name="rangeLabelHeight" format="dimension|float|integer"/>
+        <attr name="rangeLabelWidth" format="dimension|float|integer"/>
         <attr name="rangeLabelLayoutStyleX"/>
         <attr name="rangeLabelLayoutStyleY"/>
-        <attr name="rangeLabelPositionX" format="dimension|float"/>
-        <attr name="rangeLabelPositionY" format="dimension|float"/>
+        <attr name="rangeLabelPositionX" format="dimension|float|integer"/>
+        <attr name="rangeLabelPositionY" format="dimension|float|integer"/>
         <attr name="rangeLabelAnchorPosition"/>
         <attr name="rangeLabelVisible" format="boolean"/>
 
@@ -244,19 +262,19 @@
         <!-- legend widget -->
         <attr name="legendHeightSizeLayoutType"/>
         <attr name="legendWidthSizeLayoutType"/>
-        <attr name="legendHeight" format="dimension|float"/>
-        <attr name="legendWidth" format="dimension|float"/>
+        <attr name="legendHeight" format="dimension|float|integer"/>
+        <attr name="legendWidth" format="dimension|float|integer"/>
         <attr name="legendLayoutStyleX"/>
         <attr name="legendLayoutStyleY"/>
-        <attr name="legendPositionX" format="dimension|float"/>
-        <attr name="legendPositionY" format="dimension|float"/>
+        <attr name="legendPositionX" format="dimension|float|integer"/>
+        <attr name="legendPositionY" format="dimension|float|integer"/>
         <attr name="legendAnchorPosition"/>
         <attr name="legendTextSize" format="dimension"/>
         <attr name="legendTextColor" format="color"/>
         <attr name="legendIconHeightSizeLayoutType"/>
         <attr name="legendIconWidthSizeLayoutType"/>
-        <attr name="legendIconHeight" format="dimension|float"/>
-        <attr name="legendIconWidth" format="dimension|float"/>
+        <attr name="legendIconHeight" format="dimension|float|integer"/>
+        <attr name="legendIconWidth" format="dimension|float|integer"/>
         <attr name="legendVisible" format="boolean"/>
     </declare-styleable>
 

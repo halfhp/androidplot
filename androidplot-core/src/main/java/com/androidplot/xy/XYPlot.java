@@ -81,11 +81,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private TextLabelWidget domainLabelWidget;
     private TextLabelWidget rangeLabelWidget;
 
-    private XYStepMode domainStepMode = XYStepMode.SUBDIVIDE;
-    private double domainStepValue = 10;
+    //private XYStepMode domainStepMode = XYStepMode.SUBDIVIDE;
+    //private double domainStepValue = 10;
 
-    private XYStepMode rangeStepMode = XYStepMode.SUBDIVIDE;
-    private double rangeStepValue = 10;
+    //private XYStepMode rangeStepMode = XYStepMode.SUBDIVIDE;
+    //private double rangeStepValue = 10;
+    private XYStepModel domainStepModel;
+    private XYStepModel rangeStepModel;
 
     // user settable min/max values
     private Number userMinX;
@@ -267,6 +269,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             addSeries(new SimpleXYSeries(Arrays.asList(3, 3, 2, 3, 3), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Blue"),
                     new LineAndPointFormatter(Color.BLUE, null, null, null));
         }
+
+        domainStepModel = new XYStepModel(XYStepMode.SUBDIVIDE, 10);
+        rangeStepModel = new XYStepModel(XYStepMode.SUBDIVIDE, 10);
     }
 
     @Override
@@ -280,6 +285,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         if(rangeLabelAttr != null) {
             setRangeLabel(rangeLabelAttr);
         }
+
+        AttrUtils.configureStep(attrs, getDomainStepModel(),
+                R.styleable.xy_XYPlot_domainStepMode, R.styleable.xy_XYPlot_domainStep);
+
+        AttrUtils.configureStep(attrs, getRangeStepModel(),
+                R.styleable.xy_XYPlot_rangeStepMode, R.styleable.xy_XYPlot_rangeStep);
 
 
         // domainLabel size & position
@@ -810,19 +821,19 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     public XYStepMode getDomainStepMode() {
-        return domainStepMode;
+        return domainStepModel.getMode();
     }
 
     public void setDomainStepMode(XYStepMode domainStepMode) {
-        this.domainStepMode = domainStepMode;
+        domainStepModel.setMode(domainStepMode);
     }
 
     public double getDomainStepValue() {
-        return domainStepValue;
+        return domainStepModel.getValue();
     }
 
     public void setDomainStepValue(double domainStepValue) {
-        this.domainStepValue = domainStepValue;
+        domainStepModel.setValue(domainStepValue);
     }
 
     public void setDomainStep(XYStepMode mode, double value) {
@@ -831,19 +842,19 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     public XYStepMode getRangeStepMode() {
-        return rangeStepMode;
+        return rangeStepModel.getMode();
     }
 
     public void setRangeStepMode(XYStepMode rangeStepMode) {
-        this.rangeStepMode = rangeStepMode;
+        rangeStepModel.setMode(rangeStepMode);
     }
 
     public double getRangeStepValue() {
-        return rangeStepValue;
+        return rangeStepModel.getValue();
     }
 
     public void setRangeStepValue(double rangeStepValue) {
-        this.rangeStepValue = rangeStepValue;
+        rangeStepModel.setValue(rangeStepValue);
     }
 
     public void setRangeStep(XYStepMode mode, double value) {
@@ -1403,5 +1414,21 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      */
     public synchronized void setDomainRightMax(Number domainRightMax) {
         this.domainRightMax = domainRightMax;
+    }
+
+    public XYStepModel getDomainStepModel() {
+        return domainStepModel;
+    }
+
+    public void setDomainStepModel(XYStepModel domainStepModel) {
+        this.domainStepModel = domainStepModel;
+    }
+
+    public XYStepModel getRangeStepModel() {
+        return rangeStepModel;
+    }
+
+    public void setRangeStepModel(XYStepModel rangeStepModel) {
+        this.rangeStepModel = rangeStepModel;
     }
 }

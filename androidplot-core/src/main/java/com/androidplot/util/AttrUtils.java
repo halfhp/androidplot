@@ -21,6 +21,8 @@ import android.graphics.Paint;
 import android.util.TypedValue;
 import com.androidplot.ui.*;
 import com.androidplot.ui.widget.Widget;
+import com.androidplot.xy.XYStepMode;
+import com.androidplot.xy.XYStepModel;
 
 /**
  * Methods for applying styleable attributes.
@@ -112,7 +114,7 @@ public class AttrUtils {
 
     private static void configureSizeMetric(TypedArray attrs, SizeMetric model, int typeAttr, int valueAttr) {
 
-        final float value = getFloatOrDimenValue(attrs, valueAttr, model.getValue());
+        final float value = getIntFloatDimenValue(attrs, valueAttr, model.getValue()).floatValue();
         final SizeLayoutType sizeLayoutType =
                 getSizeLayoutType(attrs, typeAttr, model.getLayoutType());
 
@@ -146,35 +148,38 @@ public class AttrUtils {
      * @param yLayoutValueAttr
      * @param anchorPositionAttr
      */
-    public static void configurePositionMetrics(TypedArray attrs, PositionMetrics metrics, int xLayoutStyleAttr, int xLayoutValueAttr,
-                                       int yLayoutStyleAttr, int yLayoutValueAttr, int anchorPositionAttr) {
+    public static void configurePositionMetrics(TypedArray attrs, PositionMetrics metrics, int xLayoutStyleAttr,
+                                                int xLayoutValueAttr, int yLayoutStyleAttr, int yLayoutValueAttr,
+                                                int anchorPositionAttr) {
         if(attrs != null) {
             metrics.getXPositionMetric().set(
-                    getFloatOrDimenValue(attrs, xLayoutValueAttr, metrics.getXPositionMetric().getValue()),
+                    getIntFloatDimenValue(attrs, xLayoutValueAttr, metrics.getXPositionMetric().getValue()).floatValue(),
                     getXLayoutStyle(attrs, xLayoutStyleAttr, metrics.getXPositionMetric().getLayoutType()));
 
             metrics.getYPositionMetric().set(
-                    getFloatOrDimenValue(attrs, yLayoutValueAttr, metrics.getYPositionMetric().getValue()),
+                    getIntFloatDimenValue(attrs, yLayoutValueAttr, metrics.getYPositionMetric().getValue()).floatValue(),
                     getYLayoutStyle(attrs, yLayoutStyleAttr, metrics.getYPositionMetric().getLayoutType()));
             metrics.setAnchor(getAnchorPosition(attrs, anchorPositionAttr, metrics.getAnchor()));
         }
     }
 
     /**
-     * Convenience method to retrieve float values from xml that can be entered as either a float or a dimen.
+     * Convenience method to retrieve values from xml that can be entered as a int, float or dimen.
      * @param attrs
      * @param valueAttr
      * @param defaultValue
      * @return
      */
-    private static float getFloatOrDimenValue(TypedArray attrs, int valueAttr, float defaultValue) {
-        float result = defaultValue;
+    private static Number getIntFloatDimenValue(TypedArray attrs, int valueAttr, Number defaultValue) {
+        Number result = defaultValue;
         if(attrs != null && attrs.hasValue(valueAttr)) {
             final int valueType = attrs.peekValue(valueAttr).type;
             if (valueType == TypedValue.TYPE_DIMENSION) {
-                result = attrs.getDimension(valueAttr, defaultValue);
+                result = attrs.getDimension(valueAttr, defaultValue.floatValue());
+            } else if(valueType == TypedValue.TYPE_INT_DEC) {
+                result = attrs.getInt(valueAttr, defaultValue.intValue());
             } else if (valueType == TypedValue.TYPE_FLOAT) {
-                result = attrs.getFloat(valueAttr, defaultValue);
+                result = attrs.getFloat(valueAttr, defaultValue.floatValue());
             } else {
                 throw new IllegalArgumentException("Invalid value type - must be float or dimension.");
             }
@@ -192,5 +197,12 @@ public class AttrUtils {
 
     private static AnchorPosition getAnchorPosition(TypedArray attrs, int attr, AnchorPosition defaultValue) {
         return AnchorPosition.values()[attrs.getInt(attr, defaultValue.ordinal())];
+    }
+
+    public static void configureStep(TypedArray attrs, XYStepModel model, int stepModeAttr, int stepValueAttr) {
+        if(attrs != null) {
+            model.setMode(XYStepMode.values()[attrs.getInt(stepModeAttr, model.getMode().ordinal())]);
+            model.setValue(getIntFloatDimenValue(attrs, stepValueAttr, model.getValue()).doubleValue());
+        }
     }
 }

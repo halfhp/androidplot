@@ -18,4 +18,5 @@ include ':demoapp-wearable'
 rootProject.name = 'androidplot'
 include 'androidplot-core'
 include 'demoapp'
-include 'demoapp-wearable'
+// TODO: enable this once the gradle deps are sorted
+//include 'demoapp-wearable'

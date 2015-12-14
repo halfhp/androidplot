@@ -1,4 +1,4 @@
-include ':wearable-demoapp', ':demoapp-wearable'
+include ':demoapp-wearable'
 /*
  * Copyright 2015 AndroidPlot.com
  *

@@ -29,15 +29,15 @@ repositories {
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion theCompileSdkVersion
+    buildToolsVersion theBuildToolsVersion
 
     defaultConfig {
         applicationId "com.androidplot.demo.wearable"
         minSdkVersion 20
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion theTargetSdkVersion
+        versionCode theVersionCode
+        versionName theVersionName
     }
 
     compileOptions {

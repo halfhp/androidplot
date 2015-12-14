@@ -1,3 +1,4 @@
+include ':wearable-demoapp', ':demoapp-wearable'
 /*
  * Copyright 2015 AndroidPlot.com
  *
@@ -17,3 +18,4 @@
 rootProject.name = 'androidplot'
 include 'androidplot-core'
 include 'demoapp'
+include 'demoapp-wearable'

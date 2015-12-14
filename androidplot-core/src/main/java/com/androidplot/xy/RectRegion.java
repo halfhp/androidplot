@@ -26,7 +26,8 @@ import java.util.List;
 
 /**
  * RectRegion is just a rectangle with additional methods for determining
- * intersections with other RectRegion instances.
+ * intersections with other RectRegion instances.  RectRegion operates on
+ * "native units" which are simply whatever unit type is passed into it by the user.
  */
 public class RectRegion {
 
@@ -138,6 +139,31 @@ public class RectRegion {
         return intersectingRegions;
     }
 
+    /**
+     *
+     * @return Width of this region, in native units
+     */
+    public Number getWidth() {
+        return distanceBetween(getMinX(), getMaxX());
+    }
+
+    /**
+     *
+     * @return Height of this region, in native units
+     */
+    public Number getHeight() {
+        return distanceBetween(getMinY(), getMaxY());
+    }
+
+    /**
+     * Calculate the distance between two points in a single dimension.
+     * @param x
+     * @param y
+     * @return
+     */
+    private Number distanceBetween(Number x, Number y) {
+        return Math.abs(x.doubleValue() - y.doubleValue());
+    }
 
     public Number getMinX() {
         return xLineRegion.getMinVal();

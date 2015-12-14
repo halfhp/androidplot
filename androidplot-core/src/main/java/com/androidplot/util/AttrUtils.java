@@ -117,31 +117,19 @@ public class AttrUtils {
                 getSizeLayoutType(attrs, typeAttr, model.getLayoutType());
 
         model.set(value, sizeLayoutType);
-
-        /*if(attrs != null && attrs.hasValue(valueAttr)) {
-            final int valueType = attrs.peekValue(valueAttr).type;
-
-            final SizeLayoutType sizeLayoutType =
-                    getSizeLayoutType(attrs, typeAttr, model.getLayoutType());
-
-            if (valueType == TypedValue.TYPE_DIMENSION) {
-                model.set(attrs.getDimension(valueAttr, model.getValue()), sizeLayoutType);
-            } else if (valueType == TypedValue.TYPE_FLOAT) {
-                model.set(attrs.getFloat(valueAttr, model.getValue()), sizeLayoutType);
-            } else {
-                throw new IllegalArgumentException("Invalid size metric value type - must be float or dimension.");
-            }
-        }*/
     }
 
     private static SizeLayoutType getSizeLayoutType(TypedArray attrs, int attr, SizeLayoutType defaultValue) {
         return SizeLayoutType.values()[attrs.getInt(attr, defaultValue.ordinal())];
     }
 
-    public static void configureWidget(TypedArray attrs, Widget widget, int xLayoutStyleAttr, int xLayoutValueAttr,
-                                       int yLayoutStyleAttr, int yLayoutValueAttr, int anchorPositionAttr,
-                                       int visibilityAttr) {
+    public static void configureWidget(TypedArray attrs, Widget widget, int heightSizeLayoutTypeAttr, int heightAttr,
+                                       int widthSizeLayoutTypeAttr, int widthAttr, int xLayoutStyleAttr,
+                                       int xLayoutValueAttr, int yLayoutStyleAttr, int yLayoutValueAttr,
+                                       int anchorPositionAttr, int visibilityAttr) {
         if(attrs != null) {
+            configureSize(attrs, widget.getSize(), heightSizeLayoutTypeAttr,
+                    heightAttr, widthSizeLayoutTypeAttr, widthAttr);
             configurePositionMetrics(attrs, widget.getPositionMetrics(), xLayoutStyleAttr, xLayoutValueAttr,
                     yLayoutStyleAttr, yLayoutValueAttr, anchorPositionAttr);
             widget.setVisible(attrs.getBoolean(visibilityAttr, widget.isVisible()));

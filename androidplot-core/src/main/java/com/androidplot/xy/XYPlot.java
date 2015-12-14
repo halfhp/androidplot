@@ -281,6 +281,23 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             setRangeLabel(rangeLabelAttr);
         }
 
+
+        // domainLabel size & position
+        AttrUtils.configureWidget(attrs, getDomainLabelWidget(),
+                R.styleable.xy_XYPlot_domainLabelHeightSizeLayoutType, R.styleable.xy_XYPlot_domainLabelHeight,
+                R.styleable.xy_XYPlot_domainLabelWidthSizeLayoutType, R.styleable.xy_XYPlot_domainLabelWidth,
+                R.styleable.xy_XYPlot_domainLabelLayoutStyleX, R.styleable.xy_XYPlot_domainLabelPositionX,
+                R.styleable.xy_XYPlot_domainLabelLayoutStyleY, R.styleable.xy_XYPlot_domainLabelPositionY,
+                R.styleable.xy_XYPlot_domainLabelAnchorPosition, R.styleable.xy_XYPlot_domainLabelVisible);
+
+        // rangeLabel size & position
+        AttrUtils.configureWidget(attrs, getRangeLabelWidget(),
+                R.styleable.xy_XYPlot_rangeLabelHeightSizeLayoutType, R.styleable.xy_XYPlot_rangeLabelHeight,
+                R.styleable.xy_XYPlot_rangeLabelWidthSizeLayoutType, R.styleable.xy_XYPlot_rangeLabelWidth,
+                R.styleable.xy_XYPlot_rangeLabelLayoutStyleX, R.styleable.xy_XYPlot_rangeLabelPositionX,
+                R.styleable.xy_XYPlot_rangeLabelLayoutStyleY, R.styleable.xy_XYPlot_rangeLabelPositionY,
+                R.styleable.xy_XYPlot_rangeLabelAnchorPosition, R.styleable.xy_XYPlot_rangeLabelVisible);
+
         // domainLabelPaint
         AttrUtils.configureTextPaint(attrs, getDomainLabelWidget().getLabelPaint(),
                 R.styleable.xy_XYPlot_domainLabelTextColor, R.styleable.xy_XYPlot_domainLabelTextSize);
@@ -319,7 +336,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 R.styleable.xy_XYPlot_domainOriginTickLabelTextSize);
 
         // rangeOriginTickLabelPaint
-        AttrUtils.configureTextPaint(attrs, getGraphWidget().getDomainOriginTickLabelPaint(),
+        AttrUtils.configureTextPaint(attrs, getGraphWidget().getRangeOriginTickLabelPaint(),
                 R.styleable.xy_XYPlot_rangeOriginTickLabelTextColor,
                 R.styleable.xy_XYPlot_rangeOriginTickLabelTextSize);
 
@@ -333,19 +350,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 R.styleable.xy_XYPlot_legendIconHeightSizeLayoutType, R.styleable.xy_XYPlot_legendIconHeight,
                 R.styleable.xy_XYPlot_legendIconWidthSizeLayoutType, R.styleable.xy_XYPlot_legendIconWidth);
 
-        // legendSize
-        AttrUtils.configureSize(attrs, getLegendWidget().getSize(),
-                R.styleable.xy_XYPlot_legendHeightSizeLayoutType, R.styleable.xy_XYPlot_legendHeight,
-                R.styleable.xy_XYPlot_legendWidthSizeLayoutType, R.styleable.xy_XYPlot_legendWidth);
-
-        // legendPosition
+        // legend size & position
         AttrUtils.configureWidget(attrs, getLegendWidget(),
-                R.styleable.xy_XYPlot_legendLayoutStyleX,
-                R.styleable.xy_XYPlot_legendPositionX,
-                R.styleable.xy_XYPlot_legendLayoutStyleY,
-                R.styleable.xy_XYPlot_legendPositionY,
-                R.styleable.xy_XYPlot_legendAnchorPosition,
-                R.styleable.xy_XYPlot_legendVisible);
+                R.styleable.xy_XYPlot_legendHeightSizeLayoutType, R.styleable.xy_XYPlot_legendHeight,
+                R.styleable.xy_XYPlot_legendWidthSizeLayoutType, R.styleable.xy_XYPlot_legendWidth,
+                R.styleable.xy_XYPlot_legendLayoutStyleX, R.styleable.xy_XYPlot_legendPositionX,
+                R.styleable.xy_XYPlot_legendLayoutStyleY, R.styleable.xy_XYPlot_legendPositionY,
+                R.styleable.xy_XYPlot_legendAnchorPosition, R.styleable.xy_XYPlot_legendVisible);
 
         AttrUtils.configureLinePaint(attrs, getGraphWidget().getDomainGridLinePaint(),
                 R.styleable.xy_XYPlot_graphDomainLineColor, R.styleable.xy_XYPlot_graphDomainLineThickness);

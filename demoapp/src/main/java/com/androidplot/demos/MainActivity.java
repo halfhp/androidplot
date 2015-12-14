@@ -42,6 +42,14 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.main);
 
+        Button startScatterPlotExButton = (Button) findViewById(R.id.startScatterExButton);
+        startScatterPlotExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ScatterPlotActivity.class));
+            }
+        });
+
         Button startSimplePieExButton = (Button) findViewById(R.id.startSimplePieExButton);
         startSimplePieExButton.setOnClickListener(new View.OnClickListener() {
             @Override

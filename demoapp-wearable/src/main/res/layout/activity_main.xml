@@ -1,0 +1,70 @@
+<!--
+  ~ Copyright 2015 AndroidPlot.com
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:ap="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="${relativePackage}.${activityClass}">
+
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/plot"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ap:label="Wearable"
+        ap:rangeLabel="range"
+        ap:domainLabel="domain"
+        ap:rangeLabelTextSize="13sp"
+        ap:domainLabelTextSize="13sp"
+        ap:domainLabelLayoutStyleX="relative_from_center"
+        ap:domainLabelLayoutStyleY="absolute_from_bottom"
+        ap:domainLabelPositionX="0dp"
+        ap:domainLabelPositionY="0dp"
+        ap:domainLabelAnchorPosition="bottom_middle"
+        ap:borderColor="#000000"
+        ap:backgroundColor="#000000"
+        ap:graphBackgroundColor="#000000"
+        ap:gridBackgroundColor="#000000"
+        ap:gridPaddingLeft="20dp"
+        ap:gridPaddingRight="20dp"
+        ap:gridPaddingTop="20dp"
+        ap:gridPaddingBottom="20dp"
+        ap:labelTextSize="20sp"
+        ap:graphMarginTop="5dp"
+        ap:graphMarginBottom="10dp"
+        ap:graphMarginLeft="0dp"
+        ap:graphMarginRight="10dp"
+        ap:graphDomainLineColor="#FFFFFF"
+        ap:graphDomainLineThickness="1dp"
+        ap:graphRangeLineColor="#FFFFFF"
+        ap:graphRangeLineThickness="1dp"
+        ap:rangeTickLabelTextSize="10sp"
+        ap:rangeOriginTickLabelTextSize="10sp"
+        ap:domainOriginTickLabelTextSize="10sp"
+        ap:domainTickLabelTextSize="10sp"
+        ap:legendTextSize="15sp"
+        ap:legendIconHeight="10dp"
+        ap:legendIconWidth="10dp"
+        ap:legendHeight="20dp"
+        ap:legendWidth="0.5"
+        ap:legendLayoutStyleX="relative_from_center"
+        ap:legendLayoutStyleY="absolute_from_bottom"
+        ap:legendPositionX="0dp"
+        ap:legendPositionY="15dp"
+        ap:legendAnchorPosition="bottom_middle"/>
+
+</RelativeLayout>

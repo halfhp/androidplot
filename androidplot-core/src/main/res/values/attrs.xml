@@ -24,6 +24,30 @@
 
     <!-- values  must match the ordinal of its corresponding
     element in the AnchorPosition enum.  -->
+    <attr name="domainLabelAnchorPosition" format="enum">
+        <enum name="top_middle" value="0"/>
+        <enum name="left_top" value="1"/>
+        <enum name="left_middle" value="2"/>
+        <enum name="left_bottom" value="3"/>
+        <enum name="right_top" value="4"/>
+        <enum name="right_middle" value="5"/>
+        <enum name="right_bottom" value="6"/>
+        <enum name="bottom_middle" value="7"/>
+        <enum name="center" value="8"/>
+    </attr>
+
+    <attr name="rangeLabelAnchorPosition" format="enum">
+        <enum name="top_middle" value="0"/>
+        <enum name="left_top" value="1"/>
+        <enum name="left_middle" value="2"/>
+        <enum name="left_bottom" value="3"/>
+        <enum name="right_top" value="4"/>
+        <enum name="right_middle" value="5"/>
+        <enum name="right_bottom" value="6"/>
+        <enum name="bottom_middle" value="7"/>
+        <enum name="center" value="8"/>
+    </attr>
+
     <attr name="legendAnchorPosition" format="enum">
         <enum name="top_middle" value="0"/>
         <enum name="left_top" value="1"/>
@@ -34,6 +58,30 @@
         <enum name="right_bottom" value="6"/>
         <enum name="bottom_middle" value="7"/>
         <enum name="center" value="8"/>
+    </attr>
+
+    <attr name="domainLabelHeightSizeLayoutType" format="enum">
+        <enum name="absolute" value="0"/>
+        <enum name="relative" value="1"/>
+        <enum name="fill" value="2"/>
+    </attr>
+
+    <attr name="domainLabelWidthSizeLayoutType" format="enum">
+        <enum name="absolute" value="0"/>
+        <enum name="relative" value="1"/>
+        <enum name="fill" value="2"/>
+    </attr>
+
+    <attr name="rangeLabelHeightSizeLayoutType" format="enum">
+        <enum name="absolute" value="0"/>
+        <enum name="relative" value="1"/>
+        <enum name="fill" value="2"/>
+    </attr>
+
+    <attr name="rangeLabelWidthSizeLayoutType" format="enum">
+        <enum name="absolute" value="0"/>
+        <enum name="relative" value="1"/>
+        <enum name="fill" value="2"/>
     </attr>
 
     <attr name="legendHeightSizeLayoutType" format="enum">
@@ -58,6 +106,42 @@
         <enum name="absolute" value="0"/>
         <enum name="relative" value="1"/>
         <enum name="fill" value="2"/>
+    </attr>
+
+    <attr name="domainLabelLayoutStyleX" format="enum">
+        <enum name="absolute_from_left" value="0"/>
+        <enum name="absolute_from_right" value="1"/>
+        <enum name="absolute_from_center" value="2"/>
+        <enum name="relative_from_left" value="3"/>
+        <enum name="relative_from_right" value="4"/>
+        <enum name="relative_from_center" value="5"/>
+    </attr>
+
+    <attr name="domainLabelLayoutStyleY" format="enum">
+        <enum name="absolute_from_top" value="0"/>
+        <enum name="absolute_from_bottom" value="1"/>
+        <enum name="absolute_from_center" value="2"/>
+        <enum name="relative_from_top" value="3"/>
+        <enum name="relative_from_bottom" value="4"/>
+        <enum name="relative_from_center" value="5"/>
+    </attr>
+
+    <attr name="rangeLabelLayoutStyleX" format="enum">
+        <enum name="absolute_from_left" value="0"/>
+        <enum name="absolute_from_right" value="1"/>
+        <enum name="absolute_from_center" value="2"/>
+        <enum name="relative_from_left" value="3"/>
+        <enum name="relative_from_right" value="4"/>
+        <enum name="relative_from_center" value="5"/>
+    </attr>
+
+    <attr name="rangeLabelLayoutStyleY" format="enum">
+        <enum name="absolute_from_top" value="0"/>
+        <enum name="absolute_from_bottom" value="1"/>
+        <enum name="absolute_from_center" value="2"/>
+        <enum name="relative_from_top" value="3"/>
+        <enum name="relative_from_bottom" value="4"/>
+        <enum name="relative_from_center" value="5"/>
     </attr>
 
     <attr name="legendLayoutStyleX" format="enum">
@@ -91,12 +175,36 @@
 
     <!-- XYPlot -->
     <declare-styleable name="xy.XYPlot" parent="@style/Plot">
+
+        <!-- domain label -->
         <attr name="domainLabel" format="string"/>
         <attr name="domainLabelTextColor" format="color"/>
         <attr name="domainLabelTextSize" format="dimension"/>
+        <attr name="domainLabelHeightSizeLayoutType"/>
+        <attr name="domainLabelWidthSizeLayoutType"/>
+        <attr name="domainLabelHeight" format="dimension|float"/>
+        <attr name="domainLabelWidth" format="dimension|float"/>
+        <attr name="domainLabelLayoutStyleX"/>
+        <attr name="domainLabelLayoutStyleY"/>
+        <attr name="domainLabelPositionX" format="dimension|float"/>
+        <attr name="domainLabelPositionY" format="dimension|float"/>
+        <attr name="domainLabelAnchorPosition"/>
+        <attr name="domainLabelVisible" format="boolean"/>
+
+        <!-- range label -->
         <attr name="rangeLabel" format="string"/>
         <attr name="rangeLabelTextColor" format="color"/>
         <attr name="rangeLabelTextSize" format="dimension"/>
+        <attr name="rangeLabelHeightSizeLayoutType"/>
+        <attr name="rangeLabelWidthSizeLayoutType"/>
+        <attr name="rangeLabelHeight" format="dimension|float"/>
+        <attr name="rangeLabelWidth" format="dimension|float"/>
+        <attr name="rangeLabelLayoutStyleX"/>
+        <attr name="rangeLabelLayoutStyleY"/>
+        <attr name="rangeLabelPositionX" format="dimension|float"/>
+        <attr name="rangeLabelPositionY" format="dimension|float"/>
+        <attr name="rangeLabelAnchorPosition"/>
+        <attr name="rangeLabelVisible" format="boolean"/>
 
         <!-- graph widget margin / padding -->
         <attr name="graphMarginTop" format="dimension"/>
@@ -132,21 +240,23 @@
         <attr name="rangeOriginTickLabelTextColor" format="color"/>
         <attr name="domainOriginTickLabelTextColor" format="color"/>
         <attr name="gridBackgroundColor" format="color"/>
+
+        <!-- legend widget -->
         <attr name="legendHeightSizeLayoutType"/>
         <attr name="legendWidthSizeLayoutType"/>
         <attr name="legendHeight" format="dimension|float"/>
         <attr name="legendWidth" format="dimension|float"/>
+        <attr name="legendLayoutStyleX"/>
+        <attr name="legendLayoutStyleY"/>
+        <attr name="legendPositionX" format="dimension|float"/>
+        <attr name="legendPositionY" format="dimension|float"/>
+        <attr name="legendAnchorPosition"/>
         <attr name="legendTextSize" format="dimension"/>
         <attr name="legendTextColor" format="color"/>
         <attr name="legendIconHeightSizeLayoutType"/>
         <attr name="legendIconWidthSizeLayoutType"/>
         <attr name="legendIconHeight" format="dimension|float"/>
         <attr name="legendIconWidth" format="dimension|float"/>
-        <attr name="legendPositionX" format="dimension|float"/>
-        <attr name="legendPositionY" format="dimension|float"/>
-        <attr name="legendLayoutStyleX"/>
-        <attr name="legendLayoutStyleY"/>
-        <attr name="legendAnchorPosition"/>
         <attr name="legendVisible" format="boolean"/>
     </declare-styleable>
 

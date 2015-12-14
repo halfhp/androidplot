@@ -33,6 +33,9 @@
             <Button android:id="@+id/startSimpleXYExButton"
                     style="@style/toc_button"
                     android:text="A Simple XY Plot"/>
+            <Button android:id="@+id/startScatterExButton"
+                    style="@style/toc_button"
+                    android:text="XY Scatter Plot"/>
             <Button android:id="@+id/startDynamicXYExButton"
                     style="@style/toc_button"
                     android:text="A Dynamic XY Plot"/>

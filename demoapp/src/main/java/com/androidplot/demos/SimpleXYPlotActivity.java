@@ -41,6 +41,8 @@ public class SimpleXYPlotActivity extends Activity
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.plot);
 
+        plot.getLayoutManager().moveToBottom(plot.getTitleWidget());
+
         // create a couple arrays of y-values to plot:
         Number[] series1Numbers = {1, 4, 2, 8, 4, 16, 8, 32, 16, 64};
         Number[] series2Numbers = {5, 2, 10, 5, 20, 10, 40, 20, 80, 40};
@@ -90,6 +92,5 @@ public class SimpleXYPlotActivity extends Activity
 
         // rotate domain labels 45 degrees to make them more compact horizontally:
         plot.getGraphWidget().setDomainLabelOrientation(-45);
-
     }
 }

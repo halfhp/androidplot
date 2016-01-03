@@ -17,10 +17,9 @@
   -->
 
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:minWidth="294dp"
-                    android:minHeight="72dp"
+                    android:minWidth="@dimen/sample_widget_width"
+                    android:minHeight="@dimen/sample_widget_height"
                     android:updatePeriodMillis="86400000"
-                    android:previewImage="@drawable/ic_launcher"
                     android:initialLayout="@layout/demo_app_widget"
                     android:resizeMode="horizontal|vertical">
 </appwidget-provider>

@@ -437,8 +437,6 @@ public class XYPlotTest extends AndroidplotTest {
 
     @Test
     public void testConfigure() throws Exception {
-        //Context context = Mockit.setUpMock(new MockContext());
-        //Context context = new MockContext.MockContext2();
         HashMap<String, String> params = new HashMap<String, String>();
         String param1 = "this is a test.";
         String param2 = Plot.RenderMode.USE_BACKGROUND_THREAD.toString();
@@ -446,12 +444,12 @@ public class XYPlotTest extends AndroidplotTest {
         params.put("title", param1);
         params.put("renderMode", param2);
         params.put("backgroundPaint.color", param3);
-        params.put("graphWidget.domainLabelPaint.color", param3);
+        params.put("graphWidget.domainTickLabelPaint.color", param3);
 
         Configurator.configure(RuntimeEnvironment.application, plot, params);
         assertEquals(param1, plot.getTitle());
         assertEquals(Plot.RenderMode.USE_BACKGROUND_THREAD, plot.getRenderMode());
         assertEquals(Color.parseColor(param3), plot.getBackgroundPaint().getColor());
-        assertEquals(Color.parseColor(param3), plot.getGraphWidget().getDomainLabelPaint().getColor());
+        assertEquals(Color.parseColor(param3), plot.getGraphWidget().getDomainTickLabelPaint().getColor());
     }
 }

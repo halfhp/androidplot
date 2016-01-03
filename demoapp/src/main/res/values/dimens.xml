@@ -29,4 +29,7 @@
     <dimen name="range_tick_label_font_size">15sp</dimen>
     <dimen name="domain_tick_label_font_size">15sp</dimen>
     <dimen name="legend_text_font_size">20sp</dimen>
+
+    <dimen name="sample_widget_height">72dp</dimen>
+    <dimen name="sample_widget_width">294dp</dimen>
 </resources>

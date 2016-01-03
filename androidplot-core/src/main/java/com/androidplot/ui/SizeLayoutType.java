@@ -25,7 +25,7 @@ package com.androidplot.ui;
  * if the total size of the owning plot is 120 pixels and val is set to 50 then the size of the widget along the associated axis
  * is 60; 50% of 120 = 60.
  *
- * FILL - Widget completely fills along the associated axis, minus
+ * FILL - Widget completely fills along the associated axis, minus the input size value
  */
 public enum SizeLayoutType {
     ABSOLUTE,

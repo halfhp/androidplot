@@ -23,6 +23,10 @@ import com.androidplot.util.PixelUtils;
  * Defines physical dimensions & scaling characteristics
  */
 public class Size {
+
+    // convenience value; sets size to 100% width and height of the widget container.
+    public static Size FILL = new Size(0, SizeLayoutType.FILL, 0, SizeLayoutType.FILL);
+
     private SizeMetric height;
     private SizeMetric width;
 

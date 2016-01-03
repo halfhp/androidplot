@@ -111,35 +111,35 @@ public class DualScaleXYPlotExampleActivity extends Activity implements OnClickL
         graphWidget_L.setRangeAxisPosition(true, false, 4, "10");
         graphWidget_R.setRangeAxisPosition(false, false, 4, "10");
 
-        graphWidget_L.setRangeLabelVerticalOffset(-3);
-        graphWidget_R.setRangeLabelVerticalOffset(-3);
+        graphWidget_L.setRangeTickLabelVerticalOffset(-3);
+        graphWidget_R.setRangeTickLabelVerticalOffset(-3);
 
-        graphWidget_L.setRangeOriginLabelPaint(null);
-        graphWidget_R.setRangeOriginLabelPaint(null);
+        graphWidget_L.setRangeOriginTickLabelPaint(null);
+        graphWidget_R.setRangeOriginTickLabelPaint(null);
 
-        graphWidget_L.setRangeLabelWidth(0);
-        graphWidget_R.setRangeLabelWidth(0);
+        graphWidget_L.setRangeTickLabelWidth(0);
+        graphWidget_R.setRangeTickLabelWidth(0);
 
-        graphWidget_L.setDomainLabelWidth(0);
-        graphWidget_R.setDomainLabelWidth(0);
+        graphWidget_L.setDomainTickLabelWidth(0);
+        graphWidget_R.setDomainTickLabelWidth(0);
 
         graphWidget_R.setBackgroundPaint(null);
-        graphWidget_R.setDomainLabelPaint(null);
+        graphWidget_R.setDomainTickLabelPaint(null);
         graphWidget_R.setGridBackgroundPaint(null);
-        graphWidget_R.setDomainOriginLabelPaint(null);
+        graphWidget_R.setDomainOriginTickLabelPaint(null);
         graphWidget_R.setRangeOriginLinePaint(null);
         graphWidget_R.setDomainGridLinePaint(null);
         graphWidget_R.setRangeGridLinePaint(null);
 
-        graphWidget_L.getRangeLabelPaint().setTextSize(PixelUtils.dpToPix(8));
-        graphWidget_R.getRangeLabelPaint().setTextSize(PixelUtils.dpToPix(8));
+        graphWidget_L.getRangeTickLabelPaint().setTextSize(PixelUtils.dpToPix(8));
+        graphWidget_R.getRangeTickLabelPaint().setTextSize(PixelUtils.dpToPix(8));
 
-        graphWidget_L.getDomainOriginLabelPaint().setTextSize(PixelUtils.dpToPix(8));
-        graphWidget_L.getDomainLabelPaint().setTextSize(PixelUtils.dpToPix(8));
+        graphWidget_L.getDomainOriginTickLabelPaint().setTextSize(PixelUtils.dpToPix(8));
+        graphWidget_L.getDomainTickLabelPaint().setTextSize(PixelUtils.dpToPix(8));
 
-        float textSize = graphWidget_L.getRangeLabelPaint().getTextSize();
-        graphWidget_L.setRangeLabelVerticalOffset((textSize / 2) * -1);
-        graphWidget_R.setRangeLabelVerticalOffset(graphWidget_L.getRangeLabelVerticalOffset());
+        float textSize = graphWidget_L.getRangeTickLabelPaint().getTextSize();
+        graphWidget_L.setRangeTickLabelVerticalOffset((textSize / 2) * -1);
+        graphWidget_R.setRangeTickLabelVerticalOffset(graphWidget_L.getRangeTickLabelVerticalOffset());
 
         /*
          * Position the Graph Widgets in the Centre

@@ -30,9 +30,83 @@ import java.text.DecimalFormat;
 import java.text.Format;
 
 /**
- * Displays graphical data annotated with domain and range tick markers.
+ * Displays graphical data (lines, points, etc.) annotated with domain and range tick markers.
  */
 public class XYGraphWidget extends Widget {
+
+    private static final int ZERO = 0;
+    private static final int ONE = 1;
+    private static final int TWO = 2;
+    private static final float FLOAT_ONE = 1;
+
+    private static final int MARKER_LABEL_SPACING = TWO;
+
+    // max size of domain tick labels  in pixels
+    private float domainTickLabelWidth = 15;
+
+    // ...
+    private float rangeTickLabelWidth = 41;
+    private float domainTickLabelVerticalOffset = -5;
+    private float domainTickLabelHorizontalOffset = ZERO;
+
+    // allows tweaking of text position
+    private float rangeTickLabelHorizontalOffset = FLOAT_ONE;
+
+    // allows tweaking of text position
+    private float rangeTickLabelVerticalOffset = ZERO;
+
+    private int ticksPerRangeLabel = ONE;
+    private int ticksPerDomainLabel = ONE;
+
+    private BoxModel gridBox = new BoxModel();
+    private DisplayDimensions gridDimensions;
+
+    private int domainTickExtension = 5;
+    private int rangeTickExtension  = 5;
+    private int domainLabelSubTickExtension = ZERO;
+    private int rangeLabelSubTickExtension = ZERO;
+    private Paint gridBackgroundPaint;
+    private Paint rangeGridLinePaint;
+    private Paint rangeSubGridLinePaint;
+    private Paint domainGridLinePaint;
+    private Paint domainSubGridLinePaint;
+    private Paint domainTickLabelPaint;
+    private Paint rangeTickLabelPaint;
+    private Paint domainCursorPaint;
+    private Paint rangeCursorPaint;
+    private Paint cursorLabelPaint;
+    private Paint cursorLabelBackgroundPaint;
+    private XYPlot plot;
+    private Format rangeValueFormat;
+    private Format domainValueFormat;
+    private Paint domainOriginLinePaint;
+    private Paint rangeOriginLinePaint;
+    private Paint domainOriginTickLabelPaint;
+    private Paint rangeOriginTickLabelPaint;
+
+    private float domainCursorPosition;
+    private float rangeCursorPosition;
+
+    private boolean drawCursorLabelEnabled = true;
+    private boolean drawMarkersEnabled = true;
+
+    private boolean rangeAxisLeft = true;
+    private boolean domainAxisBottom = true;
+
+    private boolean rangeTick = true;
+    private boolean rangeSubTick = true;
+    private boolean domainTick = true;
+    private boolean domainSubTick = true;
+
+    private float rangeLabelOrientation;
+    private float domainLabelOrientation;
+
+    private Mapping<Paint, Number> domainTickLabelPaintMap;
+    private Mapping<Paint, Number> rangeTickLabelPaintMap;
+
+    private ZHash<RectRegion, AxisValueLabelFormatter> axisValueLabelRegions;
+
+    private RenderStack<? extends XYSeries, ? extends XYSeriesFormatter> renderStack;
 
     private static final float DEFAULT_TICK_LABEL_TEXT_SIZE_PX = PixelUtils.spToPix(15); // 15sp
 
@@ -55,26 +129,9 @@ public class XYGraphWidget extends Widget {
     /**
      *
      * @return
-     * @deprecated Since 0.6.2; Use {@link #getDomainTickLabelPaintMap()}.
      */
-    @Deprecated
-    public Mapping<Paint, Number> getDomainLabelPaintMap() {
-        return getDomainTickLabelPaintMap();
-    }
-
     public Mapping<Paint, Number> getDomainTickLabelPaintMap() {
         return domainTickLabelPaintMap;
-    }
-
-    /**
-     * Set a mapping to override the Paint used to draw domain labels.  The mapping should
-     * return null for values that should not be overridden.
-     * @param domainLabelPaintMap
-     * @deprecated Since 0.6.2; Use {@link #setDomainTickLabelPaintMap(com.androidplot.util.Mapping)}.
-     */
-    @Deprecated
-    public void setDomainLabelPaintMap(Mapping<Paint, Number> domainLabelPaintMap) {
-        setDomainTickLabelPaintMap(domainLabelPaintMap);
     }
 
     /**
@@ -91,32 +148,12 @@ public class XYGraphWidget extends Widget {
     }
 
     /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getRangeTickLabelPaintMap()}.
-     */
-    @Deprecated
-    public Mapping<Paint, Number> getRangeLabelPaintMap() {
-        return rangeTickLabelPaintMap;
-    }
-
-    /**
      * Set a mapping to override the Paint used to draw range labels.  The mapping should
      * return null for values that should not be overridden.
      * @param rangeLabelTickPaintMap
      */
     public void setRangeLabelTickPaintMap(Mapping<Paint, Number> rangeLabelTickPaintMap) {
         this.rangeTickLabelPaintMap = rangeLabelTickPaintMap;
-    }
-
-    /**
-     *
-     * @param rangeLabelPaintMap
-     * @deprecated Since 0.6.2; Use {@link #setRangeLabelTickPaintMap(com.androidplot.util.Mapping)}.
-     */
-    @Deprecated
-    public void setRangeLabelPaintMap(Mapping<Paint, Number> rangeLabelPaintMap) {
-        setRangeLabelTickPaintMap(rangeLabelPaintMap);
     }
 
     public BoxModel getGridBox() {
@@ -127,84 +164,31 @@ public class XYGraphWidget extends Widget {
         this.gridBox = gridBox;
     }
 
-    /**
-     * Will be used in a future version.
-     */
-    public enum XYPlotOrientation {
-        HORIZONTAL, VERTICAL
+    public Paint getDomainCursorPaint() {
+        return domainCursorPaint;
     }
 
-    private static final int MARKER_LABEL_SPACING = 2;
+    /**
+     *
+     * @param domainCursorPaint The {@link Paint} used to draw the domain cursor line.
+     *                          Set to null (default) to disable.
+     */
+    public void setDomainCursorPaint(Paint domainCursorPaint) {
+        this.domainCursorPaint = domainCursorPaint;
+    }
 
-    // space between cursor lines and label in pixels
-    private static final int CURSOR_LABEL_SPACING = 2;
+    public Paint getRangeCursorPaint() {
+        return rangeCursorPaint;
+    }
 
-    // max size of domain tick labels  in pixels
-    private float domainTickLabelWidth = 15;
-
-    // ...
-    private float rangeTickLabelWidth = 41;
-    private float domainTickLabelVerticalOffset   = -5;
-    private float domainTickLabelHorizontalOffset = 0.0f;
-
-    // allows tweaking of text position
-    private float rangeTickLabelHorizontalOffset  = 1.0f;
-
-    // allows tweaking of text position
-    private float rangeTickLabelVerticalOffset    = 0.0f;
-    
-    private int ticksPerRangeLabel = 1;
-    private int ticksPerDomainLabel = 1;
-
-    private BoxModel gridBox = new BoxModel();
-    private DisplayDimensions gridDimensions;
-
-    private int domainTickExtension = 5;
-    private int rangeTickExtension  = 5;
-    private int domainLabelSubTickExtension = 0;
-    private int rangeLabelSubTickExtension = 0;
-    private Paint gridBackgroundPaint;
-    private Paint rangeGridLinePaint;
-    private Paint rangeSubGridLinePaint;
-    private Paint domainGridLinePaint;
-    private Paint domainSubGridLinePaint;
-    private Paint domainTickLabelPaint;
-    private Paint rangeTickLabelPaint;
-    private Paint domainCursorPaint;
-    private Paint rangeCursorPaint;
-    private Paint cursorLabelPaint;
-    private Paint cursorLabelBackgroundPaint;
-    private XYPlot plot;
-    private Format rangeValueFormat;
-    private Format domainValueFormat;
-    private Paint domainOriginLinePaint;
-    private Paint rangeOriginLinePaint;
-    private Paint domainOriginTickLabelPaint;
-    private Paint rangeOriginTickLabelPaint;
-
-    private float domainCursorPosition;
-    private float rangeCursorPosition;
-    @SuppressWarnings("FieldCanBeLocal")
-    private boolean drawCursorLabelEnabled = true;
-    private boolean drawMarkersEnabled = true;
-
-    private boolean rangeAxisLeft = true;
-    private boolean domainAxisBottom = true;
-
-    private boolean rangeTick = true;
-    private boolean rangeSubTick = true;
-    private boolean domainTick = true;
-    private boolean domainSubTick = true;
-
-    private float rangeLabelOrientation;
-    private float domainLabelOrientation;
-
-    private Mapping<Paint, Number> domainTickLabelPaintMap;
-    private Mapping<Paint, Number> rangeTickLabelPaintMap;
-
-    private ZHash<RectRegion, AxisValueLabelFormatter> axisValueLabelRegions;
-
-    private RenderStack<? extends XYSeries, ? extends XYSeriesFormatter> renderStack;
+    /**
+     *
+     * @param rangeCursorPaint The {@link Paint} used to draw the range cursor line.
+     *                         Set to null (default) to disable.
+     */
+    public void setRangeCursorPaint(Paint rangeCursorPaint) {
+        this.rangeCursorPaint = rangeCursorPaint;
+    }
 
     {
         gridBackgroundPaint = new Paint();
@@ -432,7 +416,7 @@ public class XYGraphWidget extends Widget {
         calculateGridDimensions(widgetRect);
 
         // don't draw if we have no space to draw into
-        if ((gridDimensions.paddedRect.height() > 0.0f) && (gridDimensions.paddedRect.width() > 0.0f)) {
+        if ((gridDimensions.paddedRect.height() > ZERO) && (gridDimensions.paddedRect.width() > ZERO)) {
             if (plot.getCalculatedMinX() != null
                     && plot.getCalculatedMaxX() != null
                     && plot.getCalculatedMinY() != null
@@ -448,10 +432,11 @@ public class XYGraphWidget extends Widget {
     }
 
     private void calculateGridDimensions(RectF widgetRect) {
-        RectF r = new RectF(widgetRect.left + ((rangeAxisLeft)?rangeTickLabelWidth:1),
-                widgetRect.top + ((domainAxisBottom)?1:domainTickLabelWidth),
-                widgetRect.right - ((rangeAxisLeft)?1:rangeTickLabelWidth),
-                widgetRect.bottom - ((domainAxisBottom)?domainTickLabelWidth:1));
+        RectF r = new RectF(widgetRect.left + ((rangeAxisLeft) ?
+                rangeTickLabelWidth : ONE),
+                widgetRect.top + ((domainAxisBottom) ? ONE : domainTickLabelWidth),
+                widgetRect.right - ((rangeAxisLeft) ? ONE : rangeTickLabelWidth),
+                widgetRect.bottom - ((domainAxisBottom) ? domainTickLabelWidth : ONE));
 
         // don't calculate if nothing has changed:
         if(gridDimensions == null || !RectFUtils.areIdentical(r, gridDimensions.canvasRect)) {
@@ -480,6 +465,8 @@ public class XYGraphWidget extends Widget {
                     txt = getFormattedRangeValue(value);
                     canvas.rotate(getRangeLabelOrientation(), xPix, yPix);
                     break;
+                default:
+                    throw new RuntimeException("Invalid axis type: " + axis);
             }
 
             // if a matching region formatter was found, create a clone
@@ -503,7 +490,7 @@ public class XYGraphWidget extends Widget {
 
         final RectF gridRect = gridDimensions.paddedRect;
         if (!drawLineOnly) {
-            if (linePaint != null && (domainTick || domainTickExtension > 0)) {
+            if (linePaint != null && (domainTick || domainTickExtension > ZERO)) {
                 if (domainAxisBottom){
                     canvas.drawLine(xPix, domainTick ? gridRect.top : gridRect.bottom,
                             xPix, gridRect.bottom + domainTickExtension, linePaint);
@@ -526,7 +513,7 @@ public class XYGraphWidget extends Widget {
                         xPix + domainTickLabelHorizontalOffset, yPix,
                         labelPaint);
             }
-        } else if (linePaint != null && (domainSubTick || domainLabelSubTickExtension > 0)) {
+        } else if (linePaint != null && (domainSubTick || domainLabelSubTickExtension > ZERO)) {
             if (domainAxisBottom){
                 canvas.drawLine(xPix, domainSubTick ? gridRect.top : gridRect.bottom,
                         xPix, gridRect.bottom + domainLabelSubTickExtension, linePaint);
@@ -541,7 +528,7 @@ public class XYGraphWidget extends Widget {
             Paint labelPaint, Paint linePaint, boolean drawLineOnly) {
         final RectF gridRect = gridDimensions.paddedRect;
         if (!drawLineOnly) {
-            if (linePaint != null && (rangeTick || rangeTickExtension > 0)) {
+            if (linePaint != null && (rangeTick || rangeTickExtension > ZERO)) {
                 if (rangeAxisLeft){
                 canvas.drawLine(gridRect.left - rangeTickExtension, yPix,
                         rangeTick ? gridRect.right : gridRect.left, yPix, linePaint);
@@ -562,7 +549,7 @@ public class XYGraphWidget extends Widget {
                 drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix - rangeTickLabelVerticalOffset,
                         labelPaint);
             }
-        } else if (linePaint != null && (rangeSubTick || rangeLabelSubTickExtension > 0)) {
+        } else if (linePaint != null && (rangeSubTick || rangeLabelSubTickExtension > ZERO)) {
             if (rangeAxisLeft){
                 canvas.drawLine(gridRect.left - rangeLabelSubTickExtension, yPix,
                         rangeSubTick ? gridRect.right : gridRect.left, yPix, linePaint);
@@ -619,62 +606,52 @@ public class XYGraphWidget extends Widget {
         }
 
         // draw ticks LEFT of origin:
-        {
-            int i = 1;
-            double xVal;
-            float xPix = domainOriginF - domainStep.getStepPix();
-            for (; xPix >= paddedGridRect.left; xPix = domainOriginF
-                    - (i * domainStep.getStepPix())) {
-                xVal = plot.getDomainOrigin().doubleValue() - i
-                        * domainStep.getStepVal();
-                Paint dlp = domainTickLabelPaintMap != null ?
-                        domainTickLabelPaintMap.get(xVal) : domainTickLabelPaint;
-                if(dlp == null) {
-                    dlp = domainTickLabelPaint;
-                }
-                if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
-                    if (i % getTicksPerDomainLabel() == 0) {
-                        drawDomainTick(canvas, xPix, xVal, dlp, domainGridLinePaint, false);
-                    } else {
-                        drawDomainTick(canvas, xPix, xVal, dlp, domainSubGridLinePaint, true);
-                    }
-                }
-                i++;
+        float xPix = domainOriginF - domainStep.getStepPix();
+        for (int i = ONE; xPix >= paddedGridRect.left; xPix = domainOriginF
+                - (i * domainStep.getStepPix())) {
+            double xVal = plot.getDomainOrigin().doubleValue() - i
+                    * domainStep.getStepVal();
+            Paint dlp = domainTickLabelPaintMap != null ?
+                    domainTickLabelPaintMap.get(xVal) : domainTickLabelPaint;
+            if (dlp == null) {
+                dlp = domainTickLabelPaint;
             }
+            if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
+                if (i % getTicksPerDomainLabel() == ZERO) {
+                    drawDomainTick(canvas, xPix, xVal, dlp, domainGridLinePaint, false);
+                } else {
+                    drawDomainTick(canvas, xPix, xVal, dlp, domainSubGridLinePaint, true);
+                }
+            }
+            i++;
         }
 
         // draw ticks RIGHT of origin:
-        {
-            int i = 1;
-            double xVal;
-            float xPix = domainOriginF + domainStep.getStepPix();
-            for (; xPix <= paddedGridRect.right; xPix = domainOriginF
-                    + (i * domainStep.getStepPix())) {
-                xVal = plot.getDomainOrigin().doubleValue() + i
-                        * domainStep.getStepVal();
+        xPix = domainOriginF + domainStep.getStepPix();
+        for (int i = ONE; xPix <= paddedGridRect.right; xPix = domainOriginF
+                + (i * domainStep.getStepPix())) {
+            double xVal = plot.getDomainOrigin().doubleValue() + i
+                    * domainStep.getStepVal();
 
-                Paint dlp = domainTickLabelPaintMap != null ?
-                        domainTickLabelPaintMap.get(xVal) : domainTickLabelPaint;
-                if(dlp == null) {
-                    dlp = domainTickLabelPaint;
-                }
-                if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
-
-                    if (i % getTicksPerDomainLabel() == 0) {
-                        drawDomainTick(canvas, xPix, xVal, dlp, domainGridLinePaint, false);
-                    } else {
-                        drawDomainTick(canvas, xPix, xVal, dlp, domainSubGridLinePaint, true);
-                    }
-                }
-                i++;
+            Paint dlp = domainTickLabelPaintMap != null ?
+                    domainTickLabelPaintMap.get(xVal) : domainTickLabelPaint;
+            if (dlp == null) {
+                dlp = domainTickLabelPaint;
             }
+            if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
+
+                if (i % getTicksPerDomainLabel() == ZERO) {
+                    drawDomainTick(canvas, xPix, xVal, dlp, domainGridLinePaint, false);
+                } else {
+                    drawDomainTick(canvas, xPix, xVal, dlp, domainSubGridLinePaint, true);
+                }
+            }
+            i++;
         }
 
         // draw range origin:
-
         float rangeOriginF;
         if (plot.getRangeOrigin() != null) {
-            // --------- NEW WAY ------
             double rangeOriginD = plot.getRangeOrigin().doubleValue();
             rangeOriginF = ValPixConverter.valToPix(rangeOriginD, plot
                     .getCalculatedMinY().doubleValue(), plot
@@ -706,60 +683,53 @@ public class XYGraphWidget extends Widget {
                     .doubleValue(), olp,
                     rangeOriginLinePaint, false);
         }
-        // draw ticks ABOVE origin:
-        {
-            int i = 1;
-            double yVal;
-            float yPix = rangeOriginF - rangeStep.getStepPix();
-            for (; yPix >= paddedGridRect.top; yPix = rangeOriginF
-                    - (i * rangeStep.getStepPix())) {
-                yVal = plot.getRangeOrigin().doubleValue() + i
-                        * rangeStep.getStepVal();
 
-                Paint rlp = rangeTickLabelPaintMap != null ?
-                        rangeTickLabelPaintMap.get(yVal) : rangeTickLabelPaint;
-                if (rlp == null) {
-                    rlp = rangeTickLabelPaint;
-                }
-                if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
-                    if (i % getTicksPerRangeLabel() == 0) {
-                        drawRangeTick(canvas, yPix, yVal, rlp,
-                                rangeGridLinePaint, false);
-                    } else {
-                        drawRangeTick(canvas, yPix, yVal, rlp,
-                                rangeSubGridLinePaint, true);
-                    }
-                }
-                i++;
+        // draw ticks ABOVE origin:
+        float yPix = rangeOriginF - rangeStep.getStepPix();
+        for (int i = ONE; yPix >= paddedGridRect.top; yPix = rangeOriginF
+                - (i * rangeStep.getStepPix())) {
+            double yVal = plot.getRangeOrigin().doubleValue() + i
+                    * rangeStep.getStepVal();
+
+            Paint rlp = rangeTickLabelPaintMap != null ?
+                    rangeTickLabelPaintMap.get(yVal) : rangeTickLabelPaint;
+            if (rlp == null) {
+                rlp = rangeTickLabelPaint;
             }
+            if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
+                if (i % getTicksPerRangeLabel() == ZERO) {
+                    drawRangeTick(canvas, yPix, yVal, rlp,
+                            rangeGridLinePaint, false);
+                } else {
+                    drawRangeTick(canvas, yPix, yVal, rlp,
+                            rangeSubGridLinePaint, true);
+                }
+            }
+            i++;
         }
 
         // draw ticks BENEATH origin:
-        {
-            int i = 1;
-            double yVal;
-            float yPix = rangeOriginF + rangeStep.getStepPix();
-            for (; yPix <= paddedGridRect.bottom; yPix = rangeOriginF
-                    + (i * rangeStep.getStepPix())) {
-                yVal = plot.getRangeOrigin().doubleValue() - i
-                        * rangeStep.getStepVal();
+        yPix = rangeOriginF + rangeStep.getStepPix();
+        for (int i = ONE; yPix <= paddedGridRect.bottom; yPix = rangeOriginF
+                + (i * rangeStep.getStepPix())) {
+            double yVal = plot.getRangeOrigin().doubleValue() - i
+                    * rangeStep.getStepVal();
 
-                Paint rlp = rangeTickLabelPaintMap != null ?
-                        rangeTickLabelPaintMap.get(yVal) : rangeTickLabelPaint;
-                if (rlp == null) {
-                    rlp = rangeTickLabelPaint;
-                }
-                if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
-                    if (i % getTicksPerRangeLabel() == 0) {
-                        drawRangeTick(canvas, yPix, yVal, rlp,
-                                rangeGridLinePaint, false);
-                    } else {
-                        drawRangeTick(canvas, yPix, yVal, rlp,
-                                rangeSubGridLinePaint, true);
-                    }
-                }
-                i++;
+            Paint rlp = rangeTickLabelPaintMap != null ?
+                    rangeTickLabelPaintMap.get(yVal) : rangeTickLabelPaint;
+            if (rlp == null) {
+                rlp = rangeTickLabelPaint;
             }
+            if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
+                if (i % getTicksPerRangeLabel() == ZERO) {
+                    drawRangeTick(canvas, yPix, yVal, rlp,
+                            rangeGridLinePaint, false);
+                } else {
+                    drawRangeTick(canvas, yPix, yVal, rlp,
+                            rangeSubGridLinePaint, true);
+                }
+            }
+            i++;
         }
     }
 
@@ -782,7 +752,7 @@ public class XYGraphWidget extends Widget {
         textRect.offsetTo(x, y - textRect.height());
 
         if (textRect.right > paddedRect.right) {
-            textRect.offset(-(textRect.right - paddedRect.right), 0);
+            textRect.offset(-(textRect.right - paddedRect.right), ZERO);
         }
 
         if (textRect.top < paddedRect.top) {
@@ -938,166 +908,48 @@ public class XYGraphWidget extends Widget {
         canvas.drawPoint(point.x, point.y, paint);
     }
 
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getDomainTickLabelWidth()}.
-     */
-    @Deprecated
-    public float getDomainLabelWidth() {
-        return getDomainTickLabelWidth();
-    }
-
     public float getDomainTickLabelWidth() {
         return domainTickLabelWidth;
-    }
-
-    /**
-     *
-     * @param domainLabelWidth
-     * @deprecated Since 0.6.2; Use {@link #setDomainTickLabelWidth(float)}.
-     */
-    @Deprecated
-    public void setDomainLabelWidth(float domainLabelWidth) {
-        setDomainTickLabelWidth(domainLabelWidth);
     }
 
     public void setDomainTickLabelWidth(float domainTickLabelWidth) {
         this.domainTickLabelWidth = domainTickLabelWidth;
     }
 
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getRangeTickLabelWidth()}.
-     */
-    @Deprecated
-    public float getRangeLabelWidth() {
-        return getRangeTickLabelWidth();
-    }
-
     public float getRangeTickLabelWidth() {
         return rangeTickLabelWidth;
-    }
-
-    /**
-     *
-     * @param rangeLabelWidth
-     * @deprecated Since 0.6.2; Use {@link #setRangeTickLabelWidth(float)}.
-     */
-    public void setRangeLabelWidth(float rangeLabelWidth) {
-        setRangeTickLabelWidth(rangeLabelWidth);
     }
 
     public void setRangeTickLabelWidth(float rangeTickLabelWidth) {
         this.rangeTickLabelWidth = rangeTickLabelWidth;
     }
 
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getDomainTickLabelVerticalOffset()}.
-     */
-    @Deprecated
-    public float getDomainLabelVerticalOffset() {
-        return getDomainTickLabelVerticalOffset();
-    }
-
     public float getDomainTickLabelVerticalOffset() {
         return domainTickLabelVerticalOffset;
-    }
-
-    /**
-     *
-     * @param domainLabelVerticalOffset
-     * @deprecated Since 0.6.2; Use {@link #setDomainTickLabelVerticalOffset(float)}.
-     */
-    public void setDomainLabelVerticalOffset(float domainLabelVerticalOffset) {
-        setDomainTickLabelVerticalOffset(domainLabelVerticalOffset);
     }
 
     public void setDomainTickLabelVerticalOffset(float domainTickLabelVerticalOffset) {
         this.domainTickLabelVerticalOffset = domainTickLabelVerticalOffset;
     }
 
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getDomainTickLabelHorizontalOffset()}.
-     */
-    @Deprecated
-    public float getDomainLabelHorizontalOffset() {
-        return getDomainTickLabelHorizontalOffset();
-    }
-
     public float getDomainTickLabelHorizontalOffset() {
         return domainTickLabelHorizontalOffset;
-    }
-
-    /**
-     *
-     * @param domainLabelHorizontalOffset
-     * @deprecated Since 0.6.2; Use {@link #setDomainTickLabelHorizontalOffset(float)}.
-     */
-    @Deprecated
-    public void setDomainLabelHorizontalOffset(float domainLabelHorizontalOffset) {
-        setDomainTickLabelHorizontalOffset(domainLabelHorizontalOffset);
     }
 
     public void setDomainTickLabelHorizontalOffset(float domainTickLabelHorizontalOffset) {
         this.domainTickLabelHorizontalOffset = domainTickLabelHorizontalOffset;
     }
 
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getRangeTickLabelHorizontalOffset()}.
-     */
-    @Deprecated
-    public float getRangeLabelHorizontalOffset() {
-        return getRangeTickLabelHorizontalOffset();
-    }
-
     public float getRangeTickLabelHorizontalOffset() {
         return rangeTickLabelHorizontalOffset;
-    }
-
-    /**
-     *
-     * @param rangeLabelHorizontalOffset
-     * @deprecated Since 0.6.2; Use {@link #setRangeTickLabelHorizontalOffset(float)}.
-     */
-    @Deprecated
-    public void setRangeLabelHorizontalOffset(float rangeLabelHorizontalOffset) {
-        setRangeTickLabelHorizontalOffset(rangeLabelHorizontalOffset);
     }
 
     public void setRangeTickLabelHorizontalOffset(float rangeTickLabelHorizontalOffset) {
         this.rangeTickLabelHorizontalOffset = rangeTickLabelHorizontalOffset;
     }
 
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getRangeTickLabelVerticalOffset()}.
-     */
-    @Deprecated
-    public float getRangeLabelVerticalOffset() {
-        return getRangeTickLabelVerticalOffset();
-    }
-
     public float getRangeTickLabelVerticalOffset() {
         return rangeTickLabelVerticalOffset;
-    }
-
-    /**
-     *
-     * @param rangeLabelVerticalOffset
-     * @deprecated Since 0.6.2; Use {@link #setRangeTickLabelVerticalOffset(float)}.
-     */
-    @Deprecated
-    public void setRangeLabelVerticalOffset(float rangeLabelVerticalOffset) {
-        setRangeTickLabelVerticalOffset(rangeLabelVerticalOffset);
     }
 
     public void setRangeTickLabelVerticalOffset(float rangeTickLabelVerticalOffset) {
@@ -1112,56 +964,16 @@ public class XYGraphWidget extends Widget {
         this.gridBackgroundPaint = gridBackgroundPaint;
     }
 
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getDomainTickLabelPaint()}.
-     */
-    @Deprecated
-    public Paint getDomainLabelPaint() {
-        return getDomainTickLabelPaint();
-    }
-
     public Paint getDomainTickLabelPaint() {
         return domainTickLabelPaint;
-    }
-
-    /**
-     *
-     * @param domainLabelPaint
-     * @deprecated Since 0.6.2; Use {@link #setDomainTickLabelPaint(android.graphics.Paint)}.
-     */
-    @Deprecated
-    public void setDomainLabelPaint(Paint domainLabelPaint) {
-        setDomainTickLabelPaint(domainLabelPaint);
     }
 
     public void setDomainTickLabelPaint(Paint domainTickLabelPaint) {
         this.domainTickLabelPaint = domainTickLabelPaint;
     }
 
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getRangeTickLabelPaint()}.
-     */
-    @Deprecated
-    public Paint getRangeLabelPaint() {
-        return getRangeTickLabelPaint();
-    }
-
     public Paint getRangeTickLabelPaint() {
         return rangeTickLabelPaint;
-    }
-
-    /**
-     *
-     * @param rangeLabelPaint
-     * @deprecated Since 0.6.2; Use {@link #setRangeTickLabelPaint(android.graphics.Paint)}.
-     */
-    @Deprecated
-    public void setRangeLabelPaint(Paint rangeLabelPaint) {
-        setRangeTickLabelPaint(rangeLabelPaint);
     }
 
     public void setRangeTickLabelPaint(Paint rangeTickLabelPaint) {
@@ -1246,42 +1058,12 @@ public class XYGraphWidget extends Widget {
         this.domainValueFormat = domainValueFormat;
     }
 
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getDomainTickExtension()}.
-     */
-    @Deprecated
-    public int getDomainLabelTickExtension() {
-        return getDomainTickExtension();
-    }
-
     public int getDomainTickExtension() {
         return domainTickExtension;
     }
 
-    /**
-     *
-     * @param domainLabelTickExtension
-     * @deprecated Since 0.6.2; Use {@link #setDomainTickExtension(int)}.
-     */
-    @Deprecated
-    public void setDomainLabelTickExtension(int domainLabelTickExtension) {
-        setDomainTickExtension(domainLabelTickExtension);
-    }
-
     public void setDomainTickExtension(int domainTickExtension) {
         this.domainTickExtension = domainTickExtension;
-    }
-
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getRangeTickExtension()}.
-     */
-    @Deprecated
-    public int getRangeLabelTickExtension() {
-        return getRangeTickExtension();
     }
 
     public int getRangeTickExtension() {
@@ -1294,16 +1076,6 @@ public class XYGraphWidget extends Widget {
 
     public void setDomainLabelSubTickExtension(int domainLabelSubTickExtension) {
         this.domainLabelSubTickExtension = domainLabelSubTickExtension;
-    }
-
-    /**
-     *
-     * @param rangeLabelTickExtension
-     * @deprecated Since 0.6.2; Use {@link #setRangeTickExtension(int)}.
-     */
-    @Deprecated
-    public void setRangeLabelTickExtension(int rangeLabelTickExtension) {
-        setRangeTickExtension(rangeTickExtension);
     }
 
     public void setRangeTickExtension(int rangeTickExtension) {
@@ -1350,55 +1122,16 @@ public class XYGraphWidget extends Widget {
         this.rangeOriginLinePaint = rangeOriginLinePaint;
     }
 
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getDomainOriginTickLabelPaint()}.
-     */
-    public Paint getDomainOriginLabelPaint() {
-        return getDomainOriginTickLabelPaint();
-    }
-
     public Paint getDomainOriginTickLabelPaint() {
         return domainOriginTickLabelPaint;
-    }
-
-    /**
-     *
-     * @param domainOriginLabelPaint
-     * @deprecated Since 0.6.2; Use {@link #setDomainOriginTickLabelPaint(android.graphics.Paint)}.
-     */
-    @Deprecated
-    public void setDomainOriginLabelPaint(Paint domainOriginLabelPaint) {
-        setDomainOriginTickLabelPaint(domainOriginLabelPaint);
     }
 
     public void setDomainOriginTickLabelPaint(Paint domainOriginTickLabelPaint) {
         this.domainOriginTickLabelPaint = domainOriginTickLabelPaint;
     }
 
-    /**
-     *
-     * @return
-     * @deprecated Since 0.6.2; Use {@link #getRangeOriginTickLabelPaint()}.
-     */
-    @Deprecated
-    public Paint getRangeOriginLabelPaint() {
-        return getRangeOriginTickLabelPaint();
-    }
-
     public Paint getRangeOriginTickLabelPaint() {
         return rangeOriginTickLabelPaint;
-    }
-
-    /**
-     *
-     * @param rangeOriginLabelPaint
-     * @deprecated Since 0.6.2; Use {@link #setRangeOriginTickLabelPaint(android.graphics.Paint)}.
-     */
-    @Deprecated
-    public void setRangeOriginLabelPaint(Paint rangeOriginLabelPaint) {
-        setRangeOriginTickLabelPaint(rangeOriginLabelPaint);
     }
 
     public void setRangeOriginTickLabelPaint(Paint rangeOriginTickLabelPaint) {
@@ -1523,31 +1256,31 @@ public class XYGraphWidget extends Widget {
         setRangeAxisLeft(rangeAxisLeft);
         
         if (rangeAxisOverlay) {
-            setRangeLabelWidth(1);    // needs to be at least 1 to display grid line.
-            setRangeLabelHorizontalOffset(-2.0f);
-            setRangeLabelVerticalOffset(2.0f);    // get above the line
-            Paint p = getRangeLabelPaint();
+            setRangeTickLabelWidth(1);    // needs to be at least 1 to display grid line.
+            setRangeTickLabelHorizontalOffset(-TWO);
+            setRangeTickLabelVerticalOffset(TWO);    // get above the line
+            Paint p = getRangeTickLabelPaint();
             if (p != null) {
                 p.setTextAlign(((rangeAxisLeft)?Paint.Align.LEFT:Paint.Align.RIGHT));
             }
-            Paint po = getRangeOriginLabelPaint();
+            Paint po = getRangeOriginTickLabelPaint();
             if (po != null) {
                 po.setTextAlign(((rangeAxisLeft)?Paint.Align.LEFT:Paint.Align.RIGHT));
             }
-            setRangeLabelTickExtension(0); 
+            setRangeTickExtension(ZERO);
         } else {
-            setRangeLabelWidth(1);    // needs to be at least 1 to display grid line.
+            setRangeTickLabelWidth(ONE);    // needs to be at least 1 to display grid line.
                                       // if we have a paint this gets bigger.
-            setRangeLabelHorizontalOffset(1.0f);
-            setRangeLabelTickExtension(tickSize);
-            Paint p = getRangeLabelPaint();
+            setRangeTickLabelHorizontalOffset(FLOAT_ONE);
+            setRangeTickExtension(tickSize);
+            Paint p = getRangeTickLabelPaint();
             if (p != null) {
                 p.setTextAlign(((!rangeAxisLeft)?Paint.Align.LEFT:Paint.Align.RIGHT));
                 Rect r = FontUtils.getPackedStringDimensions(maxLableString,p);
-                setRangeLabelVerticalOffset(r.top/2);
-                setRangeLabelWidth(r.right + getRangeLabelTickExtension());
+                setRangeTickLabelVerticalOffset(r.top / TWO);
+                setRangeTickLabelWidth(r.right + getRangeTickExtension());
             }
-            Paint po = getRangeOriginLabelPaint();
+            Paint po = getRangeOriginTickLabelPaint();
             if (po != null) {
                 po.setTextAlign(((!rangeAxisLeft)?Paint.Align.LEFT:Paint.Align.RIGHT));
             }
@@ -1566,31 +1299,31 @@ public class XYGraphWidget extends Widget {
     public void setDomainAxisPosition(boolean domainAxisBottom, boolean domainAxisOverlay, int tickSize, String maxLabelString){
         setDomainAxisBottom(domainAxisBottom);
         if (domainAxisOverlay) {
-            setDomainLabelWidth(1);    // needs to be at least 1 to display grid line.
-            setDomainLabelVerticalOffset(2.0f);    // get above the line
-            setDomainLabelTickExtension(0);
-            Paint p = getDomainLabelPaint();
+            setDomainTickLabelWidth(ONE);    // needs to be at least 1 to display grid line.
+            setDomainTickLabelVerticalOffset(TWO);    // get above the line
+            setDomainTickExtension(ZERO);
+            Paint p = getDomainTickLabelPaint();
             if (p != null) {
                 Rect r = FontUtils.getPackedStringDimensions(maxLabelString,p);
                 if (domainAxisBottom){
-                    setDomainLabelVerticalOffset(2 * r.top);
+                    setDomainTickLabelVerticalOffset(TWO * r.top);
                 } else {
-                    setDomainLabelVerticalOffset(r.top - 1.0f);
+                    setDomainTickLabelVerticalOffset(r.top - FLOAT_ONE);
                 }
             }
         } else {
-            setDomainLabelWidth(1);    // needs to be at least 1 to display grid line.
+            setDomainTickLabelWidth(1);    // needs to be at least 1 to display grid line.
                                        // if we have a paint this gets bigger.
-            setDomainLabelTickExtension(tickSize);
-            Paint p = getDomainLabelPaint();
+            setDomainTickExtension(tickSize);
+            Paint p = getDomainTickLabelPaint();
             if (p != null) {
                 float fontHeight = FontUtils.getFontHeight(p);
                 if (domainAxisBottom){
-                    setDomainLabelVerticalOffset(-4.0f);
+                    setDomainTickLabelVerticalOffset(-4.0f);
                 } else {
-                    setDomainLabelVerticalOffset(+1.0f);
+                    setDomainTickLabelVerticalOffset(FLOAT_ONE);
                 }
-                setDomainLabelWidth(fontHeight + getDomainLabelTickExtension());
+                setDomainTickLabelWidth(fontHeight + getDomainTickExtension());
             }
         }
     }

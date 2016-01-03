@@ -71,7 +71,7 @@ public class TouchZoomExampleActivity extends Activity implements OnTouchListene
                 new DecimalFormat("#####"));
         mySimpleXYPlot.getGraphWidget().setDomainValueFormat(
                 new DecimalFormat("#####.#"));
-        mySimpleXYPlot.getGraphWidget().setRangeLabelWidth(25);
+        mySimpleXYPlot.getGraphWidget().setRangeTickLabelWidth(25);
         mySimpleXYPlot.setRangeLabel("");
         mySimpleXYPlot.setDomainLabel("");
 

@@ -67,7 +67,7 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         // setup the APR Levels plot:
         aprLevelsPlot = (XYPlot) findViewById(R.id.aprLevelsPlot);
         aprLevelsPlot.setDomainBoundaries(-1, 1, BoundaryMode.FIXED);
-        aprLevelsPlot.getGraphWidget().getDomainLabelPaint().setColor(Color.TRANSPARENT);
+        aprLevelsPlot.getGraphWidget().getDomainTickLabelPaint().setColor(Color.TRANSPARENT);
 
         aLvlSeries = new SimpleXYSeries("A");
         pLvlSeries = new SimpleXYSeries("P");

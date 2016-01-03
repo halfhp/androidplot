@@ -261,15 +261,15 @@ public class XYRegionExampleActivity extends Activity {
                 YLayoutStyle.ABSOLUTE_FROM_TOP,
                 AnchorPosition.LEFT_TOP);
 
-        plot.getGraphWidget().setRangeLabelHorizontalOffset(-1);
+        plot.getGraphWidget().setRangeTickLabelHorizontalOffset(-1);
 
         // add enough space to ensure range value labels arent cut off on the left/right:
-        plot.getGraphWidget().setRangeLabelWidth(25);
+        plot.getGraphWidget().setRangeTickLabelWidth(25);
 
         // add enough space to make sure domain value labels arent cut off on the bottom:
-        plot.getGraphWidget().setDomainLabelWidth(15);
+        plot.getGraphWidget().setDomainTickLabelWidth(15);
 
-        plot.getGraphWidget().setDomainLabelVerticalOffset(-6);
+        plot.getGraphWidget().setDomainTickLabelVerticalOffset(-6);
 
         plot.setRangeBoundaries(0, BoundaryMode.FIXED, 500, BoundaryMode.FIXED);
     }

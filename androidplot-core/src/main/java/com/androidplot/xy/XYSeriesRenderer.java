@@ -26,8 +26,8 @@ import java.util.Hashtable;
  * Base class for all Renderers that render XYSeries data.
  * @param <XYFormatterType>
  */
-public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter>
-        extends SeriesRenderer<XYPlot, XYSeries, XYFormatterType> {
+public abstract class XYSeriesRenderer<SeriesType extends XYSeries, XYFormatterType extends XYSeriesFormatter>
+        extends SeriesRenderer<XYPlot, SeriesType, XYFormatterType> {
 
     public XYSeriesRenderer(XYPlot plot) {
         super(plot);
@@ -39,8 +39,8 @@ public abstract class XYSeriesRenderer<XYFormatterType extends XYSeriesFormatter
      */
     public Hashtable<XYRegionFormatter, String> getUniqueRegionFormatters() {
 
-        Hashtable<XYRegionFormatter, String> found = new Hashtable<XYRegionFormatter, String>();
-        for(SeriesAndFormatter<XYSeries, ? extends XYFormatterType> sfPair : getSeriesList()) {
+        Hashtable<XYRegionFormatter, String> found = new Hashtable<>();
+        for(SeriesAndFormatter<SeriesType, ? extends XYFormatterType> sfPair : getSeriesList()) {
             ZIndexable<RectRegion> regionIndexer = sfPair.getFormatter().getRegions();
             for (RectRegion region : regionIndexer.elements()) {
                 XYRegionFormatter f = sfPair.getFormatter().getRegionFormatter(region);

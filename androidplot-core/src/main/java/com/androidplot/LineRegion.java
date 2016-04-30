@@ -24,22 +24,28 @@ public class LineRegion {
     private Number minVal;
     private Number maxVal;
 
-    public LineRegion(Number val1, Number v2) {
-        if (val1.doubleValue() < v2.doubleValue()) {
-            this.setMinVal(val1);
+    public LineRegion(Number v1, Number v2) {
+        if (v1 != null && v2 != null && v1.doubleValue() < v2.doubleValue()) {
+            this.setMinVal(v1);
             this.setMaxVal(v2);
         } else {
             this.setMinVal(v2);
-            this.setMaxVal(val1);
+            this.setMaxVal(v1);
         }
     }
 
-    public static Number measure(Number val1, Number val2) {
-        return new LineRegion(val1, val2).length();
+    /**
+     *
+     * @param v1
+     * @param v2
+     * @return The distance between val1 and val2 or null if either parameters are null.
+     */
+    public static Number measure(Number v1, Number v2) {
+        return new LineRegion(v1, v2).length();
     }
 
     public Number length() {
-        return maxVal.doubleValue() - minVal.doubleValue();
+        return maxVal == null || minVal == null ? null : maxVal.doubleValue() - minVal.doubleValue();
     }
 
     /**
@@ -62,13 +68,6 @@ public class LineRegion {
      * @return
      */
     public  boolean intersects(Number line2Min, Number line2Max) {
-
-        //double l1min = getMinVal() == null ? Double.NEGATIVE_INFINITY : getMinVal().doubleValue();
-        //double l1max = getMaxVal() == null ? Double.POSITIVE_INFINITY : getMaxVal().doubleValue();
-
-        //double l2min = line2Min == null ? Double.NEGATIVE_INFINITY : line2Min.doubleValue();
-        //double l2max = line2Max == null ? Double.POSITIVE_INFINITY : line2Max.doubleValue();
-
 
         // is this line completely within line2?
         if(line2Min.doubleValue() <= this.minVal.doubleValue() && line2Max.doubleValue() >= this.maxVal.doubleValue()) {

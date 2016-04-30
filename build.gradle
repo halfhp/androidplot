@@ -9,7 +9,7 @@ ext {
     theBuildToolsVersion = '21.1.2'
     theCompileSdkVersion = 23
     theTargetSdkVersion = 23
-    theMinSdkVersion = 4
+    theMinSdkVersion = 5
     theVersionName = '0.9.6'
     theVersionCode = 12
 }

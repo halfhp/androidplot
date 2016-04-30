@@ -34,7 +34,7 @@ import com.androidplot.util.ValPixConverter;
 /**
  * Renders the points in an XYSeries as bars.
  */
-public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRenderer<FormatterType> {
+public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRenderer<XYSeries, FormatterType> {
 
     private BarRenderStyle renderStyle = BarRenderStyle.OVERLAID;  // default Render Style
 	private BarWidthStyle widthStyle = BarWidthStyle.FIXED_WIDTH;  // default Width Style

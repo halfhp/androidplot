@@ -30,6 +30,8 @@ import com.androidplot.ui.TextOrientationType;
 import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.util.AttrUtils;
 import com.androidplot.util.PixelUtils;
+import com.androidplot.util.SeriesUtils;
+
 import java.text.Format;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,19 +83,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private TextLabelWidget domainLabelWidget;
     private TextLabelWidget rangeLabelWidget;
 
-    //private XYStepMode domainStepMode = XYStepMode.SUBDIVIDE;
-    //private double domainStepValue = 10;
-
-    //private XYStepMode rangeStepMode = XYStepMode.SUBDIVIDE;
-    //private double rangeStepValue = 10;
     private XYStepModel domainStepModel;
     private XYStepModel rangeStepModel;
 
-    // user settable min/max values
-    private Number userMinX;
-    private Number userMaxX;
-    private Number userMinY;
-    private Number userMaxY;
+    private XYConstraints constraints = new XYConstraints();
 
     // these are the final min/max used for dispplaying data
     private Number calculatedMinX;
@@ -119,13 +112,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private Number domainRightMin = null;
     private Number domainRightMax = null;
 
-    // used for  calculating the domain/range extents that will be displayed on the plot.
-    // using boundaries and origins are mutually exclusive.  because of this,
-    // setting one will disable the other.  when only setting the FramingModel,
-    // the origin or boundary is set to the current value of the plot.
-    private XYFramingModel domainFramingModel = XYFramingModel.EDGE;
-    private XYFramingModel rangeFramingModel = XYFramingModel.EDGE;
-
     private Number userDomainOrigin;
     private Number userRangeOrigin;
 
@@ -136,11 +122,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private Number domainOriginExtent = null;
     @SuppressWarnings("FieldCanBeLocal")
     private Number rangeOriginExtent = null;
-
-    private BoundaryMode domainUpperBoundaryMode = BoundaryMode.AUTO;
-    private BoundaryMode domainLowerBoundaryMode = BoundaryMode.AUTO;
-    private BoundaryMode rangeUpperBoundaryMode = BoundaryMode.AUTO;
-    private BoundaryMode rangeLowerBoundaryMode = BoundaryMode.AUTO;
 
     private boolean drawDomainOriginEnabled = true;
     private boolean drawRangeOriginEnabled = true;
@@ -292,7 +273,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         AttrUtils.configureStep(attrs, getRangeStepModel(),
                 R.styleable.xy_XYPlot_rangeStepMode, R.styleable.xy_XYPlot_rangeStep);
 
-
         // domainLabel size & position
         AttrUtils.configureWidget(attrs, getDomainLabelWidget(),
                 R.styleable.xy_XYPlot_domainLabelHeightSizeLayoutType, R.styleable.xy_XYPlot_domainLabelHeight,
@@ -436,118 +416,74 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         return getGraphWidget().getXVal(point);
     }
 
-    private boolean isXValWithinView(double xVal) {
-        return (userMinY == null || xVal >= userMinY.doubleValue()) &&
-                userMaxY == null || xVal <= userMaxY.doubleValue();
-    }
-
-    private boolean isPointVisible(Number x, Number y) {
-        // values without both an x and y val arent visible
-        if (x == null || y == null) {
-            return false;
-        }
-        return isValWithinRange(y.doubleValue(), userMinY, userMaxY) &&
-                isValWithinRange(x.doubleValue(), userMinX, userMaxX);
-    }
-
-    private boolean isValWithinRange(double val, Number min, Number max) {
-        boolean isAboveMinThreshold = min == null || val >= min.doubleValue();
-        boolean isBelowMaxThreshold = max == null || val <= max.doubleValue();
-        return isAboveMinThreshold &&
-                isBelowMaxThreshold;
-    }
-
     public void calculateMinMaxVals() {
         prevMinX = calculatedMinX;
         prevMaxX = calculatedMaxX;
         prevMinY = calculatedMinY;
         prevMaxY = calculatedMaxY;
 
-        calculatedMinX = userMinX;
-        calculatedMaxX = userMaxX;
-        calculatedMinY = userMinY;
-        calculatedMaxY = userMaxY;
+        calculatedMinX = constraints.getMinX();
+        calculatedMaxX = constraints.getMaxX();
+        calculatedMinY = constraints.getMinY();
+        calculatedMaxY = constraints.getMaxY();
 
-        // next we go through each series to update our min/max values:
-        for (SeriesAndFormatter<? extends XYSeries, ? extends XYSeriesFormatter> thisPair : getSeriesRegistry()) {
-            XYSeries series = thisPair.getSeries();
-            // step through each point in each series:
-            for (int i = 0; i < series.size(); i++) {
-                Number thisX = series.getX(i);
-                Number thisY = series.getY(i);
-                if (isPointVisible(thisX, thisY)) {
-                    // only calculate if a static value has not been set:
-                    if (userMinX == null) {
-                        if (thisX != null && (calculatedMinX == null ||
-                                thisX.doubleValue() < calculatedMinX.doubleValue())) {
-                            calculatedMinX = thisX;
-                        }
-                    }
+        // only calculate if we must:
+        if(calculatedMinX == null || calculatedMaxX == null || calculatedMinY == null || calculatedMaxY == null) {
 
-                    if (userMaxX == null) {
-                        if (thisX != null && (calculatedMaxX == null ||
-                                thisX.doubleValue() > calculatedMaxX.doubleValue())) {
-                            calculatedMaxX = thisX;
-                        }
-                    }
+            XYBounds bounds = SeriesUtils.minMax(constraints, getSeriesRegistry().getSeriesList());
 
-                    if (userMinY == null) {
-                        if (thisY != null && (calculatedMinY == null ||
-                                thisY.doubleValue() < calculatedMinY.doubleValue())) {
-                            calculatedMinY = thisY;
-                        }
-                    }
-
-                    if (userMaxY == null) {
-                        if (thisY != null && (calculatedMaxY == null || thisY.doubleValue() > calculatedMaxY.doubleValue())) {
-                            calculatedMaxY = thisY;
-                        }
-                    }
-                }
-            }
+            if(calculatedMinX == null) calculatedMinX = bounds.getMinX();
+            if(calculatedMaxX == null) calculatedMaxX = bounds.getMaxX();
+            if(calculatedMinY == null) calculatedMinY = bounds.getMinY();
+            if(calculatedMaxY == null) calculatedMaxY = bounds.getMaxY();
         }
 
         // at this point we now know what points are going to be visible on our
         // plot, but we still need to make corrections based on modes being used:
         // (grow, shrink etc.)
-        switch (domainFramingModel) {
+        switch (constraints.getDomainFramingModel()) {
             case ORIGIN:
                 updateDomainMinMaxForOriginModel();
                 break;
             case EDGE:
-                calculatedMaxX = getCalculatedUpperBoundary(domainUpperBoundaryMode, prevMaxX, calculatedMaxX);
-                calculatedMinX = getCalculatedLowerBoundary(domainLowerBoundaryMode, prevMinX, calculatedMinX);
-                calculatedMinX = ApplyUserMinMax(calculatedMinX, domainLeftMin,
+                calculatedMaxX = getCalculatedUpperBoundary(
+                        constraints.getDomainUpperBoundaryMode(), prevMaxX, calculatedMaxX);
+                calculatedMinX = getCalculatedLowerBoundary(
+                        constraints.getDomainLowerBoundaryMode(), prevMinX, calculatedMinX);
+                calculatedMinX = applyUserMinMax(calculatedMinX, domainLeftMin,
                         domainLeftMax);
-                calculatedMaxX = ApplyUserMinMax(calculatedMaxX,
+                calculatedMaxX = applyUserMinMax(calculatedMaxX,
                         domainRightMin, domainRightMax);
                 break;
             default:
                 throw new UnsupportedOperationException(
-                        "Domain Framing Model not yet supported: " + domainFramingModel);
+                        "Domain Framing Model not yet supported: " + constraints.getDomainFramingModel());
         }
 
-        switch (rangeFramingModel) {
+        switch (constraints.getDomainFramingModel()) {
             case ORIGIN:
                 updateRangeMinMaxForOriginModel();
                 break;
             case EDGE:
             	if (getSeriesRegistry().size() > 0) {
-                    calculatedMaxY = getCalculatedUpperBoundary(rangeUpperBoundaryMode, prevMaxY, calculatedMaxY);
-                    calculatedMinY = getCalculatedLowerBoundary(rangeLowerBoundaryMode, prevMinY, calculatedMinY);
-	                calculatedMinY = ApplyUserMinMax(calculatedMinY,
-	                        rangeBottomMin, rangeBottomMax);
-	                calculatedMaxY = ApplyUserMinMax(calculatedMaxY, rangeTopMin,
-	                        rangeTopMax);
+                    calculatedMaxY = getCalculatedUpperBoundary(
+                            constraints.getRangeUpperBoundaryMode(), prevMaxY, calculatedMaxY);
+                    calculatedMinY = getCalculatedLowerBoundary(
+                            constraints.getRangeLowerBoundaryMode(), prevMinY, calculatedMinY);
+	                calculatedMinY = applyUserMinMax(calculatedMinY, rangeBottomMin, rangeBottomMax);
+	                calculatedMaxY = applyUserMinMax(calculatedMaxY, rangeTopMin, rangeTopMax);
             	}
                 break;
             default:
                 throw new UnsupportedOperationException(
-                        "Range Framing Model not yet supported: " + domainFramingModel);
+                        "Range Framing Model not yet supported: " + constraints.getRangeFramingModel());
         }
 
-        calculatedDomainOrigin = userDomainOrigin != null ? userDomainOrigin : getCalculatedMinX();
-        calculatedRangeOrigin = this.userRangeOrigin != null ? userRangeOrigin : getCalculatedMinY();
+        calculatedDomainOrigin = userDomainOrigin != null ?
+                userDomainOrigin : getCalculatedMinX();
+
+        calculatedRangeOrigin = this.userRangeOrigin != null ?
+                userRangeOrigin : getCalculatedMinY();
     }
 
     protected Number getCalculatedUpperBoundary(BoundaryMode mode, Number previousMax, Number calculatedMax) {
@@ -561,7 +497,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                     calculatedMax = previousMax;
                 }
                 break;
-            case SHRINNK:
+            case SHRINK:
                 if (!(previousMax == null || calculatedMax.doubleValue() < previousMax.doubleValue())) {
                     calculatedMax = previousMax;
                 }
@@ -583,7 +519,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                     return previousMin;
                 }
                 break;
-            case SHRINNK:
+            case SHRINK:
                 if (!(previousMin == null || calculatedMin.doubleValue() > previousMin.doubleValue())) {
                     return previousMin;
                 }
@@ -602,7 +538,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @param min
      * @param max
      */
-    private Number ApplyUserMinMax(Number value, Number min, Number max) {
+    private Number applyUserMinMax(Number value, Number min, Number max) {
         value = (((min == null) || (value == null) || (value.doubleValue() > min.doubleValue()))
                 ? value
                 : min);
@@ -633,14 +569,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         if (origin == null) {
             throw new NullPointerException("Origin param cannot be null.");
         }
-        domainFramingModel = XYFramingModel.ORIGIN;
+        constraints.setDomainFramingModel(XYFramingModel.ORIGIN);
         setUserDomainOrigin(origin);
         domainOriginExtent = extent;
         domainOriginBoundaryMode = mode;
 
         Number[] minMax = getOriginMinMax(domainOriginBoundaryMode, userDomainOrigin, domainOriginExtent);
-        userMinX = minMax[0];
-        userMaxX = minMax[1];
+        constraints.setMinX(minMax[0]);
+        constraints.setMaxX(minMax[1]);
     }
 
     /**
@@ -665,14 +601,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         if (origin == null) {
             throw new NullPointerException("Origin param cannot be null.");
         }
-        rangeFramingModel = XYFramingModel.ORIGIN;
+        constraints.setRangeFramingModel(XYFramingModel.ORIGIN);
         setUserRangeOrigin(origin);
         rangeOriginExtent = extent;
         rangeOriginBoundaryMode = mode;
 
         Number[] minMax = getOriginMinMax(rangeOriginBoundaryMode, userRangeOrigin, rangeOriginExtent);
-        userMinY = minMax[0];
-        userMaxY = minMax[1];
+        constraints.setMinY(minMax[0]);
+        constraints.setMaxY(minMax[1]);
     }
 
     /**
@@ -739,7 +675,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 }
             }
             break;
-            case SHRINNK:
+            case SHRINK:
                 if (prevMinX == null || dlb > prevMinX.doubleValue()) {
                     calculatedMinX = dlb;
                 } else {
@@ -773,7 +709,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 break;
             case FIXED:
             case GROW:
-            case SHRINNK:
+            case SHRINK:
             default:
                 throw new UnsupportedOperationException(
                         "Range Origin Boundary Mode not yet supported: " + rangeOriginBoundaryMode);
@@ -997,11 +933,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     protected synchronized void setDomainUpperBoundaryMode(BoundaryMode mode) {
-        this.domainUpperBoundaryMode = mode;
+        constraints.setDomainUpperBoundaryMode(mode);
     }
 
-    protected synchronized void setUserMaxX(Number boundary) {
-        this.userMaxX = boundary;
+    protected synchronized void setUserMaxX(Number maxX) {
+        constraints.setMaxX(maxX);
     }
 
     /**
@@ -1017,11 +953,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     protected synchronized void setDomainLowerBoundaryMode(BoundaryMode mode) {
-        this.domainLowerBoundaryMode = mode;
+        constraints.setDomainLowerBoundaryMode(mode);
     }
 
-    protected synchronized void setUserMinX(Number boundary) {
-        this.userMinX = boundary;
+    protected synchronized void setUserMinX(Number minX) {
+        constraints.setMinX(minX);
     }
 
     /**
@@ -1037,11 +973,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     protected synchronized void setRangeUpperBoundaryMode(BoundaryMode mode) {
-        this.rangeUpperBoundaryMode = mode;
+        constraints.setRangeUpperBoundaryMode(mode);
     }
 
-    protected synchronized void setUserMaxY(Number boundary) {
-        this.userMaxY = boundary;
+    protected synchronized void setUserMaxY(Number maxY) {
+        constraints.setMaxY(maxY);
     }
 
     /**
@@ -1057,11 +993,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     protected synchronized void setRangeLowerBoundaryMode(BoundaryMode mode) {
-        this.rangeLowerBoundaryMode = mode;
+        constraints.setRangeLowerBoundaryMode(mode);
     }
 
-    protected synchronized void setUserMinY(Number boundary) {
-        this.userMinY = boundary;
+    protected synchronized void setUserMinY(Number minY) {
+        constraints.setMinY(minY);
     }
 
     /**
@@ -1076,44 +1012,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         setRangeFramingModel(XYFramingModel.EDGE);
     }
 
-    private Number getUserMinX() {
-        return userMinX;
-    }
-
-    private Number getUserMaxX() {
-        return userMaxX;
-    }
-
-    private Number getUserMinY() {
-        return userMinY;
-    }
-
-    private Number getUserMaxY() {
-        return userMaxY;
-    }
-
     public Number getDomainOrigin() {
         return calculatedDomainOrigin;
     }
 
     public Number getRangeOrigin() {
         return calculatedRangeOrigin;
-    }
-
-    protected BoundaryMode getDomainUpperBoundaryMode() {
-        return domainUpperBoundaryMode;
-    }
-
-    protected BoundaryMode getDomainLowerBoundaryMode() {
-        return domainLowerBoundaryMode;
-    }
-
-    protected BoundaryMode getRangeUpperBoundaryMode() {
-        return rangeUpperBoundaryMode;
-    }
-
-    protected BoundaryMode getRangeLowerBoundaryMode() {
-        return rangeLowerBoundaryMode;
     }
 
     public synchronized void setUserDomainOrigin(Number origin) {
@@ -1130,23 +1034,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         this.userRangeOrigin = origin;
     }
 
-    public XYFramingModel getDomainFramingModel() {
-        return domainFramingModel;
+    @SuppressWarnings("SameParameterValue")
+    protected void setDomainFramingModel(XYFramingModel model) {
+        constraints.setDomainFramingModel(model);
     }
 
     @SuppressWarnings("SameParameterValue")
-    protected void setDomainFramingModel(XYFramingModel domainFramingModel) {
-        this.domainFramingModel = domainFramingModel;
-    }
-
-    public XYFramingModel getRangeFramingModel() {
-
-        return rangeFramingModel;
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    protected void setRangeFramingModel(XYFramingModel rangeFramingModel) {
-        this.rangeFramingModel = rangeFramingModel;
+    protected void setRangeFramingModel(XYFramingModel model) {
+        constraints.setRangeFramingModel(model);
     }
 
     /**

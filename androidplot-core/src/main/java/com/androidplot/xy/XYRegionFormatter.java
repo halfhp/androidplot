@@ -25,7 +25,6 @@ import com.androidplot.util.Configurator;
  */
 public class XYRegionFormatter {
 
-    //private int color;
     private Paint paint = new Paint();
 
     {
@@ -48,11 +47,7 @@ public class XYRegionFormatter {
     }
 
     public XYRegionFormatter(int color) {
-        //paint = new Paint();
         paint.setColor(color);
-        //paint.setStyle(Paint.Style.FILL);
-        //paint.setAntiAlias(true);
-        //this.color = color;
     }
 
     public int getColor() {

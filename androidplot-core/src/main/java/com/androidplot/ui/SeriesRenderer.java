@@ -96,7 +96,7 @@ public abstract class SeriesRenderer
      */
     public List<SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType>> getSeriesList() {
         List<SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType>> results = new ArrayList<>();
-        ArrayList<SeriesAndFormatter> sfList = getPlot().getSeriesRegistry();
+        ArrayList<SeriesAndFormatter> sfList = getPlot().getSeriesRegistry().asList();
 
         for(SeriesAndFormatter thisPair : sfList) {
             if(thisPair.getFormatter().getRendererClass() == getClass()) {

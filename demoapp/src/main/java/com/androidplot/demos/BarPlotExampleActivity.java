@@ -312,7 +312,7 @@ public class BarPlotExampleActivity extends Activity
 
 
             // find the closest value to the selection:
-            for (SeriesAndFormatter<XYSeries, ? extends XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
+            for (SeriesAndFormatter<XYSeries, ? extends XYSeriesFormatter> sfPair : plot.getSeriesRegistry().asList()) {
                 XYSeries series = sfPair.getSeries();
                 for (int i = 0; i < series.size(); i++) {
                     Number thisX = series.getX(i);
@@ -323,17 +323,17 @@ public class BarPlotExampleActivity extends Activity
                         double thisYDistance =
                                 LineRegion.measure(y, thisY).doubleValue();
                         if (selection == null) {
-                            selection = new Pair<Integer, XYSeries>(i, series);
+                            selection = new Pair<>(i, series);
                             xDistance = thisXDistance;
                             yDistance = thisYDistance;
                         } else if (thisXDistance < xDistance) {
-                            selection = new Pair<Integer, XYSeries>(i, series);
+                            selection = new Pair<>(i, series);
                             xDistance = thisXDistance;
                             yDistance = thisYDistance;
                         } else if (thisXDistance == xDistance &&
                                 thisYDistance < yDistance &&
                                 thisY.doubleValue() >= y.doubleValue()) {
-                            selection = new Pair<Integer, XYSeries>(i, series);
+                            selection = new Pair<>(i, series);
                             xDistance = thisXDistance;
                             yDistance = thisYDistance;
                         }

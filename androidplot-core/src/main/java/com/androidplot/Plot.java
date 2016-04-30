@@ -66,7 +66,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      * Associates lists series and getFormatter pairs with the class of the Renderer used to render them.
      */
-    public ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> getSeriesRegistry() {
+    public SeriesRegistry<SeriesType, FormatterType> getSeriesRegistry() {
         return seriesRegistry;
     }
 
@@ -139,7 +139,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     private HashMap<Class<? extends RendererType>, RendererType> renderers;
 
-    private ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> seriesRegistry;
+    //private ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> seriesRegistry;
+    private SeriesRegistry<SeriesType, FormatterType> seriesRegistry;
 
     private final ArrayList<PlotListener> listeners;
 
@@ -149,7 +150,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     {
         listeners = new ArrayList<>();
-        seriesRegistry = new ArrayList<>();
+        seriesRegistry = new SeriesRegistry<>();
         renderers = new HashMap<>();
 
         borderPaint = new Paint();
@@ -553,7 +554,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @return The {@link SeriesAndFormatter} that matches the series and rendererClass params, or null if one is not found.
      */
     protected SeriesAndFormatter<SeriesType, FormatterType> getSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
-        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : getSeriesRegistry()) {
+        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : seriesRegistry.asList()) {
             if(thisPair.getSeries() == series && thisPair.getFormatter().getRendererClass() == rendererClass) {
                 return thisPair;
             }
@@ -569,7 +570,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     protected List<SeriesAndFormatter<SeriesType, FormatterType>> getSeries(SeriesType series) {
         List<SeriesAndFormatter<SeriesType, FormatterType>> results =
                 new ArrayList<SeriesAndFormatter<SeriesType, FormatterType>>();
-        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : getSeriesRegistry()) {
+        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : seriesRegistry.asList()) {
             if(thisPair.getSeries() == series) {
                 results.add(thisPair);
             }

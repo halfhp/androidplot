@@ -84,7 +84,7 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
          * TODO: rendering performance *might* be improved by reusing StackElement instances but I'm skeptical...
          */
         getElements().clear();
-        List<SeriesAndFormatter<SeriesType, FormatterType>> pairList = plot.getSeriesRegistry();
+        List<SeriesAndFormatter<SeriesType, FormatterType>> pairList = plot.getSeriesRegistry().asList();
         for(SeriesAndFormatter<SeriesType, FormatterType> thisPair: pairList) {
             getElements().add(new StackElement<>(thisPair));
         }

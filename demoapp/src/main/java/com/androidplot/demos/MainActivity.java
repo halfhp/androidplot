@@ -66,6 +66,14 @@ public class MainActivity extends Activity {
             }
         });
 
+        Button startCandlestickExButton = (Button) findViewById(R.id.startCandlestickExButton);
+        startCandlestickExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, CandlestickChartActivity.class));
+            }
+        });
+
         Button startSimpleXYExButton = (Button) findViewById(R.id.startSimpleXYExButton);
         startSimpleXYExButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -67,7 +67,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         RectF rec = new RectF(origin.x - radius, origin.y - radius, origin.x + radius, origin.y + radius);
         
         int i = 0;
-        for (SeriesAndFormatter<Segment, ? extends SegmentFormatter> sfPair : getSeriesList()) {
+        for (SeriesAndFormatter<Segment, ? extends SegmentFormatter> sfPair : getSeriesAndFormatterList()) {
             float lastOffset = offset;
             float sweep = (float) (scale * (values[i]) * 360);
             offset += sweep;
@@ -193,7 +193,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     }
     
 	protected double[] getValues() {
-        List<SeriesAndFormatter<Segment, ? extends SegmentFormatter>> seriesList = getSeriesList();
+        List<SeriesAndFormatter<Segment, ? extends SegmentFormatter>> seriesList = getSeriesAndFormatterList();
 		double[] result = new double[seriesList.size()];
 		int i = 0;
 		for (SeriesAndFormatter<Segment, ? extends SegmentFormatter> sfPair : seriesList) {
@@ -260,7 +260,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 
         // find the segment whose starting and ending angle (degs) contains
         // the angle calculated above
-        List<SeriesAndFormatter<Segment, ? extends SegmentFormatter>> seriesList = getSeriesList();
+        List<SeriesAndFormatter<Segment, ? extends SegmentFormatter>> seriesList = getSeriesAndFormatterList();
         int i = 0;
         double[] values = getValues();
         double scale = calculateScale(values);

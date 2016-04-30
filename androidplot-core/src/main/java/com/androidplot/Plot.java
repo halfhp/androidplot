@@ -138,10 +138,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private final Object renderSynch = new Object();
 
     private HashMap<Class<? extends RendererType>, RendererType> renderers;
-
-    //private ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> seriesRegistry;
     private SeriesRegistry<SeriesType, FormatterType> seriesRegistry;
-
     private final ArrayList<PlotListener> listeners;
 
     private Thread renderThread;
@@ -518,6 +515,23 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         for (PlotListener listener : listeners) {
             listener.onAfterDraw(this, canvas);
         }
+    }
+
+    /**
+     * Convenience method to add a multiple series at once using the same formatter.
+     * If a problem is encountered, the method immediately returns false and the plot
+     * will contain whatever series were added before the failure.
+     * @param formatter
+     * @param series
+     * @return True if all series were successfully added, false otherwise.
+     */
+    public synchronized boolean addSeries(FormatterType formatter, SeriesType... series) {
+        for(SeriesType s : series) {
+            if(!addSeries(s, formatter)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

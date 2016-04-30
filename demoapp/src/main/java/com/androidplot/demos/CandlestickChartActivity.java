@@ -17,18 +17,13 @@
 package com.androidplot.demos;
 
 import android.app.Activity;
-import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import com.androidplot.candlestick.CandlestickFormatter;
-import com.androidplot.candlestick.CandlestickSeries;
-import com.androidplot.candlestick.SimpleCandlestickSeries;
-import com.androidplot.util.PixelUtils;
+import com.androidplot.candlestick.CandlestickMaker;
 import com.androidplot.xy.*;
 
-import java.util.Arrays;
-
 /**
- * A simple XYPlot
+ * A simple example of a candlestick chart rendered on an {@link XYPlot}.
  */
 public class CandlestickChartActivity extends Activity
 {
@@ -46,24 +41,15 @@ public class CandlestickChartActivity extends Activity
 
         plot.getLayoutManager().moveToBottom(plot.getTitleWidget());
 
-        // max
-        Number[] yVals = {10, 15, 8};
+        XYSeries highVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "high", 12, 10, 15, 8, 7);
+        XYSeries lowVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "low", 3, 1, 5, 0, 2);
+        XYSeries openVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,  "open", 5, 2, 7, 5, 3);
+        XYSeries closeVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,  "close", 7, 9, 6, 0, 4);
 
-        // min
-        Number[] zVals = {1, 5, 0};
-
-        // open
-        Number[] aVals = {2, 7, 5};
-
-        // close
-        Number[] bVals = {5, 6, 7};
-
-        CandlestickSeries series1 = new SimpleCandlestickSeries(null,
-                Arrays.asList(yVals), Arrays.asList(zVals), Arrays.asList(aVals), Arrays.asList(bVals), "bla");
-
-        CandlestickFormatter cf1 = new CandlestickFormatter();
-
-        plot.addSeries(series1, cf1);
+        CandlestickFormatter formatter = new CandlestickFormatter();
+        formatter.setBodyStyle(CandlestickFormatter.BodyStyle.Triangle);
+        CandlestickMaker.make(plot, formatter,
+                openVals, closeVals, highVals, lowVals);
 
         // reduce the number of range labels
         plot.setTicksPerRangeLabel(3);

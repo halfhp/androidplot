@@ -16,9 +16,7 @@
 
 package com.androidplot.util;
 
-import android.util.Pair;
 import com.androidplot.Bounds;
-import com.androidplot.candlestick.CandlestickSeries;
 import com.androidplot.xy.XYBounds;
 import com.androidplot.xy.XYConstraints;
 import com.androidplot.xy.XYSeries;
@@ -74,23 +72,14 @@ public class SeriesUtils {
                                 }
                             }
                             if (yi != null) {
-                                if (series instanceof CandlestickSeries) {
-                                    // TODO
-                                    throw new UnsupportedOperationException("Not yet implemented.");
-                                } else {
-                                    if (bounds.getMinY() == null ||
-                                            yi.doubleValue() < bounds.getMinY().doubleValue()) {
-                                        bounds.setMinY(yi);
-                                    }
+
+                                if (bounds.getMinY() == null ||
+                                        yi.doubleValue() < bounds.getMinY().doubleValue()) {
+                                    bounds.setMinY(yi);
                                 }
-                                if (series instanceof CandlestickSeries) {
-                                    // TODO
-                                    throw new UnsupportedOperationException("Not yet implemented.");
-                                } else {
-                                    if (bounds.getMaxY() == null ||
-                                            yi.doubleValue() > bounds.getMaxY().doubleValue()) {
-                                        bounds.setMaxY(yi);
-                                    }
+                                if (bounds.getMaxY() == null ||
+                                        yi.doubleValue() > bounds.getMaxY().doubleValue()) {
+                                    bounds.setMaxY(yi);
                                 }
                             }
                         }
@@ -124,54 +113,4 @@ public class SeriesUtils {
         }
         return new Bounds(min, max);
     }
-
-
-    Number min(Number... numbers) {
-        Number min = null;
-        for(Number number : numbers) {
-            if(min == null || number != null && number.doubleValue() < min.doubleValue()) {
-                min = number;
-            }
-        }
-        return min;
-    }
-
-    Number max(Number... numbers) {
-        Number max = null;
-        for(Number number : numbers) {
-            if(max == null || number != null && number.doubleValue() > max.doubleValue()) {
-                max = number;
-            }
-        }
-        return max;
-    }
-
-//    Pair<Number, Number> minMaxY(CandlestickSeries series, int index) {
-//        Number min = series.getY(index);
-//        Number max = series.getY(index);
-//
-//        final Number a = series.getA(index);
-//
-//        if(a != null) {
-//            double ad = a.doubleValue();
-//            if(min == null || ad < min.doubleValue()) {
-//                min = ad;
-//            } else if(max == null || ad > max.doubleValue()) {
-//                max = ad;
-//            }
-//        }
-//
-//        final Number z = series.getZ(index);
-//
-//        if(z != null) {
-//            double zd = z.doubleValue();
-//            if(min == null || zd < min.doubleValue()) {
-//                min = zd;
-//            } else if(max == null || zd > max.doubleValue()) {
-//                max = zd;
-//            }
-//        }
-//
-//        return new Pair<>(min, max);
-//    }
 }

@@ -40,7 +40,7 @@ public abstract class XYSeriesRenderer<SeriesType extends XYSeries, XYFormatterT
     public Hashtable<XYRegionFormatter, String> getUniqueRegionFormatters() {
 
         Hashtable<XYRegionFormatter, String> found = new Hashtable<>();
-        for(SeriesAndFormatter<SeriesType, ? extends XYFormatterType> sfPair : getSeriesList()) {
+        for(SeriesAndFormatter<SeriesType, ? extends XYFormatterType> sfPair : getSeriesAndFormatterList()) {
             ZIndexable<RectRegion> regionIndexer = sfPair.getFormatter().getRegions();
             for (RectRegion region : regionIndexer.elements()) {
                 XYRegionFormatter f = sfPair.getFormatter().getRegionFormatter(region);

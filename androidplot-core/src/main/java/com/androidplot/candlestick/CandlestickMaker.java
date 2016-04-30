@@ -16,23 +16,26 @@
 
 package com.androidplot.candlestick;
 
+import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 
 /**
- * Series data for a candlestick chart.
- * Variables:
- * X - x value
- * Y - max value
- * Z - min value
- * A - open value
- * B - close value
- * For a description of candlestick charts see: https://en.wikipedia.org/wiki/Candlestick_chart
+ * Helper utility to simplify the creation of of candlestick charts
  */
-public interface CandlestickSeries extends XYSeries {
+public abstract class CandlestickMaker {
 
-    Number getA(int index);
-
-    Number getB(int index);
-
-    Number getZ(int index);
+    /**
+     * Adds a candlestick chart to the specified plot using the specified
+     * high, low, open and close values.
+     * @param plot
+     * @param formatter
+     * @param openVals
+     * @param closeVals
+     * @param highVals
+     * @param lowVals
+     */
+    public static void make(XYPlot plot, CandlestickFormatter formatter,
+                            XYSeries openVals, XYSeries closeVals, XYSeries highVals, XYSeries lowVals) {
+        plot.addSeries(formatter, highVals, lowVals, openVals, closeVals);
+    }
 }

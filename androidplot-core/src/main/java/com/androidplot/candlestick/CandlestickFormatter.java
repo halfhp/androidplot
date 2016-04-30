@@ -25,19 +25,31 @@ import com.androidplot.xy.XYRegionFormatter;
 import com.androidplot.xy.XYSeriesFormatter;
 
 /**
- * Format for drawing a value in a {@link CandlestickSeries}.
+ * Format for drawing a value using {@link CandlestickRenderer}.
  */
 public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
 
-    private Paint wickPaint = getDefaultStrokePaint(1.5f, Color.GREEN);
-    private Paint bodyFillPaint = getDefaultFillPaint(Color.YELLOW);
-    private Paint bodyStrokePaint = getDefaultStrokePaint(1.5f, Color.GREEN);
-    private Paint upperCapPaint = getDefaultStrokePaint(1.5f, Color.GREEN);
-    private Paint lowerCapPaint = getDefaultStrokePaint(1.5f, Color.GREEN);
+    private static final float DEFAULT_WIDTH_PIX = PixelUtils.dpToPix(10);
+    private static final float DEFAULT_STROKE_PIX = PixelUtils.dpToPix(2);
 
-    private float bodyWidth = PixelUtils.dpToPix(10f);
-    private float upperCapWidth = PixelUtils.dpToPix(10f);
-    private float lowerCapWidth = PixelUtils.dpToPix(10f);
+    private Paint wickPaint;
+    private Paint risingBodyFillPaint;
+    private Paint fallingBodyFillPaint;
+    private Paint risingBodyStrokePaint;
+    private Paint fallingBodyStrokePaint;
+    private Paint upperCapPaint;
+    private Paint lowerCapPaint;
+
+    private float bodyWidth = DEFAULT_WIDTH_PIX;
+    private float upperCapWidth = DEFAULT_WIDTH_PIX;
+    private float lowerCapWidth = DEFAULT_WIDTH_PIX;
+
+    private BodyStyle bodyStyle;
+
+    public enum BodyStyle {
+        Square,
+        Triangle
+    }
 
     protected static Paint getDefaultFillPaint(int color) {
         Paint p = new Paint();
@@ -46,12 +58,37 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
         return p;
     }
 
-    protected static Paint getDefaultStrokePaint(float strokeDp, int color) {
+    protected static Paint getDefaultStrokePaint(int color) {
         Paint p = new Paint();
         p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(PixelUtils.dpToPix(strokeDp));
+        p.setStrokeWidth(DEFAULT_STROKE_PIX);
         p.setColor(color);
+        p.setAntiAlias(true);
         return p;
+    }
+
+    public CandlestickFormatter() {
+        this(getDefaultStrokePaint(Color.YELLOW),
+                getDefaultFillPaint(Color.GREEN),
+                getDefaultFillPaint(Color.RED),
+                getDefaultStrokePaint(Color.GREEN),
+                getDefaultStrokePaint(Color.RED),
+                getDefaultStrokePaint(Color.YELLOW),
+                getDefaultStrokePaint(Color.YELLOW),
+                BodyStyle.Square);
+    }
+
+    public CandlestickFormatter(Paint wickPaint, Paint risingBodyFillPaint, Paint fallingBodyFillPaint,
+                                Paint risingBodyStrokePaint, Paint fallingBodyStrokePaint,
+                                Paint upperCapPaint, Paint lowerCapPaint, BodyStyle bodyStyle) {
+        setWickPaint(wickPaint);
+        setRisingBodyFillPaint(risingBodyFillPaint);
+        setFallingBodyFillPaint(fallingBodyFillPaint);
+        setRisingBodyStrokePaint(risingBodyStrokePaint);
+        setFallingBodyStrokePaint(fallingBodyStrokePaint);
+        setUpperCapPaint(upperCapPaint);
+        setLowerCapPaint(lowerCapPaint);
+        setBodyStyle(bodyStyle);
     }
 
     @Override
@@ -72,20 +109,20 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
         this.wickPaint = wickPaint;
     }
 
-    public Paint getBodyFillPaint() {
-        return bodyFillPaint;
+    public Paint getRisingBodyFillPaint() {
+        return risingBodyFillPaint;
     }
 
-    public void setBodyFillPaint(Paint bodyFillPaint) {
-        this.bodyFillPaint = bodyFillPaint;
+    public void setRisingBodyFillPaint(Paint risingBodyFillPaint) {
+        this.risingBodyFillPaint = risingBodyFillPaint;
     }
 
-    public Paint getBodyStrokePaint() {
-        return bodyStrokePaint;
+    public Paint getRisingBodyStrokePaint() {
+        return risingBodyStrokePaint;
     }
 
-    public void setBodyStrokePaint(Paint bodyStrokePaint) {
-        this.bodyStrokePaint = bodyStrokePaint;
+    public void setRisingBodyStrokePaint(Paint risingBodyStrokePaint) {
+        this.risingBodyStrokePaint = risingBodyStrokePaint;
     }
 
     public Paint getUpperCapPaint() {
@@ -126,5 +163,29 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
 
     public void setUpperCapWidth(float upperCapWidth) {
         this.upperCapWidth = upperCapWidth;
+    }
+
+    public Paint getFallingBodyFillPaint() {
+        return fallingBodyFillPaint;
+    }
+
+    public void setFallingBodyFillPaint(Paint fallingBodyFillPaint) {
+        this.fallingBodyFillPaint = fallingBodyFillPaint;
+    }
+
+    public Paint getFallingBodyStrokePaint() {
+        return fallingBodyStrokePaint;
+    }
+
+    public void setFallingBodyStrokePaint(Paint fallingBodyStrokePaint) {
+        this.fallingBodyStrokePaint = fallingBodyStrokePaint;
+    }
+
+    public BodyStyle getBodyStyle() {
+        return bodyStyle;
+    }
+
+    public void setBodyStyle(BodyStyle bodyStyle) {
+        this.bodyStyle = bodyStyle;
     }
 }

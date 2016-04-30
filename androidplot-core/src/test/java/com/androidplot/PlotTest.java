@@ -169,28 +169,17 @@ public class PlotTest {
 
     @Test
     public void testAddSeries() throws Exception {
-        //Context context = Mockit.setUpMock(new MockContext());
-        //Plot plot = Mockit.setUpMock(Plot.class, new MockPlot(context, "MockPlot"));
-        //Plot plot = Mockit.setUpMock(new MockPlot());
         Plot plot = new MockPlot("MockPlot");
 
         MockSeries m1 = new MockSeries();
         Class cl = MockRenderer1.class;
 
-
-
         plot.addSeries(m1, new MockFormatter1());
-
-        ArrayList<SeriesAndFormatter<MockSeries, MockFormatter1>> registry =
-                Deencapsulation.getField(plot, "seriesRegistry");
-        assertEquals(1, registry.size());
-        //assertEquals(1, registry.get(cl).size());
-
-        plot.addSeries(m1, new MockFormatter1());
+        assertEquals(1, plot.getSeriesRegistry().size());
 
         // duplicate Renderer added, registry size should not grow:
-        //assertEquals(1, registry.size());
-        //assertEquals(1, registry.get(cl).size());
+        plot.addSeries(m1, new MockFormatter1());
+
         assertEquals(1, plot.getRenderers().size());
         assertEquals(1, plot.getRenderer(cl).getSeriesList().size());
 
@@ -202,7 +191,6 @@ public class PlotTest {
         assertEquals(1, plot.getRendererList().size());
 
         // we added a new instance of cl to the renderer so there should be 2 in the subregistry:
-        //assertEquals(2, registry.get(cl).size());
         assertEquals(2, plot.getRenderer(cl).getSeriesList().size());
 
 
@@ -215,10 +203,7 @@ public class PlotTest {
     @Test
     public void testRemoveSeries() throws Exception {
 
-        //Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot("MockPlot");
-        ArrayList<SeriesAndFormatter<MockSeries, MockFormatter1>> registry =
-                Deencapsulation.getField(plot, "seriesRegistry");
 
         MockSeries m1 = new MockSeries();
         MockSeries m2 = new MockSeries();
@@ -235,30 +220,19 @@ public class PlotTest {
 
         // a quick sanity check:
         assertEquals(2, plot.getRendererList().size());
-        //assertEquals(3, registry.get(MockRenderer1.class).size());
         assertEquals(3, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
-        //assertEquals(3, registry.get(MockRenderer2.class).size());
         assertEquals(3, plot.getRenderer(MockRenderer2.class).getSeriesList().size());
 
         plot.removeSeries(m1, MockRenderer1.class);
-        //assertEquals(2, registry.get(MockRenderer1.class).size());
         assertEquals(2, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
 
         plot.removeSeries(m2, MockRenderer1.class);
-        //assertEquals(1, registry.get(MockRenderer1.class).size());
         assertEquals(1, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
 
         plot.removeSeries(m2, MockRenderer1.class);
-        //assertEquals(1, registry.get(MockRenderer1.class).size());
         assertEquals(1, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
 
         plot.removeSeries(m3, MockRenderer1.class);
-
-        // all the elements should be gone from MockRenderer1, thus the renderer should
-        // also be gone:
-        //assertNull(registry.get(MockRenderer1.class));
-        //assertNull(plot.getRenderer(MockRenderer1.class));
-
 
         // add em all back
         plot.addSeries(m1, new MockFormatter1());
@@ -272,36 +246,23 @@ public class PlotTest {
 
         // a quick sanity check:
         assertEquals(2, plot.getRendererList().size());
-        //assertEquals(3, registry.get(MockRenderer1.class).size());
         assertEquals(3, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
-        //assertEquals(3, registry.get(MockRenderer2.class).size());
         assertEquals(3, plot.getRenderer(MockRenderer2.class).getSeriesList().size());
 
         // now lets try removing a series from all renderers:
         plot.removeSeries(m1);
-        //assertEquals(2, registry.get(MockRenderer1.class).size());
         assertEquals(2, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
-        //assertEquals(2, registry.get(MockRenderer2.class).size());
         assertEquals(2, plot.getRenderer(MockRenderer2.class).getSeriesList().size());
 
         // and now lets remove the remaining series:
         plot.removeSeries(m2);
         plot.removeSeries(m3);
-
-        // nothing should be left:
-        //assertNull(registry.get(MockRenderer1.class));
-        //assertNull(plot.getRenderer(MockRenderer1.class));
-        //assertNull(registry.get(MockRenderer2.class));
-        //assertNull(plot.getRenderer(MockRenderer2.class));
     }
 
 
     @Test
     public void testGetFormatter() throws Exception {
-        //Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot("MockPlot");
-        ArrayList<SeriesAndFormatter<MockSeries, MockFormatter1>> registry =
-                Deencapsulation.getField(plot, "seriesRegistry");
 
         MockSeries m1 = new MockSeries();
         MockSeries m2 = new MockSeries();
@@ -319,15 +280,10 @@ public class PlotTest {
         plot.addSeries(m2, f3);
         plot.addSeries(m3, new MockFormatter1());
 
-
-        //assertEquals(registry.get(MockRenderer1.class).getFormatter(m1), f1);
         assertEquals(plot.getRenderer(MockRenderer1.class).getFormatter(m1), f1);
-        //assertEquals(registry.get(MockRenderer1.class).getFormatter(m2), f2);
         assertEquals(plot.getRenderer(MockRenderer1.class).getFormatter(m2), f2);
-        //assertEquals(registry.get(MockRenderer2.class).getFormatter(m2), f3);
         assertEquals(plot.getRenderer(MockRenderer2.class).getFormatter(m2), f3);
 
-        //assertNotSame(registry.get(MockRenderer2.class).getFormatter(m2), f1);
         assertNotSame(plot.getRenderer(MockRenderer2.class).getFormatter(m2), f1);
 
     }
@@ -335,9 +291,7 @@ public class PlotTest {
     @Test
     public void testGetRendererList() throws Exception {
 
-        //Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot("MockPlot");
-        //LinkedHashMap<Class<SeriesRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
         MockSeries m1 = new MockSeries();
         MockSeries m2 = new MockSeries();
@@ -353,17 +307,12 @@ public class PlotTest {
 
         List<SeriesRenderer> rList = plot.getRendererList();
         assertEquals(2, rList.size());
-
-        //assertEquals(MockRenderer1.class, rList.get(0).getClass());
-        //assertEquals(MockRenderer2.class, rList.get(1).getClass());
     }
 
     @Test
     public void testAddListener() throws Exception {
-        //Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot("MockPlot");
         ArrayList<PlotListener> listeners = Deencapsulation.getField(plot, "listeners");
-        //LinkedHashMap<Class<SeriesRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
         assertEquals(0, listeners.size());
 
@@ -388,10 +337,8 @@ public class PlotTest {
 
     @Test
     public void testRemoveListener() throws Exception {
-        //Context context = Mockit.setUpMock(new MockContext());
         Plot plot = new MockPlot("MockPlot");
         ArrayList<PlotListener> listeners = Deencapsulation.getField(plot, "listeners");
-        //LinkedHashMap<Class<SeriesRenderer>, SeriesAndFormatterList<MockSeries,MockFormatter1>> registry = Deencapsulation.getField(plot, "seriesRegistry");
 
         assertEquals(0, listeners.size());
 
@@ -420,45 +367,18 @@ public class PlotTest {
 
     }
 
-    /*@Test
-    public void testGuessGetterName() throws Exception {
-        Context context = Mockit.setUpMock(new MockContext());
-        Plot plot = new MockPlot(context, "MockPlot");
-
-        Method m = Plot.class.getDeclaredMethod("guessGetterMethod", Object.class, String.class);
-        assertNotNull(m);
-    }
-
-    @Test
-    public void testGuessSetterName() throws Exception {
-        Context context = Mockit.setUpMock(new MockContext());
-        Plot plot = new MockPlot(context, "MockPlot");
-
-        Method m = Plot.class.getDeclaredMethod("guessSetterMethod", Object.class, String.class, Class.class);
-        assertNotNull(m);
-    }*/
-
-
-
     @Test
     public void testConfigure() throws Exception {
-        //Context context = Mockit.setUpMock(new MockContext.MockContext2());
-        //Context context = new MockContext.MockContext2();
         Plot plot = new MockPlot("MockPlot");
 
         HashMap<String, String> params = new HashMap<String, String>();
         String param1 = "this is a test.";
-        //String param2 = Plot.RenderMode.USE_BACKGROUND_THREAD.toString();
         String param2 = "use_background_thread";
         String param3 = "#FF0000";
         params.put("title", param1);
         params.put("renderMode", param2);
         params.put("backgroundPaint.color", param3);
 
-
-        //Method m = Plot.class.getDeclaredMethod("configure", params.getClass());
-        //m.setAccessible(true);
-        //m.invoke(plot, params);
         Configurator.configure(RuntimeEnvironment.application, plot, params);
 
         assertEquals(param1, plot.getTitle());

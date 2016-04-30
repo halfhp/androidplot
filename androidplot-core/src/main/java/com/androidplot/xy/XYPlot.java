@@ -460,7 +460,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                         "Domain Framing Model not yet supported: " + constraints.getDomainFramingModel());
         }
 
-        switch (constraints.getDomainFramingModel()) {
+        switch (constraints.getRangeFramingModel()) {
             case ORIGIN:
                 updateRangeMinMaxForOriginModel();
                 break;

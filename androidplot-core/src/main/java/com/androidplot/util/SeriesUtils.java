@@ -28,6 +28,14 @@ import java.util.List;
  */
 public class SeriesUtils {
 
+    public static XYBounds minMax(List<XYSeries> seriesList) {
+        return minMax(null, seriesList);
+    }
+
+    public static XYBounds minMax(XYSeries... seriesList) {
+        return minMax(null, seriesList);
+    }
+
     /**
      * @param constraints may be null.
      * @param seriesList

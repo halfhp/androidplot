@@ -257,6 +257,15 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     @Override
     protected void processAttrs(TypedArray attrs) {
+
+        // graph size & position
+        AttrUtils.configureWidget(attrs, getGraphWidget(),
+                R.styleable.xy_XYPlot_graphHeightSizeLayoutType, R.styleable.xy_XYPlot_domainLabelHeight,
+                R.styleable.xy_XYPlot_graphWidthSizeLayoutType, R.styleable.xy_XYPlot_graphWidth,
+                R.styleable.xy_XYPlot_graphLayoutStyleX, R.styleable.xy_XYPlot_graphPositionX,
+                R.styleable.xy_XYPlot_graphLayoutStyleY, R.styleable.xy_XYPlot_graphPositionY,
+                R.styleable.xy_XYPlot_graphAnchorPosition, R.styleable.xy_XYPlot_graphVisible);
+
         String domainLabelAttr = attrs.getString(R.styleable.xy_XYPlot_domainLabel);
         if(domainLabelAttr != null) {
             setDomainLabel(domainLabelAttr);

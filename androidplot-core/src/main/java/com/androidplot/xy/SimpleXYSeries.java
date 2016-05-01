@@ -56,14 +56,14 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
         this.title = title;
     }
 
-    public SimpleXYSeries(ArrayFormat format, String title, double... model) {
+    public SimpleXYSeries(ArrayFormat format, String title, Number... model) {
         this(asNumberList(model), format, title);
     }
 
-    protected static List<Number> asNumberList(double... model) {
+    protected static List<Number> asNumberList(Number... model) {
         List<Number> numbers = new ArrayList<>();
-        for(double d : model) {
-            numbers.add(d);
+        for(Number n : model) {
+            numbers.add(n);
         }
         return numbers;
     }

@@ -32,7 +32,7 @@ public abstract class Widget implements BoxModelable, Resizable {
 
     private Paint borderPaint;
     private Paint backgroundPaint;
-    private boolean clippingEnabled = true;
+    private boolean clippingEnabled = false;
     private BoxModel boxModel = new BoxModel();
     private Size size;
     private DisplayDimensions plotDimensions = new DisplayDimensions();

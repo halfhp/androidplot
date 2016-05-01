@@ -35,6 +35,7 @@ public class TextLabelWidget extends Widget {
         labelPaint.setColor(Color.WHITE);
         labelPaint.setAntiAlias(true);
         labelPaint.setTextAlign(Paint.Align.CENTER);
+        setClippingEnabled(false);
     }
 
     public TextLabelWidget(LayoutManager layoutManager, Size size) {

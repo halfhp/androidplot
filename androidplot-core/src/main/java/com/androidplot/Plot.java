@@ -374,6 +374,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     private void processBaseAttrs(TypedArray attrs) {
 
+        // markup mode
+        boolean markupEnabled = attrs.getBoolean(R.styleable.Plot_markupEnabled, false);
+        setMarkupEnabled(markupEnabled);
+
         // renderMode
         RenderMode renderMode = RenderMode.values()
                 [attrs.getInt(R.styleable.Plot_renderMode, getRenderMode().ordinal())];

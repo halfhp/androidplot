@@ -30,7 +30,7 @@ import com.androidplot.xy.XYSeriesFormatter;
 public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
 
     private static final float DEFAULT_WIDTH_PIX = PixelUtils.dpToPix(10);
-    private static final float DEFAULT_STROKE_PIX = PixelUtils.dpToPix(2);
+    private static final float DEFAULT_STROKE_PIX = PixelUtils.dpToPix(4);
 
     private Paint wickPaint;
     private Paint risingBodyFillPaint;

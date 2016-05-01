@@ -38,17 +38,15 @@ public class LayoutManager extends ZLinkedList<Widget>
     private Paint paddingPaint;
     private DisplayDimensions displayDims = new DisplayDimensions();
 
-    // cache of widget rects
-    //private HashMap<Widget, DisplayDimensions> widgetRects;
-
     {
-        //widgetRects = new HashMap<Widget, DisplayDimensions>();
         anchorPaint = new Paint();
         anchorPaint.setStyle(Paint.Style.FILL);
         anchorPaint.setColor(Color.GREEN);
         outlinePaint = new Paint();
         outlinePaint.setColor(Color.GREEN);
         outlinePaint.setStyle(Paint.Style.STROKE);
+        outlinePaint.setAntiAlias(true);
+        outlinePaint.setStrokeWidth(2);
         marginPaint = new Paint();
         marginPaint.setColor(Color.YELLOW);
         marginPaint.setStyle(Paint.Style.FILL);
@@ -96,10 +94,7 @@ public class LayoutManager extends ZLinkedList<Widget>
                 PointF coords = widget.getElementCoordinates(elementHeight,
                         elementWidth, displayDims.paddedRect, metrics);
 
-                //RectF widgetRect = new RectF(coords.x, coords.y, coords.x + elementWidth, coords.y + elementHeight);
-                //DisplayDimensions dims = widgetRects.get(widget);
                 DisplayDimensions dims = widget.getWidgetDimensions();
-                //RectF widgetRect = widgetRects.get(widget);
 
                 if (drawOutlineShadowsEnabled) {
                     canvas.drawRect(dims.canvasRect, outlineShadowPaint);
@@ -109,14 +104,9 @@ public class LayoutManager extends ZLinkedList<Widget>
                 // so this is necessary to avoid clipping borders.  I suspect that its a floating point
                 // jitter issue.
                 if (widget.isClippingEnabled()) {
-                    //RectF clipRect = new RectF(l-1, t-1, r + 1, b + 1);
-                    //canvas.clipRect(clipRect, Region.Op.REPLACE);
                     canvas.clipRect(dims.canvasRect, Region.Op.INTERSECT);
                 }
                 widget.draw(canvas, dims.canvasRect);
-
-                //RectF marginatedWidgetRect = widget.getMarginatedRect(dims.canvasRect);
-                //RectF paddedWidgetRect = widget.getPaddedRect(marginatedWidgetRect);
 
                 if (drawMarginsEnabled) {
                     drawSpacing(canvas, dims.canvasRect, dims.marginatedRect, getMarginPaint());
@@ -135,23 +125,19 @@ public class LayoutManager extends ZLinkedList<Widget>
 
 
                 if (drawOutlinesEnabled) {
-                    outlinePaint.setAntiAlias(true);
                     canvas.drawRect(dims.canvasRect, outlinePaint);
                 }
             } finally {
-                //canvas.restoreToCount(canvasState);  // restore clipping etc.
                 canvas.restore();
             }
         }
     }
 
     private void drawSpacing(Canvas canvas, RectF outer, RectF inner, Paint paint) {
-        //int saved = canvas.save(Canvas.ALL_SAVE_FLAG);
         try {
             canvas.save(Canvas.ALL_SAVE_FLAG);
             canvas.clipRect(inner, Region.Op.DIFFERENCE);
             canvas.drawRect(outer, paint);
-            //canvas.restoreToCount(saved);
         } finally {
             canvas.restore();
         }
@@ -253,7 +239,6 @@ public class LayoutManager extends ZLinkedList<Widget>
      * to call this method as it is a relatively slow operation.
      */
     public void refreshLayout() {
-        //widgetRects.clear();
         for (Widget widget : elements()) {
             widget.layout(displayDims);
         }

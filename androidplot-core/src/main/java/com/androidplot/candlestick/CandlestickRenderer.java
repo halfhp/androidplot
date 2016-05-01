@@ -20,7 +20,7 @@ import android.graphics.*;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesAndFormatter;
 import com.androidplot.util.ValPixConverter;
-import com.androidplot.xy.ComplexRenderer;
+import com.androidplot.xy.GroupRenderer;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 
@@ -37,8 +37,9 @@ import java.util.List;
  * high, low, open, close
  *
  * {@link CandlestickMaker} simplified methods for setting up a candlestick chart.
+ * @since 0.9.7
  */
-public class CandlestickRenderer<FormatterType extends CandlestickFormatter> extends ComplexRenderer<FormatterType> {
+public class CandlestickRenderer<FormatterType extends CandlestickFormatter> extends GroupRenderer<FormatterType> {
 
     private static final int HIGH_INDEX = 0;
     private static final int LOW_INDEX = 1;

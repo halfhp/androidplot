@@ -528,6 +528,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param formatter
      * @param series
      * @return True if all series were successfully added, false otherwise.
+     * @since 0.9.7
      */
     public synchronized boolean addSeries(FormatterType formatter, SeriesType... series) {
         for(SeriesType s : series) {
@@ -572,7 +573,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @return The {@link SeriesAndFormatter} that matches the series and rendererClass params, or null if one is not found.
      */
     protected SeriesAndFormatter<SeriesType, FormatterType> getSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
-        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : seriesRegistry.asList()) {
+        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : seriesRegistry) {
             if(thisPair.getSeries() == series && thisPair.getFormatter().getRendererClass() == rendererClass) {
                 return thisPair;
             }
@@ -588,7 +589,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     protected List<SeriesAndFormatter<SeriesType, FormatterType>> getSeries(SeriesType series) {
         List<SeriesAndFormatter<SeriesType, FormatterType>> results =
                 new ArrayList<SeriesAndFormatter<SeriesType, FormatterType>>();
-        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : seriesRegistry.asList()) {
+        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : seriesRegistry) {
             if(thisPair.getSeries() == series) {
                 results.add(thisPair);
             }

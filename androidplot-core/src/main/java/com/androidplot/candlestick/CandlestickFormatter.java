@@ -26,6 +26,7 @@ import com.androidplot.xy.XYSeriesFormatter;
 
 /**
  * Format for drawing a value using {@link CandlestickRenderer}.
+ * @since 0.9.7
  */
 public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
 

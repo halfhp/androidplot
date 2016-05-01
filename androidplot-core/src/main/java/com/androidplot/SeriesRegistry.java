@@ -24,45 +24,17 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by halfhp on 1/16/16.
+ * Manages a list of {@link Series} and their associated {@link Formatter} in the context of a {@link Plot}.
+ * @since 0.9.7
  */
-public class SeriesRegistry<SeriesType extends Series, FormatterType extends Formatter> {
-
-    private ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> sfPairs;
-
-    {
-        sfPairs = new ArrayList<>();
-    }
-
-    public void add(SeriesAndFormatter<SeriesType, FormatterType> sfPair) {
-        sfPairs.add(sfPair);
-    }
-
-    public void remove(SeriesAndFormatter<SeriesType, FormatterType> sfPair) {
-        sfPairs.remove(sfPair);
-    }
-
-    public ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> asList() {
-        return sfPairs;
-    }
-
-    public Iterator<SeriesAndFormatter<SeriesType, FormatterType>> iterator() {
-        return sfPairs.iterator();
-    }
+public class SeriesRegistry<SeriesType extends Series, FormatterType extends Formatter>
+        extends ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> {
 
     public List<SeriesType> getSeriesList() {
         List<SeriesType> result = new ArrayList<>();
-        for(SeriesAndFormatter<SeriesType, FormatterType> sfPair : sfPairs) {
+        for(SeriesAndFormatter<SeriesType, FormatterType> sfPair : this) {
             result.add(sfPair.getSeries());
         }
         return result;
-    }
-
-    public boolean isEmpty() {
-        return sfPairs.isEmpty();
-    }
-
-    public int size() {
-        return sfPairs.size();
     }
 }

@@ -39,6 +39,7 @@ public class LineRegion {
      * @param v1
      * @param v2
      * @return The distance between val1 and val2 or null if either parameters are null.
+     * @since 0.9.7
      */
     public static Number measure(Number v1, Number v2) {
         return new LineRegion(v1, v2).length();

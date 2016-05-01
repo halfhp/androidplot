@@ -21,6 +21,7 @@ import com.androidplot.xy.XYSeries;
 
 /**
  * Helper utility to simplify the creation of of candlestick charts
+ * @since 0.9.7
  */
 public abstract class CandlestickMaker {
 

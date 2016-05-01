@@ -18,6 +18,7 @@ package com.androidplot;
 
 /**
  * Defines simple min/max boundary.  Differs from {@link LineRegion} in that it accepts null values.
+ * @since 0.9.7
  */
 public class Bounds {
 

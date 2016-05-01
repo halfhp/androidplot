@@ -18,6 +18,7 @@ package com.androidplot.xy;
 
 /**
  * Calculates the min/max constraints for an xy plane.
+ * @since 0.9.7
  */
 public class XYConstraints {
 

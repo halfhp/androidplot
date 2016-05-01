@@ -171,7 +171,7 @@ public class XYLegendWidget extends Widget {
         RectF cellRect;
 
         // draw each series legend item:
-        for(SeriesAndFormatter<XYSeries, XYSeriesFormatter> sfPair : plot.getSeriesRegistry().asList()) {
+        for(SeriesAndFormatter<XYSeries, XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
             cellRect = it.next();
             XYSeriesFormatter format = sfPair.getFormatter();
             drawSeriesLegendCell(canvas, plot.getRenderer(sfPair.getFormatter().getRendererClass()),

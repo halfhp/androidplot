@@ -28,13 +28,14 @@ import java.util.List;
 /**
  * Renders data to an XYPlot that potentially contains more than a single yVal per index.
  * Examples of such data are bar plot groups, candlestick charts, etc.
+ * @since 0.9.7
  */
-public abstract class ComplexRenderer<FormatterType extends XYSeriesFormatter<XYRegionFormatter>>
+public abstract class GroupRenderer<FormatterType extends XYSeriesFormatter<XYRegionFormatter>>
         extends XYSeriesRenderer<XYSeries, FormatterType>  {
 
-    private static final String TAG = ComplexRenderer.class.getName();
+    private static final String TAG = GroupRenderer.class.getName();
 
-    public ComplexRenderer(XYPlot plot) {
+    public GroupRenderer(XYPlot plot) {
         super(plot);
     }
 

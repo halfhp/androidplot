@@ -96,7 +96,7 @@ public abstract class SeriesRenderer
      */
     public List<SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType>> getSeriesAndFormatterList() {
         List<SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType>> results = new ArrayList<>();
-        ArrayList<SeriesAndFormatter> sfList = getPlot().getSeriesRegistry().asList();
+        ArrayList<SeriesAndFormatter> sfList = getPlot().getSeriesRegistry();
 
         for(SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType> thisPair : sfList) {
             if(thisPair.rendersWith(this)) {
@@ -106,9 +106,14 @@ public abstract class SeriesRenderer
         return results;
     }
 
+    /**
+     *
+     * @return
+     * @since 0.9.7
+     */
     public List<SeriesType> getSeriesList() {
         List<SeriesType> results = new ArrayList<>();
-        ArrayList<SeriesAndFormatter> sfList = getPlot().getSeriesRegistry().asList();
+        ArrayList<SeriesAndFormatter> sfList = getPlot().getSeriesRegistry();
 
         for(SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType> thisPair : sfList) {
             if(thisPair.rendersWith(this)) {

@@ -312,7 +312,7 @@ public class BarPlotExampleActivity extends Activity
 
 
             // find the closest value to the selection:
-            for (SeriesAndFormatter<XYSeries, ? extends XYSeriesFormatter> sfPair : plot.getSeriesRegistry().asList()) {
+            for (SeriesAndFormatter<XYSeries, ? extends XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
                 XYSeries series = sfPair.getSeries();
                 for (int i = 0; i < series.size(); i++) {
                     Number thisX = series.getX(i);

@@ -21,6 +21,7 @@ import com.androidplot.Bounds;
 /**
  * Defines a rectangle using xy min/max values.  XYBounds differs from {@link RectRegion} in that
  * it accepts null values.
+ * @since 0.9.7
  */
 public class XYBounds {
 

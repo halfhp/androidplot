@@ -69,7 +69,7 @@ public abstract class SeriesRenderer
      *              to gain effect.
      * @throws PlotRenderException
      */
-    public abstract void onRender(Canvas canvas, RectF plotArea, SeriesType series,
+    protected abstract void onRender(Canvas canvas, RectF plotArea, SeriesType series,
                                   SeriesFormatterType formatter, RenderStack stack) throws PlotRenderException;
 
     /**
@@ -94,13 +94,30 @@ public abstract class SeriesRenderer
      * @return A List of all {@link SeriesAndFormatter} instances currently associated
      * with this Renderer.
      */
-    public List<SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType>> getSeriesList() {
+    public List<SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType>> getSeriesAndFormatterList() {
         List<SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType>> results = new ArrayList<>();
         ArrayList<SeriesAndFormatter> sfList = getPlot().getSeriesRegistry();
 
-        for(SeriesAndFormatter thisPair : sfList) {
-            if(thisPair.getFormatter().getRendererClass() == getClass()) {
+        for(SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType> thisPair : sfList) {
+            if(thisPair.rendersWith(this)) {
                 results.add(thisPair);
+            }
+        }
+        return results;
+    }
+
+    /**
+     *
+     * @return
+     * @since 0.9.7
+     */
+    public List<SeriesType> getSeriesList() {
+        List<SeriesType> results = new ArrayList<>();
+        ArrayList<SeriesAndFormatter> sfList = getPlot().getSeriesRegistry();
+
+        for(SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType> thisPair : sfList) {
+            if(thisPair.rendersWith(this)) {
+                results.add(thisPair.getSeries());
             }
         }
         return results;

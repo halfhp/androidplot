@@ -108,7 +108,7 @@ public class XYPlotTest extends AndroidplotTest {
     @Test
     public void testOriginShrinkMode() throws Exception {
         plot.addSeries(series1, new LineAndPointFormatter());
-        plot.centerOnDomainOrigin(5, null, BoundaryMode.SHRINNK);
+        plot.centerOnDomainOrigin(5, null, BoundaryMode.SHRINK);
         plot.calculateMinMaxVals();
 
         assertEquals(0.0, plot.getCalculatedMinX());
@@ -176,7 +176,7 @@ public class XYPlotTest extends AndroidplotTest {
         // back to big
         series1.setModel(numList2,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         
-        plot.setDomainBoundaries(2, BoundaryMode.SHRINNK, 8, BoundaryMode.SHRINNK);
+        plot.setDomainBoundaries(2, BoundaryMode.SHRINK, 8, BoundaryMode.SHRINK);
         plot.calculateMinMaxVals();
 
         // check inital
@@ -259,7 +259,7 @@ public class XYPlotTest extends AndroidplotTest {
         // back to big
         series1.setModel(numList2,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         
-        plot.setRangeBoundaries(2, BoundaryMode.SHRINNK, 8, BoundaryMode.SHRINNK);
+        plot.setRangeBoundaries(2, BoundaryMode.SHRINK, 8, BoundaryMode.SHRINK);
         plot.calculateMinMaxVals();
 
         // check inital

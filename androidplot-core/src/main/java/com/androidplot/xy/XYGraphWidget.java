@@ -251,7 +251,8 @@ public class XYGraphWidget extends Widget {
         setMarginBottom(4);
         rangeValueFormat = new DecimalFormat("0.0");
         domainValueFormat = new DecimalFormat("0.0");
-        axisValueLabelRegions = new ZHash<RectRegion, AxisValueLabelFormatter>();
+        axisValueLabelRegions = new ZHash<>();
+        setClippingEnabled(true);
     }
 
     public XYGraphWidget(LayoutManager layoutManager, XYPlot plot, Size size) {

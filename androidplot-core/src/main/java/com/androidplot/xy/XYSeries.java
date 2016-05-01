@@ -16,7 +16,6 @@
 
 package com.androidplot.xy;
 
-import android.util.Pair;
 import com.androidplot.Series;
 
 /**
@@ -27,7 +26,7 @@ public interface XYSeries extends Series {
     /**
      * @return Number of elements in this Series.
      */
-    public int size();
+    int size();
 
     /**
      * Returns the x-value for an index within a series.
@@ -37,7 +36,7 @@ public interface XYSeries extends Series {
      *
      * @return The x-value.
      */
-    public Number getX(int index);
+    Number getX(int index);
 
     /**
      * Returns the y-value for an index within a series.
@@ -47,5 +46,13 @@ public interface XYSeries extends Series {
      *
      * @return The y-value.
      */
-    public Number getY(int index);
+    Number getY(int index);
+
+//    /**
+//     * Optional method to optimize min/max value calculation.  Implementations that do not wish to provide the
+//     * optimization should simply return null.
+//     * @return An instance of {@link XYBounds} containing xy min/max values.
+//     * @since 0.9.7
+//     */
+//    XYBounds getBounds();
 }

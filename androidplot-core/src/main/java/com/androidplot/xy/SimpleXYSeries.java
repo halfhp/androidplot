@@ -20,9 +20,7 @@ import android.graphics.Canvas;
 import com.androidplot.Plot;
 import com.androidplot.PlotListener;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
@@ -57,6 +55,19 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
     public SimpleXYSeries(String title) {
         this.title = title;
     }
+
+    public SimpleXYSeries(ArrayFormat format, String title, Number... model) {
+        this(asNumberList(model), format, title);
+    }
+
+    protected static List<Number> asNumberList(Number... model) {
+        List<Number> numbers = new ArrayList<>();
+        for(Number n : model) {
+            numbers.add(n);
+        }
+        return numbers;
+    }
+
     /**
      * Generates an XYSeries instance from the List of numbers passed in.  This is a convenience class
      * and should only be used for static data models; it is not suitable for representing dynamically

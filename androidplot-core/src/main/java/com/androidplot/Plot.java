@@ -66,7 +66,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      * Associates lists series and getFormatter pairs with the class of the Renderer used to render them.
      */
-    public ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> getSeriesRegistry() {
+    public SeriesRegistry<SeriesType, FormatterType> getSeriesRegistry() {
         return seriesRegistry;
     }
 
@@ -138,9 +138,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private final Object renderSynch = new Object();
 
     private HashMap<Class<? extends RendererType>, RendererType> renderers;
-
-    private ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> seriesRegistry;
-
+    private SeriesRegistry<SeriesType, FormatterType> seriesRegistry;
     private final ArrayList<PlotListener> listeners;
 
     private Thread renderThread;
@@ -149,7 +147,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     {
         listeners = new ArrayList<>();
-        seriesRegistry = new ArrayList<>();
+        seriesRegistry = new SeriesRegistry<>();
         renderers = new HashMap<>();
 
         borderPaint = new Paint();
@@ -376,6 +374,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     private void processBaseAttrs(TypedArray attrs) {
 
+        // markup mode
+        boolean markupEnabled = attrs.getBoolean(R.styleable.Plot_markupEnabled, false);
+        setMarkupEnabled(markupEnabled);
+
         // renderMode
         RenderMode renderMode = RenderMode.values()
                 [attrs.getInt(R.styleable.Plot_renderMode, getRenderMode().ordinal())];
@@ -520,6 +522,24 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     /**
+     * Convenience method to add a multiple series at once using the same formatter.
+     * If a problem is encountered, the method immediately returns false and the plot
+     * will contain whatever series were added before the failure.
+     * @param formatter
+     * @param series
+     * @return True if all series were successfully added, false otherwise.
+     * @since 0.9.7
+     */
+    public synchronized boolean addSeries(FormatterType formatter, SeriesType... series) {
+        for(SeriesType s : series) {
+            if(!addSeries(s, formatter)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Add a new Series to the Plot.
      * @param series
      * @param formatter
@@ -553,7 +573,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @return The {@link SeriesAndFormatter} that matches the series and rendererClass params, or null if one is not found.
      */
     protected SeriesAndFormatter<SeriesType, FormatterType> getSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
-        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : getSeriesRegistry()) {
+        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : seriesRegistry) {
             if(thisPair.getSeries() == series && thisPair.getFormatter().getRendererClass() == rendererClass) {
                 return thisPair;
             }
@@ -569,7 +589,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     protected List<SeriesAndFormatter<SeriesType, FormatterType>> getSeries(SeriesType series) {
         List<SeriesAndFormatter<SeriesType, FormatterType>> results =
                 new ArrayList<SeriesAndFormatter<SeriesType, FormatterType>>();
-        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : getSeriesRegistry()) {
+        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : seriesRegistry) {
             if(thisPair.getSeries() == series) {
                 results.add(thisPair);
             }

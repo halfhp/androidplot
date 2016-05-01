@@ -26,7 +26,6 @@ import java.util.TreeMap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesAndFormatter;
 import com.androidplot.util.ValPixConverter;
@@ -34,7 +33,7 @@ import com.androidplot.util.ValPixConverter;
 /**
  * Renders the points in an XYSeries as bars.
  */
-public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRenderer<FormatterType> {
+public class BarRenderer<FormatterType extends BarFormatter> extends GroupRenderer<FormatterType> {
 
     private BarRenderStyle renderStyle = BarRenderStyle.OVERLAID;  // default Render Style
 	private BarWidthStyle widthStyle = BarWidthStyle.FIXED_WIDTH;  // default Width Style
@@ -57,7 +56,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRen
         super(plot);
     }
 
-    /**
+	/**
      * Sets the width of the bars when using the FIXED_WIDTH render style
      * @param barWidth
      */
@@ -120,38 +119,28 @@ public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRen
         return null;
     }
 
-    @Override
-    public void onRender(Canvas canvas, RectF plotArea, XYSeries series,
-                         FormatterType barFormatter, RenderStack stack) throws PlotRenderException {
 
-        // get all the series associated with this renderer:
-        List<SeriesAndFormatter<XYSeries, ? extends FormatterType>> sfPairList = getSeriesList();
+	@Override
+	public void onRender(Canvas canvas, RectF plotArea, List<SeriesAndFormatter<XYSeries,
+			? extends FormatterType>> sfList, int seriesSize, RenderStack stack) {
 
-        // this renderer uses special element-by-element z-indexing that results in
-        // all series associated with the renderer being rendered in a single pass, so
-        // we need to exclude the rest of the series on the render stack from being redrawn later:
-        stack.disable(getClass());
-    	
     	TreeMap<Number, BarGroup> axisMap = new TreeMap<Number, BarGroup>();
-    	
-        // dont try to render anything if there's nothing to render.
-        if(sfPairList == null) return;
 
-        /* 
+        /*
          * Build the axisMap (yVal,BarGroup)... a TreeMap of BarGroups
          * BarGroups represent a point on the X axis where a single or group of bars need to be drawn.
          */
-        for(SeriesAndFormatter<XYSeries, ? extends FormatterType> thisPair : sfPairList) {
+        for(SeriesAndFormatter<XYSeries, ? extends FormatterType> thisPair : sfList) {
         	BarGroup barGroup;
-        	
+
             // For each value in the series
-            for(int i = 0; i < thisPair.getSeries().size(); i++) {
-            	
+            for(int i = 0; i < seriesSize; i++) {
+
                	if (thisPair.getSeries().getX(i) != null) {
 
             		// get a new bar object
             		Bar bar = new Bar(thisPair.getSeries(), thisPair.getFormatter(),i,plotArea);
-	            	
+
             		// Find or create the barGroup
 	            	if (axisMap.containsKey(bar.intX)) {
 	            		barGroup = axisMap.get(bar.intX);
@@ -168,12 +157,11 @@ public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRen
 		BarGroup prev, current;
 		prev = null;
 		for(Entry<Number, BarGroup> mapEntry : axisMap.entrySet()) {
-			current = mapEntry.getValue(); 
+			current = mapEntry.getValue();
     		current.prev = prev;
     		prev = current;
 		}
 
-		
 		// The default gap between each bar section
 		int gap  = (int) barGap;
 
@@ -186,9 +174,9 @@ public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRen
 			gap = rough_width / 2;
 		}
 
-		/* 
+		/*
 		 * Calculate the dimensions of each barGroup and then draw each bar within it according to
-		 * the Render Style and Width Style. 
+		 * the Render Style and Width Style.
 		 */
 		for(Number key : axisMap.keySet()) {
 
@@ -228,7 +216,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRen
 			default:
 				break;
 			}
-    		
+
     		/*
     		 * Draw the bars within the barGroup area.
     		 */
@@ -324,8 +312,8 @@ public class BarRenderer<FormatterType extends BarFormatter> extends XYSeriesRen
 			}
 		}
     }
-    
-    public class Bar {
+
+	public class Bar {
         public final XYSeries series;
         private final FormatterType formatter;
 		public final int seriesIndex;

@@ -38,4 +38,8 @@ public class SeriesAndFormatter<SeriesType extends Series, FormatterType extends
     public FormatterType getFormatter() {
         return formatter;
     }
+
+    public boolean rendersWith(SeriesRenderer renderer) {
+        return getFormatter().getRendererClass() == renderer.getClass();
+    }
 }

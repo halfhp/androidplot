@@ -323,17 +323,17 @@ public class BarPlotExampleActivity extends Activity
                         double thisYDistance =
                                 LineRegion.measure(y, thisY).doubleValue();
                         if (selection == null) {
-                            selection = new Pair<Integer, XYSeries>(i, series);
+                            selection = new Pair<>(i, series);
                             xDistance = thisXDistance;
                             yDistance = thisYDistance;
                         } else if (thisXDistance < xDistance) {
-                            selection = new Pair<Integer, XYSeries>(i, series);
+                            selection = new Pair<>(i, series);
                             xDistance = thisXDistance;
                             yDistance = thisYDistance;
                         } else if (thisXDistance == xDistance &&
                                 thisYDistance < yDistance &&
                                 thisY.doubleValue() >= y.doubleValue()) {
-                            selection = new Pair<Integer, XYSeries>(i, series);
+                            selection = new Pair<>(i, series);
                             xDistance = thisXDistance;
                             yDistance = thisYDistance;
                         }

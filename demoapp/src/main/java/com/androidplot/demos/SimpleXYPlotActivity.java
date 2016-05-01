@@ -22,6 +22,11 @@ import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.*;
+
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.Arrays;
 
 /**
@@ -40,8 +45,6 @@ public class SimpleXYPlotActivity extends Activity
 
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.plot);
-
-        plot.getLayoutManager().moveToBottom(plot.getTitleWidget());
 
         // create a couple arrays of y-values to plot:
         Number[] series1Numbers = {1, 4, 2, 8, 4, 16, 8, 32, 16, 64};

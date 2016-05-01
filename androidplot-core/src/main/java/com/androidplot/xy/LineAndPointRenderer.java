@@ -27,7 +27,7 @@ import java.util.List;
  * Renders a point as a line with the vertices marked.  Requires 2 or more points to
  * be rendered.
  */
-public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> extends XYSeriesRenderer<FormatterType> {
+public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> extends XYSeriesRenderer<XYSeries, FormatterType> {
 
     protected static final int ZERO = 0;
     protected static final int ONE = 1;

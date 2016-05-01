@@ -62,12 +62,10 @@ public class RectRegion {
     }
 
     public boolean containsDomainValue(Number value) {
-        //return RectRegion.isBetween(value, minX, maxX);
         return xLineRegion.contains(value);
     }
 
     public boolean containsRangeValue(Number value) {
-        //return RectRegion.isBetween(value, minY, maxY);
         return yLineRegion.contains(value);
     }
 

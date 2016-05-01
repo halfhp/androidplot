@@ -7,6 +7,7 @@ A library for creating dynamic and static charts in Android apps. It’s designe
 * Bar Charts
 * Pie Charts
 * Step Charts
+* (NEW) Candlestick Charts
 
 ##### Website http://androidplot.com
 ##### Bitbucket Repo: (Primary) https://bitbucket.org/androidplot/androidplot
@@ -24,7 +25,7 @@ To use the library in your gradle project add the following to your `build.gradl
 
 ```groovy
 dependencies {
-    compile 'com.androidplot:androidplot-core:0.9.6'
+    compile 'com.androidplot:androidplot-core:0.9.7'
 }
 ```
 

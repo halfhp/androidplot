@@ -14,15 +14,12 @@
  *    limitations under the License.
  */
 
-package com.androidplot.candlestick;
+package com.androidplot.xy;
 
 import android.graphics.*;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesAndFormatter;
 import com.androidplot.util.ValPixConverter;
-import com.androidplot.xy.GroupRenderer;
-import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYSeries;
 
 import java.util.List;
 
@@ -36,7 +33,8 @@ import java.util.List;
  * - Expects that series are added in the order of:
  * high, low, open, close
  *
- * {@link CandlestickMaker} simplified methods for setting up a candlestick chart.
+ * {@link CandlestickSeries} and {@link CandlestickMaker} provide simplified classes and methods
+ * for setting up a candlestick chart.
  * @since 0.9.7
  */
 public class CandlestickRenderer<FormatterType extends CandlestickFormatter> extends GroupRenderer<FormatterType> {

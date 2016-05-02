@@ -24,6 +24,7 @@
         android:id="@+id/plot"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        ap:previewMode="candlestick"
         ap:label="A Candlestick Chart"
         ap:rangeLabel="range"
         ap:domainLabel="domain"

@@ -14,15 +14,12 @@
  *    limitations under the License.
  */
 
-package com.androidplot.candlestick;
+package com.androidplot.xy;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYRegionFormatter;
-import com.androidplot.xy.XYSeriesFormatter;
 
 /**
  * Format for drawing a value using {@link CandlestickRenderer}.

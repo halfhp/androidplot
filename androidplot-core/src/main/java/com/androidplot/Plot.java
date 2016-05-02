@@ -300,11 +300,20 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     /**
-     * Concrete implementations should do any final setup / initialization
+     * Concrete implementations may do any final setup / initialization
      * here.  Immediately following this method's invocation, AndroidPlot assumes
      * that the Plot instance is ready for final configuration via the Configurator.
      */
-    protected abstract void onPreInit();
+    protected void onPreInit() {
+        // nothing to do by default
+    }
+
+    /**
+     * Invoked immediately following configurator / styleable attr application.
+     */
+    protected void onAfterConfig() {
+        // nothing to do by default
+    }
 
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
@@ -327,6 +336,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         if(context != null && attrs != null) {
             loadAttrs(attrs, defStyle);
         }
+
+        onAfterConfig();
 
         layoutManager.onPostInit();
         if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {

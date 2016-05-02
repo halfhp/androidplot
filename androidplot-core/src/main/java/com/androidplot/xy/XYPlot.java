@@ -131,6 +131,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     private RectRegion defaultBounds;
 
+    private PreviewMode previewMode;
+    public enum PreviewMode {
+        LineAndPoint,
+        Candlestick,
+        Bar
+    }
+
     public XYPlot(Context context, String title) {
         super(context, title);
     }
@@ -241,22 +248,49 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
         setDefaultBounds(new RectRegion(-1, 1, -1, 1));
 
-        // display some generic series data in editors that support it:
-        if(isInEditMode()) {
-            addSeries(new SimpleXYSeries(Arrays.asList(1, 2, 3, 3, 4), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Red"),
-                    new LineAndPointFormatter(Color.RED, null, null, null));
-            addSeries(new SimpleXYSeries(Arrays.asList(2, 1, 4, 2, 5), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Green"),
-                    new LineAndPointFormatter(Color.GREEN, null, null, null));
-            addSeries(new SimpleXYSeries(Arrays.asList(3, 3, 2, 3, 3), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Blue"),
-                    new LineAndPointFormatter(Color.BLUE, null, null, null));
-        }
-
         domainStepModel = new XYStepModel(XYStepMode.SUBDIVIDE, 10);
         rangeStepModel = new XYStepModel(XYStepMode.SUBDIVIDE, 10);
     }
 
     @Override
+    protected void onAfterConfig() {
+        // display some generic series data in editors that support it:
+        if(isInEditMode()) {
+
+            switch (previewMode) {
+                case LineAndPoint: {
+                    addSeries(new SimpleXYSeries(Arrays.asList(1, 2, 3, 3, 4), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Red"),
+                            new LineAndPointFormatter(Color.RED, null, null, null));
+                    addSeries(new SimpleXYSeries(Arrays.asList(2, 1, 4, 2, 5), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Green"),
+                            new LineAndPointFormatter(Color.GREEN, null, null, null));
+                    addSeries(new SimpleXYSeries(Arrays.asList(3, 3, 2, 3, 3), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Blue"),
+                            new LineAndPointFormatter(Color.BLUE, null, null, null));
+                }
+                break;
+                case Candlestick: {
+                    CandlestickSeries candlestickSeries = new CandlestickSeries(
+                            new CandlestickSeries.Item(1, 10, 2, 9),
+                            new CandlestickSeries.Item(4, 18, 6, 5),
+                            new CandlestickSeries.Item(3, 11, 5, 10),
+                            new CandlestickSeries.Item(2, 17, 2, 15),
+                            new CandlestickSeries.Item(6, 11, 11, 7),
+                            new CandlestickSeries.Item(8, 16, 10, 15));
+                    CandlestickMaker.make(this, new CandlestickFormatter(), candlestickSeries);
+                }
+                break;
+                case Bar: {
+                    throw new UnsupportedOperationException("Not yet implemented.");
+                }
+                default:
+                    throw new UnsupportedOperationException("Unexpected preview mode: " + previewMode);
+            }
+        }
+    }
+
+    @Override
     protected void processAttrs(TypedArray attrs) {
+        this. previewMode = PreviewMode.values()[attrs.getInt(
+                R.styleable.xy_XYPlot_previewMode, PreviewMode.LineAndPoint.ordinal())];
 
         // graph size & position
         AttrUtils.configureWidget(attrs, getGraphWidget(),

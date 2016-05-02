@@ -22,6 +22,12 @@
         <enum name="use_main_thread" value="0"/>
     </attr>
 
+    <attr name="previewMode" format="enum">
+        <enum name="line_and_point" value = "0"/>
+        <enum name="candlestick" value = "1"/>
+        <enum name="bar" value = "2"/>
+    </attr>
+
     <attr name="domainStepMode" format="enum">
         <enum name="subdivide" value="0"/>
         <enum name="increment_by_val" value="1"/>
@@ -230,6 +236,8 @@
 
     <!-- XYPlot -->
     <declare-styleable name="xy.XYPlot" parent="@style/Plot">
+
+        <attr name="previewMode"/>
 
         <attr name="domainStepMode"/>
         <attr name="domainStep" format="dimension|float|integer"/>

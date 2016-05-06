@@ -14,15 +14,12 @@
  *    limitations under the License.
  */
 
-package com.androidplot.candlestick;
+package com.androidplot.xy;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYRegionFormatter;
-import com.androidplot.xy.XYSeriesFormatter;
 
 /**
  * Format for drawing a value using {@link CandlestickRenderer}.
@@ -188,5 +185,15 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
 
     public void setBodyStyle(BodyStyle bodyStyle) {
         this.bodyStyle = bodyStyle;
+    }
+
+    /**
+     * Convenience method to set caps and wick to a single color in one call.
+     * @param paint
+     */
+    public void setCapAndWickPaint(Paint paint) {
+        setUpperCapPaint(paint);
+        setLowerCapPaint(paint);
+        setWickPaint(paint);
     }
 }

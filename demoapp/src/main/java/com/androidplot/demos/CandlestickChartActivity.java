@@ -19,9 +19,11 @@ package com.androidplot.demos;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.graphics.Paint;
 import android.os.Bundle;
-import com.androidplot.candlestick.CandlestickFormatter;
-import com.androidplot.candlestick.CandlestickMaker;
+import com.androidplot.xy.CandlestickFormatter;
+import com.androidplot.xy.CandlestickMaker;
+import com.androidplot.xy.CandlestickSeries;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.*;
 
@@ -29,8 +31,6 @@ import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A simple example of a candlestick chart rendered on an {@link XYPlot}.
@@ -49,53 +49,55 @@ public class CandlestickChartActivity extends Activity
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.plot);
 
-
-        // create our min, max, high and low values:
-        List<Number> xVals = Arrays.asList(new Number[]{1, 2, 3, 4, 5});
-        XYSeries highVals = new SimpleXYSeries(xVals,
-                Arrays.asList(12, 10, 15, 8, 7), "high");
-        XYSeries lowVals = new SimpleXYSeries(xVals,
-                Arrays.asList(3, 1, 5, 0, 2), "low");
-        XYSeries openVals = new SimpleXYSeries(xVals,
-                Arrays.asList(5, 2, 7, 5, 3), "open");
-        XYSeries closeVals = new SimpleXYSeries(xVals,
-                Arrays.asList(7, 9, 6, 0, 4), "close");
+        CandlestickSeries candlestickSeries = new CandlestickSeries(
+                new CandlestickSeries.Item(1, 10, 2, 9),
+                new CandlestickSeries.Item(4, 18, 6, 5),
+                new CandlestickSeries.Item(3, 11, 5, 10),
+                new CandlestickSeries.Item(2, 17, 2, 15),
+                new CandlestickSeries.Item(6, 11, 11, 7),
+                new CandlestickSeries.Item(8, 16, 10, 15));
 
         // draw a simple line plot of the close vals:
-        LineAndPointFormatter lpf = new LineAndPointFormatter(Color.WHITE, Color.WHITE, null, null);
+        LineAndPointFormatter lpf = new LineAndPointFormatter(Color.BLACK, Color.BLACK, null, null);
         lpf.getLinePaint().setPathEffect(
                 new DashPathEffect(
                         new float[]{PixelUtils.dpToPix(5), PixelUtils.dpToPix(5)}, 0));
         lpf.setInterpolationParams(
                 new CatmullRomInterpolator.Params(20, CatmullRomInterpolator.Type.Centripetal));
 
-        plot.addSeries(closeVals, lpf);
+        plot.addSeries(candlestickSeries.getCloseSeries(), lpf);
 
         CandlestickFormatter formatter = new CandlestickFormatter();
+        Paint p = formatter.getWickPaint();
+        p.setColor(Color.BLACK);
+        formatter.setCapAndWickPaint(p);
+        formatter.setRisingBodyStrokePaint(p);
+        formatter.setFallingBodyStrokePaint(p);
 
         // draw candlestick bodies as triangles instead of squares:
         // triangles will point up for items that closed higher than they opened
         // and down for those that closed lower:
-        formatter.setBodyStyle(CandlestickFormatter.BodyStyle.Triangle);
+        formatter.setBodyStyle(CandlestickFormatter.BodyStyle.Square);
 
         // add the candlestick series data to the plot:
-        CandlestickMaker.make(plot, formatter,
-                openVals, closeVals, highVals, lowVals);
+        CandlestickMaker.make(plot, formatter, candlestickSeries);
 
-        // setup the range label formatting, etc:
-        plot.setRangeLabel("Amount");
+        // setup the range tick label formatting, etc:
         plot.setTicksPerRangeLabel(3);
 
         plot.setRangeValueFormat(new DecimalFormat("$0.00"));
 
-        // setup the domain label formatting, etc:
-        plot.setDomainBoundaries(0, 6, BoundaryMode.FIXED);
-        plot.setDomainLabel("Day");
+        // setup the domain tick label formatting, etc:
+        plot.setDomainBoundaries(-1, 6, BoundaryMode.FIXED);
         plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
         plot.setDomainValueFormat(new Format() {
             @Override
             public StringBuffer format(Object object, StringBuffer buffer, FieldPosition field) {
-                switch(((Number) object).intValue()) {
+                int day = ((Number) object).intValue() % 7;
+                switch(day) {
+                    case 0:
+                        buffer.append("Sun");
+                        break;
                     case 1:
                         buffer.append("Mon");
                         break;
@@ -111,6 +113,8 @@ public class CandlestickChartActivity extends Activity
                     case 5:
                         buffer.append("Fri");
                         break;
+                    case 6:
+                        buffer.append("Sat");
                     default:
                         // show nothing
 

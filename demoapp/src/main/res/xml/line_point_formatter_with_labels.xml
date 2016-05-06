@@ -21,4 +21,4 @@
     vertexPaint.color="#007700"
     vertexPaint.strokeWidth="20dp"
     fillPaint.color="#00000000"
-    pointLabelFormatter.textPaint.color="#FFFFFF"/>
+    pointLabelFormatter.textPaint.color="#CCCCCC"/>

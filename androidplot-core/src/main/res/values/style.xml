@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 AndroidPlot.com
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<resources>
+
+    <style name="APDefacto">
+        <item name="gridPaddingTop">20dp</item>
+        <item name="gridPaddingBottom">20dp</item>
+        <item name="gridPaddingLeft">20dp</item>
+        <item name="gridPaddingRight">20dp</item>
+        <item name="labelTextSize">20sp</item>
+        <item name="rangeLabelTextSize">13sp</item>
+        <item name="domainLabelTextSize">13sp</item>
+        <item name="graphMarginTop">20dp</item>
+        <item name="graphMarginBottom">40dp</item>
+        <item name="graphMarginLeft">15dp</item>
+        <item name="graphMarginRight">10dp</item>
+        <item name="graphDomainLineThickness">1dp</item>
+        <item name="graphRangeLineThickness">1dp</item>
+        <item name="rangeTickLabelTextSize">15sp</item>
+        <item name="rangeOriginTickLabelTextSize">15sp</item>
+        <item name="domainTickLabelTextSize">15sp</item>
+        <item name="domainOriginTickLabelTextSize">15sp</item>
+        <item name="legendTextSize">15sp</item>
+        <item name="legendIconHeight">15dp</item>
+        <item name="legendIconWidth">15dp</item>
+        <item name="legendHeight">25dp</item>
+        <item name="legendAnchorPosition">right_bottom</item>
+        <item name="borderColor">@color/ap_transparent</item>
+    </style>
+
+    <style name="APDefacto.Dark">
+        <item name="android:background">@color/ap_black</item>
+        <item name="backgroundColor">@color/ap_black</item>
+        <item name="graphBackgroundColor">@color/ap_black</item>
+        <item name="gridBackgroundColor">@color/ap_charcoal</item>
+        <item name="graphDomainLineColor">@color/off_white</item>
+        <item name="graphRangeLineColor">@color/off_white</item>
+        <item name="rangeTickLabelTextColor">@color/off_white</item>
+        <item name="domainTickLabelTextColor">@color/off_white</item>
+        <item name="domainOriginTickLabelTextColor">@color/off_white</item>
+        <item name="rangeOriginTickLabelTextColor">@color/off_white</item>
+        <item name="domainOriginLineColor">@color/off_white</item>
+        <item name="rangeOriginLineColor">@color/off_white</item>
+        <item name="labelTextColor">@color/ap_white</item>
+        <item name="domainLabelTextColor">@color/ap_white</item>
+        <item name="rangeLabelTextColor">@color/ap_white</item>
+        <item name="legendTextColor">@color/ap_white</item>
+    </style>
+
+    <style name="APDefacto.Light">
+        <item name="android:background">@color/off_white</item>
+        <item name="backgroundColor">@color/off_white</item>
+        <item name="graphBackgroundColor">@color/off_white</item>
+        <item name="gridBackgroundColor">@color/ap_white</item>
+        <item name="graphDomainLineColor">@color/ap_gray</item>
+        <item name="graphRangeLineColor">@color/ap_gray</item>
+        <item name="rangeTickLabelTextColor">@color/ap_charcoal</item>
+        <item name="domainTickLabelTextColor">@color/ap_charcoal</item>
+        <item name="domainOriginTickLabelTextColor">@color/ap_charcoal</item>
+        <item name="rangeOriginTickLabelTextColor">@color/ap_charcoal</item>
+        <item name="domainOriginLineColor">@color/ap_charcoal</item>
+        <item name="rangeOriginLineColor">@color/ap_charcoal</item>
+        <item name="labelTextColor">@color/ap_black</item>
+        <item name="domainLabelTextColor">@color/ap_black</item>
+        <item name="rangeLabelTextColor">@color/ap_black</item>
+        <item name="legendTextColor">@color/ap_black</item>
+    </style>
+
+    <style name="FullScreenGraph">
+        <item name="gridPaddingTop">0dp</item>
+        <item name="gridPaddingBottom">0dp</item>
+        <item name="gridPaddingLeft">1dp</item>
+        <item name="gridPaddingRight">0dp</item>
+        <item name="gridMarginTop">0dp</item>
+        <item name="gridMarginBottom">0dp</item>
+        <item name="gridMarginLeft">0dp</item>
+        <item name="gridMarginRight">0dp</item>
+        <item name="graphMarginTop">0dp</item>
+        <item name="graphMarginBottom">0dp</item>
+        <item name="graphMarginLeft">0dp</item>
+        <item name="graphMarginRight">0dp</item>
+        <item name="graphHeightSizeLayoutType">fill</item>
+        <item name="graphWidthSizeLayoutType">fill</item>
+        <item name="graphHeight">0</item>
+        <item name="graphWidth">0</item>
+        <item name="graphDomainLineThickness">1dp</item>
+        <item name="graphLayoutStyleX">absolute_from_left</item>
+        <item name="graphLayoutStyleY">absolute_from_top</item>
+        <item name="graphRangeLineThickness">1dp</item>
+        <item name="graphAnchorPosition">left_top</item>
+        <item name="graphPositionX">0dp</item>
+        <item name="graphPositionY">0dp</item>
+        <item name="legendVisible">false</item>
+        <item name="domainTickLabelWidth">0dp</item>
+        <item name="rangeTickLabelWidth">0dp</item>
+    </style>
+
+    <style name="FullScreenGraph.Minimalist">
+        <item name="android:padding">0dp</item>
+        <item name="android:layout_margin">0dp</item>
+        <item name="domainTickExtension">0dp</item>
+        <item name="rangeTickExtension">0dp</item>
+        <item name="showDomainLabels">false</item>
+        <item name="showRangeLabels">false</item>
+    </style>
+
+    <!-- No margins/padding, black background, white grid, no legend, axis labels,
+    plot title etc; nothing but the data -->
+    <style name="FullScreenGraph.Minimalist.Dark">
+        <item name="graphDomainLineColor">@color/ap_white</item>
+        <item name="graphRangeLineColor">@color/ap_white</item>
+        <item name="backgroundColor">@color/ap_black</item>
+        <item name="gridBackgroundColor">@color/ap_black</item>
+        <item name="borderColor">@color/ap_transparent</item>
+    </style>
+
+    <style name="FullScreenGraph.Minimalist.Light">
+        <item name="graphDomainLineColor">@color/ap_black</item>
+        <item name="graphRangeLineColor">@color/ap_black</item>
+        <item name="backgroundColor">@color/ap_white</item>
+        <item name="gridBackgroundColor">@color/ap_white</item>
+        <item name="borderColor">@color/ap_transparent</item>
+    </style>
+</resources>

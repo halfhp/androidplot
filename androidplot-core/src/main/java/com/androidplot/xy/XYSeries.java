@@ -48,11 +48,4 @@ public interface XYSeries extends Series {
      */
     Number getY(int index);
 
-//    /**
-//     * Optional method to optimize min/max value calculation.  Implementations that do not wish to provide the
-//     * optimization should simply return null.
-//     * @return An instance of {@link XYBounds} containing xy min/max values.
-//     * @since 0.9.7
-//     */
-//    XYBounds getBounds();
 }

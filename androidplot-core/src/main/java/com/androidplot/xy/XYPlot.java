@@ -65,14 +65,16 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private static final int DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP = 0;
 
-    private static final int DEFAULT_GRAPH_WIDGET_TOP_MARGIN_DP = 3;
-    private static final int DEFAULT_GRAPH_WIDGET_BOTTOM_MARGIN_DP = 3;
-    private static final int DEFAULT_GRAPH_WIDGET_LEFT_MARGIN_DP = 3;
-    private static final int DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN_DP = 3;
+    private static final int DEFAULT_DOMAIN_TICK_EXTENSION_DP = 2;
+    private static final int DEFAULT_RANGE_TICK_EXTENSION_DP = 2;
 
-    private static final int DEFAULT_PLOT_LEFT_MARGIN_DP = 2;
-    private static final int DEFAULT_PLOT_RIGHT_MARGIN_DP = 2;
-    private static final int DEFAULT_PLOT_BOTTOM_MARGIN_DP = 2;
+    private static final int DEFAULT_PLOT_LEFT_MARGIN_DP = 1;
+    private static final int DEFAULT_PLOT_RIGHT_MARGIN_DP = 1;
+    private static final int DEFAULT_PLOT_TOP_MARGIN_DP = 1;
+    private static final int DEFAULT_PLOT_BOTTOM_MARGIN_DP = 1;
+
+    private static final int DEFAULT_DOMAIN_TICK_LABEL_WIDTH = 15;
+    private static final int DEFAULT_RANGE_TICK_LABEL_WIDTH = 41;
 
     private BoundaryMode domainOriginBoundaryMode;
     private BoundaryMode rangeOriginBoundaryMode;
@@ -130,6 +132,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private ArrayList<XValueMarker> xValueMarkers;
 
     private RectRegion defaultBounds;
+
+    private PreviewMode previewMode;
+    public enum PreviewMode {
+        LineAndPoint,
+        Candlestick,
+        Bar
+    }
 
     public XYPlot(Context context, String title) {
         super(context, title);
@@ -225,15 +234,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
         getLayoutManager().moveToTop(getTitleWidget());
         getLayoutManager().moveToTop(getLegendWidget());
-        graphWidget.setMarginTop(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_TOP_MARGIN_DP));
-        graphWidget.setMarginBottom(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_BOTTOM_MARGIN_DP));
-        graphWidget.setMarginLeft(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_LEFT_MARGIN_DP));
-        graphWidget.setMarginRight(PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_RIGHT_MARGIN_DP));
 
         getDomainLabelWidget().pack();
         getRangeLabelWidget().pack();
         setPlotMarginLeft(PixelUtils.dpToPix(DEFAULT_PLOT_LEFT_MARGIN_DP));
         setPlotMarginRight(PixelUtils.dpToPix(DEFAULT_PLOT_RIGHT_MARGIN_DP));
+        setPlotMarginTop(PixelUtils.dpToPix(DEFAULT_PLOT_TOP_MARGIN_DP));
         setPlotMarginBottom(PixelUtils.dpToPix(DEFAULT_PLOT_BOTTOM_MARGIN_DP));
 
         xValueMarkers = new ArrayList<>();
@@ -241,26 +247,53 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
         setDefaultBounds(new RectRegion(-1, 1, -1, 1));
 
-        // display some generic series data in editors that support it:
-        if(isInEditMode()) {
-            addSeries(new SimpleXYSeries(Arrays.asList(1, 2, 3, 3, 4), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Red"),
-                    new LineAndPointFormatter(Color.RED, null, null, null));
-            addSeries(new SimpleXYSeries(Arrays.asList(2, 1, 4, 2, 5), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Green"),
-                    new LineAndPointFormatter(Color.GREEN, null, null, null));
-            addSeries(new SimpleXYSeries(Arrays.asList(3, 3, 2, 3, 3), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Blue"),
-                    new LineAndPointFormatter(Color.BLUE, null, null, null));
-        }
-
         domainStepModel = new XYStepModel(XYStepMode.SUBDIVIDE, 10);
         rangeStepModel = new XYStepModel(XYStepMode.SUBDIVIDE, 10);
     }
 
     @Override
+    protected void onAfterConfig() {
+        // display some generic series data in editors that support it:
+        if(isInEditMode()) {
+
+            switch (previewMode) {
+                case LineAndPoint: {
+                    addSeries(new SimpleXYSeries(Arrays.asList(1, 2, 3, 3, 4), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Red"),
+                            new LineAndPointFormatter(Color.RED, null, null, null));
+                    addSeries(new SimpleXYSeries(Arrays.asList(2, 1, 4, 2, 5), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Green"),
+                            new LineAndPointFormatter(Color.GREEN, null, null, null));
+                    addSeries(new SimpleXYSeries(Arrays.asList(3, 3, 2, 3, 3), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Blue"),
+                            new LineAndPointFormatter(Color.BLUE, null, null, null));
+                }
+                break;
+                case Candlestick: {
+                    CandlestickSeries candlestickSeries = new CandlestickSeries(
+                            new CandlestickSeries.Item(1, 10, 2, 9),
+                            new CandlestickSeries.Item(4, 18, 6, 5),
+                            new CandlestickSeries.Item(3, 11, 5, 10),
+                            new CandlestickSeries.Item(2, 17, 2, 15),
+                            new CandlestickSeries.Item(6, 11, 11, 7),
+                            new CandlestickSeries.Item(8, 16, 10, 15));
+                    CandlestickMaker.make(this, new CandlestickFormatter(), candlestickSeries);
+                }
+                break;
+                case Bar: {
+                    throw new UnsupportedOperationException("Not yet implemented.");
+                }
+                default:
+                    throw new UnsupportedOperationException("Unexpected preview mode: " + previewMode);
+            }
+        }
+    }
+
+    @Override
     protected void processAttrs(TypedArray attrs) {
+        this. previewMode = PreviewMode.values()[attrs.getInt(
+                R.styleable.xy_XYPlot_previewMode, PreviewMode.LineAndPoint.ordinal())];
 
         // graph size & position
         AttrUtils.configureWidget(attrs, getGraphWidget(),
-                R.styleable.xy_XYPlot_graphHeightSizeLayoutType, R.styleable.xy_XYPlot_domainLabelHeight,
+                R.styleable.xy_XYPlot_graphHeightSizeLayoutType, R.styleable.xy_XYPlot_graphHeight,
                 R.styleable.xy_XYPlot_graphWidthSizeLayoutType, R.styleable.xy_XYPlot_graphWidth,
                 R.styleable.xy_XYPlot_graphLayoutStyleX, R.styleable.xy_XYPlot_graphPositionX,
                 R.styleable.xy_XYPlot_graphLayoutStyleY, R.styleable.xy_XYPlot_graphPositionY,
@@ -275,6 +308,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         if(rangeLabelAttr != null) {
             setRangeLabel(rangeLabelAttr);
         }
+
+        graphWidget.setDomainTickLabelWidth(
+                attrs.getDimension(R.styleable.xy_XYPlot_domainTickLabelWidth, DEFAULT_DOMAIN_TICK_LABEL_WIDTH));
+
+        graphWidget.setRangeTickLabelWidth(
+                attrs.getDimension(R.styleable.xy_XYPlot_rangeTickLabelWidth, DEFAULT_RANGE_TICK_LABEL_WIDTH));
 
         AttrUtils.configureStep(attrs, getDomainStepModel(),
                 R.styleable.xy_XYPlot_domainStepMode, R.styleable.xy_XYPlot_domainStep);
@@ -313,6 +352,15 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 R.styleable.xy_XYPlot_graphPaddingTop, R.styleable.xy_XYPlot_graphPaddingBottom,
                 R.styleable.xy_XYPlot_graphPaddingLeft, R.styleable.xy_XYPlot_graphPaddingRight);
 
+        graphWidget.setDomainTickExtension(attrs.getDimension(R.styleable.xy_XYPlot_domainTickExtension,
+                PixelUtils.dpToPix(DEFAULT_DOMAIN_TICK_EXTENSION_DP)));
+
+        graphWidget.setRangeTickExtension(attrs.getDimension(R.styleable.xy_XYPlot_rangeTickExtension,
+                PixelUtils.dpToPix(DEFAULT_RANGE_TICK_EXTENSION_DP)));
+
+        graphWidget.setShowDomainLabels(attrs.getBoolean(R.styleable.xy_XYPlot_showDomainLabels, true));
+        graphWidget.setShowRangeLabels(attrs.getBoolean(R.styleable.xy_XYPlot_showRangeLabels, true));
+
         // gridRect
         AttrUtils.configureBoxModelable(attrs, getGraphWidget().getGridBox(),
                 R.styleable.xy_XYPlot_gridMarginTop, R.styleable.xy_XYPlot_gridMarginBottom,
@@ -339,6 +387,16 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         AttrUtils.configureTextPaint(attrs, getGraphWidget().getRangeOriginTickLabelPaint(),
                 R.styleable.xy_XYPlot_rangeOriginTickLabelTextColor,
                 R.styleable.xy_XYPlot_rangeOriginTickLabelTextSize);
+
+        // domainOriginLinePaint
+        AttrUtils.configureLinePaint(attrs, getGraphWidget().getDomainOriginLinePaint(),
+                R.styleable.xy_XYPlot_domainOriginLineColor,
+                R.styleable.xy_XYPlot_domainOriginLineThickness);
+
+        // rangeOriginLinePaint
+        AttrUtils.configureLinePaint(attrs, getGraphWidget().getRangeOriginLinePaint(),
+                R.styleable.xy_XYPlot_rangeOriginLineColor,
+                R.styleable.xy_XYPlot_rangeOriginLineThickness);
 
         // legendWTextPaint
         AttrUtils.configureTextPaint(attrs, getLegendWidget().getTextPaint(),

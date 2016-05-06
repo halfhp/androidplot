@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
-  ~ Copyright 2015 AndroidPlot.com
+  ~ Copyright 2016 AndroidPlot.com
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
   ~    you may not use this file except in compliance with the License.
@@ -16,17 +15,13 @@
   ~    limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:ap="http://schemas.android.com/apk/res-auto"
+<resources>
 
-              style="@style/sample_activity"
-              android:orientation="vertical">
-
-    <com.androidplot.xy.XYPlot
-            android:id="@+id/plot1"
-            style="@style/APDefacto.Light"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            ap:label="@string/ts_plot1_title"
-            renderMode="use_main_thread"/>
-</LinearLayout>
+    <!-- Androidplot colors -->
+    <color name="ap_transparent">#00000000</color>
+    <color name="ap_black">#000</color>
+    <color name="ap_charcoal">#111</color>
+    <color name="ap_white">#FFF</color>
+    <color name="off_white">#EEE</color>
+    <color name="ap_gray">#888</color>
+</resources>

@@ -226,6 +226,14 @@
     <declare-styleable name="Plot">
         <attr name="markupEnabled" format="boolean"/>
         <attr name="renderMode"/>
+        <attr name="marginTop" format="dimension"/>
+        <attr name="marginBottom" format="dimension"/>
+        <attr name="marginLeft" format="dimension"/>
+        <attr name="marginRight" format="dimension"/>
+        <attr name="paddingTop" format="dimension"/>
+        <attr name="paddingBottom" format="dimension"/>
+        <attr name="paddingLeft" format="dimension"/>
+        <attr name="paddingRight" format="dimension"/>
         <attr name="label" format="string"/>
         <attr name="labelTextSize" format="dimension"/>
         <attr name="labelTextColor" format="color"/>
@@ -305,6 +313,9 @@
         <attr name="gridPaddingLeft" format="dimension"/>
         <attr name="gridPaddingRight" format="dimension"/>
 
+        <attr name="domainTickLabelWidth" format="dimension"/>
+        <attr name="rangeTickLabelWidth" format="dimension"/>
+
         <attr name="graphBackgroundColor" format="color"/>
         <attr name="graphDomainLineThickness" format="dimension"/>
         <attr name="graphRangeLineThickness" format="dimension"/>
@@ -318,6 +329,10 @@
         <attr name="domainOriginTickLabelTextSize" format="dimension"/>
         <attr name="rangeOriginTickLabelTextColor" format="color"/>
         <attr name="domainOriginTickLabelTextColor" format="color"/>
+        <attr name="domainOriginLineThickness" format="dimension"/>
+        <attr name="rangeOriginLineThickness" format="dimension"/>
+        <attr name="domainOriginLineColor" format="color"/>
+        <attr name="rangeOriginLineColor" format="color"/>
         <attr name="gridBackgroundColor" format="color"/>
 
         <!-- legend widget -->
@@ -337,6 +352,12 @@
         <attr name="legendIconHeight" format="dimension|float|integer"/>
         <attr name="legendIconWidth" format="dimension|float|integer"/>
         <attr name="legendVisible" format="boolean"/>
+
+        <attr name="domainTickExtension" format="dimension"/>
+        <attr name="rangeTickExtension" format="dimension"/>
+
+        <attr name="showDomainLabels" format="boolean"/>
+        <attr name="showRangeLabels" format="boolean"/>
     </declare-styleable>
 
     <!-- TODO: PieChart -->

@@ -25,7 +25,7 @@
     tools:context=".GraphMetricsActivity" >
     
     <com.androidplot.xy.XYPlot
-        style="@style/simple_xy"
+        style="@style/APDefacto.Light"
         android:id="@+id/graph_metrics"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

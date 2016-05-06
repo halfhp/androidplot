@@ -31,6 +31,7 @@ import java.text.Format;
 
 /**
  * Displays graphical data (lines, points, etc.) annotated with domain and range tick markers.
+ * The inner area of the graph upon which grid ticks, lines and points are rendered is called the "grid" area.
  */
 public class XYGraphWidget extends Widget {
 
@@ -42,10 +43,8 @@ public class XYGraphWidget extends Widget {
     private static final int MARKER_LABEL_SPACING = TWO;
 
     // max size of domain tick labels  in pixels
-    private float domainTickLabelWidth = 15;
-
-    // ...
-    private float rangeTickLabelWidth = 41;
+    private float domainTickLabelWidth;
+    private float rangeTickLabelWidth;
     private float domainTickLabelVerticalOffset = -5;
     private float domainTickLabelHorizontalOffset = ZERO;
 
@@ -61,10 +60,13 @@ public class XYGraphWidget extends Widget {
     private BoxModel gridBox = new BoxModel();
     private DisplayDimensions gridDimensions;
 
-    private int domainTickExtension = 5;
-    private int rangeTickExtension  = 5;
-    private int domainLabelSubTickExtension = ZERO;
-    private int rangeLabelSubTickExtension = ZERO;
+    private boolean showDomainLabels;
+    private boolean showRangeLabels;
+
+    private float domainTickExtension;
+    private float rangeTickExtension;
+    private float domainLabelSubTickExtension = ZERO;
+    private float rangeLabelSubTickExtension = ZERO;
     private Paint gridBackgroundPaint;
     private Paint rangeGridLinePaint;
     private Paint rangeSubGridLinePaint;
@@ -603,7 +605,7 @@ public class XYGraphWidget extends Widget {
                 olp = domainTickLabelPaint;
             }
             drawDomainTick(canvas, domainOriginF, plot.getDomainOrigin()
-                    .doubleValue(), olp, domainOriginLinePaint, false);
+                    .doubleValue(), olp, domainOriginLinePaint, !showDomainLabels);
         }
 
         // draw ticks LEFT of origin:
@@ -619,7 +621,7 @@ public class XYGraphWidget extends Widget {
             }
             if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
                 if (i % getTicksPerDomainLabel() == ZERO) {
-                    drawDomainTick(canvas, xPix, xVal, dlp, domainGridLinePaint, false);
+                    drawDomainTick(canvas, xPix, xVal, dlp, domainGridLinePaint, !showDomainLabels);
                 } else {
                     drawDomainTick(canvas, xPix, xVal, dlp, domainSubGridLinePaint, true);
                 }
@@ -642,7 +644,7 @@ public class XYGraphWidget extends Widget {
             if (xPix >= paddedGridRect.left && xPix <= paddedGridRect.right) {
 
                 if (i % getTicksPerDomainLabel() == ZERO) {
-                    drawDomainTick(canvas, xPix, xVal, dlp, domainGridLinePaint, false);
+                    drawDomainTick(canvas, xPix, xVal, dlp, domainGridLinePaint, !showDomainLabels);
                 } else {
                     drawDomainTick(canvas, xPix, xVal, dlp, domainSubGridLinePaint, true);
                 }
@@ -682,7 +684,7 @@ public class XYGraphWidget extends Widget {
             }
             drawRangeTick(canvas, rangeOriginF, plot.getRangeOrigin()
                     .doubleValue(), olp,
-                    rangeOriginLinePaint, false);
+                    rangeOriginLinePaint, !showRangeLabels);
         }
 
         // draw ticks ABOVE origin:
@@ -700,7 +702,7 @@ public class XYGraphWidget extends Widget {
             if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
                 if (i % getTicksPerRangeLabel() == ZERO) {
                     drawRangeTick(canvas, yPix, yVal, rlp,
-                            rangeGridLinePaint, false);
+                            rangeGridLinePaint, !showRangeLabels);
                 } else {
                     drawRangeTick(canvas, yPix, yVal, rlp,
                             rangeSubGridLinePaint, true);
@@ -724,7 +726,7 @@ public class XYGraphWidget extends Widget {
             if (yPix >= paddedGridRect.top && yPix <= paddedGridRect.bottom) {
                 if (i % getTicksPerRangeLabel() == ZERO) {
                     drawRangeTick(canvas, yPix, yVal, rlp,
-                            rangeGridLinePaint, false);
+                            rangeGridLinePaint, !showRangeLabels);
                 } else {
                     drawRangeTick(canvas, yPix, yVal, rlp,
                             rangeSubGridLinePaint, true);
@@ -1059,35 +1061,35 @@ public class XYGraphWidget extends Widget {
         this.domainValueFormat = domainValueFormat;
     }
 
-    public int getDomainTickExtension() {
+    public float getDomainTickExtension() {
         return domainTickExtension;
     }
 
-    public void setDomainTickExtension(int domainTickExtension) {
+    public void setDomainTickExtension(float domainTickExtension) {
         this.domainTickExtension = domainTickExtension;
     }
 
-    public int getRangeTickExtension() {
+    public float getRangeTickExtension() {
         return rangeTickExtension;
     }
 
-    public int getDomainLabelSubTickExtension() {
+    public float getDomainLabelSubTickExtension() {
         return domainLabelSubTickExtension;
     }
 
-    public void setDomainLabelSubTickExtension(int domainLabelSubTickExtension) {
+    public void setDomainLabelSubTickExtension(float domainLabelSubTickExtension) {
         this.domainLabelSubTickExtension = domainLabelSubTickExtension;
     }
 
-    public void setRangeTickExtension(int rangeTickExtension) {
+    public void setRangeTickExtension(float rangeTickExtension) {
         this.rangeTickExtension = rangeTickExtension;
     }
 
-    public int getRangeLabelSubTickExtension() {
+    public float getRangeLabelSubTickExtension() {
         return rangeLabelSubTickExtension;
     }
 
-    public void setRangeLabelSubTickExtension(int rangeLabelSubTickExtension) {
+    public void setRangeLabelSubTickExtension(float rangeLabelSubTickExtension) {
         this.rangeLabelSubTickExtension = rangeLabelSubTickExtension;
     }
 
@@ -1331,5 +1333,41 @@ public class XYGraphWidget extends Widget {
 
     public DisplayDimensions getGridDimensions() {
         return gridDimensions;
+    }
+
+    /**
+     *
+     * @return
+     * @since 0.9.8
+     */
+    public boolean isShowDomainLabels() {
+        return showDomainLabels;
+    }
+
+    /**
+     *
+     * @param showDomainLabels
+     * @since 0.9.8
+     */
+    public void setShowDomainLabels(boolean showDomainLabels) {
+        this.showDomainLabels = showDomainLabels;
+    }
+
+    /**
+     *
+     * @return
+     * @since 0.9.8
+     */
+    public boolean isShowRangeLabels() {
+        return showRangeLabels;
+    }
+
+    /**
+     *
+     * @param showRangeLabels
+     * @since 0.9.8
+     */
+    public void setShowRangeLabels(boolean showRangeLabels) {
+        this.showRangeLabels = showRangeLabels;
     }
 }

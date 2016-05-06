@@ -19,6 +19,7 @@ package com.androidplot.demos;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.graphics.Paint;
 import android.os.Bundle;
 import com.androidplot.xy.CandlestickFormatter;
 import com.androidplot.xy.CandlestickMaker;
@@ -57,7 +58,7 @@ public class CandlestickChartActivity extends Activity
                 new CandlestickSeries.Item(8, 16, 10, 15));
 
         // draw a simple line plot of the close vals:
-        LineAndPointFormatter lpf = new LineAndPointFormatter(Color.WHITE, Color.WHITE, null, null);
+        LineAndPointFormatter lpf = new LineAndPointFormatter(Color.BLACK, Color.BLACK, null, null);
         lpf.getLinePaint().setPathEffect(
                 new DashPathEffect(
                         new float[]{PixelUtils.dpToPix(5), PixelUtils.dpToPix(5)}, 0));
@@ -67,24 +68,27 @@ public class CandlestickChartActivity extends Activity
         plot.addSeries(candlestickSeries.getCloseSeries(), lpf);
 
         CandlestickFormatter formatter = new CandlestickFormatter();
+        Paint p = formatter.getWickPaint();
+        p.setColor(Color.BLACK);
+        formatter.setCapAndWickPaint(p);
+        formatter.setRisingBodyStrokePaint(p);
+        formatter.setFallingBodyStrokePaint(p);
 
         // draw candlestick bodies as triangles instead of squares:
         // triangles will point up for items that closed higher than they opened
         // and down for those that closed lower:
-        formatter.setBodyStyle(CandlestickFormatter.BodyStyle.Triangle);
+        formatter.setBodyStyle(CandlestickFormatter.BodyStyle.Square);
 
         // add the candlestick series data to the plot:
         CandlestickMaker.make(plot, formatter, candlestickSeries);
 
-        // setup the range label formatting, etc:
-        plot.setRangeLabel("Amount");
+        // setup the range tick label formatting, etc:
         plot.setTicksPerRangeLabel(3);
 
         plot.setRangeValueFormat(new DecimalFormat("$0.00"));
 
-        // setup the domain label formatting, etc:
+        // setup the domain tick label formatting, etc:
         plot.setDomainBoundaries(-1, 6, BoundaryMode.FIXED);
-        plot.setDomainLabel("Day");
         plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
         plot.setDomainValueFormat(new Format() {
             @Override

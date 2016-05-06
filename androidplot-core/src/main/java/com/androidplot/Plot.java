@@ -122,8 +122,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
          */
         USE_MAIN_THREAD
     }
-    private BoxModel boxModel = new BoxModel(3, 3, 3, 3, 3, 3, 3, 3);
-    private BorderStyle borderStyle = Plot.BorderStyle.SQUARE;
+    private BoxModel boxModel = new BoxModel();
+
+    // no border by default:
+    private BorderStyle borderStyle = Plot.BorderStyle.NONE;
     private float borderRadiusX = 15;
     private float borderRadiusY = 15;
     private Paint borderPaint;
@@ -396,6 +398,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             setRenderMode(renderMode);
         }
 
+        // margins & padding
+        AttrUtils.configureBoxModelable(attrs, boxModel, R.styleable.Plot_marginTop, R.styleable.Plot_marginBottom,
+                R.styleable.Plot_marginLeft, R.styleable.Plot_marginRight, R.styleable.Plot_paddingTop,
+                R.styleable.Plot_paddingBottom, R.styleable.Plot_paddingLeft, R.styleable.Plot_paddingRight);
+
         // title
         setTitle(attrs.getString(R.styleable.Plot_label));
         getTitleWidget().getLabelPaint().setTextSize(
@@ -599,7 +606,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     protected List<SeriesAndFormatter<SeriesType, FormatterType>> getSeries(SeriesType series) {
         List<SeriesAndFormatter<SeriesType, FormatterType>> results =
-                new ArrayList<SeriesAndFormatter<SeriesType, FormatterType>>();
+                new ArrayList<>();
         for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : seriesRegistry) {
             if(thisPair.getSeries() == series) {
                 results.add(thisPair);
@@ -683,7 +690,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     public List<RendererType> getRendererList() {
-        return new ArrayList<RendererType>(getRenderers().values());
+        return new ArrayList<>(getRenderers().values());
     }
 
     public void setMarkupEnabled(boolean enabled) {
@@ -721,7 +728,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     @Override
     public synchronized void layout(final DisplayDimensions dims) {
-        displayDims = dims;
+        this.displayDims = dims;
         layoutManager.layout(displayDims);
     }
 
@@ -865,9 +872,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, paint);
                 break;
             case SQUARE:
+            default:
                 canvas.drawRect(dims, paint);
                 break;
-            default:
         }
     }
 

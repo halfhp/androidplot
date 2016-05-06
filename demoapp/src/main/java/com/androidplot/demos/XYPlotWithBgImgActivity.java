@@ -21,6 +21,7 @@ import android.graphics.*;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ToggleButton;
+import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.*;
 
 import java.text.DecimalFormat;
@@ -67,13 +68,15 @@ public class XYPlotWithBgImgActivity extends Activity {
         plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 60);
         plot.setTicksPerDomainLabel(2);
 
-        series = (SimpleXYSeries) getSeries();
+        series = getSeries();
 		LineAndPointFormatter lpFormat = new LineAndPointFormatter(
 				Color.BLACK,
-				Color.BLACK,
+				Color.GRAY,
 				null, // No fill
 				new PointLabelFormatter(Color.TRANSPARENT) // Don't show text at points
 		);
+		lpFormat.getLinePaint().setStrokeWidth(PixelUtils.dpToPix(3));
+		lpFormat.getVertexPaint().setStrokeWidth(PixelUtils.dpToPix(6));
         plot.addSeries(series, lpFormat);
         plot.redraw();
 	}

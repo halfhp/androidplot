@@ -19,13 +19,14 @@ package com.androidplot.util;
 import android.util.Log;
 import com.androidplot.Plot;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Utility class for invoking Plot.redraw() on a background thread
- * at a set frequency.
+ * at a set frequency.  Callers should be sure to create a separate thread from which to use this class.
  */
 public class Redrawer implements Runnable {
 
@@ -33,10 +34,16 @@ public class Redrawer implements Runnable {
 
     private static final String TAG = Redrawer.class.getName();
 
-    private List<Plot> plots;
+    private List<WeakReference<Plot>> plots;
     private long sleepTime;
+
+    // used to temporarily pause rendering without disposing of the run thread
     private boolean keepRunning;
+
+    // when set to false, run thread will be allowed to exit the main run loop
     private boolean keepAlive;
+
+    private Thread thread;
 
     /**
      *
@@ -45,11 +52,15 @@ public class Redrawer implements Runnable {
      * @param startImmediately If true, invokes run() immediately after construction.
      */
     public Redrawer(List<Plot> plots, float maxRefreshRate, boolean startImmediately) {
-        this.plots = plots;
+        this.plots = new ArrayList<>();
+        for(Plot plot : plots) {
+            this.plots.add(new WeakReference<>(plot));
+        }
         setMaxRefreshRate(maxRefreshRate);
-        new Thread(this).start();
+        thread = new Thread(this);
+        thread.start();
         if(startImmediately) {
-            run();
+            start();
         }
     }
 
@@ -97,8 +108,8 @@ public class Redrawer implements Runnable {
                 // TODO: record start and end timestamps and
                 // TODO: calculate sleepTime from that, in order to more accurately
                 // TODO: meet desired refresh rate.
-                for(Plot plot : plots) {
-                    plot.redraw();
+                for(WeakReference<Plot> plotRef : plots) {
+                    plotRef.get().redraw();
                 }
                 synchronized (this) {
                     wait(sleepTime);

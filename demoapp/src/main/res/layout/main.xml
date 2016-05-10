@@ -105,6 +105,12 @@
                 style="@style/toc_button"
                 android:text="XY Background Example"
                 android:enabled="true"/>
+
+            <Button
+                android:id="@+id/startECGExample"
+                style="@style/toc_button"
+                android:text="ECG Example"
+                android:enabled="true"/>
         </LinearLayout>
     </ScrollView>
 

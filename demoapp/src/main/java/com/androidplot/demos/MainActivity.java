@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(CRITTERCISM_APP_ID != null) {
+        if (CRITTERCISM_APP_ID != null) {
             Log.d(TAG, "Crittercism initialized.");
             Crittercism.initialize(getApplicationContext(), CRITTERCISM_APP_ID);
         }
@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        Button startDynamicXYExButton = (Button)findViewById(R.id.startDynamicXYExButton);
+        Button startDynamicXYExButton = (Button) findViewById(R.id.startDynamicXYExButton);
         startDynamicXYExButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        Button startTimeSeriesExButon = (Button)findViewById(R.id.startTimeSeriesExButton);
+        Button startTimeSeriesExButon = (Button) findViewById(R.id.startTimeSeriesExButton);
         startTimeSeriesExButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,7 +106,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        Button startStepChartExButton = (Button)findViewById(R.id.startStepChartExButton);
+        Button startStepChartExButton = (Button) findViewById(R.id.startStepChartExButton);
         startStepChartExButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,7 +114,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        Button startScrollZoomExButton = (Button)findViewById(R.id.startScrollZoomButton);
+        Button startScrollZoomExButton = (Button) findViewById(R.id.startScrollZoomButton);
         startScrollZoomExButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,7 +122,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        Button startXyRegionExampleButton = (Button)findViewById(R.id.startXyRegionExampleButton);
+        Button startXyRegionExampleButton = (Button) findViewById(R.id.startXyRegionExampleButton);
         startXyRegionExampleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,7 +131,7 @@ public class MainActivity extends Activity {
         });
 
 
-        Button listViewExButton = (Button)findViewById(R.id.startXyListViewExButton);
+        Button listViewExButton = (Button) findViewById(R.id.startXyListViewExButton);
         listViewExButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,7 +139,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        Button startDualScaleExampleButton = (Button)findViewById(R.id.startDualScaleExampleButton);
+        Button startDualScaleExampleButton = (Button) findViewById(R.id.startDualScaleExampleButton);
         startDualScaleExampleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,13 +147,22 @@ public class MainActivity extends Activity {
             }
         });
 
-        Button startXYPlotWithBgImgExampleButton = (Button)findViewById(R.id.startXYPlotWithBgImgExample);
+        Button startXYPlotWithBgImgExampleButton = (Button) findViewById(R.id.startXYPlotWithBgImgExample);
         startXYPlotWithBgImgExampleButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(MainActivity.this, XYPlotWithBgImgActivity.class));
-                    }
-                });
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, XYPlotWithBgImgActivity.class));
+            }
+        });
+
+        // ECG
+        Button startECGExampleButton = (Button) findViewById(R.id.startECGExample);
+        startECGExampleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ECGExample.class));
+            }
+        });
 
     }
 }

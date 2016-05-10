@@ -44,7 +44,7 @@ import java.util.*;
  * Base class for all Plot implementations.
  */
 public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends SeriesRenderer>
-        extends View implements Resizable{
+        extends View implements Resizable {
     private static final String TAG = Plot.class.getName();
     private static final String XML_ATTR_PREFIX      = "androidplot";
     private static final String BASE_PACKAGE = "com.androidplot.";
@@ -167,7 +167,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      *  Any rendering that utilizes a buffer from this class should synchronize rendering on the instance of this class
      *  that is being used.
      */
-    private class BufferedCanvas {
+    private static class BufferedCanvas {
         private volatile Bitmap bgBuffer;  // all drawing is done on this buffer.
         private volatile Bitmap fgBuffer;
         private Canvas canvas = new Canvas();
@@ -192,6 +192,14 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             }
         }
 
+        public void recycle() {
+            bgBuffer.recycle();
+            bgBuffer = null;
+
+            fgBuffer.recycle();
+            fgBuffer = null;
+            System.gc();
+        }
 
         /**
          * Get a Canvas for drawing.  Actual drawing should be synchronized on the instance
@@ -368,6 +376,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                             }
                         }
                     }
+                    pingPong.recycle();
                 }
             });
         }

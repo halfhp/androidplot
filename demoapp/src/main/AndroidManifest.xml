@@ -98,6 +98,7 @@
         <activity android:name=".TimeSeriesActivity"/>
 		<activity android:name=".DualScaleXYPlotExampleActivity"/>
         <activity android:name=".XYPlotWithBgImgActivity"/>
+        <activity android:name=".ECGExample"/>
         
         <!-- receiver for demo app widget -->
         <receiver

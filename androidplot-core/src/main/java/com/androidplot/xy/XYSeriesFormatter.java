@@ -24,7 +24,7 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
     ZHash<RectRegion, XYRegionFormatterType>  regions;
 
     {
-        regions = new ZHash<RectRegion, XYRegionFormatterType>();
+        regions = new ZHash<>();
     }
 
     public void addRegion(RectRegion region, XYRegionFormatterType regionFormatter) {

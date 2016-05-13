@@ -18,6 +18,7 @@ package com.androidplot.xy;
 
 import android.graphics.*;
 
+import com.androidplot.NumberLabelFormatter;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.BoxModel;
 import com.androidplot.ui.LayoutManager;
@@ -106,11 +107,11 @@ public class XYGraphWidget extends Widget {
     private Mapping<Paint, Number> domainTickLabelPaintMap;
     private Mapping<Paint, Number> rangeTickLabelPaintMap;
 
-    private ZHash<RectRegion, AxisValueLabelFormatter> axisValueLabelRegions;
+    private ZHash<RectRegion, NumberLabelFormatter> tickLabelRegionFormatters;
 
     private RenderStack<? extends XYSeries, ? extends XYSeriesFormatter> renderStack;
 
-    private static final float DEFAULT_TICK_LABEL_TEXT_SIZE_PX = PixelUtils.spToPix(15); // 15sp
+    private static final float DEFAULT_TICK_LABEL_TEXT_SIZE_PX = PixelUtils.spToPix(15);
 
     public float getRangeLabelOrientation() {
         return rangeLabelOrientation;
@@ -253,7 +254,7 @@ public class XYGraphWidget extends Widget {
         setMarginBottom(4);
         rangeValueFormat = new DecimalFormat("0.0");
         domainValueFormat = new DecimalFormat("0.0");
-        axisValueLabelRegions = new ZHash<>();
+        tickLabelRegionFormatters = new ZHash<>();
         setClippingEnabled(true);
     }
 
@@ -263,26 +264,25 @@ public class XYGraphWidget extends Widget {
         renderStack = new RenderStack(plot);
     }
 
-    public ZIndexable<RectRegion> getAxisValueLabelRegions() {
-        return axisValueLabelRegions;
+    public ZIndexable<RectRegion> getTickLabelRegionFormatters() {
+        return tickLabelRegionFormatters;
     }
 
     /**
-     * Add a new Region used for rendering axis valuelabels. Note that it is
-     * possible to add multiple Region instances which overlap, in which cast
+     * Add a new Region used for rendering tick labels. Note that it is
+     * possible to add multiple Region instances which overlap, in which case
      * the last region to be added will be used. It is up to the developer to
-     * guard against this often undesireable situation.
+     * guard against this often undesirable situation.
      * 
      * @param region
      * @param formatter
      */
-    public void addAxisValueLabelRegion(RectRegion region,
-            AxisValueLabelFormatter formatter) {
-        axisValueLabelRegions.addToTop(region, formatter);
+    public void addTickLabelFormatter(RectRegion region, NumberLabelFormatter formatter) {
+        tickLabelRegionFormatters.addToTop(region, formatter);
     }
 
     /**
-     * Convenience method - wraps addAxisValueLabelRegion, using
+     * Convenience method - wraps addDomainTickLabelFormatter, using
      * Double.POSITIVE_INFINITY and Double.NEGATIVE_INFINITY to mask off range
      * axis value labels.
      * 
@@ -291,15 +291,14 @@ public class XYGraphWidget extends Widget {
      * @param formatter
      * 
      */
-    public void addDomainAxisValueLabelRegion(double min, double max,
-            AxisValueLabelFormatter formatter) {
-        addAxisValueLabelRegion(new RectRegion(min, max,
+    public void addDomainTickLabelFormatter(double min, double max, NumberLabelFormatter formatter) {
+        addTickLabelFormatter(new RectRegion(min, max,
                 Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, null),
                 formatter);
     }
 
     /**
-     * Convenience method - wraps addAxisValueLabelRegion, using
+     * Convenience method - wraps addDomainTickLabelFormatter, using
      * Double.POSITIVE_INFINITY and Double.NEGATIVE_INFINITY to mask off domain
      * axis value labels.
      * 
@@ -307,9 +306,8 @@ public class XYGraphWidget extends Widget {
      * @param max
      * @param formatter
      */
-    public void addRangeAxisValueLabelRegion(double min, double max,
-            AxisValueLabelFormatter formatter) {
-        addAxisValueLabelRegion(new RectRegion(Double.POSITIVE_INFINITY,
+    public void addRangeTickLabelFormatter(double min, double max, NumberLabelFormatter formatter) {
+        addTickLabelFormatter(new RectRegion(Double.POSITIVE_INFINITY,
                 Double.NEGATIVE_INFINITY, min, max, null), formatter);
     }
 
@@ -322,31 +320,40 @@ public class XYGraphWidget extends Widget {
      * @return the formatter associated with the first (bottom) region
      *         containing x and y. null otherwise.
      */
-    public AxisValueLabelFormatter getAxisValueLabelFormatterForVal(double x,
-            double y) {
-        for (RectRegion r : axisValueLabelRegions.elements()) {
+    public NumberLabelFormatter getTickLabelFormatter(double x, double y) {
+        for (RectRegion r : tickLabelRegionFormatters.elements()) {
             if (r.containsValue(x, y)) {
-                return axisValueLabelRegions.get(r);
+                return tickLabelRegionFormatters.get(r);
             }
         }
         return null;
     }
 
-    public AxisValueLabelFormatter getAxisValueLabelFormatterForDomainVal(
+    /**
+     *
+     * @param val domain value
+     * @return
+     */
+    public NumberLabelFormatter getDomainTickLabelFormatter(
             double val) {
-        for (RectRegion r : axisValueLabelRegions.elements()) {
+        for (RectRegion r : tickLabelRegionFormatters.elements()) {
             if (r.containsDomainValue(val)) {
-                return axisValueLabelRegions.get(r);
+                return tickLabelRegionFormatters.get(r);
             }
         }
         return null;
     }
 
-    public AxisValueLabelFormatter getAxisValueLabelFormatterForRangeVal(
+    /**
+     *
+     * @param val range value
+     * @return
+     */
+    public NumberLabelFormatter getRangeTickLabelFormatter(
             double val) {
-        for (RectRegion r : axisValueLabelRegions.elements()) {
+        for (RectRegion r : tickLabelRegionFormatters.elements()) {
             if (r.containsRangeValue(val)) {
-                return axisValueLabelRegions.get(r);
+                return tickLabelRegionFormatters.get(r);
             }
         }
         return null;
@@ -451,20 +458,20 @@ public class XYGraphWidget extends Widget {
 
     private void drawTickText(Canvas canvas, XYAxisType axis, Number value,
             float xPix, float yPix, Paint labelPaint) {
-        AxisValueLabelFormatter rf = null;
-        String txt = null;
+        NumberLabelFormatter formatter;
+        String txt;
         double v = value.doubleValue();
 
         int canvasState = canvas.save();
         try {
             switch (axis) {
                 case DOMAIN:
-                    rf = getAxisValueLabelFormatterForDomainVal(v);
+                    formatter = getDomainTickLabelFormatter(v);
                     txt = getFormattedDomainValue(value);
                     canvas.rotate(getDomainLabelOrientation(), xPix, yPix);
                     break;
                 case RANGE:
-                    rf = getAxisValueLabelFormatterForRangeVal(v);
+                    formatter = getRangeTickLabelFormatter(v);
                     txt = getFormattedRangeValue(value);
                     canvas.rotate(getRangeLabelOrientation(), xPix, yPix);
                     break;
@@ -476,9 +483,8 @@ public class XYGraphWidget extends Widget {
             // of labelPaint and use the formatter's color. Otherwise
             // just use labelPaint:
             Paint p;
-            if (rf != null) {
-                p = new Paint(labelPaint);
-                p.setColor(rf.getColor());
+            if (formatter != null) {
+                p = formatter.getPaint(value);
             } else {
                 p = labelPaint;
             }
@@ -590,7 +596,6 @@ public class XYGraphWidget extends Widget {
         XYStep domainStep = XYStepCalculator.getStep(plot, XYAxisType.DOMAIN,
                 paddedGridRect, plot.getCalculatedMinX().doubleValue(), plot
                         .getCalculatedMaxX().doubleValue());
-
 
         // draw domain origin:
         if (domainOriginF >= paddedGridRect.left
@@ -764,7 +769,6 @@ public class XYGraphWidget extends Widget {
 
         canvas.drawText(text, textRect.left, textRect.bottom,
                 marker.getTextPaint());
-
     }
 
     protected void drawMarkers(Canvas canvas) {

@@ -107,7 +107,7 @@ public class XYGraphWidget extends Widget {
     private Mapping<Paint, Number> domainTickLabelPaintMap;
     private Mapping<Paint, Number> rangeTickLabelPaintMap;
 
-    private ZHash<RectRegion, NumberLabelFormatter> tickLabelRegionFormatters;
+    private LayerHash<RectRegion, NumberLabelFormatter> tickLabelRegionFormatters;
 
     private RenderStack<? extends XYSeries, ? extends XYSeriesFormatter> renderStack;
 
@@ -254,7 +254,7 @@ public class XYGraphWidget extends Widget {
         setMarginBottom(4);
         rangeValueFormat = new DecimalFormat("0.0");
         domainValueFormat = new DecimalFormat("0.0");
-        tickLabelRegionFormatters = new ZHash<>();
+        tickLabelRegionFormatters = new LayerHash<>();
         setClippingEnabled(true);
     }
 
@@ -264,7 +264,7 @@ public class XYGraphWidget extends Widget {
         renderStack = new RenderStack(plot);
     }
 
-    public ZIndexable<RectRegion> getTickLabelRegionFormatters() {
+    public Layerable<RectRegion> getTickLabelRegionFormatters() {
         return tickLabelRegionFormatters;
     }
 

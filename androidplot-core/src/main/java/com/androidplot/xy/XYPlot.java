@@ -164,22 +164,22 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 this,
                 new Size(
                         PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_H_DP),
-                        SizeLayoutType.ABSOLUTE, 0.5f, SizeLayoutType.RELATIVE),
+                        SizeLayout.ABSOLUTE, 0.5f, SizeLayout.RELATIVE),
                 new DynamicTableModel(0, 1),
                 new Size(
                         PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP),
-                        SizeLayoutType.ABSOLUTE,
+                        SizeLayout.ABSOLUTE,
                         PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP),
-                        SizeLayoutType.ABSOLUTE));
+                        SizeLayout.ABSOLUTE));
 
         graphWidget = new XYGraphWidget(
                 getLayoutManager(),
                 this,
                 new Size(
                         PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_H_DP),
-                        SizeLayoutType.FILL,
+                        SizeLayout.FILL,
                         PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_W_DP),
-                        SizeLayoutType.FILL));
+                        SizeLayout.FILL));
 
         Paint backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.DKGRAY);
@@ -191,17 +191,17 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 getLayoutManager(),
                 new Size(
                         PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_H_DP),
-                        SizeLayoutType.ABSOLUTE,
+                        SizeLayout.ABSOLUTE,
                         PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_W_DP),
-                        SizeLayoutType.ABSOLUTE),
+                        SizeLayout.ABSOLUTE),
                 TextOrientation.HORIZONTAL);
         rangeLabelWidget = new TextLabelWidget(
                 getLayoutManager(),
                 new Size(
                         PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_H_DP),
-                        SizeLayoutType.ABSOLUTE,
+                        SizeLayout.ABSOLUTE,
                         PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_W_DP),
-                        SizeLayoutType.ABSOLUTE),
+                        SizeLayout.ABSOLUTE),
                 TextOrientation.VERTICAL_ASCENDING);
 
         legendWidget.position(

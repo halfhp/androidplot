@@ -330,8 +330,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         PixelUtils.init(getContext());
         layoutManager = new LayoutManager();
         titleWidget = new TextLabelWidget(layoutManager, new Size(25,
-                SizeLayoutType.ABSOLUTE, 100,
-                SizeLayoutType.ABSOLUTE),
+                SizeLayout.ABSOLUTE, 100,
+                SizeLayout.ABSOLUTE),
                 TextOrientation.HORIZONTAL);
         titleWidget.position(0, XLayoutStyle.RELATIVE_TO_CENTER, 0,
                 YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);

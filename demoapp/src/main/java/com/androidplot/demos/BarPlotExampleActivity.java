@@ -102,8 +102,8 @@ public class BarPlotExampleActivity extends Activity
 
         selectionWidget = new TextLabelWidget(plot.getLayoutManager(), NO_SELECTION_TXT,
                 new Size(
-                        PixelUtils.dpToPix(100), SizeLayoutType.ABSOLUTE,
-                        PixelUtils.dpToPix(100), SizeLayoutType.ABSOLUTE),
+                        PixelUtils.dpToPix(100), SizeLayout.ABSOLUTE,
+                        PixelUtils.dpToPix(100), SizeLayout.ABSOLUTE),
                 TextOrientation.HORIZONTAL);
 
         selectionWidget.getLabelPaint().setTextSize(PixelUtils.dpToPix(16));

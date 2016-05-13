@@ -130,7 +130,7 @@ public abstract class Widget implements BoxModelable, Resizable {
         size.getWidth().setValue(width);
     }
 
-    public void setWidth(float width, SizeLayoutType layoutType) {
+    public void setWidth(float width, SizeLayout layoutType) {
         size.getWidth().set(width, layoutType);
     }
 
@@ -138,7 +138,7 @@ public abstract class Widget implements BoxModelable, Resizable {
         size.getHeight().setValue(height);
     }
 
-    public void setHeight(float height, SizeLayoutType layoutType) {
+    public void setHeight(float height, SizeLayout layoutType) {
         size.getHeight().set(height, layoutType);
     }
 

@@ -47,7 +47,7 @@ public class XYSeriesRendererTest extends AndroidplotTest {
         plot.setDomainBoundaries(0, 100, BoundaryMode.FIXED);
         plot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
         plot.calculateMinMaxVals();
-        XYStep domainStep = XYStepCalculator.getStep(plot, XYAxisType.DOMAIN, gridRect, plot.getCalculatedMinX().doubleValue(), plot.getCalculatedMaxX().doubleValue());
+        XYStep domainStep = XYStepCalculator.getStep(plot, Axis.DOMAIN, gridRect, plot.getCalculatedMinX().doubleValue(), plot.getCalculatedMaxX().doubleValue());
 
         int x = 0;
         float val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false);

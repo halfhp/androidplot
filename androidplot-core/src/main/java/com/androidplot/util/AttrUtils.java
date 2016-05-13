@@ -115,14 +115,14 @@ public class AttrUtils {
     private static void configureSizeMetric(TypedArray attrs, SizeMetric model, int typeAttr, int valueAttr) {
 
         final float value = getIntFloatDimenValue(attrs, valueAttr, model.getValue()).floatValue();
-        final SizeLayoutType sizeLayoutType =
+        final SizeLayout sizeLayout =
                 getSizeLayoutType(attrs, typeAttr, model.getLayoutType());
 
-        model.set(value, sizeLayoutType);
+        model.set(value, sizeLayout);
     }
 
-    private static SizeLayoutType getSizeLayoutType(TypedArray attrs, int attr, SizeLayoutType defaultValue) {
-        return SizeLayoutType.values()[attrs.getInt(attr, defaultValue.ordinal())];
+    private static SizeLayout getSizeLayoutType(TypedArray attrs, int attr, SizeLayout defaultValue) {
+        return SizeLayout.values()[attrs.getInt(attr, defaultValue.ordinal())];
     }
 
     public static void configureWidget(TypedArray attrs, Widget widget, int heightSizeLayoutTypeAttr, int heightAttr,

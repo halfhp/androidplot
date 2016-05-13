@@ -48,7 +48,7 @@ public class TextLabelWidget extends Widget {
     }
 
     public TextLabelWidget(LayoutManager layoutManager, Size size, TextOrientation orientation) {
-        super(layoutManager, new Size(0, SizeLayoutType.ABSOLUTE, 0, SizeLayoutType.ABSOLUTE));
+        super(layoutManager, new Size(0, SizeLayout.ABSOLUTE, 0, SizeLayout.ABSOLUTE));
         setSize(size);
         this.orientation = orientation;
     }
@@ -81,11 +81,11 @@ public class TextLabelWidget extends Widget {
         }
         switch(orientation) {
             case HORIZONTAL:
-                setSize(new Size(size.height(), SizeLayoutType.ABSOLUTE, size.width()+2, SizeLayoutType.ABSOLUTE));
+                setSize(new Size(size.height(), SizeLayout.ABSOLUTE, size.width()+2, SizeLayout.ABSOLUTE));
                 break;
             case VERTICAL_ASCENDING:
             case VERTICAL_DESCENDING:
-                setSize(new Size(size.width(), SizeLayoutType.ABSOLUTE, size.height()+2, SizeLayoutType.ABSOLUTE));
+                setSize(new Size(size.width(), SizeLayout.ABSOLUTE, size.height()+2, SizeLayout.ABSOLUTE));
                 break;
         }
         refreshLayout();

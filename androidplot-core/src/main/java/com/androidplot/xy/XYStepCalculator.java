@@ -35,7 +35,7 @@ public class XYStepCalculator {
      * @param maxVal
      * @return
      */
-    public static XYStep getStep(XYPlot plot, XYAxisType axisType, RectF rect, Number minVal, Number maxVal) {
+    public static XYStep getStep(XYPlot plot, Axis axisType, RectF rect, Number minVal, Number maxVal) {
         XYStep step = null;
         switch(axisType) {
             case DOMAIN:

@@ -456,8 +456,8 @@ public class XYGraphWidget extends Widget {
         }
     }
 
-    private void drawTickText(Canvas canvas, XYAxisType axis, Number value,
-            float xPix, float yPix, Paint labelPaint) {
+    private void drawTickText(Canvas canvas, Axis axis, Number value,
+                              float xPix, float yPix, Paint labelPaint) {
         NumberLabelFormatter formatter;
         String txt;
         double v = value.doubleValue();
@@ -518,7 +518,7 @@ public class XYGraphWidget extends Widget {
                     yPix = gridRect.top - domainTickExtension
                             - domainTickLabelVerticalOffset;
                 }
-                drawTickText(canvas, XYAxisType.DOMAIN, xVal,
+                drawTickText(canvas, Axis.DOMAIN, xVal,
                         xPix + domainTickLabelHorizontalOffset, yPix,
                         labelPaint);
             }
@@ -555,7 +555,7 @@ public class XYGraphWidget extends Widget {
                     xPix = gridRect.right
                             + (rangeTickExtension + rangeTickLabelHorizontalOffset);
                 }
-                drawTickText(canvas, XYAxisType.RANGE, yVal, xPix, yPix - rangeTickLabelVerticalOffset,
+                drawTickText(canvas, Axis.RANGE, yVal, xPix, yPix - rangeTickLabelVerticalOffset,
                         labelPaint);
             }
         } else if (linePaint != null && (rangeSubTick || rangeLabelSubTickExtension > ZERO)) {
@@ -593,7 +593,7 @@ public class XYGraphWidget extends Widget {
             domainOriginF = paddedGridRect.left;
         }
 
-        XYStep domainStep = XYStepCalculator.getStep(plot, XYAxisType.DOMAIN,
+        XYStep domainStep = XYStepCalculator.getStep(plot, Axis.DOMAIN,
                 paddedGridRect, plot.getCalculatedMinX().doubleValue(), plot
                         .getCalculatedMaxX().doubleValue());
 
@@ -671,7 +671,7 @@ public class XYGraphWidget extends Widget {
             rangeOriginF = paddedGridRect.bottom;
         }
 
-        XYStep rangeStep = XYStepCalculator.getStep(plot, XYAxisType.RANGE,
+        XYStep rangeStep = XYStepCalculator.getStep(plot, Axis.RANGE,
                 paddedGridRect, plot.getCalculatedMinY().doubleValue(), plot
                         .getCalculatedMaxY().doubleValue());
 

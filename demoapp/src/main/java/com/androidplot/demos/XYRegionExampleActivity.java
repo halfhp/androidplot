@@ -19,7 +19,6 @@ package com.androidplot.demos;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -227,7 +226,7 @@ public class XYRegionExampleActivity extends Activity {
 
         plot.setDomainValueFormat(new DecimalFormat("#"));
 
-        plot.getLegendWidget().setWidth(PixelUtils.dpToPix(100), SizeLayoutType.FILL);
+        plot.getLegendWidget().setWidth(PixelUtils.dpToPix(100), SizeLayout.FILL);
 
         // reposition the grid so that it rests above the bottom-left
         // edge of the graph widget:

@@ -29,7 +29,7 @@ import android.widget.Button;
 
 import com.androidplot.ui.AnchorPosition;
 import com.androidplot.ui.DynamicTableModel;
-import com.androidplot.ui.SizeLayoutType;
+import com.androidplot.ui.SizeLayout;
 import com.androidplot.ui.Size;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.PointLabelFormatter;
@@ -67,7 +67,7 @@ public class DualScaleXYPlotExampleActivity extends Activity implements OnClickL
 
         final float f26 = PixelUtils.dpToPix(26);
         final float f10 = PixelUtils.dpToPix(10);
-        final Size sm = new Size(0, SizeLayoutType.FILL, 0, SizeLayoutType.FILL);
+        final Size sm = new Size(0, SizeLayout.FILL, 0, SizeLayout.FILL);
 
         plot1 = (XYPlot) findViewById(R.id.mySimpleXYPlot_L);
         plot2 = (XYPlot) findViewById(R.id.mySimpleXYPlot_R);
@@ -159,10 +159,10 @@ public class DualScaleXYPlotExampleActivity extends Activity implements OnClickL
          *  Setup and Position the LEFT Legend
          */
         XYLegendWidget legendWidget_LEFT = plot1.getLegendWidget();
-        legendWidget_LEFT.setSize(new Size(100, SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE));
+        legendWidget_LEFT.setSize(new Size(100, SizeLayout.ABSOLUTE, 200, SizeLayout.ABSOLUTE));
         legendWidget_LEFT.setPadding(1, 1, 1, 1);
         legendWidget_LEFT.setTableModel(new DynamicTableModel(1, 3));
-        legendWidget_LEFT.setIconSize(new Size(PixelUtils.dpToPix(10), SizeLayoutType.ABSOLUTE, PixelUtils.dpToPix(10), SizeLayoutType.ABSOLUTE));
+        legendWidget_LEFT.setIconSize(new Size(PixelUtils.dpToPix(10), SizeLayout.ABSOLUTE, PixelUtils.dpToPix(10), SizeLayout.ABSOLUTE));
         legendWidget_LEFT.getTextPaint().setTextSize(PixelUtils.dpToPix(9));
         legendWidget_LEFT.position(PixelUtils.dpToPix(30), XLayoutStyle.ABSOLUTE_FROM_LEFT, f10 + 2, YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.LEFT_TOP);
 
@@ -171,10 +171,10 @@ public class DualScaleXYPlotExampleActivity extends Activity implements OnClickL
          *  Setup and Position the RIGHT Legend
          */
         XYLegendWidget legendWidget_RIGHT = plot2.getLegendWidget();
-        legendWidget_RIGHT.setSize(new Size(100, SizeLayoutType.ABSOLUTE, 200, SizeLayoutType.ABSOLUTE));
+        legendWidget_RIGHT.setSize(new Size(100, SizeLayout.ABSOLUTE, 200, SizeLayout.ABSOLUTE));
         legendWidget_RIGHT.setPadding(1, 1, 1, 1);
         legendWidget_RIGHT.setTableModel(new DynamicTableModel(1, 3));
-        legendWidget_RIGHT.setIconSize(new Size(PixelUtils.dpToPix(10), SizeLayoutType.ABSOLUTE, PixelUtils.dpToPix(10), SizeLayoutType.ABSOLUTE));
+        legendWidget_RIGHT.setIconSize(new Size(PixelUtils.dpToPix(10), SizeLayout.ABSOLUTE, PixelUtils.dpToPix(10), SizeLayout.ABSOLUTE));
         legendWidget_RIGHT.getTextPaint().setTextSize(PixelUtils.dpToPix(9));
         legendWidget_RIGHT.getTextPaint().setTextAlign(Align.RIGHT);
         legendWidget_RIGHT.setMarginLeft(185);

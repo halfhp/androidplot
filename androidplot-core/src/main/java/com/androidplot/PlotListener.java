@@ -31,7 +31,7 @@ public interface PlotListener {
      * @param source
      * @param canvas
      */
-    public void onBeforeDraw(Plot source, Canvas canvas);
+    void onBeforeDraw(Plot source, Canvas canvas);
 
     /**
      * Fired immediately after the Plot "source" is drawn onto canvas.
@@ -41,5 +41,5 @@ public interface PlotListener {
      * @param source
      * @param canvas
      */
-    public void onAfterDraw(Plot source, Canvas canvas);
+    void onAfterDraw(Plot source, Canvas canvas);
 }

@@ -34,5 +34,5 @@ public interface Resizable {
      * Resizables in likely undesired ways.
      * @param dims
      */
-    public void layout(final DisplayDimensions dims);
+    void layout(final DisplayDimensions dims);
 }

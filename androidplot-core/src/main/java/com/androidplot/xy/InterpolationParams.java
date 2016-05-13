@@ -21,5 +21,5 @@ package com.androidplot.xy;
  */
 public interface InterpolationParams<InterpolatorType extends Interpolator> {
 
-    public Class<InterpolatorType> getInterpolatorClass();
+    Class<InterpolatorType> getInterpolatorClass();
 }

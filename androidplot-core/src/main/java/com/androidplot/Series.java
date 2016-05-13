@@ -25,6 +25,6 @@ public interface Series {
      *
      * @return The title of this Series.
      */
-    public String getTitle();
+    String getTitle();
 
 }

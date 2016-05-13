@@ -26,6 +26,9 @@ import com.androidplot.util.FontUtils;
 
 import java.util.*;
 
+/**
+ * Displays a legend for each series added to the owning {@link XYPlot}.
+ */
 public class XYLegendWidget extends Widget {
 
     /**

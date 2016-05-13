@@ -19,11 +19,11 @@ package com.androidplot.xy;
 /**
  * A pair of x/y coordinates
  */
-public class XY {
+public class XYCoords {
     public Number x;
     public Number y;
 
-    public XY(Number x, Number y) {
+    public XYCoords(Number x, Number y) {
         this.x = x;
         this.y = y;
     }

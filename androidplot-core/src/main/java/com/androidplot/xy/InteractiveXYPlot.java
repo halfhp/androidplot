@@ -23,7 +23,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-public class XYPlotZoomPan extends XYPlot implements OnTouchListener {
+/**
+ * An {@link XYPlot} that supports pan and zoom via touch gestures.
+ */
+public class InteractiveXYPlot extends XYPlot implements OnTouchListener {
     private static final float MIN_DIST_2_FING = 5f;
 
     // Definition of the touch states
@@ -53,12 +56,12 @@ public class XYPlotZoomPan extends XYPlot implements OnTouchListener {
     private boolean mZoomVerticallyInit;
     private boolean mZoomHorizontallyInit;
 
-    public XYPlotZoomPan(Context context, String title, RenderMode mode) {
+    public InteractiveXYPlot(Context context, String title, RenderMode mode) {
         super(context, title, mode);
         setZoomEnabled(true); //Default is ZoomEnabled if instantiated programmatically
     }
 
-    public XYPlotZoomPan(final Context context, final AttributeSet attrs) {
+    public InteractiveXYPlot(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         if(mZoomEnabled || !mZoomEnabledInit) {
             setZoomEnabled(true);
@@ -71,7 +74,7 @@ public class XYPlotZoomPan extends XYPlot implements OnTouchListener {
         }
     }
 
-    public XYPlotZoomPan(final Context context, final AttributeSet attrs, final int defStyle) {
+    public InteractiveXYPlot(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         if(mZoomEnabled || !mZoomEnabledInit) {
             setZoomEnabled(true);
@@ -84,7 +87,7 @@ public class XYPlotZoomPan extends XYPlot implements OnTouchListener {
         }
     }
 
-    public XYPlotZoomPan(final Context context, final String title) {
+    public InteractiveXYPlot(final Context context, final String title) {
         super(context, title);
     }
 

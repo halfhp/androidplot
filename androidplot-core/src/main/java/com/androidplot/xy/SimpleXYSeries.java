@@ -216,15 +216,15 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
 
     /**
      *
-     * @return {@link XY} with first equal to x-val and second equal to y-val.
+     * @return {@link XYCoords} with first equal to x-val and second equal to y-val.
      */
-    public XY removeFirst() {
+    public XYCoords removeFirst() {
         lock.writeLock().lock();
         try {
             if (size() <= 0) {
                 throw new NoSuchElementException();
             }
-            return new XY(xVals != null ? xVals.removeFirst() : 0, yVals.removeFirst());
+            return new XYCoords(xVals != null ? xVals.removeFirst() : 0, yVals.removeFirst());
         } finally {
             lock.writeLock().unlock();
         }
@@ -244,15 +244,15 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
 
     /**
      *
-     * @return {@link XY} with first equal to x-val and second equal to y-val.
+     * @return {@link XYCoords} with first equal to x-val and second equal to y-val.
      */
-    public XY removeLast() {
+    public XYCoords removeLast() {
         lock.writeLock().lock();
         try {
             if (size() <= 0) {
                 throw new NoSuchElementException();
             }
-            return new XY(xVals != null ? xVals.removeLast() : yVals.size() - 1, yVals.removeLast());
+            return new XYCoords(xVals != null ? xVals.removeLast() : yVals.size() - 1, yVals.removeLast());
         } finally {
             lock.writeLock().unlock();
         }

@@ -104,7 +104,7 @@ public class BarPlotExampleActivity extends Activity
                 new Size(
                         PixelUtils.dpToPix(100), SizeLayoutType.ABSOLUTE,
                         PixelUtils.dpToPix(100), SizeLayoutType.ABSOLUTE),
-                TextOrientationType.HORIZONTAL);
+                TextOrientation.HORIZONTAL);
 
         selectionWidget.getLabelPaint().setTextSize(PixelUtils.dpToPix(16));
 

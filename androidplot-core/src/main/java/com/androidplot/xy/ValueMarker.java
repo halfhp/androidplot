@@ -19,6 +19,7 @@ package com.androidplot.xy;
 import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.PositionMetric;
+import com.androidplot.ui.TextOrientation;
 
 /**
  * Encapsulates a single axis line marker drawn onto an XYPlot at a specified value.
@@ -34,14 +35,9 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
         this.text = text;
     }
 
-    public enum TextOrientation {
-        HORIZONTAL,
-        VERTICAL
-    }
     private Number value;
     private Paint linePaint;
     private Paint textPaint;
-    //private Paint backgroundPaint;
     private TextOrientation textOrientation;
     private int textMargin = 2;
     private PositionMetricType textPosition;
@@ -55,10 +51,6 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
         textPaint = new Paint();
         textPaint.setAntiAlias(true);
         textPaint.setColor(Color.RED);
-        //backgroundPaint = new Paint();
-        //backgroundPaint.setColor(Color.argb(100, 100, 100, 100));
-        //backgroundPaint.setColor(Color.DKGRAY);
-
     }
 
     public ValueMarker(Number value, String text, PositionMetricType textPosition) {
@@ -77,10 +69,8 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
      */
     public ValueMarker(Number value, String text, PositionMetricType textPosition, Paint linePaint, Paint textPaint) {
         this(value, text, textPosition);
-
         this.linePaint = linePaint;
         this.textPaint = textPaint;
-        //this.backgroundPaint = backgroundPaint;
     }
 
     public ValueMarker(Number value, String text, PositionMetricType textPosition, int linePaint, int textPaint) {
@@ -112,14 +102,6 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
     public void setTextPaint(Paint textPaint) {
         this.textPaint = textPaint;
     }
-
-    /*public Paint getBackgroundPaint() {
-        return backgroundPaint;
-    }
-
-    public void setBackgroundPaint(Paint backgroundPaint) {
-        this.backgroundPaint = backgroundPaint;
-    }*/
 
     public TextOrientation getTextOrientation() {
         return textOrientation;

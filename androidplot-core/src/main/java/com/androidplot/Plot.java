@@ -27,7 +27,7 @@ import android.view.View;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
 import com.androidplot.ui.Formatter;
-import com.androidplot.ui.TextOrientationType;
+import com.androidplot.ui.TextOrientation;
 import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.AttrUtils;
@@ -332,7 +332,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         titleWidget = new TextLabelWidget(layoutManager, new Size(25,
                 SizeLayoutType.ABSOLUTE, 100,
                 SizeLayoutType.ABSOLUTE),
-                TextOrientationType.HORIZONTAL);
+                TextOrientation.HORIZONTAL);
         titleWidget.position(0, XLayoutStyle.RELATIVE_TO_CENTER, 0,
                 YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
 

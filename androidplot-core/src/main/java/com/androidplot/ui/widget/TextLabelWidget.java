@@ -26,7 +26,7 @@ public class TextLabelWidget extends Widget {
     private String text;
     private Paint labelPaint;
 
-    private TextOrientationType orientation;
+    private TextOrientation orientation;
 
     private boolean autoPackEnabled = true;
 
@@ -39,15 +39,15 @@ public class TextLabelWidget extends Widget {
     }
 
     public TextLabelWidget(LayoutManager layoutManager, Size size) {
-        this(layoutManager, size, TextOrientationType.HORIZONTAL);
+        this(layoutManager, size, TextOrientation.HORIZONTAL);
     }
 
-    public TextLabelWidget(LayoutManager layoutManager, String title, Size size, TextOrientationType orientation) {
+    public TextLabelWidget(LayoutManager layoutManager, String title, Size size, TextOrientation orientation) {
         this(layoutManager, size, orientation);
         setText(title);
     }
 
-    public TextLabelWidget(LayoutManager layoutManager, Size size, TextOrientationType orientation) {
+    public TextLabelWidget(LayoutManager layoutManager, Size size, TextOrientation orientation) {
         super(layoutManager, new Size(0, SizeLayoutType.ABSOLUTE, 0, SizeLayoutType.ABSOLUTE));
         setSize(size);
         this.orientation = orientation;
@@ -150,11 +150,11 @@ public class TextLabelWidget extends Widget {
         }
     }
 
-    public TextOrientationType getOrientation() {
+    public TextOrientation getOrientation() {
         return orientation;
     }
 
-    public void setOrientation(TextOrientationType orientation) {
+    public void setOrientation(TextOrientation orientation) {
         this.orientation = orientation;
         if(autoPackEnabled) {
             pack();

@@ -26,7 +26,7 @@ import android.util.AttributeSet;
 import com.androidplot.Plot;
 import com.androidplot.R;
 import com.androidplot.ui.*;
-import com.androidplot.ui.TextOrientationType;
+import com.androidplot.ui.TextOrientation;
 import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.util.AttrUtils;
 import com.androidplot.util.PixelUtils;
@@ -194,7 +194,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                         SizeLayoutType.ABSOLUTE,
                         PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_W_DP),
                         SizeLayoutType.ABSOLUTE),
-                TextOrientationType.HORIZONTAL);
+                TextOrientation.HORIZONTAL);
         rangeLabelWidget = new TextLabelWidget(
                 getLayoutManager(),
                 new Size(
@@ -202,7 +202,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                         SizeLayoutType.ABSOLUTE,
                         PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_W_DP),
                         SizeLayoutType.ABSOLUTE),
-                TextOrientationType.VERTICAL_ASCENDING);
+                TextOrientation.VERTICAL_ASCENDING);
 
         legendWidget.position(
                 PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_X_OFFSET_DP),

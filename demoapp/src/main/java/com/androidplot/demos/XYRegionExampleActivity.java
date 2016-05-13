@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import com.androidplot.SimpleNumberLabelFormatter;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.ui.*;
@@ -61,11 +62,9 @@ public class XYRegionExampleActivity extends Activity {
     private RectRegion warmupRegion;
     private RectRegion homeRunRegion;
 
-    //private XYRegionFormatter rf1;
     private XYRegionFormatter shortRegionFormatter;
     private XYRegionFormatter warmupRegionFormatter;
     private XYRegionFormatter homeRunRegionFormatter;
-    //private XYRegionFormatter rf5;
 
     private CheckBox timCB;
     private CheckBox nickCB;
@@ -209,19 +208,6 @@ public class XYRegionExampleActivity extends Activity {
     private void makePlotPretty() {
         // use a 2x5 grid with room for 10 items:
         plot.getLegendWidget().setTableModel(new DynamicTableModel(4, 2));
-
-        // add a semi-transparent black background to the legend
-        // so it's easier to see overlaid on top of our plot:
-        Paint bgPaint = new Paint();
-        bgPaint.setColor(Color.BLACK);
-        bgPaint.setStyle(Paint.Style.FILL);
-        bgPaint.setAlpha(40);
-
-        plot.getLegendWidget().setBackgroundPaint(bgPaint);
-
-        // adjust the padding of the legend widget to look a little nicer:
-        plot.getLegendWidget().setPadding(5, 5, 5, 5);
-
         plot.setRangeValueFormat(new NumberFormat() {
             @Override
             public StringBuffer format(double value, StringBuffer buffer, FieldPosition field) {
@@ -243,33 +229,14 @@ public class XYRegionExampleActivity extends Activity {
 
         plot.getLegendWidget().setWidth(PixelUtils.dpToPix(100), SizeLayoutType.FILL);
 
-
-        // adjust the legend size so there is enough room
-        // to draw the new legend grid:
-        //plot.getLegendWidget().getHeight().setLayoutType(SizeLayoutType.ABSOLUTE);
-        //plot.getLegendWidget().getWidth().setLayoutType(SizeLayoutType.ABSOLUTE);
-        //plot.getLegendWidget().setSize(
-        //    new SizeMetrics(70, SizeLayoutType.ABSOLUTE, 80, SizeLayoutType.ABSOLUTE));
-
         // reposition the grid so that it rests above the bottom-left
         // edge of the graph widget:
-
         plot.getLegendWidget().position(
-                125,
-                XLayoutStyle.ABSOLUTE_FROM_LEFT,
-                65,
+                50,
+                XLayoutStyle.ABSOLUTE_FROM_CENTER,
+                200,
                 YLayoutStyle.ABSOLUTE_FROM_TOP,
-                AnchorPosition.LEFT_TOP);
-
-        plot.getGraphWidget().setRangeTickLabelHorizontalOffset(-1);
-
-        // add enough space to ensure range value labels arent cut off on the left/right:
-        plot.getGraphWidget().setRangeTickLabelWidth(25);
-
-        // add enough space to make sure domain value labels arent cut off on the bottom:
-        plot.getGraphWidget().setDomainTickLabelWidth(15);
-
-        plot.getGraphWidget().setDomainTickLabelVerticalOffset(-6);
+                AnchorPosition.TOP_MIDDLE);
 
         plot.setRangeBoundaries(0, BoundaryMode.FIXED, 500, BoundaryMode.FIXED);
     }
@@ -336,7 +303,6 @@ public class XYRegionExampleActivity extends Activity {
         plot.addSeries(jamesSeries, jamesFormatter);
 
         plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 100);
-        //plot.setTicksPerRangeLabel(1);
         plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
     }
 
@@ -345,15 +311,15 @@ public class XYRegionExampleActivity extends Activity {
      */
     private void axisLabelSetup() {
         // DOMAIN
-        plot.getGraphWidget().addDomainAxisValueLabelRegion(
-                Double.NEGATIVE_INFINITY, 2, new AxisValueLabelFormatter(Color.GRAY));
-        plot.getGraphWidget().addDomainAxisValueLabelRegion(
-                2, Double.POSITIVE_INFINITY, new AxisValueLabelFormatter(Color.WHITE));
+        plot.getGraphWidget().addDomainTickLabelFormatter(
+                Double.NEGATIVE_INFINITY, 2, new SimpleNumberLabelFormatter(Color.GRAY));
+        plot.getGraphWidget().addDomainTickLabelFormatter(
+                2, Double.POSITIVE_INFINITY, new SimpleNumberLabelFormatter(Color.WHITE));
         // RANGE
-        plot.getGraphWidget().addRangeAxisValueLabelRegion(
-                Double.NEGATIVE_INFINITY, HOME_RUN_DIST, new AxisValueLabelFormatter(Color.RED));
-        plot.getGraphWidget().addRangeAxisValueLabelRegion(
-                HOME_RUN_DIST, Double.POSITIVE_INFINITY, new AxisValueLabelFormatter(Color.GREEN));
+        plot.getGraphWidget().addRangeTickLabelFormatter(
+                Double.NEGATIVE_INFINITY, HOME_RUN_DIST, new SimpleNumberLabelFormatter(Color.RED));
+        plot.getGraphWidget().addRangeTickLabelFormatter(
+                HOME_RUN_DIST, Double.POSITIVE_INFINITY, new SimpleNumberLabelFormatter(Color.GREEN));
     }
 
     /**
@@ -397,7 +363,6 @@ public class XYRegionExampleActivity extends Activity {
      * Add some fill regions to our series data
      */
     private void regionSetup() {
-
 
         // and another region:
         shortRegionFormatter = new XYRegionFormatter(Color.RED);

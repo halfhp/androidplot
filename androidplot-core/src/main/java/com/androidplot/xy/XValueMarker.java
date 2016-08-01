@@ -17,10 +17,10 @@
 package com.androidplot.xy;
 
 import android.graphics.Paint;
-import com.androidplot.ui.YLayoutStyle;
-import com.androidplot.ui.YPositionMetric;
+import com.androidplot.ui.VerticalPositioning;
+import com.androidplot.ui.VerticalPosition;
 
-public class XValueMarker extends ValueMarker<YPositionMetric> {
+public class XValueMarker extends ValueMarker<VerticalPosition> {
 
     /**
      *
@@ -28,7 +28,7 @@ public class XValueMarker extends ValueMarker<YPositionMetric> {
      * @param text Set to null to use the plot's default getFormatter.
      */
     public XValueMarker(Number value, String text) {
-        super(value, text, new YPositionMetric(3, YLayoutStyle.ABSOLUTE_FROM_TOP));
+        super(value, text, new VerticalPosition(3, VerticalPositioning.ABSOLUTE_FROM_TOP));
     }
 
     /**
@@ -39,7 +39,7 @@ public class XValueMarker extends ValueMarker<YPositionMetric> {
      * @param linePaint
      * @param textPaint
      */
-    public XValueMarker(Number value, String text, YPositionMetric textPosition, Paint linePaint, Paint textPaint) {
+    public XValueMarker(Number value, String text, VerticalPosition textPosition, Paint linePaint, Paint textPaint) {
         super(value, text, textPosition, linePaint, textPaint);
     }
 
@@ -52,7 +52,7 @@ public class XValueMarker extends ValueMarker<YPositionMetric> {
      * @param linePaint
      * @param textPaint
      */
-    public XValueMarker(Number value, String text, YPositionMetric textPosition, int linePaint, int textPaint) {
+    public XValueMarker(Number value, String text, VerticalPosition textPosition, int linePaint, int textPaint) {
         super(value, text, textPosition, linePaint, textPaint);
     }
 }

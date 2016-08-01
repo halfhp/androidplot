@@ -221,7 +221,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
     		 * Draw the bars within the barGroup area.
     		 */
             double rangeOrigin = getPlot().getRangeOrigin().doubleValue();
-            float basePositionY = ValPixConverter.valToPix(rangeOrigin,
+            float basePositionY = (float) ValPixConverter.valToPix(rangeOrigin,
                     getPlot().getCalculatedMinY().doubleValue(),
                     getPlot().getCalculatedMaxY().doubleValue(),
                     plotArea.height(), true) + plotArea.top;
@@ -328,12 +328,14 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
 			this.seriesIndex = seriesIndex;
 			
 			this.xVal = series.getX(seriesIndex).doubleValue();
-			this.pixX = ValPixConverter.valToPix(xVal, getPlot().getCalculatedMinX().doubleValue(), getPlot().getCalculatedMaxX().doubleValue(), plotArea.width(), false) + (plotArea.left);
+			this.pixX = (float) ValPixConverter.valToPix(xVal, getPlot().getCalculatedMinX().doubleValue(),
+					getPlot().getCalculatedMaxX().doubleValue(), plotArea.width(), false) + (plotArea.left);
 			this.intX = (int) pixX;
 			
 			if (series.getY(seriesIndex) != null) {
 				this.yVal = series.getY(seriesIndex).doubleValue();
-				this.pixY = ValPixConverter.valToPix(yVal, getPlot().getCalculatedMinY().doubleValue(), getPlot().getCalculatedMaxY().doubleValue(), plotArea.height(), true) + plotArea.top;
+				this.pixY = (float) ValPixConverter.valToPix(yVal, getPlot().getCalculatedMinY().doubleValue(),
+						getPlot().getCalculatedMaxY().doubleValue(), plotArea.height(), true) + plotArea.top;
 				this.intY = (int) pixY;
 			} else {
 				this.yVal = 0;

@@ -20,29 +20,12 @@
               xmlns:ap="http://schemas.android.com/apk/res-auto"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
+
     <com.androidplot.xy.XYPlot
+            style="@style/APDefacto.Light"
             android:id="@+id/xyplot"
             android:layout_width="fill_parent"
             android:layout_height="250dp"
-            ap:backgroundColor="#000000"
-            ap:graphBackgroundColor="#000000"
-            ap:label="an xy plot"
-            ap:labelTextSize="@dimen/title_font_size"
-            ap:borderColor="#000000"
-            ap:legendTextSize="15sp"
-            ap:legendTextColor="#FFFFFF"
-            ap:legendIconHeightSizeLayoutType="absolute"
-            ap:legendIconHeight="10dp"
-            ap:legendIconWidthSizeLayoutType="absolute"
-            ap:legendIconWidth="10dp"
-            ap:legendHeightSizeLayoutType="absolute"
-            ap:legendHeight="30dp"
-            ap:legendWidthSizeLayoutType="absolute"
-            ap:legendWidth="200dp"
-            ap:legendAnchorPosition="right_bottom"
-            ap:graphMarginTop="20dp"
-            ap:graphMarginLeft="15dp"
-            ap:graphMarginBottom="25dp"
-            ap:graphMarginRight="10dp"/>
+            ap:title="an xy plot"/>
 
 </LinearLayout>

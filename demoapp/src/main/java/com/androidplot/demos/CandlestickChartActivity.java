@@ -21,6 +21,7 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
+
 import com.androidplot.xy.CandlestickFormatter;
 import com.androidplot.xy.CandlestickMaker;
 import com.androidplot.xy.CandlestickSeries;
@@ -35,14 +36,12 @@ import java.text.ParsePosition;
 /**
  * A simple example of a candlestick chart rendered on an {@link XYPlot}.
  */
-public class CandlestickChartActivity extends Activity
-{
+public class CandlestickChartActivity extends Activity {
 
     private XYPlot plot;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.candlestick_example);
 
@@ -61,7 +60,7 @@ public class CandlestickChartActivity extends Activity
         LineAndPointFormatter lpf = new LineAndPointFormatter(Color.BLACK, Color.BLACK, null, null);
         lpf.getLinePaint().setPathEffect(
                 new DashPathEffect(
-                        new float[]{PixelUtils.dpToPix(5), PixelUtils.dpToPix(5)}, 0));
+                        new float[] {PixelUtils.dpToPix(5), PixelUtils.dpToPix(5)}, 0));
         lpf.setInterpolationParams(
                 new CatmullRomInterpolator.Params(20, CatmullRomInterpolator.Type.Centripetal));
 
@@ -83,18 +82,20 @@ public class CandlestickChartActivity extends Activity
         CandlestickMaker.make(plot, formatter, candlestickSeries);
 
         // setup the range tick label formatting, etc:
-        plot.setTicksPerRangeLabel(3);
+        plot.setLinesPerRangeLabel(3);
 
-        plot.setRangeValueFormat(new DecimalFormat("$0.00"));
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
+                setFormat(new DecimalFormat("$0.00"));
 
         // setup the domain tick label formatting, etc:
         plot.setDomainBoundaries(-1, 6, BoundaryMode.FIXED);
-        plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
-        plot.setDomainValueFormat(new Format() {
+        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1);
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
             @Override
-            public StringBuffer format(Object object, StringBuffer buffer, FieldPosition field) {
+            public StringBuffer format(Object object, StringBuffer buffer,
+                    FieldPosition field) {
                 int day = ((Number) object).intValue() % 7;
-                switch(day) {
+                switch (day) {
                     case 0:
                         buffer.append("Sun");
                         break;
@@ -127,8 +128,5 @@ public class CandlestickChartActivity extends Activity
                 return null;
             }
         });
-
-        // rotate domain labels 45 degrees to make them more compact horizontally:
-        plot.getGraphWidget().setDomainLabelOrientation(-45);
     }
 }

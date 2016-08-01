@@ -21,27 +21,27 @@ import android.graphics.Paint;
 import com.androidplot.util.PixelUtils;
 
 /**
- * A basic implementation of a {@link NumberLabelFormatter}.
+ * A basic implementation of a {@link LineLabelFormatter}.
  */
-public class SimpleNumberLabelFormatter implements NumberLabelFormatter {
+public class SimpleLineLabelFormatter implements LineLabelFormatter {
 
     private static final int DEFAULT_TEXT_SIZE_SP = 12;
     private static final int DEFAULT_STROKE_SIZE_DP = 2;
     private Paint paint;
 
-    public SimpleNumberLabelFormatter() {
+    public SimpleLineLabelFormatter() {
         this(new Paint());
         getPaint().setColor(Color.WHITE);
         getPaint().setTextSize(PixelUtils.spToPix(DEFAULT_TEXT_SIZE_SP));
         getPaint().setStrokeWidth(PixelUtils.dpToPix(DEFAULT_STROKE_SIZE_DP));
     }
 
-    public SimpleNumberLabelFormatter(int color) {
+    public SimpleLineLabelFormatter(int color) {
         this();
         getPaint().setColor(color);
     }
 
-    public SimpleNumberLabelFormatter(Paint paint) {
+    public SimpleLineLabelFormatter(Paint paint) {
         this.paint = paint;
     }
 

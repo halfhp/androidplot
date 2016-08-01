@@ -69,39 +69,41 @@ public class StepChartExampleActivity extends Activity
         stepFormatter.setFillPaint(lineFill);
         mySimpleXYPlot.addSeries(series2, stepFormatter);
 
-        // adjust the domain/range ticks to make more sense; label per tick for range and label per 5 ticks domain:
-        mySimpleXYPlot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 1);
-        mySimpleXYPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
-        mySimpleXYPlot.setTicksPerRangeLabel(1);
-        mySimpleXYPlot.setTicksPerDomainLabel(5);
+        // adjust the domain/range ticks to make more sense; label per line for range and label per 5 ticks domain:
+        mySimpleXYPlot.setRangeStep(StepMode.INCREMENT_BY_VAL, 1);
+        mySimpleXYPlot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1);
+        mySimpleXYPlot.setLinesPerRangeLabel(1);
+        mySimpleXYPlot.setLinesPerDomainLabel(5);
 
         // get rid of decimal points in our domain labels:
-        mySimpleXYPlot.setDomainValueFormat(new DecimalFormat("0"));
+        mySimpleXYPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).
+                setFormat(new DecimalFormat("0"));
 
         // create a custom getFormatter to draw our state names as range tick labels:
-        mySimpleXYPlot.setRangeValueFormat(new Format() {
-            @Override
-            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
-                Number num = (Number) obj;
-                switch(num.intValue()) {
-                    case 1:
-                        toAppendTo.append("Init");
-                        break;
-                    case 2:
-                        toAppendTo.append("Idle");
-                        break;
-                    case 3:
-                        toAppendTo.append("Recv");
-                        break;
-                    case 4:
-                        toAppendTo.append("Send");
-                        break;
-                    default:
-                        toAppendTo.append("Unknown");
-                        break;
-                }
-                return toAppendTo;
-            }
+        mySimpleXYPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).setFormat(new Format() {
+                    @Override
+                    public StringBuffer format(Object obj, StringBuffer toAppendTo,
+                            FieldPosition pos) {
+                        Number num = (Number) obj;
+                        switch (num.intValue()) {
+                            case 1:
+                                toAppendTo.append("Init");
+                                break;
+                            case 2:
+                                toAppendTo.append("Idle");
+                                break;
+                            case 3:
+                                toAppendTo.append("Recv");
+                                break;
+                            case 4:
+                                toAppendTo.append("Send");
+                                break;
+                            default:
+                                toAppendTo.append("Unknown");
+                                break;
+                        }
+                        return toAppendTo;
+                    }
 
             @Override
             public Object parseObject(String source, ParsePosition pos) {

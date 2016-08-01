@@ -14,34 +14,14 @@
  *    limitations under the License.
  */
 
-package com.androidplot.xy;
+package com.androidplot.ui;
 
-/**
- * Encapsulates a set of stepping parameters for a single axis.
- */
-public class XYStepModel {
+public enum HorizontalPositioning {
+    ABSOLUTE_FROM_LEFT,
+    ABSOLUTE_FROM_RIGHT,
+    ABSOLUTE_FROM_CENTER,
+    RELATIVE_TO_LEFT,
+    RELATIVE_TO_RIGHT,
+    RELATIVE_TO_CENTER
 
-    public XYStepModel(XYStepMode mode, double value) {
-        setMode(mode);
-        setValue(value);
-    }
-
-    private XYStepMode mode;
-    private double value;
-
-    public XYStepMode getMode() {
-        return mode;
-    }
-
-    public void setMode(XYStepMode mode) {
-        this.mode = mode;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
 }

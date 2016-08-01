@@ -16,25 +16,18 @@
 
 package com.androidplot.ui;
 
+public class HorizontalPosition extends PositionMetric<HorizontalPositioning> {
 
-import com.androidplot.ui.PositionMetric;
-import com.androidplot.ui.XLayoutStyle;
-
-public class XPositionMetric extends PositionMetric<XLayoutStyle> {
-
-    //private XLayoutStyle layoutType;
-
-    public XPositionMetric(float value, XLayoutStyle layoutStyle) {
+    public HorizontalPosition(float value, HorizontalPositioning layoutStyle) {
         super(value, layoutStyle);
         validatePair(value, layoutStyle);
-        //this.layoutStyle = layoutStyle;
     }
 
     /**
      * Throws IllegalArgumentException if there is a problem.
      * @param value
      */
-    protected void validatePair(float value, XLayoutStyle layoutStyle) {
+    protected void validatePair(float value, HorizontalPositioning layoutStyle) {
         switch(layoutStyle) {
             case ABSOLUTE_FROM_LEFT:
             case ABSOLUTE_FROM_RIGHT:
@@ -69,7 +62,7 @@ public class XPositionMetric extends PositionMetric<XLayoutStyle> {
     }
 
     @Override
-    public void setLayoutType(XLayoutStyle layoutType) {
+    public void setLayoutType(HorizontalPositioning layoutType) {
         super.setLayoutType(layoutType);
     }
 }

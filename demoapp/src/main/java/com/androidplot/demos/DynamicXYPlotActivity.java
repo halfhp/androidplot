@@ -55,7 +55,7 @@ public class DynamicXYPlotActivity extends Activity {
 
         // android boilerplate stuff
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dynamicxyplot_example);
+        setContentView(R.layout.dynamic_xyplot_example);
 
         // get handles to our View defined in layout.xml:
         dynamicPlot = (XYPlot) findViewById(R.id.dynamicXYPlot);
@@ -63,7 +63,8 @@ public class DynamicXYPlotActivity extends Activity {
         plotUpdater = new MyPlotUpdater(dynamicPlot);
 
         // only display whole numbers in domain labels
-        dynamicPlot.getGraphWidget().setDomainValueFormat(new DecimalFormat("0"));
+        dynamicPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).
+                setFormat(new DecimalFormat("0"));
 
         // getInstance and position datasets:
         data = new SampleDynamicXYDatasource();
@@ -71,7 +72,7 @@ public class DynamicXYPlotActivity extends Activity {
         SampleDynamicSeries sine2Series = new SampleDynamicSeries(data, 1, "Sine 2");
 
         LineAndPointFormatter formatter1 = new LineAndPointFormatter(
-                                Color.rgb(0, 0, 0), null, null, null);
+                                Color.rgb(0, 200, 0), null, null, null);
         formatter1.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
         formatter1.getLinePaint().setStrokeWidth(10);
         dynamicPlot.addSeries(sine1Series,
@@ -89,13 +90,14 @@ public class DynamicXYPlotActivity extends Activity {
         data.addObserver(plotUpdater);
 
         // thin out domain tick labels so they dont overlap each other:
-        dynamicPlot.setDomainStepMode(XYStepMode.INCREMENT_BY_VAL);
+        dynamicPlot.setDomainStepMode(StepMode.INCREMENT_BY_VAL);
         dynamicPlot.setDomainStepValue(5);
 
-        dynamicPlot.setRangeStepMode(XYStepMode.INCREMENT_BY_VAL);
+        dynamicPlot.setRangeStepMode(StepMode.INCREMENT_BY_VAL);
         dynamicPlot.setRangeStepValue(10);
 
-        dynamicPlot.setRangeValueFormat(new DecimalFormat("###.#"));
+        dynamicPlot.getGraph().getLineLabelStyle(
+                XYGraphWidget.Edge.LEFT).setFormat(new DecimalFormat("###.#"));
 
         // uncomment this line to freeze the range boundaries:
         dynamicPlot.setRangeBoundaries(-100, 100, BoundaryMode.FIXED);
@@ -103,10 +105,8 @@ public class DynamicXYPlotActivity extends Activity {
         // create a dash effect for domain and range grid lines:
         DashPathEffect dashFx = new DashPathEffect(
                 new float[] {PixelUtils.dpToPix(3), PixelUtils.dpToPix(3)}, 0);
-        dynamicPlot.getGraphWidget().getDomainGridLinePaint().setPathEffect(dashFx);
-        dynamicPlot.getGraphWidget().getRangeGridLinePaint().setPathEffect(dashFx);
-
-
+        dynamicPlot.getGraph().getDomainGridLinePaint().setPathEffect(dashFx);
+        dynamicPlot.getGraph().getRangeGridLinePaint().setPathEffect(dashFx);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class DynamicXYPlotActivity extends Activity {
         private static final int AMP_STEP = 1;
         public static final int SINE1 = 0;
         public static final int SINE2 = 1;
-        private static final int SAMPLE_SIZE = 30;
+        private static final int SAMPLE_SIZE = 31;
         private int phase = 0;
         private int sinAmp = 1;
         private MyObservable notifier;

@@ -16,55 +16,17 @@
 
 package com.androidplot.ui;
 
-import com.androidplot.ui.PositionMetric;
-import com.androidplot.ui.YLayoutStyle;
+public class VerticalPosition extends PositionMetric<VerticalPositioning> {
 
-public class YPositionMetric extends PositionMetric<YLayoutStyle> {
-    /*
-    public enum YLayoutStyle {
-        ABSOLUTE_FROM_TOP,
-        ABSOLUTE_FROM_BOTTOM,
-        ABSOLUTE_FROM_CENTER,
-        RELATIVE_TO_TOP,
-        RELATIVE_TO_BOTTOM,
-        RELATIVE_TO_CENTER
-    }
-    */
-
-    //private YLayoutStyle layoutType;
-
-    public YPositionMetric(float value, YLayoutStyle layoutStyle) {
+    public VerticalPosition(float value, VerticalPositioning layoutStyle) {
         super(value, layoutStyle);
-        //this.layoutStyle = layoutStyle;
-
-
     }
-
-    /*
-    @Override
-    public void set(float value, YLayoutStyle layoutType) {
-        validatePair(value, layoutType);
-        super.set(value, layoutType);
-    }
-
-    @Override
-    public void setLayoutType(YLayoutStyle layoutType) {
-        validatePair(getValue(), layoutType);
-        super.setLayoutType(layoutType);
-    }
-
-    @Override
-    public void setValue(float value) {
-        validatePair(value, getLayoutType());
-        super.setValue(value);
-    }
-    */
 
     /**
      * Throws IllegalArgumentException if there is a problem.
      * @param value
      */
-    protected void validatePair(float value, YLayoutStyle layoutStyle) {
+    protected void validatePair(float value, VerticalPositioning layoutStyle) {
         switch(layoutStyle) {
             case ABSOLUTE_FROM_TOP:
             case ABSOLUTE_FROM_BOTTOM:
@@ -99,7 +61,7 @@ public class YPositionMetric extends PositionMetric<YLayoutStyle> {
     }
 
     @Override
-    public void setLayoutType(YLayoutStyle layoutType) {
+    public void setLayoutType(VerticalPositioning layoutType) {
         super.setLayoutType(layoutType);
     }
 }

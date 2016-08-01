@@ -21,14 +21,22 @@ import android.graphics.Paint;
 import android.util.TypedValue;
 import com.androidplot.ui.*;
 import com.androidplot.ui.widget.Widget;
-import com.androidplot.xy.XYStepMode;
-import com.androidplot.xy.XYStepModel;
+import com.androidplot.xy.StepMode;
+import com.androidplot.xy.StepModel;
 
 /**
  * Methods for applying styleable attributes.
  *
  */
 public class AttrUtils {
+
+    public static void configureInsets(TypedArray attrs, Insets insets,
+            int topAttr, int bottomAttr, int leftAttr, int rightAttr) {
+        insets.setTop(attrs.getDimension(topAttr, insets.getTop()));
+        insets.setBottom(attrs.getDimension(bottomAttr, insets.getBottom()));
+        insets.setLeft(attrs.getDimension(leftAttr, insets.getLeft()));
+        insets.setRight(attrs.getDimension(rightAttr, insets.getRight()));
+    }
 
     /**
      * Configure a {@link Paint} instance used for drawing text from xml attrs.
@@ -37,10 +45,44 @@ public class AttrUtils {
      * @param colorAttr
      * @param textSizeAttr
      */
-    public static void configureTextPaint(TypedArray attrs, Paint paint, int colorAttr, int textSizeAttr) {
+    public static void configureTextPaint(TypedArray attrs, Paint paint,
+            int colorAttr, int textSizeAttr) {
+        configureTextPaint(attrs, paint, colorAttr, textSizeAttr, null);
+    }
+
+    /**
+     * Configure a {@link Paint} instance used for drawing text from xml attrs.
+     * @param attrs
+     * @param paint
+     * @param colorAttr
+     * @param textSizeAttr
+     * @param alignAttr
+     */
+    public static void configureTextPaint(TypedArray attrs, Paint paint, int colorAttr,
+            int textSizeAttr, Integer alignAttr) {
         if(attrs != null) {
             setColor(attrs, paint, colorAttr);
             setTextSize(attrs, paint, textSizeAttr);
+
+            if(alignAttr != null && attrs.hasValue(alignAttr)) {
+                configureTextAlign(attrs, paint, alignAttr);
+            }
+        }
+    }
+
+    /**
+     * Configure {@link Paint} text alignment from xml attrs.
+     * @param attrs
+     * @param paint
+     * @param alignAttr
+     */
+    public static void configureTextAlign(TypedArray attrs, Paint paint, int alignAttr) {
+        if (attrs != null) {
+            //if(attrs.hasValue(alignAttr)) {
+            final Paint.Align alignment = Paint.Align.values()
+                    [attrs.getInt(alignAttr, paint.getTextAlign().ordinal())];
+            paint.setTextAlign(alignment);
+            //}
         }
     }
 
@@ -115,14 +157,14 @@ public class AttrUtils {
     private static void configureSizeMetric(TypedArray attrs, SizeMetric model, int typeAttr, int valueAttr) {
 
         final float value = getIntFloatDimenValue(attrs, valueAttr, model.getValue()).floatValue();
-        final SizeLayout sizeLayout =
+        final SizeMode sizeMode =
                 getSizeLayoutType(attrs, typeAttr, model.getLayoutType());
 
-        model.set(value, sizeLayout);
+        model.set(value, sizeMode);
     }
 
-    private static SizeLayout getSizeLayoutType(TypedArray attrs, int attr, SizeLayout defaultValue) {
-        return SizeLayout.values()[attrs.getInt(attr, defaultValue.ordinal())];
+    private static SizeMode getSizeLayoutType(TypedArray attrs, int attr, SizeMode defaultValue) {
+        return SizeMode.values()[attrs.getInt(attr, defaultValue.ordinal())];
     }
 
     public static void configureWidget(TypedArray attrs, Widget widget, int heightSizeLayoutTypeAttr, int heightAttr,
@@ -187,21 +229,21 @@ public class AttrUtils {
         return result;
     }
 
-    private static XLayoutStyle getXLayoutStyle(TypedArray attrs, int attr, XLayoutStyle defaultValue) {
-        return XLayoutStyle.values()[attrs.getInt(attr, defaultValue.ordinal())];
+    private static HorizontalPositioning getXLayoutStyle(TypedArray attrs, int attr, HorizontalPositioning defaultValue) {
+        return HorizontalPositioning.values()[attrs.getInt(attr, defaultValue.ordinal())];
     }
 
-    private static YLayoutStyle getYLayoutStyle(TypedArray attrs, int attr, YLayoutStyle defaultValue) {
-        return YLayoutStyle.values()[attrs.getInt(attr, defaultValue.ordinal())];
+    private static VerticalPositioning getYLayoutStyle(TypedArray attrs, int attr, VerticalPositioning defaultValue) {
+        return VerticalPositioning.values()[attrs.getInt(attr, defaultValue.ordinal())];
     }
 
-    private static AnchorPosition getAnchorPosition(TypedArray attrs, int attr, AnchorPosition defaultValue) {
-        return AnchorPosition.values()[attrs.getInt(attr, defaultValue.ordinal())];
+    private static Anchor getAnchorPosition(TypedArray attrs, int attr, Anchor defaultValue) {
+        return Anchor.values()[attrs.getInt(attr, defaultValue.ordinal())];
     }
 
-    public static void configureStep(TypedArray attrs, XYStepModel model, int stepModeAttr, int stepValueAttr) {
+    public static void configureStep(TypedArray attrs, StepModel model, int stepModeAttr, int stepValueAttr) {
         if(attrs != null) {
-            model.setMode(XYStepMode.values()[attrs.getInt(stepModeAttr, model.getMode().ordinal())]);
+            model.setMode(StepMode.values()[attrs.getInt(stepModeAttr, model.getMode().ordinal())]);
             model.setValue(getIntFloatDimenValue(attrs, stepValueAttr, model.getValue()).doubleValue());
         }
     }

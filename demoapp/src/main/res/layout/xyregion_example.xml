@@ -30,11 +30,10 @@
         ap:graphMarginTop="10dp"
         ap:graphMarginLeft="0dp"
         ap:graphMarginRight="0dp"
-        ap:gridPaddingLeft="10dp"
         ap:graphMarginBottom="3dp"
-        ap:label="Batting Practice Stats"
-        ap:domainLabel="Pitch #"
-        ap:rangeLabel="Distance"
+        ap:title="Batting Practice Stats"
+        ap:domainTitle="Pitch #"
+        ap:rangeTitle="Distance"
         android:layout_weight="1"
         />
 

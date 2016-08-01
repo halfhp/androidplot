@@ -21,106 +21,88 @@
               android:orientation="vertical">
 
     <com.androidplot.xy.XYPlot
-            android:id="@+id/plot"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            ap:backgroundColor="#FFFFFF"
-            ap:label="Growth"
-            ap:labelTextSize="@dimen/title_font_size"
-            ap:labelTextColor="#000000"
-            ap:domainLabel="Month"
-            ap:rangeLabel="Revenue (millions)"
-            ap:domainLabelTextColor="#000000"
-            ap:rangeLabelTextColor="#000000"
-            ap:rangeLabelTextSize="@dimen/range_label_font_size"
-            ap:domainLabelTextSize="@dimen/domain_label_font_size"
-            ap:rangeTickLabelTextColor="#000000"
-            ap:domainTickLabelTextColor="#000000"
-            ap:graphDomainLineColor="#000000"
-            ap:graphRangeLineColor="#000000"
-            ap:graphMarginTop="20dp"
-            ap:graphMarginLeft="15dp"
-            ap:graphMarginBottom="25dp"
-            ap:graphMarginRight="10dp"
-            ap:graphBackgroundColor="#FFFFFF"
-            ap:gridBackgroundColor="#FFFFFF"
-            ap:rangeOriginTickLabelTextSize="@dimen/range_tick_label_font_size"
-            ap:domainOriginTickLabelTextSize="@dimen/domain_tick_label_font_size"
-            ap:legendTextSize="@dimen/legend_text_font_size"
-            ap:legendTextColor="#000000"
-            ap:legendIconHeightSizeLayoutType="absolute"
-            ap:legendIconHeight="10dp"
-            ap:legendIconWidthSizeLayoutType="absolute"
-            ap:legendIconWidth="10dp"
-            ap:legendHeightSizeLayoutType="absolute"
-            ap:legendHeight="30dp"
-            ap:legendWidthSizeLayoutType="absolute"
-            ap:legendWidth="200dp"
-            ap:legendAnchorPosition="right_bottom"
-
-            android:layout_weight="1"/>
+        style="@style/APDefacto.Light"
+        android:id="@+id/plot"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ap:title="Growth"
+        ap:gridInsetLeft="35dp"
+        ap:gridInsetRight="10dp"
+        ap:gridClippingEnabled="false"
+        android:layout_weight="1"/>
 
     <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
         <Spinner
-                android:id="@+id/spRenderStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/spRenderStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <Spinner
-                android:id="@+id/spSeriesSize"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/spSeriesSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
     <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
         <Spinner
-                android:id="@+id/spWidthStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/spWidthStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <RelativeLayout
-                android:id="@+id/sectionGraph"
+            android:id="@+id/sectionGraph"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <SeekBar
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:max="300"
+                android:progress="10"
+                android:id="@+id/sbFixed"/>
+
             <SeekBar
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:max="300"
-                    android:progress="10"
-                    android:id="@+id/sbFixed"/>
-            <SeekBar
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:max="50"
-                    android:progress="1"
-                    android:id="@+id/sbVariable"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:max="50"
+                android:progress="1"
+                android:id="@+id/sbVariable"/>
         </RelativeLayout>
     </LinearLayout>
+
     <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/s1CheckBox"
+            android:text="Series 1"
+            android:checked="true"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-        <CheckBox android:id="@+id/s1CheckBox"
-                  android:text="Series 1"
-                  android:checked="true"
-                  android:layout_height="wrap_content"
-                  android:layout_width="fill_parent"/>
-        <CheckBox android:id="@+id/s2CheckBox"
-                  android:text="Series 2"
-                  android:checked="true"
-                  android:layout_height="wrap_content"
-                  android:layout_width="fill_parent"/>
+            android:layout_width="fill_parent"/>
+
+        <CheckBox
+            android:id="@+id/s2CheckBox"
+            android:text="Series 2"
+            android:checked="true"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"/>
     </LinearLayout>
 </LinearLayout>

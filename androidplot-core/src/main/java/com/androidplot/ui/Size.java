@@ -25,7 +25,7 @@ import com.androidplot.util.PixelUtils;
 public class Size {
 
     // convenience value; sets size to 100% width and height of the widget container.
-    public static Size FILL = new Size(0, SizeLayout.FILL, 0, SizeLayout.FILL);
+    public static Size FILL = new Size(0, SizeMode.FILL, 0, SizeMode.FILL);
 
     private SizeMetric height;
     private SizeMetric width;
@@ -37,7 +37,7 @@ public class Size {
      * @param width Width value used algorithm to calculate the width of the associated widget(s).
      * @param widthLayoutType Algorithm used to calculate the width of the associated widget(s).
      */
-    public Size(float height, SizeLayout heightLayoutType, float width, SizeLayout widthLayoutType) {
+    public Size(float height, SizeMode heightLayoutType, float width, SizeMode widthLayoutType) {
         this.height = new SizeMetric(height, heightLayoutType);
         this.width = new SizeMetric(width, widthLayoutType);
     }

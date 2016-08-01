@@ -18,31 +18,31 @@ package com.androidplot.ui;
 
 public class PositionMetrics implements Comparable<PositionMetrics> {
 
-    private XPositionMetric xPositionMetric;
-    private YPositionMetric yPositionMetric;
-    private AnchorPosition anchor;
+    private HorizontalPosition horizontalPosition;
+    private VerticalPosition verticalPosition;
+    private Anchor anchor;
     private float layerDepth;
 
-    public PositionMetrics(float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle, AnchorPosition anchor) {
-        setXPositionMetric(new XPositionMetric(x, xLayoutStyle));
-        setYPositionMetric(new YPositionMetric(y, yLayoutStyle));
+    public PositionMetrics(float x, HorizontalPositioning horizontalPositioning, float y, VerticalPositioning verticalPositioning, Anchor anchor) {
+        setXPositionMetric(new HorizontalPosition(x, horizontalPositioning));
+        setYPositionMetric(new VerticalPosition(y, verticalPositioning));
         setAnchor(anchor);
 
     }
 
-    public YPositionMetric getYPositionMetric() {
-        return yPositionMetric;
+    public VerticalPosition getYPositionMetric() {
+        return verticalPosition;
     }
 
-    public void setYPositionMetric(YPositionMetric yPositionMetric) {
-        this.yPositionMetric = yPositionMetric;
+    public void setYPositionMetric(VerticalPosition verticalPosition) {
+        this.verticalPosition = verticalPosition;
     }
 
-    public AnchorPosition getAnchor() {
+    public Anchor getAnchor() {
         return anchor;
     }
 
-    public void setAnchor(AnchorPosition anchor) {
+    public void setAnchor(Anchor anchor) {
         this.anchor = anchor;
     }
 
@@ -57,11 +57,11 @@ public class PositionMetrics implements Comparable<PositionMetrics> {
         }
     }
 
-    public XPositionMetric getXPositionMetric() {
-        return xPositionMetric;
+    public HorizontalPosition getXPositionMetric() {
+        return horizontalPosition;
     }
 
-    public void setXPositionMetric(XPositionMetric xPositionMetric) {
-        this.xPositionMetric = xPositionMetric;
+    public void setXPositionMetric(HorizontalPosition horizontalPosition) {
+        this.horizontalPosition = horizontalPosition;
     }
 }

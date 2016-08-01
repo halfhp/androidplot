@@ -18,6 +18,8 @@ package com.androidplot.util;
 
 import android.graphics.RectF;
 
+import com.androidplot.ui.*;
+
 /**
  * Convenience methods for dealing with {@link android.graphics.RectF}
  */
@@ -37,5 +39,24 @@ public abstract class RectFUtils {
                 r1.top == r2.top &&
                 r1.right == r2.right &&
                 r1.bottom == r2.bottom;
+    }
+
+    /**
+     * Calculates a new {@link RectF} by applying insets to rect.
+     * @param rect
+     * @param insets
+     * @return The {@link RectF} created as a result of applying insets, or the passed in
+     * instance, if the insets were null.
+     */
+    public static RectF applyInsets(RectF rect, Insets insets) {
+        if (insets != null) {
+            return new RectF(
+                    rect.left + insets.getLeft(),
+                    rect.top + insets.getTop(),
+                    rect.right - insets.getRight(),
+                    rect.bottom - insets.getBottom());
+        } else {
+            return rect;
+        }
     }
 }

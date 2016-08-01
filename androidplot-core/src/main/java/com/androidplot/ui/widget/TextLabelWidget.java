@@ -48,7 +48,7 @@ public class TextLabelWidget extends Widget {
     }
 
     public TextLabelWidget(LayoutManager layoutManager, Size size, TextOrientation orientation) {
-        super(layoutManager, new Size(0, SizeLayout.ABSOLUTE, 0, SizeLayout.ABSOLUTE));
+        super(layoutManager, new Size(0, SizeMode.ABSOLUTE, 0, SizeMode.ABSOLUTE));
         setSize(size);
         this.orientation = orientation;
     }
@@ -81,11 +81,11 @@ public class TextLabelWidget extends Widget {
         }
         switch(orientation) {
             case HORIZONTAL:
-                setSize(new Size(size.height(), SizeLayout.ABSOLUTE, size.width()+2, SizeLayout.ABSOLUTE));
+                setSize(new Size(size.height(), SizeMode.ABSOLUTE, size.width()+2, SizeMode.ABSOLUTE));
                 break;
             case VERTICAL_ASCENDING:
             case VERTICAL_DESCENDING:
-                setSize(new Size(size.width(), SizeLayout.ABSOLUTE, size.height()+2, SizeLayout.ABSOLUTE));
+                setSize(new Size(size.width(), SizeMode.ABSOLUTE, size.height()+2, SizeMode.ABSOLUTE));
                 break;
         }
         refreshLayout();
@@ -106,7 +106,7 @@ public class TextLabelWidget extends Widget {
         //FontUtils.getStringDimensions(text, labelPaint);
         float vOffset = labelPaint.getFontMetrics().descent;
         PointF start = getAnchorCoordinates(widgetRect,
-                AnchorPosition.CENTER);
+                Anchor.CENTER);
 
         // BEGIN ROTATION CALCULATION
         //int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG);

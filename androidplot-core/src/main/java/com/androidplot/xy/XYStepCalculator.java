@@ -35,8 +35,8 @@ public class XYStepCalculator {
      * @param maxVal
      * @return
      */
-    public static XYStep getStep(XYPlot plot, Axis axisType, RectF rect, Number minVal, Number maxVal) {
-        XYStep step = null;
+    public static Step getStep(XYPlot plot, Axis axisType, RectF rect, Number minVal, Number maxVal) {
+        Step step = null;
         switch(axisType) {
             case DOMAIN:
                 step = getStep(plot.getDomainStepMode(), rect.width(), plot.getDomainStepValue(), minVal, maxVal);
@@ -48,28 +48,28 @@ public class XYStepCalculator {
         return step;
     }
 
-    public static XYStep getStep(XYStepMode typeXY, float plotPixelSize, double stepValue, Number minVal, Number maxVal) {
+    public static Step getStep(StepMode typeXY, float plotPixelSize, double stepValue, Number minVal, Number maxVal) {
         //XYStep step = new XYStep();
         double stepVal = 0;
-        float stepPix = 0;
-        float stepCount = 0;
+        double stepPix = 0;
+        double stepCount = 0;
         switch(typeXY) {
             case INCREMENT_BY_VAL:
                 stepVal = stepValue;
-                stepPix = (float)(stepValue/ ValPixConverter.valPerPix(minVal.doubleValue(), maxVal.doubleValue(), plotPixelSize));
+                stepPix = stepValue / ValPixConverter.valPerPix(minVal.doubleValue(), maxVal.doubleValue(), plotPixelSize);
                 stepCount = plotPixelSize /stepPix;
                 break;
             case INCREMENT_BY_PIXELS:
-                stepPix = new Double(stepValue).floatValue();
+                stepPix = stepValue;
                 stepCount = plotPixelSize /stepPix;
                 stepVal = ValPixConverter.valPerPix(minVal.doubleValue(), maxVal.doubleValue(), plotPixelSize)*stepPix;
                 break;
             case SUBDIVIDE:
-                stepCount = new Double(stepValue).floatValue();
+                stepCount = stepValue;
                 stepPix = (plotPixelSize /(stepCount-1));
                 stepVal = ValPixConverter.valPerPix(minVal.doubleValue(), maxVal.doubleValue(), plotPixelSize)*stepPix;
                 break;
         }
-        return new XYStep(stepCount, stepPix, stepVal);
+        return new Step(stepCount, stepPix, stepVal);
     }
 }

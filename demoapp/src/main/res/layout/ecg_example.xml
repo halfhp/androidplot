@@ -26,7 +26,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         ap:renderMode="use_background_thread"
-        ap:label="ECG Example"
-        ap:rangeLabel="range"
-        ap:domainLabel="domain"/>
+        ap:title="ECG Example"
+        ap:rangeTitle="range"
+        ap:domainTitle="domain"/>
 </LinearLayout>

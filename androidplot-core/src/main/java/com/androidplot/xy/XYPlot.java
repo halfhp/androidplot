@@ -32,7 +32,6 @@ import com.androidplot.util.AttrUtils;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.util.SeriesUtils;
 
-import java.text.Format;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,28 +64,25 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private static final int DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP = 0;
 
-    private static final int DEFAULT_DOMAIN_TICK_EXTENSION_DP = 2;
-    private static final int DEFAULT_RANGE_TICK_EXTENSION_DP = 2;
+    private static final int DEFAULT_DOMAIN_LINE_EXTENSION_DP = 2;
+    private static final int DEFAULT_RANGE_LINE_EXTENSION_DP = 2;
 
     private static final int DEFAULT_PLOT_LEFT_MARGIN_DP = 1;
     private static final int DEFAULT_PLOT_RIGHT_MARGIN_DP = 1;
     private static final int DEFAULT_PLOT_TOP_MARGIN_DP = 1;
     private static final int DEFAULT_PLOT_BOTTOM_MARGIN_DP = 1;
 
-    private static final int DEFAULT_DOMAIN_TICK_LABEL_WIDTH = 15;
-    private static final int DEFAULT_RANGE_TICK_LABEL_WIDTH = 41;
-
     private BoundaryMode domainOriginBoundaryMode;
     private BoundaryMode rangeOriginBoundaryMode;
 
     // widgets
-    private XYLegendWidget legendWidget;
-    private XYGraphWidget graphWidget;
-    private TextLabelWidget domainLabelWidget;
-    private TextLabelWidget rangeLabelWidget;
+    private XYLegendWidget legend;
+    private XYGraphWidget graph;
+    private TextLabelWidget domainTitle;
+    private TextLabelWidget rangeTitle;
 
-    private XYStepModel domainStepModel;
-    private XYStepModel rangeStepModel;
+    private StepModel domainStepModel;
+    private StepModel rangeStepModel;
 
     private XYConstraints constraints = new XYConstraints();
 
@@ -122,6 +118,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     @SuppressWarnings("FieldCanBeLocal")
     private Number domainOriginExtent = null;
+
     @SuppressWarnings("FieldCanBeLocal")
     private Number rangeOriginExtent = null;
 
@@ -159,84 +156,84 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     @Override
     protected void onPreInit() {
-        legendWidget = new XYLegendWidget(
+        legend = new XYLegendWidget(
                 getLayoutManager(),
                 this,
                 new Size(
                         PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_H_DP),
-                        SizeLayout.ABSOLUTE, 0.5f, SizeLayout.RELATIVE),
+                        SizeMode.ABSOLUTE, 0.5f, SizeMode.RELATIVE),
                 new DynamicTableModel(0, 1),
                 new Size(
                         PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP),
-                        SizeLayout.ABSOLUTE,
+                        SizeMode.ABSOLUTE,
                         PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP),
-                        SizeLayout.ABSOLUTE));
+                        SizeMode.ABSOLUTE));
 
-        graphWidget = new XYGraphWidget(
+        graph = new XYGraphWidget(
                 getLayoutManager(),
                 this,
                 new Size(
                         PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_H_DP),
-                        SizeLayout.FILL,
+                        SizeMode.FILL,
                         PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_W_DP),
-                        SizeLayout.FILL));
+                        SizeMode.FILL));
 
         Paint backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.DKGRAY);
         backgroundPaint.setStyle(Paint.Style.FILL);
-        graphWidget.setBackgroundPaint(backgroundPaint);
+        graph.setBackgroundPaint(backgroundPaint);
 
 
-        domainLabelWidget = new TextLabelWidget(
+        domainTitle = new TextLabelWidget(
                 getLayoutManager(),
                 new Size(
                         PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_H_DP),
-                        SizeLayout.ABSOLUTE,
+                        SizeMode.ABSOLUTE,
                         PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_W_DP),
-                        SizeLayout.ABSOLUTE),
+                        SizeMode.ABSOLUTE),
                 TextOrientation.HORIZONTAL);
-        rangeLabelWidget = new TextLabelWidget(
+        rangeTitle = new TextLabelWidget(
                 getLayoutManager(),
                 new Size(
                         PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_H_DP),
-                        SizeLayout.ABSOLUTE,
+                        SizeMode.ABSOLUTE,
                         PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_W_DP),
-                        SizeLayout.ABSOLUTE),
+                        SizeMode.ABSOLUTE),
                 TextOrientation.VERTICAL_ASCENDING);
 
-        legendWidget.position(
+        legend.position(
                 PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_X_OFFSET_DP),
-                XLayoutStyle.ABSOLUTE_FROM_RIGHT,
+                HorizontalPositioning.ABSOLUTE_FROM_RIGHT,
                 PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_Y_OFFSET_DP),
-                YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
-                AnchorPosition.RIGHT_BOTTOM);
+                VerticalPositioning.ABSOLUTE_FROM_BOTTOM,
+                Anchor.RIGHT_BOTTOM);
 
-        graphWidget.position(
+        graph.position(
                 PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_X_OFFSET_DP),
-                XLayoutStyle.ABSOLUTE_FROM_RIGHT,
+                HorizontalPositioning.ABSOLUTE_FROM_RIGHT,
                 PixelUtils.dpToPix(DEFAULT_GRAPH_WIDGET_Y_OFFSET_DP),
-                YLayoutStyle.ABSOLUTE_FROM_CENTER,
-                AnchorPosition.RIGHT_MIDDLE);
+                VerticalPositioning.ABSOLUTE_FROM_CENTER,
+                Anchor.RIGHT_MIDDLE);
 
-        domainLabelWidget.position(
+        domainTitle.position(
                 PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_X_OFFSET_DP),
-                XLayoutStyle.ABSOLUTE_FROM_LEFT,
+                HorizontalPositioning.ABSOLUTE_FROM_LEFT,
                 PixelUtils.dpToPix(DEFAULT_DOMAIN_LABEL_WIDGET_Y_OFFSET_DP),
-                YLayoutStyle.ABSOLUTE_FROM_BOTTOM,
-                AnchorPosition.LEFT_BOTTOM);
+                VerticalPositioning.ABSOLUTE_FROM_BOTTOM,
+                Anchor.LEFT_BOTTOM);
 
-        rangeLabelWidget.position(
+        rangeTitle.position(
                 PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP),
-                XLayoutStyle.ABSOLUTE_FROM_LEFT,
+                HorizontalPositioning.ABSOLUTE_FROM_LEFT,
                 PixelUtils.dpToPix(DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP),
-                YLayoutStyle.ABSOLUTE_FROM_CENTER,
-                AnchorPosition.LEFT_MIDDLE);
+                VerticalPositioning.ABSOLUTE_FROM_CENTER,
+                Anchor.LEFT_MIDDLE);
 
-        getLayoutManager().moveToTop(getTitleWidget());
-        getLayoutManager().moveToTop(getLegendWidget());
+        getLayoutManager().moveToTop(getTitle());
+        getLayoutManager().moveToTop(getLegend());
 
-        getDomainLabelWidget().pack();
-        getRangeLabelWidget().pack();
+        getDomainTitle().pack();
+        getRangeTitle().pack();
         setPlotMarginLeft(PixelUtils.dpToPix(DEFAULT_PLOT_LEFT_MARGIN_DP));
         setPlotMarginRight(PixelUtils.dpToPix(DEFAULT_PLOT_RIGHT_MARGIN_DP));
         setPlotMarginTop(PixelUtils.dpToPix(DEFAULT_PLOT_TOP_MARGIN_DP));
@@ -247,8 +244,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
         setDefaultBounds(new RectRegion(-1, 1, -1, 1));
 
-        domainStepModel = new XYStepModel(XYStepMode.SUBDIVIDE, 10);
-        rangeStepModel = new XYStepModel(XYStepMode.SUBDIVIDE, 10);
+        domainStepModel = new StepModel(StepMode.SUBDIVIDE, 10);
+        rangeStepModel = new StepModel(StepMode.SUBDIVIDE, 10);
     }
 
     @Override
@@ -291,29 +288,15 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         this. previewMode = PreviewMode.values()[attrs.getInt(
                 R.styleable.xy_XYPlot_previewMode, PreviewMode.LineAndPoint.ordinal())];
 
-        // graph size & position
-        AttrUtils.configureWidget(attrs, getGraphWidget(),
-                R.styleable.xy_XYPlot_graphHeightSizeLayoutType, R.styleable.xy_XYPlot_graphHeight,
-                R.styleable.xy_XYPlot_graphWidthSizeLayoutType, R.styleable.xy_XYPlot_graphWidth,
-                R.styleable.xy_XYPlot_graphLayoutStyleX, R.styleable.xy_XYPlot_graphPositionX,
-                R.styleable.xy_XYPlot_graphLayoutStyleY, R.styleable.xy_XYPlot_graphPositionY,
-                R.styleable.xy_XYPlot_graphAnchorPosition, R.styleable.xy_XYPlot_graphVisible);
-
-        String domainLabelAttr = attrs.getString(R.styleable.xy_XYPlot_domainLabel);
+        String domainLabelAttr = attrs.getString(R.styleable.xy_XYPlot_domainTitle);
         if(domainLabelAttr != null) {
-            setDomainLabel(domainLabelAttr);
+            getDomainTitle().setText(domainLabelAttr);
         }
 
-        String rangeLabelAttr = attrs.getString(R.styleable.xy_XYPlot_rangeLabel);
+        String rangeLabelAttr = attrs.getString(R.styleable.xy_XYPlot_rangeTitle);
         if(rangeLabelAttr != null) {
-            setRangeLabel(rangeLabelAttr);
+            getRangeTitle().setText(rangeLabelAttr);
         }
-
-        graphWidget.setDomainTickLabelWidth(
-                attrs.getDimension(R.styleable.xy_XYPlot_domainTickLabelWidth, DEFAULT_DOMAIN_TICK_LABEL_WIDTH));
-
-        graphWidget.setRangeTickLabelWidth(
-                attrs.getDimension(R.styleable.xy_XYPlot_rangeTickLabelWidth, DEFAULT_RANGE_TICK_LABEL_WIDTH));
 
         AttrUtils.configureStep(attrs, getDomainStepModel(),
                 R.styleable.xy_XYPlot_domainStepMode, R.styleable.xy_XYPlot_domainStep);
@@ -321,116 +304,33 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         AttrUtils.configureStep(attrs, getRangeStepModel(),
                 R.styleable.xy_XYPlot_rangeStepMode, R.styleable.xy_XYPlot_rangeStep);
 
-        // domainLabel size & position
-        AttrUtils.configureWidget(attrs, getDomainLabelWidget(),
-                R.styleable.xy_XYPlot_domainLabelHeightSizeLayoutType, R.styleable.xy_XYPlot_domainLabelHeight,
-                R.styleable.xy_XYPlot_domainLabelWidthSizeLayoutType, R.styleable.xy_XYPlot_domainLabelWidth,
-                R.styleable.xy_XYPlot_domainLabelLayoutStyleX, R.styleable.xy_XYPlot_domainLabelPositionX,
-                R.styleable.xy_XYPlot_domainLabelLayoutStyleY, R.styleable.xy_XYPlot_domainLabelPositionY,
-                R.styleable.xy_XYPlot_domainLabelAnchorPosition, R.styleable.xy_XYPlot_domainLabelVisible);
-
-        // rangeLabel size & position
-        AttrUtils.configureWidget(attrs, getRangeLabelWidget(),
-                R.styleable.xy_XYPlot_rangeLabelHeightSizeLayoutType, R.styleable.xy_XYPlot_rangeLabelHeight,
-                R.styleable.xy_XYPlot_rangeLabelWidthSizeLayoutType, R.styleable.xy_XYPlot_rangeLabelWidth,
-                R.styleable.xy_XYPlot_rangeLabelLayoutStyleX, R.styleable.xy_XYPlot_rangeLabelPositionX,
-                R.styleable.xy_XYPlot_rangeLabelLayoutStyleY, R.styleable.xy_XYPlot_rangeLabelPositionY,
-                R.styleable.xy_XYPlot_rangeLabelAnchorPosition, R.styleable.xy_XYPlot_rangeLabelVisible);
-
         // domainLabelPaint
-        AttrUtils.configureTextPaint(attrs, getDomainLabelWidget().getLabelPaint(),
-                R.styleable.xy_XYPlot_domainLabelTextColor, R.styleable.xy_XYPlot_domainLabelTextSize);
+        AttrUtils.configureTextPaint(attrs, getDomainTitle().getLabelPaint(),
+                R.styleable.xy_XYPlot_domainTitleTextColor, R.styleable.xy_XYPlot_domainTitleTextSize);
 
         // rangeLabelPaint
-        AttrUtils.configureTextPaint(attrs, getRangeLabelWidget().getLabelPaint(),
-                R.styleable.xy_XYPlot_rangeLabelTextColor, R.styleable.xy_XYPlot_rangeLabelTextSize);
-
-        // graphWidget
-        AttrUtils.configureBoxModelable(attrs, getGraphWidget(),
-                R.styleable.xy_XYPlot_graphMarginTop, R.styleable.xy_XYPlot_graphMarginBottom,
-                R.styleable.xy_XYPlot_graphMarginLeft, R.styleable.xy_XYPlot_graphMarginRight,
-                R.styleable.xy_XYPlot_graphPaddingTop, R.styleable.xy_XYPlot_graphPaddingBottom,
-                R.styleable.xy_XYPlot_graphPaddingLeft, R.styleable.xy_XYPlot_graphPaddingRight);
-
-        graphWidget.setDomainTickExtension(attrs.getDimension(R.styleable.xy_XYPlot_domainTickExtension,
-                PixelUtils.dpToPix(DEFAULT_DOMAIN_TICK_EXTENSION_DP)));
-
-        graphWidget.setRangeTickExtension(attrs.getDimension(R.styleable.xy_XYPlot_rangeTickExtension,
-                PixelUtils.dpToPix(DEFAULT_RANGE_TICK_EXTENSION_DP)));
-
-        graphWidget.setShowDomainLabels(attrs.getBoolean(R.styleable.xy_XYPlot_showDomainLabels, true));
-        graphWidget.setShowRangeLabels(attrs.getBoolean(R.styleable.xy_XYPlot_showRangeLabels, true));
-
-        // gridRect
-        AttrUtils.configureBoxModelable(attrs, getGraphWidget().getGridBox(),
-                R.styleable.xy_XYPlot_gridMarginTop, R.styleable.xy_XYPlot_gridMarginBottom,
-                R.styleable.xy_XYPlot_gridMarginLeft, R.styleable.xy_XYPlot_gridMarginRight,
-                R.styleable.xy_XYPlot_gridPaddingTop, R.styleable.xy_XYPlot_gridPaddingBottom,
-                R.styleable.xy_XYPlot_gridPaddingLeft, R.styleable.xy_XYPlot_gridPaddingRight);
-
-        // domainTickLabelPaint
-        AttrUtils.configureTextPaint(attrs, getGraphWidget().getDomainTickLabelPaint(),
-                R.styleable.xy_XYPlot_domainTickLabelTextColor,
-                R.styleable.xy_XYPlot_domainTickLabelTextSize);
-
-        // rangeTickLabelPaint
-        AttrUtils.configureTextPaint(attrs, getGraphWidget().getRangeTickLabelPaint(),
-                R.styleable.xy_XYPlot_rangeTickLabelTextColor,
-                R.styleable.xy_XYPlot_rangeTickLabelTextSize);
-
-        // domainOriginTickLabelPaint
-        AttrUtils.configureTextPaint(attrs, getGraphWidget().getDomainOriginTickLabelPaint(),
-                R.styleable.xy_XYPlot_domainOriginTickLabelTextColor,
-                R.styleable.xy_XYPlot_domainOriginTickLabelTextSize);
-
-        // rangeOriginTickLabelPaint
-        AttrUtils.configureTextPaint(attrs, getGraphWidget().getRangeOriginTickLabelPaint(),
-                R.styleable.xy_XYPlot_rangeOriginTickLabelTextColor,
-                R.styleable.xy_XYPlot_rangeOriginTickLabelTextSize);
-
-        // domainOriginLinePaint
-        AttrUtils.configureLinePaint(attrs, getGraphWidget().getDomainOriginLinePaint(),
-                R.styleable.xy_XYPlot_domainOriginLineColor,
-                R.styleable.xy_XYPlot_domainOriginLineThickness);
-
-        // rangeOriginLinePaint
-        AttrUtils.configureLinePaint(attrs, getGraphWidget().getRangeOriginLinePaint(),
-                R.styleable.xy_XYPlot_rangeOriginLineColor,
-                R.styleable.xy_XYPlot_rangeOriginLineThickness);
+        AttrUtils.configureTextPaint(attrs, getRangeTitle().getLabelPaint(),
+                R.styleable.xy_XYPlot_rangeTitleTextColor, R.styleable.xy_XYPlot_rangeTitleTextSize);
 
         // legendWTextPaint
-        AttrUtils.configureTextPaint(attrs, getLegendWidget().getTextPaint(),
+        AttrUtils.configureTextPaint(attrs, getLegend().getTextPaint(),
                 R.styleable.xy_XYPlot_legendTextColor,
                 R.styleable.xy_XYPlot_legendTextSize);
 
         // legendIconSize
-        AttrUtils.configureSize(attrs, getLegendWidget().getIconSize(),
-                R.styleable.xy_XYPlot_legendIconHeightSizeLayoutType, R.styleable.xy_XYPlot_legendIconHeight,
-                R.styleable.xy_XYPlot_legendIconWidthSizeLayoutType, R.styleable.xy_XYPlot_legendIconWidth);
+        AttrUtils.configureSize(attrs, getLegend().getIconSize(),
+                R.styleable.xy_XYPlot_legendIconHeightMode, R.styleable.xy_XYPlot_legendIconHeight,
+                R.styleable.xy_XYPlot_legendIconWidthMode, R.styleable.xy_XYPlot_legendIconWidth);
 
         // legend size & position
-        AttrUtils.configureWidget(attrs, getLegendWidget(),
-                R.styleable.xy_XYPlot_legendHeightSizeLayoutType, R.styleable.xy_XYPlot_legendHeight,
-                R.styleable.xy_XYPlot_legendWidthSizeLayoutType, R.styleable.xy_XYPlot_legendWidth,
-                R.styleable.xy_XYPlot_legendLayoutStyleX, R.styleable.xy_XYPlot_legendPositionX,
-                R.styleable.xy_XYPlot_legendLayoutStyleY, R.styleable.xy_XYPlot_legendPositionY,
-                R.styleable.xy_XYPlot_legendAnchorPosition, R.styleable.xy_XYPlot_legendVisible);
+        AttrUtils.configureWidget(attrs, getLegend(),
+                R.styleable.xy_XYPlot_legendHeightMode, R.styleable.xy_XYPlot_legendHeight,
+                R.styleable.xy_XYPlot_legendWidthMode, R.styleable.xy_XYPlot_legendWidth,
+                R.styleable.xy_XYPlot_legendHorizontalPositioning, R.styleable.xy_XYPlot_legendHorizontalPosition,
+                R.styleable.xy_XYPlot_legendVerticalPositioning, R.styleable.xy_XYPlot_legendVerticalPosition,
+                R.styleable.xy_XYPlot_legendAnchor, R.styleable.xy_XYPlot_legendVisible);
 
-        AttrUtils.configureLinePaint(attrs, getGraphWidget().getDomainGridLinePaint(),
-                R.styleable.xy_XYPlot_graphDomainLineColor, R.styleable.xy_XYPlot_graphDomainLineThickness);
-
-        AttrUtils.configureLinePaint(attrs, getGraphWidget().getRangeGridLinePaint(),
-                R.styleable.xy_XYPlot_graphRangeLineColor, R.styleable.xy_XYPlot_graphRangeLineThickness);
-
-        getGraphWidget().getBackgroundPaint().setColor(attrs.getColor(
-                R.styleable.xy_XYPlot_graphBackgroundColor, getGraphWidget().getBackgroundPaint().getColor()));
-
-        getGraphWidget().getGridBackgroundPaint().setColor(attrs.getColor(
-                R.styleable.xy_XYPlot_gridBackgroundColor, getGraphWidget().getGridBackgroundPaint().getColor()));
-    }
-
-    public void setGridPadding(float left, float top, float right, float bottom) {
-        getGraphWidget().getGridBox().setPadding(left, top, right, bottom);
+        getGraph().processAttrs(attrs);
     }
 
     @Override
@@ -451,10 +351,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      * @return
      */
     public boolean containsPoint(float x, float y) {
-        if (getGraphWidget().getGridDimensions().marginatedRect != null) {
-            return getGraphWidget().getGridDimensions().marginatedRect.contains(x, y);
-        }
-        return false;
+        return getGraph().containsPoint(x, y);
     }
 
     /**                                                           `
@@ -468,19 +365,19 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     public void setCursorPosition(PointF point) {
-        getGraphWidget().setCursorPosition(point);
+        getGraph().setCursorPosition(point);
     }
 
     public void setCursorPosition(float x, float y) {
-        getGraphWidget().setCursorPosition(x, y);
+        getGraph().setCursorPosition(x, y);
     }
 
     public Number getYVal(PointF point) {
-        return getGraphWidget().getYVal(point);
+        return getGraph().getYVal(point);
     }
 
     public Number getXVal(PointF point) {
-        return getGraphWidget().getXVal(point);
+        return getGraph().getXVal(point);
     }
 
     public void calculateMinMaxVals() {
@@ -690,7 +587,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             double o = origin.doubleValue();
             double e = extent.doubleValue();
             return new Number[] {o - e, o + e};
-
         }
         return new Number[] {null, null};
     }
@@ -784,50 +680,50 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     * Convenience method - wraps XYGraphWidget.getTicksPerRangeLabel().
-     * Equivalent to getGraphWidget().getTicksPerRangeLabel().
+     * Convenience method - wraps XYGraphWidget.getLinesPerRangeLabel().
+     * Equivalent to getGraphWidget().getLinesPerRangeLabel().
      *
      * @return
      */
-    public int getTicksPerRangeLabel() {
-        return graphWidget.getTicksPerRangeLabel();
+    public int getLinesPerRangeLabel() {
+        return graph.getLinesPerRangeLabel();
     }
 
     /**
-     * Convenience method - wraps XYGraphWidget.setTicksPerRangeLabel().
-     * Equivalent to getGraphWidget().setTicksPerRangeLabel().
+     * Convenience method - wraps XYGraphWidget.setLinesPerRangeLabel().
+     * Equivalent to getGraphWidget().setLinesPerRangeLabel().
      *
-     * @param ticksPerRangeLabel
+     * @param linesPerLabel
      */
-    public void setTicksPerRangeLabel(int ticksPerRangeLabel) {
-        graphWidget.setTicksPerRangeLabel(ticksPerRangeLabel);
+    public void setLinesPerRangeLabel(int linesPerLabel) {
+        graph.setLinesPerRangeLabel(linesPerLabel);
     }
 
     /**
-     * Convenience method - wraps XYGraphWidget.getTicksPerDomainLabel().
-     * Equivalent to getGraphWidget().getTicksPerDomainLabel().
+     * Convenience method - wraps XYGraphWidget.getLinesPerDomainLabel().
+     * Equivalent to getGraphWidget().getLinesPerDomainLabel().
      *
      * @return
      */
-    public int getTicksPerDomainLabel() {
-        return graphWidget.getTicksPerDomainLabel();
+    public int getLinesPerDomainLabel() {
+        return graph.getLinesPerDomainLabel();
     }
 
     /**
-     * Convenience method - wraps XYGraphWidget.setTicksPerDomainLabel().
-     * Equivalent to getGraphWidget().setTicksPerDomainLabel().
+     * Convenience method - wraps XYGraphWidget.setLinesPerDomainLabel().
+     * Equivalent to getGraphWidget().setLinesPerDomainLabel().
      *
-     * @param ticksPerDomainLabel
+     * @param linesPerDomainLabel
      */
-    public void setTicksPerDomainLabel(int ticksPerDomainLabel) {
-        graphWidget.setTicksPerDomainLabel(ticksPerDomainLabel);
+    public void setLinesPerDomainLabel(int linesPerDomainLabel) {
+        graph.setLinesPerDomainLabel(linesPerDomainLabel);
     }
 
-    public XYStepMode getDomainStepMode() {
+    public StepMode getDomainStepMode() {
         return domainStepModel.getMode();
     }
 
-    public void setDomainStepMode(XYStepMode domainStepMode) {
+    public void setDomainStepMode(StepMode domainStepMode) {
         domainStepModel.setMode(domainStepMode);
     }
 
@@ -839,16 +735,16 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         domainStepModel.setValue(domainStepValue);
     }
 
-    public void setDomainStep(XYStepMode mode, double value) {
+    public void setDomainStep(StepMode mode, double value) {
         setDomainStepMode(mode);
         setDomainStepValue(value);
     }
 
-    public XYStepMode getRangeStepMode() {
+    public StepMode getRangeStepMode() {
         return rangeStepModel.getMode();
     }
 
-    public void setRangeStepMode(XYStepMode rangeStepMode) {
+    public void setRangeStepMode(StepMode rangeStepMode) {
         rangeStepModel.setMode(rangeStepMode);
     }
 
@@ -860,94 +756,86 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         rangeStepModel.setValue(rangeStepValue);
     }
 
-    public void setRangeStep(XYStepMode mode, double value) {
+    public void setRangeStep(StepMode mode, double value) {
         setRangeStepMode(mode);
         setRangeStepValue(value);
     }
 
-    public String getDomainLabel() {
-        return getDomainLabelWidget().getText();
+    public XYLegendWidget getLegend() {
+        return legend;
+    }
+
+    public void setLegend(XYLegendWidget legend) {
+        this.legend = legend;
+    }
+
+    public XYGraphWidget getGraph() {
+        return graph;
+    }
+
+    public void setGraph(XYGraphWidget graph) {
+        this.graph = graph;
+    }
+
+    public TextLabelWidget getDomainTitle() {
+        return domainTitle;
+    }
+
+    public void setDomainTitle(TextLabelWidget domainTitle) {
+        this.domainTitle = domainTitle;
     }
 
     public void setDomainLabel(String domainLabel) {
-        getDomainLabelWidget().setText(domainLabel);
+        getDomainTitle().setText(domainLabel);
     }
 
-    public String getRangeLabel() {
-        return getRangeLabelWidget().getText();
+    public TextLabelWidget getRangeTitle() {
+        return rangeTitle;
+    }
+
+    public void setRangeTitle(TextLabelWidget rangeTitle) {
+        this.rangeTitle = rangeTitle;
     }
 
     public void setRangeLabel(String rangeLabel) {
-        getRangeLabelWidget().setText(rangeLabel);
+        getRangeTitle().setText(rangeLabel);
     }
 
-    public XYLegendWidget getLegendWidget() {
-        return legendWidget;
-    }
-
-    public void setLegendWidget(XYLegendWidget legendWidget) {
-        this.legendWidget = legendWidget;
-    }
-
-    public XYGraphWidget getGraphWidget() {
-        return graphWidget;
-    }
-
-    public void setGraphWidget(XYGraphWidget graphWidget) {
-        this.graphWidget = graphWidget;
-    }
-
-    public TextLabelWidget getDomainLabelWidget() {
-        return domainLabelWidget;
-    }
-
-    public void setDomainLabelWidget(TextLabelWidget domainLabelWidget) {
-        this.domainLabelWidget = domainLabelWidget;
-    }
-
-    public TextLabelWidget getRangeLabelWidget() {
-        return rangeLabelWidget;
-    }
-
-    public void setRangeLabelWidget(TextLabelWidget rangeLabelWidget) {
-        this.rangeLabelWidget = rangeLabelWidget;
-    }
-
-    /**
-     * Convenience method - wraps XYGraphWidget.getRangeValueFormat().
-     *
-     * @return
-     */
-    public Format getRangeValueFormat() {
-        return graphWidget.getRangeValueFormat();
-    }
-
-    /**
-     * Convenience method - wraps XYGraphWidget.setRangeValueFormat().
-     *
-     * @param rangeValueFormat
-     */
-    public void setRangeValueFormat(Format rangeValueFormat) {
-        graphWidget.setRangeValueFormat(rangeValueFormat);
-    }
-
-    /**
-     * Convenience method - wraps XYGraphWidget.getDomainValueFormat().
-     *
-     * @return
-     */
-    public Format getDomainValueFormat() {
-        return graphWidget.getDomainValueFormat();
-    }
-
-    /**
-     * Convenience method - wraps XYGraphWidget.setDomainValueFormat().
-     *
-     * @param domainValueFormat
-     */
-    public void setDomainValueFormat(Format domainValueFormat) {
-        graphWidget.setDomainValueFormat(domainValueFormat);
-    }
+//    /**
+//     * Convenience method - wraps XYGraphWidget.getRangeValueFormat().
+//     *
+//     * @return
+//     */
+//    public Format getRangeValueFormat() {
+//        return graphWidget.getRangeValueFormat();
+//    }
+//
+//    /**
+//     * Convenience method - wraps XYGraphWidget.setRangeValueFormat().
+//     *
+//     * @param rangeValueFormat
+//     */
+//    public void setRangeValueFormat(Format rangeValueFormat) {
+//        graphWidget.setRangeValueFormat(rangeValueFormat);
+//    }
+//
+//    /**
+//     * Convenience method - wraps XYGraphWidget.getDomainValueFormat().
+//     *
+//     * @return
+//     */
+//    public Format getDomainValueFormat() {
+//        return graphWidget.getDomainValueFormat();
+//    }
+//
+//    /**
+//     * Convenience method - wraps XYGraphWidget.setDomainValueFormat().
+//     *
+//     * @param domainValueFormat
+//     */
+//    public void setDomainValueFormat(Format domainValueFormat) {
+//        graphWidget.setDomainValueFormat(domainValueFormat);
+//    }
 
     /**
      * Setup the boundary mode, boundary values only applicable in FIXED mode.
@@ -1378,19 +1266,19 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         this.domainRightMax = domainRightMax;
     }
 
-    public XYStepModel getDomainStepModel() {
+    public StepModel getDomainStepModel() {
         return domainStepModel;
     }
 
-    public void setDomainStepModel(XYStepModel domainStepModel) {
+    public void setDomainStepModel(StepModel domainStepModel) {
         this.domainStepModel = domainStepModel;
     }
 
-    public XYStepModel getRangeStepModel() {
+    public StepModel getRangeStepModel() {
         return rangeStepModel;
     }
 
-    public void setRangeStepModel(XYStepModel rangeStepModel) {
+    public void setRangeStepModel(StepModel rangeStepModel) {
         this.rangeStepModel = rangeStepModel;
     }
 }

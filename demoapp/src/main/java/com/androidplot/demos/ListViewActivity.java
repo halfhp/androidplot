@@ -112,7 +112,7 @@ public class ListViewActivity extends Activity {
 
             Plot p = (XYPlot) v.findViewById(R.id.xyplot);
             p.clear();
-            p.setTitle("plot" + pos);
+            p.getTitle().setText("plot" + pos);
 
             List<SeriesAndFormatter<XYSeries, LineAndPointFormatter>> thisSeriesList = seriesData.get(pos);
             for(SeriesAndFormatter<XYSeries, LineAndPointFormatter> sf : thisSeriesList) {

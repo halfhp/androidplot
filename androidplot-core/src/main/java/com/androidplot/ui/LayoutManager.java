@@ -106,7 +106,7 @@ public class LayoutManager extends LinkedLayerList<Widget>
                 if (widget.isClippingEnabled()) {
                     canvas.clipRect(dims.canvasRect, Region.Op.INTERSECT);
                 }
-                widget.draw(canvas, dims.canvasRect);
+                widget.draw(canvas);
 
                 if (drawMarginsEnabled) {
                     drawSpacing(canvas, dims.canvasRect, dims.marginatedRect, getMarginPaint());

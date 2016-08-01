@@ -68,10 +68,10 @@ public class ECGExample extends Activity
         plot.setDomainBoundaries(0, 2000, BoundaryMode.FIXED);
 
         // reduce the number of range labels
-        plot.setTicksPerRangeLabel(3);
+        plot.setLinesPerRangeLabel(3);
 
         // rotate domain labels 45 degrees to make them more compact horizontally:
-        plot.getGraphWidget().setDomainLabelOrientation(-45);
+        //plot.getGraphWidget().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setRotation(-45);
 
         // start generating ecg data in the background:
         ecgSeries.start();

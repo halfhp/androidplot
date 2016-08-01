@@ -17,7 +17,7 @@
 package com.androidplot.ui;
 
 /**
- * SizeLayoutType is an enumeration of algorithms available for calculating an arbitrary dimension of a widget.
+ * Algorithms available for calculating an arbitrary dimension of a widget.
  * Each algorithm also takes a single value called "val" in this doc.
  * ABSOLUTE - Val is treated as absolute.  If val is 5 then the size of the widget along the associated axis is 5 pixels.
  *
@@ -27,7 +27,7 @@ package com.androidplot.ui;
  *
  * FILL - Widget completely fills along the associated axis, minus the input size value
  */
-public enum SizeLayout {
+public enum SizeMode {
     ABSOLUTE,
     RELATIVE,
     FILL

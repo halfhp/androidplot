@@ -96,14 +96,14 @@ public class BarPlotExampleActivity extends Activity
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.plot);
 
-        formatter1 = new MyBarFormatter(Color.argb(200, 100, 150, 100), Color.LTGRAY);
-        formatter2 = new MyBarFormatter(Color.argb(200, 100, 100, 150), Color.LTGRAY);
+        formatter1 = new MyBarFormatter(Color.rgb(100, 150, 100), Color.LTGRAY);
+        formatter2 = new MyBarFormatter(Color.rgb(100, 100, 150), Color.LTGRAY);
         selectionFormatter = new MyBarFormatter(Color.YELLOW, Color.WHITE);
 
         selectionWidget = new TextLabelWidget(plot.getLayoutManager(), NO_SELECTION_TXT,
                 new Size(
-                        PixelUtils.dpToPix(100), SizeLayout.ABSOLUTE,
-                        PixelUtils.dpToPix(100), SizeLayout.ABSOLUTE),
+                        PixelUtils.dpToPix(100), SizeMode.ABSOLUTE,
+                        PixelUtils.dpToPix(100), SizeMode.ABSOLUTE),
                 TextOrientation.HORIZONTAL);
 
         selectionWidget.getLabelPaint().setTextSize(PixelUtils.dpToPix(16));
@@ -114,18 +114,17 @@ public class BarPlotExampleActivity extends Activity
         selectionWidget.setBackgroundPaint(p);
 
         selectionWidget.position(
-                0, XLayoutStyle.RELATIVE_TO_CENTER,
-                PixelUtils.dpToPix(45), YLayoutStyle.ABSOLUTE_FROM_TOP,
-                AnchorPosition.TOP_MIDDLE);
+                0, HorizontalPositioning.RELATIVE_TO_CENTER,
+                PixelUtils.dpToPix(45), VerticalPositioning.ABSOLUTE_FROM_TOP,
+                Anchor.TOP_MIDDLE);
         selectionWidget.pack();
 
 
         // reduce the number of range labels
-        plot.setTicksPerRangeLabel(3);
+        plot.setLinesPerRangeLabel(3);
         plot.setRangeLowerBoundary(0, BoundaryMode.FIXED);
-        plot.getGraphWidget().getGridBox().setPadding(30, 10, 30, 0);
 
-        plot.setTicksPerDomainLabel(2);
+        plot.setLinesPerDomainLabel(2);
 
 
         // setup checkbox listers:
@@ -245,24 +244,29 @@ public class BarPlotExampleActivity extends Activity
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-        plot.setDomainValueFormat(new NumberFormat() {
-            @Override
-            public StringBuffer format(double value, StringBuffer buffer, FieldPosition field) {
-                int year = (int) (value + 0.5d) / 12;
-                int month = (int) ((value + 0.5d) % 12);
-                return new StringBuffer(DateFormatSymbols.getInstance().getShortMonths()[month] + " '0" + year);
-            }
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).
+                setFormat(new NumberFormat() {
+                    @Override
+                    public StringBuffer format(double value, StringBuffer buffer,
+                            FieldPosition field) {
+                        int year = (int) (value + 0.5d) / 12;
+                        int month = (int) ((value + 0.5d) % 12);
+                        return new StringBuffer(DateFormatSymbols.getInstance()
+                                .getShortMonths()[month] + " '0" + year);
+                    }
 
-            @Override
-            public StringBuffer format(long value, StringBuffer buffer, FieldPosition field) {
-                throw new UnsupportedOperationException("Not yet implemented.");
-            }
+                    @Override
+                    public StringBuffer format(long value, StringBuffer buffer,
+                            FieldPosition field) {
+                        throw new UnsupportedOperationException("Not yet implemented.");
+                    }
 
-            @Override
-            public Number parse(String string, ParsePosition position) {
-                throw new UnsupportedOperationException("Not yet implemented.");
-            }
-        });
+                    @Override
+                    public Number parse(String string, ParsePosition position) {
+                        throw new UnsupportedOperationException("Not yet implemented.");
+                    }
+                });
+
         updatePlot();
 
     }
@@ -301,7 +305,7 @@ public class BarPlotExampleActivity extends Activity
 
         // make sure the point lies within the graph area.  we use gridrect
         // because it accounts for margins and padding as well. 
-        if (plot.getGraphWidget().getGridDimensions().marginatedRect.contains(point.x, point.y)) {
+        if (plot.containsPoint(point.x, point.y)) {
             Number x = plot.getXVal(point);
             Number y = plot.getYVal(point);
 

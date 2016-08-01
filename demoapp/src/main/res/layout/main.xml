@@ -95,12 +95,6 @@
                 android:enabled="true"/>
 
             <Button
-                android:id="@+id/startDualScaleExampleButton"
-                style="@style/toc_button"
-                android:text="Dual Scale Example"
-                android:enabled="true"/>
-
-            <Button
                 android:id="@+id/startXYPlotWithBgImgExample"
                 style="@style/toc_button"
                 android:text="XY Background Example"
@@ -110,6 +104,12 @@
                 android:id="@+id/startECGExample"
                 style="@style/toc_button"
                 android:text="ECG Example"
+                android:enabled="true"/>
+
+            <Button
+                android:id="@+id/fxPlotExample"
+                style="@style/toc_button"
+                android:text="f(x) Example"
                 android:enabled="true"/>
         </LinearLayout>
     </ScrollView>

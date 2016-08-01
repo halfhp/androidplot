@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright 2015 AndroidPlot.com
+  ~ Copyright 2016 AndroidPlot.com
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
   ~    you may not use this file except in compliance with the License.
@@ -17,21 +17,26 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:ap="http://schemas.android.com/apk/res-auto"
-              style="@style/sample_activity">
+              android:layout_height="match_parent"
+              android:layout_width="match_parent">
 
     <com.androidplot.xy.XYPlot
-        style="@style/simple_xy"
-        android:id="@+id/dynamicXYPlot"
+        style="@style/APDefacto.Dark"
+        android:id="@+id/plot"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        androidplot.renderMode="use_background_thread"
-        ap:label="A Dynamic XY Plot"
-        ap:domainLabel="Domain"
-        ap:rangeLabel="Range"
-        ap:legendTextSize="15sp"
-        ap:legendIconHeight="15dp"
-        ap:legendIconWidth="15dp"
-        ap:legendHeight="25dp"
-        ap:legendAnchorPosition="right_bottom"/>
-
+        ap:title="A Simple XY Plot"
+        ap:rangeTitle="range"
+        ap:domainTitle="domain"
+        ap:lineLabels="left|bottom|top|right"
+        ap:gridInsetRight="30dp"
+        ap:gridInsetTop="30dp"
+        ap:gridInsetBottom="20dp"
+        ap:lineLabelInsetRight="25dp"
+        ap:lineLabelInsetTop="25dp"
+        ap:lineLabelRotationBottom="-45"
+        ap:lineLabelRotationTop="0"
+        ap:lineLabelAlignTop="center"
+        ap:domainOriginLineThickness="4dp"
+        ap:rangeOriginLineThickness="4dp"/>
 </LinearLayout>

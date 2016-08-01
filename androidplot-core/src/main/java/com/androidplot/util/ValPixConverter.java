@@ -26,14 +26,14 @@ public class ValPixConverter {
     private static final int ZERO = 0;
 
 
-    public static float valToPix(double val, double min, double max, float lengthPix, boolean flip) {
+    public static double valToPix(double val, double min, double max, double lengthPix, boolean flip) {
         if(lengthPix <= ZERO) {
             throw new IllegalArgumentException("Length in pixels must be greater than 0.");
         }
         double range = range(min, max);
         double scale = lengthPix / range;
         double raw = val - min;
-        float pix = (float)(raw * scale);
+        double pix = raw * scale;
 
         if(flip) {
             pix = (lengthPix - pix);
@@ -46,9 +46,9 @@ public class ValPixConverter {
     }
 
     
-    public static double valPerPix(double min, double max, float lengthPix) {
+    public static double valPerPix(double min, double max, double lengthPix) {
         double valRange = range(min, max);
-        return valRange/lengthPix;
+        return valRange / lengthPix;
     }
 
     /**
@@ -61,7 +61,7 @@ public class ValPixConverter {
      * with the y axis for screen coords.
      * @return
      */
-    public static double pixToVal(float pix, double min, double max, float lengthPix, boolean flip) {
+    public static double pixToVal(double pix, double min, double max, double lengthPix, boolean flip) {
         if(pix < ZERO) {
             throw new IllegalArgumentException("pixel values cannot be negative.");
         }
@@ -69,7 +69,7 @@ public class ValPixConverter {
         if(lengthPix <= ZERO) {
             throw new IllegalArgumentException("Length in pixels must be greater than 0.");
         }
-        float pMult = pix;
+        double pMult = pix;
         if(flip) {
             pMult = lengthPix - pix;
         }
@@ -89,8 +89,11 @@ public class ValPixConverter {
      * @return
      */
     public static PointF valToPix(Number x, Number y, RectF plotArea, Number minX, Number maxX, Number minY, Number maxY) {
-        float pixX = ValPixConverter.valToPix(x.doubleValue(), minX.doubleValue(), maxX.doubleValue(), plotArea.width(), false) + (plotArea.left);
-        float pixY = ValPixConverter.valToPix(y.doubleValue(), minY.doubleValue(), maxY.doubleValue(), plotArea.height(), true) + plotArea.top;
+        float pixX = (float) ValPixConverter.valToPix(x.doubleValue(), minX.doubleValue(),
+                maxX.doubleValue(), plotArea.width(), false) + (plotArea.left);
+        float pixY = (float) ValPixConverter.valToPix(y.doubleValue(), minY.doubleValue(),
+                maxY.doubleValue(), plotArea.height(), true) + plotArea.top;
         return new PointF(pixX, pixY);
     }
+
 }

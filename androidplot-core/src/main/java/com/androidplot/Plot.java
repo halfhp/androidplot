@@ -34,8 +34,8 @@ import com.androidplot.util.AttrUtils;
 import com.androidplot.util.Configurator;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.ui.XLayoutStyle;
-import com.androidplot.ui.YLayoutStyle;
+import com.androidplot.ui.HorizontalPositioning;
+import com.androidplot.ui.VerticalPositioning;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -68,6 +68,18 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public SeriesRegistry<SeriesType, FormatterType> getSeriesRegistry() {
         return seriesRegistry;
+    }
+
+    public TextLabelWidget getTitle() {
+        return title;
+    }
+
+    public void setTitle(TextLabelWidget title) {
+        this.title = title;
+    }
+
+    public void setTitle(String title) {
+        getTitle().setText(title);
     }
 
     public enum BorderStyle {
@@ -131,7 +143,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private Paint borderPaint;
     private Paint backgroundPaint;
     private LayoutManager layoutManager;
-    private TextLabelWidget titleWidget;
+    private TextLabelWidget title;
     private DisplayDimensions displayDims = new DisplayDimensions();
     private RenderMode renderMode = RenderMode.USE_MAIN_THREAD;
     private final BufferedCanvas pingPong = new BufferedCanvas();
@@ -243,7 +255,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         super(context);
         this.renderMode = mode;
         init(null, null, 0);
-        setTitle(title);
+        getTitle().setText(title);
     }
 
 
@@ -329,20 +341,20 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private void init(Context context, AttributeSet attrs, int defStyle) {
         PixelUtils.init(getContext());
         layoutManager = new LayoutManager();
-        titleWidget = new TextLabelWidget(layoutManager, new Size(25,
-                SizeLayout.ABSOLUTE, 100,
-                SizeLayout.ABSOLUTE),
+        title = new TextLabelWidget(layoutManager, new Size(25,
+                SizeMode.ABSOLUTE, 100,
+                SizeMode.ABSOLUTE),
                 TextOrientation.HORIZONTAL);
-        titleWidget.position(0, XLayoutStyle.RELATIVE_TO_CENTER, 0,
-                YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.TOP_MIDDLE);
+        title.position(0, HorizontalPositioning.RELATIVE_TO_CENTER, 0,
+                VerticalPositioning.ABSOLUTE_FROM_TOP, Anchor.TOP_MIDDLE);
 
         // initialize attr defaults:
-        titleWidget.getLabelPaint().setTextSize(
+        title.getLabelPaint().setTextSize(
                 PixelUtils.spToPix(DEFAULT_TITLE_WIDGET_TEXT_SIZE_SP));
 
         onPreInit();
         // make sure the title widget is always the topmost widget:
-        layoutManager.moveToTop(titleWidget);
+        layoutManager.moveToTop(title);
         if(context != null && attrs != null) {
             loadAttrs(attrs, defStyle);
         }
@@ -413,13 +425,13 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 R.styleable.Plot_paddingBottom, R.styleable.Plot_paddingLeft, R.styleable.Plot_paddingRight);
 
         // title
-        setTitle(attrs.getString(R.styleable.Plot_label));
-        getTitleWidget().getLabelPaint().setTextSize(
-                attrs.getDimension(R.styleable.Plot_labelTextSize,
+        getTitle().setText(attrs.getString(R.styleable.Plot_title));
+        getTitle().getLabelPaint().setTextSize(
+                attrs.getDimension(R.styleable.Plot_titleTextSize,
                         PixelUtils.spToPix(DEFAULT_TITLE_WIDGET_TEXT_SIZE_SP)));
 
-        getTitleWidget().getLabelPaint().setColor(attrs.getColor(
-                R.styleable.Plot_labelTextColor, getTitleWidget().getLabelPaint().getColor()));
+        getTitle().getLabelPaint().setColor(attrs.getColor(
+                R.styleable.Plot_titleTextColor, getTitle().getLabelPaint().getColor()));
 
         getBackgroundPaint().setColor(
                 attrs.getColor(R.styleable.Plot_backgroundColor, getBackgroundPaint().getColor()));
@@ -887,36 +899,12 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
     }
 
-    /**
-     *
-     * @return The displayed title of this Plot.
-     */
-    public String getTitle() {
-        return getTitleWidget().getText();
-    }
-
-    /**
-     *
-     * @param title  The title to display on this Plot.
-     */
-    public void setTitle(String title) {
-        titleWidget.setText(title);
-    }
-
     public LayoutManager getLayoutManager() {
         return layoutManager;
     }
 
     public void setLayoutManager(LayoutManager layoutManager) {
         this.layoutManager = layoutManager;
-    }
-
-    public TextLabelWidget getTitleWidget() {
-        return titleWidget;
-    }
-
-    public void setTitleWidget(TextLabelWidget titleWidget) {
-        this.titleWidget = titleWidget;
     }
 
     public Paint getBackgroundPaint() {

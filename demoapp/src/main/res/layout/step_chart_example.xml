@@ -26,8 +26,8 @@
     style="@style/APDefacto.Dark"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    ap:label="HTTP Server State (15  Sec)"
-    ap:domainLabel="time (secs)"
-    ap:rangeLabel="server state"/>
+    ap:title="HTTP Server State (15  Sec)"
+    ap:domainTitle="time (secs)"
+    ap:rangeTitle="server state"/>
 </LinearLayout>
 

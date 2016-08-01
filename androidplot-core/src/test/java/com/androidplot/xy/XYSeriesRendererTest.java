@@ -42,15 +42,15 @@ public class XYSeriesRendererTest extends AndroidplotTest {
     public void testDataToGridCorrelation() throws Exception {
         RectF gridRect = new RectF(5, 5, 105, 105);
         XYPlot plot = new XYPlot(RuntimeEnvironment.application, "Test");
-        plot.setDomainStepMode(XYStepMode.SUBDIVIDE);
+        plot.setDomainStepMode(StepMode.SUBDIVIDE);
         plot.setDomainStepValue(10);
         plot.setDomainBoundaries(0, 100, BoundaryMode.FIXED);
         plot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
         plot.calculateMinMaxVals();
-        XYStep domainStep = XYStepCalculator.getStep(plot, Axis.DOMAIN, gridRect, plot.getCalculatedMinX().doubleValue(), plot.getCalculatedMaxX().doubleValue());
+        Step domainStep = XYStepCalculator.getStep(plot, Axis.DOMAIN, gridRect, plot.getCalculatedMinX().doubleValue(), plot.getCalculatedMaxX().doubleValue());
 
         int x = 0;
-        float val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false);
+        double val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false);
 
         assertEquals(val, domainStep.getStepPix()*x);
 

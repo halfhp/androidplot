@@ -14,14 +14,15 @@
  *    limitations under the License.
  */
 
-package com.androidplot.ui;
+package com.androidplot.xy;
 
-public enum XLayoutStyle {
-    ABSOLUTE_FROM_LEFT,
-    ABSOLUTE_FROM_RIGHT,
-    ABSOLUTE_FROM_CENTER,
-    RELATIVE_TO_LEFT,
-    RELATIVE_TO_RIGHT,
-    RELATIVE_TO_CENTER
-
+/**
+ * INCREMENTAL_VALUE - (default) draw a tick every n values.
+ * INCREMENTAL_PIXEL - draw a tick every n pixels.
+ * SUBDIVIDE - draw n number of evenly spaced lines.
+ */
+public enum StepMode {
+    SUBDIVIDE,           // default
+    INCREMENT_BY_VAL,
+    INCREMENT_BY_PIXELS
 }

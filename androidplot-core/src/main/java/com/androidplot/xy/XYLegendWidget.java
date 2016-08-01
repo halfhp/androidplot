@@ -99,7 +99,7 @@ public class XYLegendWidget extends Widget {
 
     private void beginDrawingCell(Canvas canvas, RectF iconRect) {
 
-        Paint bgPaint = plot.getGraphWidget().getGridBackgroundPaint();
+        Paint bgPaint = plot.getGraph().getGridBackgroundPaint();
         if(drawIconBackgroundEnabled && bgPaint != null) {
             canvas.drawRect(iconRect, bgPaint);
         }
@@ -107,7 +107,7 @@ public class XYLegendWidget extends Widget {
 
     private void finishDrawingCell(Canvas canvas, RectF cellRect, RectF iconRect, String text) {
 
-        Paint bgPaint = plot.getGraphWidget().getGridBackgroundPaint();
+        Paint bgPaint = plot.getGraph().getGridBackgroundPaint();
         if(drawIconBorderEnabled && bgPaint != null) {
             iconBorderPaint.setColor(bgPaint.getColor());
             canvas.drawRect(iconRect, iconBorderPaint);

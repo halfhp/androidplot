@@ -14,13 +14,34 @@
  *    limitations under the License.
  */
 
-package com.androidplot.ui;
+package com.androidplot.xy;
 
-public enum YLayoutStyle {
-    ABSOLUTE_FROM_TOP,
-    ABSOLUTE_FROM_BOTTOM,
-    ABSOLUTE_FROM_CENTER,
-    RELATIVE_TO_TOP,
-    RELATIVE_TO_BOTTOM,
-    RELATIVE_TO_CENTER
+/**
+ * Encapsulates a set of stepping parameters for a single axis.
+ */
+public class StepModel {
+
+    public StepModel(StepMode mode, double value) {
+        setMode(mode);
+        setValue(value);
+    }
+
+    private StepMode mode;
+    private double value;
+
+    public StepMode getMode() {
+        return mode;
+    }
+
+    public void setMode(StepMode mode) {
+        this.mode = mode;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
 }

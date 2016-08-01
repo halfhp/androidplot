@@ -29,10 +29,7 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 
 import com.androidplot.Plot;
-import com.androidplot.xy.BoundaryMode;
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.*;
 
 /***********************************
  * @author David Buezas (david.buezas at gmail.com)
@@ -64,14 +61,14 @@ public class TouchZoomExampleActivity extends Activity implements OnTouchListene
         });
         mySimpleXYPlot = (XYPlot) findViewById(R.id.plot);
         mySimpleXYPlot.setOnTouchListener(this);
-        mySimpleXYPlot.getGraphWidget().setTicksPerRangeLabel(2);
-        mySimpleXYPlot.getGraphWidget().setTicksPerDomainLabel(2);
-        mySimpleXYPlot.getGraphWidget().getBackgroundPaint().setColor(Color.TRANSPARENT);
-        mySimpleXYPlot.getGraphWidget().setRangeValueFormat(
-                new DecimalFormat("#####"));
-        mySimpleXYPlot.getGraphWidget().setDomainValueFormat(
-                new DecimalFormat("#####.#"));
-        mySimpleXYPlot.getGraphWidget().setRangeTickLabelWidth(25);
+        mySimpleXYPlot.getGraph().setLinesPerRangeLabel(2);
+        mySimpleXYPlot.getGraph().setLinesPerDomainLabel(2);
+        mySimpleXYPlot.getGraph().getBackgroundPaint().setColor(Color.TRANSPARENT);
+        mySimpleXYPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
+                setFormat(new DecimalFormat("#####"));
+        mySimpleXYPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).
+                setFormat(new DecimalFormat("#####.#"));
+        //mySimpleXYPlot.getGraphWidget().setRangeTickLabelWidth(25);
         mySimpleXYPlot.setRangeLabel("");
         mySimpleXYPlot.setDomainLabel("");
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 AndroidPlot.com
+ * Copyright 2015 AndroidPlot.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,17 +14,13 @@
  *    limitations under the License.
  */
 
-package com.androidplot;
+package com.androidplot.ui;
 
-import android.graphics.Paint;
-
-public interface NumberLabelFormatter {
-
-
-    /**
-     *
-     * @param value The value being rendered by this formatter.
-     * @return Paint instance that should be used to render the specified value.
-     */
-    Paint getPaint(Number value);
+public enum VerticalPositioning {
+    ABSOLUTE_FROM_TOP,
+    ABSOLUTE_FROM_BOTTOM,
+    ABSOLUTE_FROM_CENTER,
+    RELATIVE_TO_TOP,
+    RELATIVE_TO_BOTTOM,
+    RELATIVE_TO_CENTER
 }

@@ -59,7 +59,7 @@ public class SimplePieChartActivity extends Activity
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 PointF click = new PointF(motionEvent.getX(), motionEvent.getY());
-                if(pie.getPieWidget().containsPoint(click)) {
+                if(pie.getPie().containsPoint(click)) {
                     Segment segment = pie.getRenderer(PieRenderer.class).getContainingSegment(click);
                     if(segment != null) {
                         // handle the segment click...for now, just print

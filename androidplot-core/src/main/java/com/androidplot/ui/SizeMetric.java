@@ -19,16 +19,16 @@ package com.androidplot.ui;
 /**
  * Encapsulates a sizing algorithm and an associated value.
  *
- * The available algorithms list are stored in the {@link SizeLayout} enumeration.
+ * The available algorithms list are stored in the {@link SizeMode} enumeration.
  *
  */
-public class SizeMetric extends LayoutMetric<SizeLayout> {
+public class SizeMetric extends LayoutMetric<SizeMode> {
 
-    public SizeMetric(float value, SizeLayout layoutType) {
+    public SizeMetric(float value, SizeMode layoutType) {
         super(value, layoutType);
     }
 
-    protected void validatePair(float value, SizeLayout layoutType) {
+    protected void validatePair(float value, SizeMode layoutType) {
         switch(layoutType) {
             case RELATIVE:
                 if(value < 0 || value > 1) {
@@ -57,7 +57,7 @@ public class SizeMetric extends LayoutMetric<SizeLayout> {
     }
 
     @Override
-    public void setLayoutType(SizeLayout layoutType) {
+    public void setLayoutType(SizeMode layoutType) {
         super.setLayoutType(layoutType);
     }
 }

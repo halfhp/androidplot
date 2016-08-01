@@ -244,7 +244,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
      */
     public Segment getContainingSegment(PointF point) {
 
-        RectF plotArea = getPlot().getPieWidget().getWidgetDimensions().marginatedRect;
+        RectF plotArea = getPlot().getPie().getWidgetDimensions().marginatedRect;
         // figure out the angle in degrees of the line between the clicked point
         // and the origin of the plotArea:
         PointF origin = new PointF(plotArea.centerX(), plotArea.centerY());

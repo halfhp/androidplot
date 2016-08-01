@@ -210,7 +210,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 path.close();
                 break;
             case RANGE_ORIGIN:
-                float originPix = ValPixConverter.valToPix(
+                float originPix = (float) ValPixConverter.valToPix(
                         getPlot().getRangeOrigin().doubleValue(),
                         getPlot().getCalculatedMinY().doubleValue(),
                         getPlot().getCalculatedMaxY().doubleValue(),

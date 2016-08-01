@@ -25,7 +25,6 @@ import android.graphics.Color;
 import android.widget.RemoteViews;
 import com.androidplot.demos.R;
 import com.androidplot.ui.*;
-import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
@@ -42,35 +41,23 @@ public class DemoAppWidgetProvider extends AppWidgetProvider {
             final int h = (int) context.getResources().getDimension(R.dimen.sample_widget_height);
             final int w = (int) context.getResources().getDimension(R.dimen.sample_widget_width);
 
-            plot.getGraphWidget().setMargins(0, 0, 0 , 0);
-            plot.getGraphWidget().setPadding(0, 0, 0, 0);
-            plot.getGraphWidget().getGridBox().setPadding(20, 25, 0, 20);
-            plot.getGraphWidget().getDomainTickLabelPaint().setTextSize(PixelUtils.spToPix(10));
-            plot.getGraphWidget().getRangeTickLabelPaint().setTextSize(PixelUtils.spToPix(10));
-            plot.getGraphWidget().getDomainOriginTickLabelPaint().setTextSize(PixelUtils.spToPix(10));
-            plot.getGraphWidget().getRangeOriginTickLabelPaint().setTextSize(PixelUtils.spToPix(10));
+            plot.getGraph().setMargins(0, 0, 0 , 0);
+            plot.getGraph().setPadding(0, 0, 0, 0);
+//            plot.getGraphWidget().getDomainLineLabelPaint().setTextSize(PixelUtils.spToPix(10));
+//            plot.getGraphWidget().getRangeLineLabelPaint().setTextSize(PixelUtils.spToPix(10));
+//            plot.getGraphWidget().getDomainOriginLineLabelPaint().setTextSize(PixelUtils.spToPix(10));
+//            plot.getGraphWidget().getRangeOriginLineLabelPaint().setTextSize(PixelUtils.spToPix(10));
 
-            plot.getGraphWidget().position(0, XLayoutStyle.ABSOLUTE_FROM_LEFT, 0,
-                    YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.LEFT_TOP);
+            plot.getGraph().position(0, HorizontalPositioning.ABSOLUTE_FROM_LEFT, 0,
+                    VerticalPositioning.ABSOLUTE_FROM_TOP, Anchor.LEFT_TOP);
 
-            plot.getGraphWidget().setSize(Size.FILL);
+            plot.getGraph().setSize(Size.FILL);
 
-            plot.getLayoutManager().moveToTop(plot.getTitleWidget());
+            plot.getLayoutManager().moveToTop(plot.getTitle());
 
             plot.measure(w, h);
             plot.layout(0, 0, w, h);
 
-            /*plot.getGraphWidget().setMarginBottom(PixelUtils.dpToPix(40));
-            plot.getGraphWidget().setMarginLeft(PixelUtils.dpToPix(80));
-            plot.getGraphWidget().setPaddingLeft(PixelUtils.dpToPix(80));
-            plot.setPlotMargins(0, 0, 0, 0);
-            plot.getGraphWidget().position(0, XLayoutStyle.ABSOLUTE_FROM_LEFT, 0,
-                    YLayoutStyle.ABSOLUTE_FROM_TOP, AnchorPosition.LEFT_TOP);
-
-            plot.getGraphWidget().setSize(Size.FILL);*/
-            // Create a couple arrays of y-values to plot:
-            //Number[] series1Numbers = {1, 8, 5, 2, 7, 4};
-            //Number[] series2Numbers = {4, 6, 3, 8, 2, 10};
             Number[] series1Numbers = {1, 4, 2, 8, 4, 16, 8, 32, 16, 64};
             Number[] series2Numbers = {5, 2, 10, 5, 20, 10, 40, 20, 80, 40};
 
@@ -100,11 +87,11 @@ public class DemoAppWidgetProvider extends AppWidgetProvider {
 
 
             // reduce the number of range labels
-            plot.setTicksPerRangeLabel(3);
-            plot.setTicksPerDomainLabel(2);
+            plot.setLinesPerRangeLabel(3);
+            plot.setLinesPerDomainLabel(2);
 
             // hide the legend:
-            plot.getLegendWidget().setVisible(false);
+            plot.getLegend().setVisible(false);
 
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.demo_app_widget);
 

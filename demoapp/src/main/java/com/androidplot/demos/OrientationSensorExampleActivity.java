@@ -67,7 +67,7 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         // setup the APR Levels plot:
         aprLevelsPlot = (XYPlot) findViewById(R.id.aprLevelsPlot);
         aprLevelsPlot.setDomainBoundaries(-1, 1, BoundaryMode.FIXED);
-        aprLevelsPlot.getGraphWidget().getDomainTickLabelPaint().setColor(Color.TRANSPARENT);
+        //aprLevelsPlot.getGraphWidget().getDomainLineLabelPaint().setColor(Color.TRANSPARENT);
 
         aLvlSeries = new SimpleXYSeries("A");
         pLvlSeries = new SimpleXYSeries("P");
@@ -81,7 +81,7 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
                         new BarFormatter(Color.rgb(0, 0, 200), Color.rgb(0, 80, 0)));
 
         aprLevelsPlot.setDomainStepValue(3);
-        aprLevelsPlot.setTicksPerRangeLabel(3);
+        aprLevelsPlot.setLinesPerRangeLabel(3);
 
         // per the android documentation, the minimum and maximum readings we can get from
         // any of the orientation sensors is -180 and 359 respectively so we will fix our plot's
@@ -91,11 +91,11 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
 
         // update our domain and range axis labels:
         aprLevelsPlot.setDomainLabel("");
-        aprLevelsPlot.getDomainLabelWidget().pack();
+        aprLevelsPlot.getDomainTitle().pack();
         aprLevelsPlot.setRangeLabel("Angle (Degs)");
-        aprLevelsPlot.getRangeLabelWidget().pack();
-        aprLevelsPlot.setGridPadding(15, 0, 15, 0);
-        aprLevelsPlot.setRangeValueFormat(new DecimalFormat("#"));
+        aprLevelsPlot.getRangeTitle().pack();
+        aprLevelsPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
+                setFormat(new DecimalFormat("#"));
 
         // setup the APR History plot:
         aprHistoryPlot = (XYPlot) findViewById(R.id.aprHistoryPlot);
@@ -118,16 +118,19 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         aprHistoryPlot.addSeries(rollHistorySeries,
                 new LineAndPointFormatter(
                         Color.rgb(200, 100, 100), null, null, null));
-        aprHistoryPlot.setDomainStepMode(XYStepMode.INCREMENT_BY_VAL);
+        aprHistoryPlot.setDomainStepMode(StepMode.INCREMENT_BY_VAL);
         aprHistoryPlot.setDomainStepValue(HISTORY_SIZE/10);
-        aprHistoryPlot.setTicksPerRangeLabel(3);
+        aprHistoryPlot.setLinesPerRangeLabel(3);
         aprHistoryPlot.setDomainLabel("Sample Index");
-        aprHistoryPlot.getDomainLabelWidget().pack();
+        aprHistoryPlot.getDomainTitle().pack();
         aprHistoryPlot.setRangeLabel("Angle (Degs)");
-        aprHistoryPlot.getRangeLabelWidget().pack();
+        aprHistoryPlot.getRangeTitle().pack();
 
-        aprHistoryPlot.setRangeValueFormat(new DecimalFormat("#"));
-        aprHistoryPlot.setDomainValueFormat(new DecimalFormat("#"));
+        aprHistoryPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
+                setFormat(new DecimalFormat("#"));
+
+        aprHistoryPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).
+                setFormat(new DecimalFormat("#"));
 
         // setup checkboxes:
         hwAcceleratedCb = (CheckBox) findViewById(R.id.hwAccelerationCb);

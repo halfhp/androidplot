@@ -139,14 +139,6 @@ public class MainActivity extends Activity {
             }
         });
 
-        Button startDualScaleExampleButton = (Button) findViewById(R.id.startDualScaleExampleButton);
-        startDualScaleExampleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, DualScaleXYPlotExampleActivity.class));
-            }
-        });
-
         Button startXYPlotWithBgImgExampleButton = (Button) findViewById(R.id.startXYPlotWithBgImgExample);
         startXYPlotWithBgImgExampleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,5 +156,13 @@ public class MainActivity extends Activity {
             }
         });
 
+        // f(x) plot
+        Button fxPlotExampleButton = (Button) findViewById(R.id.fxPlotExample);
+        fxPlotExampleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, FXPlotExampleActivity.class));
+            }
+        });
     }
 }

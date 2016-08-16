@@ -35,8 +35,8 @@ and add an XYPlot view.  By default this file is usually named main.xml.  If it 
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         ap:title="A Simple XY Plot"
-        ap:rangeLabel="range"
-        ap:domainLabel="domain"
+        ap:rangeTitle="range"
+        ap:domainTitle="domain"
         ap:lineLabels="left|bottom"
         ap:lineLabelRotationBottom="-45"/>
 </LinearLayout>

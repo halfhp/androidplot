@@ -27,12 +27,13 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         ap:previewMode="candlestick"
-        ap:label="Daily Price"
-        ap:domainLabel="Day of week"
-        ap:rangeLabel="Price"
+        ap:title="Daily Price"
+        ap:domainTitle="Day of week"
+        ap:rangeTitle="Price"
+        ap:gridClippingEnabled="false"
         ap:legendVisible="false"
-        ap:rangeTickLabelTextSize="12sp"
-        ap:rangeOriginTickLabelTextSize="15sp"
-        ap:domainTickLabelTextSize="15sp"
-        ap:domainOriginTickLabelTextSize="15sp"/>
+        ap:lineLabelTextSizeLeft="12sp"
+        ap:lineLabelTextSizeBottom="15sp"
+        ap:lineLabelInsetLeft="32dp"
+        ap:gridInsetLeft="35dp"/>
 </LinearLayout>

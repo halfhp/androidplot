@@ -38,41 +38,41 @@ public class ValPixConverterTest {
         int min = 0;
         int max = 100;
 
-        int value = 50;
+        double value = 50;
 
-        assertEquals(50.0f, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
+        assertEquals(value, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
 
         // should be closer to the top:
         // (remember that 0,0 is the top left pixel)
         value = 75;
-        assertEquals(25.0f, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
+        assertEquals(25d, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
 
         // should be at the very top:
         value = 100;
-        assertEquals(0.0f, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
+        assertEquals(0d, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
 
         // should be at the very top:
         value = 0;
-        assertEquals(100.0f, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
+        assertEquals(100d, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
 
         // should be smack in the middle:
         min = -100;
         value = 0;
-        assertEquals(50.0f, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
+        assertEquals(50d, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
 
         // should be at the very bottom:
         value = 100;
-        assertEquals(0.0f, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
+        assertEquals(0d, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
 
         // should be in the middle:
         value = 0;
-        assertEquals(50.0f, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
+        assertEquals(50d, ValPixConverter.valToPix(value, min, max, sizeInPix, true));
 
         min = -100;
         max = 100;
         sizeInPix = 200;
-        assertEquals(0f, ValPixConverter.valToPix(-100, min, max, sizeInPix, false));
-        assertEquals(200f, ValPixConverter.valToPix(100, min, max, sizeInPix, false));
+        assertEquals(0d, ValPixConverter.valToPix(-100, min, max, sizeInPix, false));
+        assertEquals(200d, ValPixConverter.valToPix(100, min, max, sizeInPix, false));
     }
 
     @org.junit.Test
@@ -83,7 +83,7 @@ public class ValPixConverterTest {
 
         double value = 50;
 
-        float pixel = ValPixConverter.valToPix(value, min, max, sizeInPix, true);
+        double pixel = ValPixConverter.valToPix(value, min, max, sizeInPix, true);
         assertEquals(value, ValPixConverter.pixToVal(pixel, min, max, sizeInPix, true));
 
         value = 75;

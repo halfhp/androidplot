@@ -375,13 +375,13 @@ public class PlotTest {
         String param1 = "this is a test.";
         String param2 = "use_background_thread";
         String param3 = "#FF0000";
-        params.put("title", param1);
+        params.put("title.text", param1);
         params.put("renderMode", param2);
         params.put("backgroundPaint.color", param3);
 
         Configurator.configure(RuntimeEnvironment.application, plot, params);
 
-        assertEquals(param1, plot.getTitle());
+        assertEquals(param1, plot.getTitle().getText());
         assertEquals(Plot.RenderMode.USE_BACKGROUND_THREAD, plot.getRenderMode());
         assertEquals(Color.parseColor(param3), plot.getBackgroundPaint().getColor());
     }

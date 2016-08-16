@@ -22,9 +22,9 @@ import android.view.View;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.DisplayDimensions;
-import com.androidplot.util.ZLinkedList;
+import com.androidplot.util.LinkedLayerList;
 
-public class LayoutManager extends ZLinkedList<Widget>
+public class LayoutManager extends LinkedLayerList<Widget>
         implements View.OnTouchListener, Resizable {
     private boolean drawAnchorsEnabled = false;
     private Paint anchorPaint;
@@ -106,7 +106,7 @@ public class LayoutManager extends ZLinkedList<Widget>
                 if (widget.isClippingEnabled()) {
                     canvas.clipRect(dims.canvasRect, Region.Op.INTERSECT);
                 }
-                widget.draw(canvas, dims.canvasRect);
+                widget.draw(canvas);
 
                 if (drawMarginsEnabled) {
                     drawSpacing(canvas, dims.canvasRect, dims.marginatedRect, getMarginPaint());

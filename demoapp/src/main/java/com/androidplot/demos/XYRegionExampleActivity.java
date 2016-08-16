@@ -19,10 +19,10 @@ package com.androidplot.demos;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.ui.*;
@@ -61,11 +61,9 @@ public class XYRegionExampleActivity extends Activity {
     private RectRegion warmupRegion;
     private RectRegion homeRunRegion;
 
-    //private XYRegionFormatter rf1;
     private XYRegionFormatter shortRegionFormatter;
     private XYRegionFormatter warmupRegionFormatter;
     private XYRegionFormatter homeRunRegionFormatter;
-    //private XYRegionFormatter rf5;
 
     private CheckBox timCB;
     private CheckBox nickCB;
@@ -112,8 +110,6 @@ public class XYRegionExampleActivity extends Activity {
             }
         });
 
-
-
         r2CheckBox = (CheckBox) findViewById(R.id.r2CheckBox);
         r2CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -146,7 +142,7 @@ public class XYRegionExampleActivity extends Activity {
     }
 
     private void onS1CheckBoxClicked() {
-        if(timCB.isChecked()) {
+        if (timCB.isChecked()) {
             plot.addSeries(timSeries, timFormatter);
             r2CheckBox.setEnabled(true);
         } else {
@@ -157,7 +153,7 @@ public class XYRegionExampleActivity extends Activity {
     }
 
     private void onS2CheckBoxClicked() {
-        if(nickCB.isChecked()) {
+        if (nickCB.isChecked()) {
             plot.addSeries(nickSeries, nickFormatter);
             r3CheckBox.setEnabled(true);
             r4CheckBox.setEnabled(true);
@@ -170,7 +166,7 @@ public class XYRegionExampleActivity extends Activity {
     }
 
     private void onS3CheckBoxClicked() {
-        if(joeCB.isChecked()) {
+        if (joeCB.isChecked()) {
             plot.addSeries(joeSeries, joeFormatter);
         } else {
             plot.removeSeries(joeSeries);
@@ -179,7 +175,7 @@ public class XYRegionExampleActivity extends Activity {
     }
 
     private void onS4CheckBoxClicked() {
-        if(jamesCB.isChecked()) {
+        if (jamesCB.isChecked()) {
             plot.addSeries(jamesSeries, jamesFormatter);
         } else {
             plot.removeSeries(jamesSeries);
@@ -195,8 +191,8 @@ public class XYRegionExampleActivity extends Activity {
      * @param rr The RectRegion to add/remove
      */
     private void onCheckBoxClicked(CheckBox cb, LineAndPointFormatter lpf,
-                                   XYRegionFormatter rf, RectRegion rr) {
-        if(cb.isChecked()) {
+            XYRegionFormatter rf, RectRegion rr) {
+        if (cb.isChecked()) {
             lpf.removeRegion(rr);
         } else {
             lpf.addRegion(rr, rf);
@@ -208,68 +204,40 @@ public class XYRegionExampleActivity extends Activity {
      */
     private void makePlotPretty() {
         // use a 2x5 grid with room for 10 items:
-        plot.getLegendWidget().setTableModel(new DynamicTableModel(4, 2));
+        plot.getLegend().setTableModel(new DynamicTableModel(4, 2));
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT)
+                .setFormat(new NumberFormat() {
+                    @Override
+                    public StringBuffer format(double value, StringBuffer buffer,
+                            FieldPosition field) {
+                        return new StringBuffer(value + "'");
+                    }
 
-        // add a semi-transparent black background to the legend
-        // so it's easier to see overlaid on top of our plot:
-        Paint bgPaint = new Paint();
-        bgPaint.setColor(Color.BLACK);
-        bgPaint.setStyle(Paint.Style.FILL);
-        bgPaint.setAlpha(40);
+                    @Override
+                    public StringBuffer format(long value, StringBuffer buffer,
+                            FieldPosition field) {
+                        throw new UnsupportedOperationException("Not yet implemented.");
+                    }
 
-        plot.getLegendWidget().setBackgroundPaint(bgPaint);
+                    @Override
+                    public Number parse(String string, ParsePosition position) {
+                        throw new UnsupportedOperationException("Not yet implemented.");
+                    }
+                });
 
-        // adjust the padding of the legend widget to look a little nicer:
-        plot.getLegendWidget().setPadding(5, 5, 5, 5);
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM)
+                .setFormat(new DecimalFormat("#"));
 
-        plot.setRangeValueFormat(new NumberFormat() {
-            @Override
-            public StringBuffer format(double value, StringBuffer buffer, FieldPosition field) {
-                return new StringBuffer(value + "'");
-            }
-
-            @Override
-            public StringBuffer format(long value, StringBuffer buffer, FieldPosition field) {
-                throw new UnsupportedOperationException("Not yet implemented.");
-            }
-
-            @Override
-            public Number parse(String string, ParsePosition position) {
-                throw new UnsupportedOperationException("Not yet implemented.");
-            }
-        });
-
-        plot.setDomainValueFormat(new DecimalFormat("#"));
-
-        plot.getLegendWidget().setWidth(PixelUtils.dpToPix(100), SizeLayoutType.FILL);
-
-
-        // adjust the legend size so there is enough room
-        // to draw the new legend grid:
-        //plot.getLegendWidget().getHeight().setLayoutType(SizeLayoutType.ABSOLUTE);
-        //plot.getLegendWidget().getWidth().setLayoutType(SizeLayoutType.ABSOLUTE);
-        //plot.getLegendWidget().setSize(
-        //    new SizeMetrics(70, SizeLayoutType.ABSOLUTE, 80, SizeLayoutType.ABSOLUTE));
+        plot.getLegend().setWidth(PixelUtils.dpToPix(100), SizeMode.FILL);
 
         // reposition the grid so that it rests above the bottom-left
         // edge of the graph widget:
-
-        plot.getLegendWidget().position(
-                125,
-                XLayoutStyle.ABSOLUTE_FROM_LEFT,
-                65,
-                YLayoutStyle.ABSOLUTE_FROM_TOP,
-                AnchorPosition.LEFT_TOP);
-
-        plot.getGraphWidget().setRangeTickLabelHorizontalOffset(-1);
-
-        // add enough space to ensure range value labels arent cut off on the left/right:
-        plot.getGraphWidget().setRangeTickLabelWidth(25);
-
-        // add enough space to make sure domain value labels arent cut off on the bottom:
-        plot.getGraphWidget().setDomainTickLabelWidth(15);
-
-        plot.getGraphWidget().setDomainTickLabelVerticalOffset(-6);
+        plot.getLegend().position(
+                50,
+                HorizontalPositioning.ABSOLUTE_FROM_CENTER,
+                200,
+                VerticalPositioning.ABSOLUTE_FROM_TOP,
+                Anchor.TOP_MIDDLE);
 
         plot.setRangeBoundaries(0, BoundaryMode.FIXED, 500, BoundaryMode.FIXED);
     }
@@ -280,7 +248,6 @@ public class XYRegionExampleActivity extends Activity {
      */
     private void seriesSetup() {
 
-
         // TIM
         timFormatter = new LineAndPointFormatter(
                 Color.rgb(100, 25, 20),
@@ -290,7 +257,7 @@ public class XYRegionExampleActivity extends Activity {
         timFormatter.getVertexPaint().setStrokeWidth(PixelUtils.dpToPix(POINT_SIZE_DP));
 
         timSeries = new SimpleXYSeries(Arrays.asList(timHits),
-            SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Tim");
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Tim");
 
         plot.addSeries(timSeries, timFormatter);
 
@@ -302,10 +269,8 @@ public class XYRegionExampleActivity extends Activity {
         nickFormatter.getLinePaint().setStrokeWidth(PixelUtils.dpToPix(LINE_THICKNESS_DP));
         nickFormatter.getVertexPaint().setStrokeWidth(PixelUtils.dpToPix(POINT_SIZE_DP));
 
-
-
         nickSeries = new SimpleXYSeries(Arrays.asList(nickHits),
-            SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Nick");
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Nick");
 
         plot.addSeries(nickSeries, nickFormatter);
 
@@ -318,7 +283,7 @@ public class XYRegionExampleActivity extends Activity {
         joeFormatter.getVertexPaint().setStrokeWidth(PixelUtils.dpToPix(POINT_SIZE_DP));
 
         joeSeries = new SimpleXYSeries(Arrays.asList(joeHits),
-            SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Joe");
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Joe");
 
         plot.addSeries(joeSeries, joeFormatter);
 
@@ -332,12 +297,11 @@ public class XYRegionExampleActivity extends Activity {
         jamesFormatter.getVertexPaint().setStrokeWidth(PixelUtils.dpToPix(POINT_SIZE_DP));
 
         jamesSeries = new SimpleXYSeries(Arrays.asList(jamesHits),
-            SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,"James");
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "James");
         plot.addSeries(jamesSeries, jamesFormatter);
 
-        plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 100);
-        //plot.setTicksPerRangeLabel(1);
-        plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
+        plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 100);
+        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1);
     }
 
     /**
@@ -345,15 +309,16 @@ public class XYRegionExampleActivity extends Activity {
      */
     private void axisLabelSetup() {
         // DOMAIN
-        plot.getGraphWidget().addDomainAxisValueLabelRegion(
-                Double.NEGATIVE_INFINITY, 2, new AxisValueLabelFormatter(Color.GRAY));
-        plot.getGraphWidget().addDomainAxisValueLabelRegion(
-                2, Double.POSITIVE_INFINITY, new AxisValueLabelFormatter(Color.WHITE));
-        // RANGE
-        plot.getGraphWidget().addRangeAxisValueLabelRegion(
-                Double.NEGATIVE_INFINITY, HOME_RUN_DIST, new AxisValueLabelFormatter(Color.RED));
-        plot.getGraphWidget().addRangeAxisValueLabelRegion(
-                HOME_RUN_DIST, Double.POSITIVE_INFINITY, new AxisValueLabelFormatter(Color.GREEN));
+        // TODO
+        //        plot.getGraphWidget().addDomainLineLabelFormatter(
+        //                Double.NEGATIVE_INFINITY, 2, new SimpleLineLabelFormatter(Color.GRAY));
+        //        plot.getGraphWidget().addDomainLineLabelFormatter(
+        //                2, Double.POSITIVE_INFINITY, new SimpleLineLabelFormatter(Color.WHITE));
+        //        // RANGE
+        //        plot.getGraphWidget().addRangeLineLabelFormatter(
+        //                Double.NEGATIVE_INFINITY, HOME_RUN_DIST, new SimpleLineLabelFormatter(Color.RED));
+        //        plot.getGraphWidget().addRangeLineLabelFormatter(
+        //                HOME_RUN_DIST, Double.POSITIVE_INFINITY, new SimpleLineLabelFormatter(Color.GREEN));
     }
 
     /**
@@ -364,27 +329,28 @@ public class XYRegionExampleActivity extends Activity {
         YValueMarker fenwayLfMarker = new YValueMarker(
                 380,                                        // y-val to mark
                 "Fenway Park LF Wall",                      // marker label
-                new XPositionMetric(                        // object instance to set text positioning on the marker
+                new HorizontalPosition(
+                        // object instance to set text positioning on the marker
                         PixelUtils.dpToPix(5),              // 5dp offset
-                        XLayoutStyle.ABSOLUTE_FROM_RIGHT),  // offset origin
+                        HorizontalPositioning.ABSOLUTE_FROM_RIGHT),  // offset origin
                 Color.BLUE,                                 // line paint color
                 Color.BLUE);                                // text paint color
 
         YValueMarker attRfMarker = new YValueMarker(
-                        309,                                        // y-val to mark
-                        "ATT Park RF Wall",                         // marker label
-                        new XPositionMetric(                        // object instance to set text positioning on the marker
-                                PixelUtils.dpToPix(5),              // 5dp offset
-                                XLayoutStyle.ABSOLUTE_FROM_RIGHT),  // offset origin
-                        Color.CYAN,                                 // line paint color
-                        Color.CYAN);                                // text paint color
-
+                309,                                        // y-val to mark
+                "ATT Park RF Wall",                         // marker label
+                new HorizontalPosition(
+                        // object instance to set text positioning on the marker
+                        PixelUtils.dpToPix(5),              // 5dp offset
+                        HorizontalPositioning.ABSOLUTE_FROM_RIGHT),  // offset origin
+                Color.CYAN,                                 // line paint color
+                Color.CYAN);                                // text paint color
 
         fenwayLfMarker.getTextPaint().setTextSize(PixelUtils.dpToPix(14));
         attRfMarker.getTextPaint().setTextSize(PixelUtils.dpToPix(14));
 
         DashPathEffect dpe = new DashPathEffect(
-                        new float[]{PixelUtils.dpToPix(2), PixelUtils.dpToPix(2)}, 0);
+                new float[] {PixelUtils.dpToPix(2), PixelUtils.dpToPix(2)}, 0);
 
         fenwayLfMarker.getLinePaint().setPathEffect(dpe);
         attRfMarker.getLinePaint().setPathEffect(dpe);
@@ -398,11 +364,11 @@ public class XYRegionExampleActivity extends Activity {
      */
     private void regionSetup() {
 
-
         // and another region:
         shortRegionFormatter = new XYRegionFormatter(Color.RED);
         shortRegionFormatter.getPaint().setAlpha(75);
-        shortRegion = new RectRegion(2, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, HOME_RUN_DIST, "Short");
+        shortRegion = new RectRegion(2, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY,
+                HOME_RUN_DIST, "Short");
         timFormatter.addRegion(shortRegion, shortRegionFormatter);
         nickFormatter.addRegion(shortRegion, shortRegionFormatter);
         joeFormatter.addRegion(shortRegion, shortRegionFormatter);
@@ -413,7 +379,8 @@ public class XYRegionExampleActivity extends Activity {
         warmupRegionFormatter = new XYRegionFormatter(Color.WHITE);
         warmupRegionFormatter.getPaint().setAlpha(75);
 
-        warmupRegion = new RectRegion(0, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "Warmup");
+        warmupRegion = new RectRegion(0, 2, Double.NEGATIVE_INFINITY,
+                Double.POSITIVE_INFINITY, "Warmup");
         timFormatter.addRegion(warmupRegion, warmupRegionFormatter);
         nickFormatter.addRegion(warmupRegion, warmupRegionFormatter);
         joeFormatter.addRegion(warmupRegion, warmupRegionFormatter);
@@ -422,7 +389,8 @@ public class XYRegionExampleActivity extends Activity {
         homeRunRegionFormatter = new XYRegionFormatter(Color.GREEN);
         homeRunRegionFormatter.getPaint().setAlpha(75);
 
-        homeRunRegion = new RectRegion(2, Double.POSITIVE_INFINITY, HOME_RUN_DIST, Double.POSITIVE_INFINITY, "H. Run");
+        homeRunRegion = new RectRegion(2, Double.POSITIVE_INFINITY, HOME_RUN_DIST,
+                Double.POSITIVE_INFINITY, "H. Run");
         timFormatter.addRegion(homeRunRegion, homeRunRegionFormatter);
         nickFormatter.addRegion(homeRunRegion, homeRunRegionFormatter);
         joeFormatter.addRegion(homeRunRegion, homeRunRegionFormatter);

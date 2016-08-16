@@ -43,30 +43,27 @@ public class XYPlotWithBgImgActivity extends Activity {
 
 		plot = (XYPlot) findViewById(R.id.graph_metrics);
 
-		//For debugging.
-        //plot.setMarkupEnabled(true);
-
         // Format Graph
-        plot.getGraphWidget().getBackgroundPaint().setColor(Color.TRANSPARENT);
-        plot.getGraphWidget().getGridBackgroundPaint().setShader(WHITE_SHADER);
-        plot.getGraphWidget().getDomainGridLinePaint().setColor(Color.BLACK);
-        plot.getGraphWidget().getDomainGridLinePaint().setPathEffect(new DashPathEffect(new float[]{3, 3}, 1));
-        plot.getGraphWidget().getRangeGridLinePaint().setColor(Color.BLACK);
-        plot.getGraphWidget().getRangeGridLinePaint().setPathEffect(new DashPathEffect(new float[]{3, 3}, 1));
-        plot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
-        plot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
-        //plot.getGraphWidget().setMarginTop(10);
+        plot.getGraph().getBackgroundPaint().setColor(Color.TRANSPARENT);
+        plot.getGraph().getGridBackgroundPaint().setShader(WHITE_SHADER);
+        plot.getGraph().getDomainGridLinePaint().setColor(Color.BLACK);
+        plot.getGraph().getDomainGridLinePaint().setPathEffect(new DashPathEffect(new float[]{3, 3}, 1));
+        plot.getGraph().getRangeGridLinePaint().setColor(Color.BLACK);
+        plot.getGraph().getRangeGridLinePaint().setPathEffect(new DashPathEffect(new float[]{3, 3}, 1));
+        plot.getGraph().getDomainOriginLinePaint().setColor(Color.BLACK);
+        plot.getGraph().getRangeOriginLinePaint().setColor(Color.BLACK);
 
         // Customize domain and range labels.
         plot.setDomainLabel("x-vals");
         plot.setRangeLabel("y-vals");
-        plot.setRangeValueFormat(new DecimalFormat("0"));
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
+				setFormat(new DecimalFormat("0"));
 
         // Make the domain and range step correctly
         plot.setRangeBoundaries(40, 160, BoundaryMode.FIXED);
-        plot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 20);
-        plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 60);
-        plot.setTicksPerDomainLabel(2);
+        plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 20);
+        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 60);
+        plot.setLinesPerDomainLabel(2);
 
         series = getSeries();
 		LineAndPointFormatter lpFormat = new LineAndPointFormatter(
@@ -101,30 +98,7 @@ public class XYPlotWithBgImgActivity extends Activity {
 
 	public void onGraphStyleToggle(View v) {
 		boolean styleOn = ((ToggleButton) v).isChecked();
-
-        /*RectF graphRect = plot.getGraphWidget().getGridRect();
-        float segmentSize = 1.0f/6.0f;
-        LinearGradient lg = new LinearGradient(
-                0,
-                graphRect.top,
-                0,
-                graphRect.bottom,
-                new int[]{
-                        Color.RED,
-                        Color.YELLOW,
-                        Color.GREEN,
-                        Color.WHITE},
-                new float[]{
-                        0,
-                        segmentSize*2,
-                        segmentSize*3,
-                        segmentSize*5
-                },
-                Shader.TileMode.REPEAT
-        );
-        plot.getGraphWidget().getGridBackgroundPaint().setShader(lg);*/
-
-        RectF rect = plot.getGraphWidget().getGridDimensions().marginatedRect;
+		RectF rect = plot.getGraph().getGridRect();
         BitmapShader myShader = new BitmapShader(
                 Bitmap.createScaledBitmap(
                         BitmapFactory.decodeResource(
@@ -139,10 +113,10 @@ public class XYPlotWithBgImgActivity extends Activity {
         m.setTranslate(rect.left, rect.top);
         myShader.setLocalMatrix(m);
         if (styleOn)
-	        plot.getGraphWidget().getGridBackgroundPaint().setShader(
+	        plot.getGraph().getGridBackgroundPaint().setShader(
 	        		myShader);
 		else
-			plot.getGraphWidget().getGridBackgroundPaint().setShader(WHITE_SHADER);
+			plot.getGraph().getGridBackgroundPaint().setShader(WHITE_SHADER);
 
         plot.redraw();
 

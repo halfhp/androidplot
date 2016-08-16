@@ -27,6 +27,11 @@
             style="@style/APDefacto.Light"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            ap:label="@string/ts_plot1_title"
+            ap:title="@string/ts_plot1_title"
+            ap:lineLabelRotationBottom="-45"
+            ap:gridInsetLeft="30dp"
+            ap:gridInsetBottom="25dp"
+            ap:gridInsetRight="20dp"
+            ap:lineLabelInsetBottom="15dp"
             renderMode="use_main_thread"/>
 </LinearLayout>

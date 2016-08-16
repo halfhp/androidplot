@@ -20,8 +20,8 @@ import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
 import com.androidplot.util.DisplayDimensions;
-import com.androidplot.ui.XLayoutStyle;
-import com.androidplot.ui.YLayoutStyle;
+import com.androidplot.ui.HorizontalPositioning;
+import com.androidplot.ui.VerticalPositioning;
 import com.androidplot.util.PixelUtils;
 
 /**
@@ -56,37 +56,37 @@ public abstract class Widget implements BoxModelable, Resizable {
         return widgetDimensions;
     }
 
-    public AnchorPosition getAnchor() {
+    public Anchor getAnchor() {
         return getPositionMetrics().getAnchor();
     }
 
-    public void setAnchor(AnchorPosition anchor) {
+    public void setAnchor(Anchor anchor) {
         getPositionMetrics().setAnchor(anchor);
     }
 
 
     /**
-     * Same as {@link #position(float, com.androidplot.ui.XLayoutStyle, float, com.androidplot.ui.YLayoutStyle, com.androidplot.ui.AnchorPosition)}
+     * Same as {@link #position(float, HorizontalPositioning, float, VerticalPositioning, Anchor)}
      * but with the anchor parameter defaulted to the upper left corner.
      * @param x
-     * @param xLayoutStyle
+     * @param horizontalPositioning
      * @param y
-     * @param yLayoutStyle
+     * @param verticalPositioning
      */
-    public void position(float x, XLayoutStyle xLayoutStyle, float y, YLayoutStyle yLayoutStyle) {
-        position(x, xLayoutStyle, y, yLayoutStyle, AnchorPosition.LEFT_TOP);
+    public void position(float x, HorizontalPositioning horizontalPositioning, float y, VerticalPositioning verticalPositioning) {
+        position(x, horizontalPositioning, y, verticalPositioning, Anchor.LEFT_TOP);
     }
 
     /**
      * @param x            X-Coordinate of the top left corner of element.  When using RELATIVE, must be a value between 0 and 1.
-     * @param xLayoutStyle LayoutType to use when orienting this element's X-Coordinate.
+     * @param horizontalPositioning LayoutType to use when orienting this element's X-Coordinate.
      * @param y            Y_VALS_ONLY-Coordinate of the top-left corner of element.  When using RELATIVE, must be a value between 0 and 1.
-     * @param yLayoutStyle LayoutType to use when orienting this element's Y_VALS_ONLY-Coordinate.
+     * @param verticalPositioning LayoutType to use when orienting this element's Y_VALS_ONLY-Coordinate.
      * @param anchor       The point of reference used by this positioning call.
      */
-    public void position(float x, XLayoutStyle xLayoutStyle, float y,
-                         YLayoutStyle yLayoutStyle, AnchorPosition anchor) {
-        setPositionMetrics(new PositionMetrics(x, xLayoutStyle, y, yLayoutStyle, anchor));
+    public void position(float x, HorizontalPositioning horizontalPositioning, float y,
+                         VerticalPositioning verticalPositioning, Anchor anchor) {
+        setPositionMetrics(new PositionMetrics(x, horizontalPositioning, y, verticalPositioning, anchor));
         layoutManager.addToTop(this);
     }
 
@@ -130,7 +130,7 @@ public abstract class Widget implements BoxModelable, Resizable {
         size.getWidth().setValue(width);
     }
 
-    public void setWidth(float width, SizeLayoutType layoutType) {
+    public void setWidth(float width, SizeMode layoutType) {
         size.getWidth().set(width, layoutType);
     }
 
@@ -138,7 +138,7 @@ public abstract class Widget implements BoxModelable, Resizable {
         size.getHeight().setValue(height);
     }
 
-    public void setHeight(float height, SizeLayoutType layoutType) {
+    public void setHeight(float height, SizeMode layoutType) {
         size.getHeight().set(height, layoutType);
     }
 
@@ -295,9 +295,9 @@ public abstract class Widget implements BoxModelable, Resizable {
             return PixelUtils.sub(point, getAnchorOffset(width, height, metrics.getAnchor()));
         }
 
-    public static PointF getAnchorOffset(float width, float height, AnchorPosition anchorPosition) {
+    public static PointF getAnchorOffset(float width, float height, Anchor anchor) {
             PointF point = new PointF();
-            switch (anchorPosition) {
+            switch (anchor) {
                 case LEFT_TOP:
                     break;
                 case LEFT_MIDDLE:
@@ -325,34 +325,25 @@ public abstract class Widget implements BoxModelable, Resizable {
                     point.set(width / 2, height / 2);
                     break;
                 default:
-                    throw new IllegalArgumentException("Unsupported anchor location: " + anchorPosition);
+                    throw new IllegalArgumentException("Unsupported anchor location: " + anchor);
             }
             return point;
         }
 
-    public static PointF getAnchorCoordinates(RectF widgetRect, AnchorPosition anchorPosition) {
+    public static PointF getAnchorCoordinates(RectF widgetRect, Anchor anchor) {
             return PixelUtils.add(new PointF(widgetRect.left, widgetRect.top),
-                    getAnchorOffset(widgetRect.width(), widgetRect.height(), anchorPosition));
+                    getAnchorOffset(widgetRect.width(), widgetRect.height(), anchor));
         }
 
-        public static PointF getAnchorCoordinates(float x, float y, float width, float height, AnchorPosition anchorPosition) {
-            return getAnchorCoordinates(new RectF(x, y, x+width, y+height), anchorPosition);
+        public static PointF getAnchorCoordinates(float x, float y, float width, float height, Anchor anchor) {
+            return getAnchorCoordinates(new RectF(x, y, x+width, y+height), anchor);
         }
 
-    public void draw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
-        //outlineRect = widgetRect;
+    public void draw(Canvas canvas) throws PlotRenderException {
         if (isVisible()) {
             if (backgroundPaint != null) {
                 drawBackground(canvas, widgetDimensions.canvasRect);
             }
-
-            /* RectF marginatedRect = new RectF(outlineRect.left + marginLeft,
-          outlineRect.top + marginTop,
-          outlineRect.right - marginRight,
-          outlineRect.bottom - marginBottom);*/
-
-            /*RectF marginatedRect = boxModel.getMarginatedRect(widgetRect);
-            RectF paddedRect = boxModel.getPaddedRect(marginatedRect);*/
             doOnDraw(canvas, widgetDimensions.paddedRect);
 
             if (borderPaint != null) {

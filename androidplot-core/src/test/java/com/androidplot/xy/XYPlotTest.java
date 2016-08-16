@@ -441,15 +441,13 @@ public class XYPlotTest extends AndroidplotTest {
         String param1 = "this is a test.";
         String param2 = Plot.RenderMode.USE_BACKGROUND_THREAD.toString();
         String param3 = "#FF0000";
-        params.put("title", param1);
+        params.put("title.text", param1);
         params.put("renderMode", param2);
         params.put("backgroundPaint.color", param3);
-        params.put("graphWidget.domainTickLabelPaint.color", param3);
 
         Configurator.configure(RuntimeEnvironment.application, plot, params);
-        assertEquals(param1, plot.getTitle());
+        assertEquals(param1, plot.getTitle().getText());
         assertEquals(Plot.RenderMode.USE_BACKGROUND_THREAD, plot.getRenderMode());
         assertEquals(Color.parseColor(param3), plot.getBackgroundPaint().getColor());
-        assertEquals(Color.parseColor(param3), plot.getGraphWidget().getDomainTickLabelPaint().getColor());
     }
 }

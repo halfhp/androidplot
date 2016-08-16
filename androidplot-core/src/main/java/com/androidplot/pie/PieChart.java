@@ -21,13 +21,13 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import com.androidplot.Plot;
 import com.androidplot.R;
-import com.androidplot.ui.AnchorPosition;
-import com.androidplot.ui.SizeLayoutType;
+import com.androidplot.ui.Anchor;
+import com.androidplot.ui.SizeMode;
 import com.androidplot.ui.Size;
 import com.androidplot.util.AttrUtils;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.ui.XLayoutStyle;
-import com.androidplot.ui.YLayoutStyle;
+import com.androidplot.ui.HorizontalPositioning;
+import com.androidplot.ui.VerticalPositioning;
 
 public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
@@ -37,12 +37,12 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
     private static final int DEFAULT_PIE_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_PIE_WIDGET_X_OFFSET_DP = 0;
 
-    public void setPieWidget(PieWidget pieWidget) {
-        this.pieWidget = pieWidget;
+    public void setPie(PieWidget pie) {
+        this.pie = pie;
     }
 
     @SuppressWarnings("FieldCanBeLocal")
-    private PieWidget pieWidget;
+    private PieWidget pie;
 
     public PieChart(Context context, String title) {
         super(context, title);
@@ -58,28 +58,23 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
     @Override
     protected void onPreInit() {
-        pieWidget = new PieWidget(
+        pie = new PieWidget(
                 getLayoutManager(),
                 this,
                 new Size(
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_H_DP),
-                        SizeLayoutType.FILL,
+                        SizeMode.FILL,
                         PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_W_DP),
-                        SizeLayoutType.FILL));
+                        SizeMode.FILL));
 
-        pieWidget.position(
+        pie.position(
                 PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_X_OFFSET_DP),
-                XLayoutStyle.ABSOLUTE_FROM_CENTER,
+                HorizontalPositioning.ABSOLUTE_FROM_CENTER,
                 PixelUtils.dpToPix(DEFAULT_PIE_WIDGET_Y_OFFSET_DP),
-                YLayoutStyle.ABSOLUTE_FROM_CENTER,
-                AnchorPosition.CENTER);
+                VerticalPositioning.ABSOLUTE_FROM_CENTER,
+                Anchor.CENTER);
 
-        pieWidget.setPadding(10, 10, 10, 10);
-
-        // TODO: can't remember why this getClass() check is neccessary.  test if it actually is...
-        /*if (getClass().equals(PieChart.class) && attrs != null) {
-            loadAttrs(context, attrs);
-        }*/
+        pie.setPadding(10, 10, 10, 10);
     }
 
     @Override
@@ -90,8 +85,8 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
                 R.styleable.pie_PieChart_pieBorderColor, R.styleable.pie_PieChart_pieBorderThickness);
     }
 
-    public PieWidget getPieWidget() {
-        return pieWidget;
+    public PieWidget getPie() {
+        return pie;
     }
 
     public void addSegment(Segment segment, SegmentFormatter formatter) {

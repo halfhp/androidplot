@@ -96,8 +96,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".TimeSeriesActivity"/>
-		<activity android:name=".DualScaleXYPlotExampleActivity"/>
         <activity android:name=".XYPlotWithBgImgActivity"/>
+        <activity android:name=".ECGExample"/>
+        <activity android:name=".FXPlotExampleActivity"/>
         
         <!-- receiver for demo app widget -->
         <receiver

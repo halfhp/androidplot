@@ -24,5 +24,5 @@ import java.util.List;
 public interface Interpolator<ParamsType extends InterpolationParams> {
 
 
-    List<XY> interpolate(XYSeries series, ParamsType params);
+    List<XYCoords> interpolate(XYSeries series, ParamsType params);
 }

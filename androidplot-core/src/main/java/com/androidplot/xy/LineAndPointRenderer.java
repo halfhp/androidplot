@@ -122,7 +122,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
         if(linePaint != null) {
             if(formatter.getInterpolationParams() != null) {
-                List<XY> interpolatedPoints = getInterpolator(
+                List<XYCoords> interpolatedPoints = getInterpolator(
                         formatter.getInterpolationParams()).interpolate(series,
                         formatter.getInterpolationParams());
                 firstPoint = convertPoint(interpolatedPoints.get(ZERO), plotArea);
@@ -157,7 +157,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
     }
 
-    protected PointF convertPoint(XY coord, RectF plotArea) {
+    protected PointF convertPoint(XYCoords coord, RectF plotArea) {
         return ValPixConverter.valToPix(
                 coord.x.doubleValue(),
                 coord.y.doubleValue(),
@@ -210,7 +210,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 path.close();
                 break;
             case RANGE_ORIGIN:
-                float originPix = ValPixConverter.valToPix(
+                float originPix = (float) ValPixConverter.valToPix(
                         getPlot().getRangeOrigin().doubleValue(),
                         getPlot().getCalculatedMinY().doubleValue(),
                         getPlot().getCalculatedMaxY().doubleValue(),

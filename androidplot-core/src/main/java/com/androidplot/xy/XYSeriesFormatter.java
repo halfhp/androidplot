@@ -17,14 +17,14 @@
 package com.androidplot.xy;
 
 import com.androidplot.ui.Formatter;
-import com.androidplot.util.ZHash;
-import com.androidplot.util.ZIndexable;
+import com.androidplot.util.LayerHash;
+import com.androidplot.util.Layerable;
 
 public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFormatter> extends Formatter<XYPlot> {
-    ZHash<RectRegion, XYRegionFormatterType>  regions;
+    LayerHash<RectRegion, XYRegionFormatterType> regions;
 
     {
-        regions = new ZHash<RectRegion, XYRegionFormatterType>();
+        regions = new LayerHash<>();
     }
 
     public void addRegion(RectRegion region, XYRegionFormatterType regionFormatter) {
@@ -39,7 +39,7 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
      * Can be used to access z-index manipulation methods of ZIndexable.
      * @return
      */
-    public ZIndexable<RectRegion> getRegions() {
+    public Layerable<RectRegion> getRegions() {
         return regions;
     }
 

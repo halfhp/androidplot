@@ -25,7 +25,9 @@
         android:id="@+id/plot"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        ap:label="A Simple XY Plot"
-        ap:rangeLabel="range"
-        ap:domainLabel="domain"/>
+        ap:title="A Simple XY Plot"
+        ap:rangeTitle="range"
+        ap:domainTitle="domain"
+        ap:lineLabels="left|bottom"
+        ap:lineLabelRotationBottom="-45"/>
 </LinearLayout>

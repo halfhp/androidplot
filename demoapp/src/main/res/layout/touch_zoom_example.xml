@@ -16,19 +16,21 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ap="http://schemas.android.com/apk/res-auto"
               style="@style/sample_activity"
               android:orientation="vertical">
 
     <com.androidplot.xy.XYPlot
-            style="@style/simple_xy"
-            android:id="@+id/plot"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            androidPlot.title="ScrollZoom Example"
-            android:layout_weight="1"/>
+        style="@style/APDefacto.Dark"
+        android:id="@+id/plot"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ap:title="A Simple XY Plot"
+        android:layout_weight="1"/>
 
-    <Button android:id="@+id/resetButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Reset"/>
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Reset"/>
 </LinearLayout>

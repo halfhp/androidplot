@@ -74,7 +74,7 @@ public class BoxModel implements BoxModelable{
      */
     public RectF getPaddedRect(RectF marginRect) {
         return new RectF(marginRect.left + getPaddingLeft(),
-                marginRect.top+getPaddingTop(),
+                marginRect.top + getPaddingTop(),
                 marginRect.right - getPaddingRight(),
                 marginRect.bottom - getPaddingBottom());
     }

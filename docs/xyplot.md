@@ -14,7 +14,7 @@ to populate the graph with series data.
 
 # The Graph
 XYGraphWidget encapsulates XYPlot's graphing functionality.  Given an instance of XYPlot, a reference
-to XYGraphWidget can be retrieve via `Plot.getGraph()`.
+to XYGraphWidget can be retrieve via `XYPlot.getGraph()`.
 
 ## Domain & Range Boundaries
 By default, Androidplot will analyze all XYSeries instances registered with the Plot, determine the
@@ -23,8 +23,16 @@ plot contains dynamic data, especially if your plot can periodically contain eit
 or data with no resolution on one or both axis (all identical values for either x or y) then you may
 want to manually set your XYPlot's domain and range boundaries.
 
+To set your plot's boundaries use:
+
+* `XYPlot.setDomainBoundaries(Number value, BoundaryMode mode)`
+* `XYPlot.setRangeBoundaries(Number value, BoundaryMode mode)`
+
+Note that the value argument is only used when setting `BoundaryMode.FIXED`.  For all other
+modes, pass in null.
+
 ### BoundaryMode
-Androidplot provides four BoundaryMode options
+Androidplot provides four boundary modes:
 
 #### Fixed
 The plot's boundaries on the specified axis are fixed to user defined values.
@@ -41,7 +49,23 @@ The plot's boundaries automatically shrink to the min value encountered by the p
 determines the starting boundaries from which the Shrink behavior will be based.
 
 ## Domain & Range Lines
-TODO
+These are the horizontal lines drawn on a graph.  These lines are configured via:
+
+* `XYPlot.setDomainStep(StepMode mode, Number value)`
+* `XYPlot.setRangeStep(StepMode, Number value)`
+
+Androidplot provides these step modes:
+
+### Subdivide
+When using `BoundaryMode.SUBDIVIDE`, the graph is subdivided into the specified number of sections.
+
+### IncrementByValue
+`BoundaryMode.INCREMENT_BY_VALUE` instructs Androidplot draw grid lines at the specified interval.  This
+is the most commonly used modes as is produces an easy to read result.
+
+### IncrementByPixels
+`BoundaryMode.INCREMENT_BY_PIXELS` behaves identically to `BoundaryMode.INCREMENT_BY_VALUE` except that 
+the increment quantity is expressed in pixels.
 
 ## Domain & Range Labels
 Androidplot supports labeling domain values on either or both the top and bottom  graph edges 
@@ -54,7 +78,13 @@ Sometimes it is desirable to display additional labels for a single axis, each u
 TODO - [f(x) plot example source](../demoapp/src/main/java/com/androidplot/demos/FXPlotExampleActivity.java) 
 provides a reference implementation.
 
-### StepMode
+### Line Label Interval
+Androidplot allows you to configure the interval at which labels are rendered for domain and range lines:
+
+* `XYPlot.getGraph().setLinesPerDomainLabel(int interval)`
+* `XYPlot.getGraph().setLinesPerRangeLabel(int interval)`
+
+### Line Label Format
 TODO
 
 # Renderers

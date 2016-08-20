@@ -35,20 +35,8 @@ import java.util.Iterator;
  */
 public class DynamicTableModel extends TableModel {
 
-    //private float cellWidth;
-    //private float cellHeight;
-    //private TableSizingMethod rowSizingMethod;
-    //private TableSizingMethod columnSizingMethod;
-
-
     private int numRows;
     private int numColumns;
-
-    private Float cellWidth;
-    private Float cellHeight;
-
-    private CellSizingMethod rowSizingMethod;
-    private CellSizingMethod columnSizingMethod;
 
     /**
      * Convenience method.  Sets order to ROW_MAJOR.
@@ -63,29 +51,8 @@ public class DynamicTableModel extends TableModel {
     public DynamicTableModel(int numColumns, int numRows, TableOrder order) {
         super(order);
         this.numColumns = numColumns;
-        //this.cellWidth = cellWidth;
-        //this.rowSizingMethod = rowSizingMethod;
         this.numRows = numRows;
-        //this.cellHeight = cellHeight;
-        //this.columnSizingMethod = columnSizingMethod;
-        //this.order = order;
     }
-
-    /*public DynamicTableModel(Number colVal, CellSizingMethod colSzMethod, Number rowVal, CellSizingMethod rowSzMethod, TableOrder order) {
-        if(colVal == null || rowVal == null) {
-            throw new NullPointerException();
-        }
-        columnSizingMethod = colSzMethod;
-        switch(columnSizingMethod) {
-            case FILL:
-                numColumns = colVal.intValue();
-                break;
-            case FIXED:
-                cellWidth = colVal.floatValue();
-                break;
-        }
-        rowSzMethod = rowSzMethod;
-    }*/
 
     @Override
     public TableModelIterator getIterator(RectF tableRect, int totalElements) {
@@ -103,9 +70,7 @@ public class DynamicTableModel extends TableModel {
         RectF cellRect = new RectF();
         cellRect.left = tableRect.left;
         cellRect.top = tableRect.top;
-        //cellRect.bottom = getElementHeightPix(tableRect);
         cellRect.bottom = tableRect.top + calculateCellSize(tableRect, TableModel.Axis.ROW, numElements);
-        //cellRect.right = getElementWidthPix(tableRect);
         cellRect.right = tableRect.left + calculateCellSize(tableRect, TableModel.Axis.COLUMN, numElements);
         return cellRect;
     }
@@ -120,24 +85,19 @@ public class DynamicTableModel extends TableModel {
     private float calculateCellSize(RectF tableRect,
                                     Axis axis,
                                     int numElementsInTable) {
-        //float elementSizeInPix = 0;
         int axisElements = 0;
         
         float axisSizePix = 0;
         switch (axis) {
             case ROW:
-                //elementSizeInPix = cellHeight;
                 axisElements = numRows;
                 axisSizePix = tableRect.height();
                 break;
             case COLUMN:
-                //elementSizeInPix = cellWidth;
                 axisElements = numColumns;
                 axisSizePix = tableRect.width();
                 break;
         }
-        //if (elementSizeInPix != 0) {
-        //    return elementSizeInPix;
         if(axisElements != 0) {
             return axisSizePix / axisElements;
         } else {
@@ -162,22 +122,6 @@ public class DynamicTableModel extends TableModel {
     public void setNumColumns(int numColumns) {
         this.numColumns = numColumns;
     }
-
-/*    public void setCellWidth(Float cellWidth) {
-        this.cellWidth = cellWidth;
-    }
-
-    public Float getCellWidth() {
-        return cellWidth;
-    }
-
-    public Float getCellHeight() {
-        return cellHeight;
-    }
-
-    public void setCellHeight(Float cellHeight) {
-        this.cellHeight = cellHeight;
-    }*/
 
     private class TableModelIterator implements Iterator<RectF> {
         private boolean isOk = true;
@@ -207,7 +151,6 @@ public class DynamicTableModel extends TableModel {
                 // round up:
                 calculatedColumns = new Float((totalElements / (float) calculatedRows) + 0.5).intValue();
             } else if(dynamicTableModel.getNumRows() == 0 && dynamicTableModel.getNumColumns() >= 1) {
-                //order = TableOrder.ROW_MAJOR;
                 calculatedColumns = dynamicTableModel.getNumColumns();
                 calculatedRows = new Float((totalElements / (float) calculatedColumns) + 0.5).intValue();
             // unlimited rows and columns (impossible) so default a single row with n columns:
@@ -215,7 +158,6 @@ public class DynamicTableModel extends TableModel {
                 calculatedRows = 1;
                 calculatedColumns = totalElements;
             } else {
-                //order = dynamicTableModel.getOrder();
                 calculatedRows = dynamicTableModel.getNumRows();
                 calculatedColumns = dynamicTableModel.getNumColumns();
             }

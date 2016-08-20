@@ -23,7 +23,8 @@ import java.util.Iterator;
 public class FixedTableModel extends TableModel {
     private float cellWidth;
     private float cellHeight;
-    protected FixedTableModel(float cellWidth, float cellHeight, TableOrder order) {
+
+    public FixedTableModel(float cellWidth, float cellHeight, TableOrder order) {
         super(order);
         setCellWidth(cellWidth);
         setCellHeight(cellHeight);

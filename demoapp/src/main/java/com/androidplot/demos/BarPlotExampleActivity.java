@@ -45,7 +45,7 @@ import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.*;
 
 /**
- * The simplest possible example of using AndroidPlot to plot some data.
+ * An example of a Bar Plot.
  */
 public class BarPlotExampleActivity extends Activity
 {

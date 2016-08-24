@@ -27,9 +27,8 @@ compatible with all versions of Android from 1.6 onward and is **used by over
 
 # Usage
 
-* **[Quickstart](docs/quickstart.md)** 
-* [Androidplot 1.0 full documentation](docs/index.md)
-* [Documentation for older releases](http://androidplot.com/docs/)
+* :star: **[Quickstart](docs/quickstart.md)** 
+* [Full Documentation](docs/index.md)
 
 # Help
 Technical questions should be posted using the [androidplot tag](http://stackoverflow.com/questions/tagged/androidplot) on Stack Overflow.  For everything else use the [Google Groups forum](https://groups.google.com/d/forum/androidplot).

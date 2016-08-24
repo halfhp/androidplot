@@ -28,7 +28,7 @@
         android:layout_height="fill_parent"
         ap:previewMode="candlestick"
         ap:title="Daily Price"
-        ap:domainTitle="Day of week"
+        ap:domainTitle="Day"
         ap:rangeTitle="Price"
         ap:gridClippingEnabled="false"
         ap:legendVisible="false"

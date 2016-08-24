@@ -1,4 +1,7 @@
 # Quickstart
+
+![image](images/simple_xy_plot.png)
+
 This tutorial will walk you through Adding Androidplot as a dependency and displaying an XYPlot with 
 two data series.  You can view this sample on your own device or emulator by installing the 
 [Demo App](https://play.google.com/store/apps/details?id=com.androidplot.demos) on your device and 

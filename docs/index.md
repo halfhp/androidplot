@@ -13,6 +13,7 @@ in the Androidplot library and lays the foundation for future topics.  The tutor
 specific plot types explaining styling and other advanced topics.
 
 * :star: [Quickstart](quickstart.md)
+* :movie_camera: [Quickstart (YouTube Video)](https://www.youtube.com/watch?v=wEFkzQY_wWI)
 * [Plot Composition](plot_composition.md)
 * [XY Plots](xyplot.md)
 * [Bar Charts](barchart.md)
@@ -22,6 +23,7 @@ specific plot types explaining styling and other advanced topics.
 
 # Examples
 Source code examples of the various plot types.
+
 * [An XYPlot](../demoapp/src/main/java/com/androidplot/demos/SimpleXYPlotActivity.java)
 * [A dynamic XYPlot](../demoapp/src/main/java/com/androidplot/demos/DynamicXYPlotActivity.java)
 * [Panning & Zooming](../demoapp/src/main/java/com/androidplot/demos/TouchZoomExampleActivity.java)

@@ -22,7 +22,7 @@ compatible with all versions of Android from 1.6 onward and is **used by over
 * [Bitbucket Repo](https://bitbucket.org/androidplot/androidplot)
 * [Demo App (Google Play Store)](https://play.google.com/store/apps/details?id=com.androidplot.demos&hl=en)
 * [Demo App Soure Code](https://bitbucket.org/androidplot/androidplot/src/1538c5dfa56aed0d2cfdcbc7cdc6173e605543cd/demoapp/?at=master)
-* [Bugs](https://github.com/halfhp/androidplot/issues)
+* :ant: [Bugs](https://github.com/halfhp/androidplot/issues)
 * [Contributing Source Code](http://androidplot.com/docs/working-with-androidplot-source/)
 
 # Usage

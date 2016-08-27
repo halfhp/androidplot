@@ -135,12 +135,43 @@ plot.getGraph().setLineLabelRenderer(XYGraphWidget.Edge.LEFT, customLineLabelRen
 [f(x) plot example source](../demoapp/src/main/java/com/androidplot/demos/FXPlotExampleActivity.java) 
 provides an example of this kind of customization.
 
-# Renderers
+# Pan & Zoom
+You can enable pan/zoom behavior on any instance of XYPlot using the PanZoom class like this:
+
+```java
+PanZoom.attach(plot);
+```
+
+The default behavior is to enable horizontal and vertical panning an to zoom using uniform scaling.
+If you want to override this behavior use the three argument form of `PanZoom.attach(Plot)`.  For example,
+to enable pan and zoom (stretch) on the horizontal axis only:
+
+```java
+PanZoom.attach(plot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.STRETCH_HORIZONTAL);
+```
+
+For a more detailed look at pan & zoom behavior, check out the [Touch Zoom Example source code](../demoapp/src/main/java/com/androidplot/demos/TouchZoomExampleActivity.java).
+
+# Series Renderers
 There are several renderers available for XYPlots:
 
 * LineAndPointRenderer
 * BarRenderer
 * CandlestickRenderer
+
+When you add a new series to your plot, you tell Androidplot how to render it by passing
+in a subclass of XYSeriesFormatter that corresponds to the desired renderer.  For example, to use
+LineAndPointRenderer, you'd register your series with an instance of LineAndPointFormatter:
+
+```java
+LineAndPointFormatter format = new LineAndPointFormatter();
+plot.addSeries(series, format);
+```
+
+If you need special behavior not provided by an existing renderer you can create
+your own by either extending XYSeriesRenderer or one of the above implementations.  You'll also need
+to create a matching implementation of XYSeriesFormatter that returns your XYSeriesRenderer's class 
+from it's `getRendererClass()` method.
 
 # Drawing Smooth Lines
 Smooth lines can be created by applying the 

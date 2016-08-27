@@ -6,7 +6,7 @@ A library for creating dynamic and static charts in Android apps. It’s designe
 compatible with all versions of Android from 1.6 onward and is **used by over 
 [1,000 apps](http://www.appbrain.com/stats/libraries/details/androidplot/androidplot) on Google Play**.
 
-**Supports:**
+**Features:**
 
 * Line Charts
 * Scatter Charts
@@ -14,6 +14,9 @@ compatible with all versions of Android from 1.6 onward and is **used by over
 * Pie Charts
 * Step Charts
 * Candlestick Charts
+* Dynamic plots
+* Pan & Zoom
+
 
 # Usage
 

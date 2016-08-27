@@ -115,6 +115,7 @@ public class XYGraphWidget extends Widget {
     private float rangeCursorPosition;
 
     private boolean drawMarkersEnabled = true;
+    private boolean drawGridOnTop;
 
     /**
      * Set of edges for which line labels should be displayed
@@ -280,6 +281,7 @@ public class XYGraphWidget extends Widget {
      */
     public void processAttrs(TypedArray attrs) {
 
+        setDrawGridOnTop(attrs.getBoolean(R.styleable.xy_XYPlot_drawGridOnTop, isDrawGridOnTop()));
         int tlp = attrs.getInt(R.styleable.xy_XYPlot_lineLabels, 0);
         if(tlp != 0) {
             setLineLabelEdges(tlp);
@@ -628,8 +630,13 @@ public class XYGraphWidget extends Widget {
                     && plot.getCalculatedMaxX() != null
                     && plot.getCalculatedMinY() != null
                     && plot.getCalculatedMaxY() != null) {
-                drawGrid(canvas);
-                drawData(canvas);
+                if(drawGridOnTop) {
+                    drawData(canvas);
+                    drawGrid(canvas);
+                } else {
+                    drawGrid(canvas);
+                    drawData(canvas);
+                }
                 drawCursors(canvas);
                 if (isDrawMarkersEnabled()) {
                     drawMarkers(canvas);
@@ -677,8 +684,8 @@ public class XYGraphWidget extends Widget {
      * @param canvas
      */
     protected void drawGrid(Canvas canvas) {
-        if (gridBackgroundPaint != null) {
-            canvas.drawRect(gridRect, gridBackgroundPaint);
+        if(!drawGridOnTop) {
+            drawGridBackground(canvas);
         }
 
         double domainOrigin;
@@ -909,6 +916,12 @@ public class XYGraphWidget extends Widget {
         }
     }
 
+    protected void drawGridBackground(Canvas canvas) {
+        if(gridBackgroundPaint != null) {
+            canvas.drawRect(gridRect, gridBackgroundPaint);
+        }
+    }
+
     /**
      * Draws lines and points for each element in the series.
      *
@@ -916,11 +929,15 @@ public class XYGraphWidget extends Widget {
      * @throws PlotRenderException
      */
     protected void drawData(Canvas canvas) throws PlotRenderException {
+        if (drawGridOnTop) {
+            drawGridBackground(canvas);
+        }
         try {
             if(isGridClippingEnabled) {
                 canvas.save(Canvas.ALL_SAVE_FLAG);
                 canvas.clipRect(gridRect, android.graphics.Region.Op.INTERSECT);
             }
+
             renderStack.sync();
 
             for(RenderStack.StackElement thisElement : renderStack.getElements()) {
@@ -1074,6 +1091,14 @@ public class XYGraphWidget extends Widget {
 
     public void setRangeCursorPosition(float rangeCursorPosition) {
         this.rangeCursorPosition = rangeCursorPosition;
+    }
+
+    public boolean isDrawGridOnTop() {
+        return drawGridOnTop;
+    }
+
+    public void setDrawGridOnTop(boolean drawGridOnTop) {
+        this.drawGridOnTop = drawGridOnTop;
     }
 
     public boolean isDrawMarkersEnabled() {

@@ -320,6 +320,9 @@
         <attr name="rangeTitleVisible" format="boolean"/>
 
         <!-- graph widget -->
+        <!-- (default is false) When set to true, grid lines are drawn on top of rendered series data
+        instead of underneath. -->
+        <attr name="drawGridOnTop" format="boolean"/>
         <attr name="graphHeightMode"/>
         <attr name="graphWidthMode"/>
         <attr name="graphHeight" format="dimension|float|integer"/>

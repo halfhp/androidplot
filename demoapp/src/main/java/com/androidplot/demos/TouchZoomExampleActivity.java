@@ -23,10 +23,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.widget.Button;
+import android.widget.*;
 
 import com.androidplot.Plot;
 import com.androidplot.xy.*;
@@ -36,10 +34,14 @@ import com.androidplot.xy.*;
  * Feel free to copy, modify and use the source as it fits you.
  * 09/27/2012 nfellows - updated for 0.5.1 and made a few simplifications
  */
-public class TouchZoomExampleActivity extends Activity implements OnTouchListener {
+public class TouchZoomExampleActivity extends Activity {
     private static final int SERIES_SIZE = 200;
-    private XYPlot mySimpleXYPlot;
+    private static final int SERIES_ALPHA = 255;
+    private XYPlot plot;
+    private PanZoom panZoom;
     private Button resetButton;
+    private Spinner panSpinner;
+    private Spinner zoomSpinner;
     private SimpleXYSeries[] series = null;
     private PointF minXY;
     private PointF maxXY;
@@ -53,51 +55,63 @@ public class TouchZoomExampleActivity extends Activity implements OnTouchListene
             public void onClick(View view) {
                 minXY.x = series[0].getX(0).floatValue();
                 maxXY.x = series[3].getX(series[3].size() - 1).floatValue();
-                mySimpleXYPlot.setDomainBoundaries(minXY.x, maxXY.x, BoundaryMode.FIXED);
-
-                // pre 0.5.1 users should use postRedraw() instead.
-                mySimpleXYPlot.redraw();
+                plot.setDomainBoundaries(minXY.x, maxXY.x, BoundaryMode.FIXED);
+                plot.redraw();
             }
         });
-        mySimpleXYPlot = (XYPlot) findViewById(R.id.plot);
-        mySimpleXYPlot.setOnTouchListener(this);
-        mySimpleXYPlot.getGraph().setLinesPerRangeLabel(2);
-        mySimpleXYPlot.getGraph().setLinesPerDomainLabel(2);
-        mySimpleXYPlot.getGraph().getBackgroundPaint().setColor(Color.TRANSPARENT);
-        mySimpleXYPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
-                setFormat(new DecimalFormat("#####"));
-        mySimpleXYPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).
-                setFormat(new DecimalFormat("#####.#"));
-        //mySimpleXYPlot.getGraphWidget().setRangeTickLabelWidth(25);
-        mySimpleXYPlot.setRangeLabel("");
-        mySimpleXYPlot.setDomainLabel("");
+        plot = (XYPlot) findViewById(R.id.plot);
 
-        mySimpleXYPlot.setBorderStyle(Plot.BorderStyle.NONE, null, null);
-        //mySimpleXYPlot.disableAllMarkup();
+        // set a fixed origin and a "by-value" step mode so that grid lines will
+        // move dynamically with the data when the users pans or zooms:
+        plot.setUserDomainOrigin(0);
+        plot.setUserRangeOrigin(0);
+        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 20);
+        plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 10);
+
+        panSpinner = (Spinner) findViewById(R.id.pan_spinner);
+        zoomSpinner = (Spinner) findViewById(R.id.zoom_spinner);
+        plot.getGraph().setLinesPerRangeLabel(2);
+        plot.getGraph().setLinesPerDomainLabel(2);
+        plot.getGraph().getBackgroundPaint().setColor(Color.TRANSPARENT);
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
+                setFormat(new DecimalFormat("#####"));
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).
+                setFormat(new DecimalFormat("#####.#"));
+
+        plot.setRangeLabel("");
+        plot.setDomainLabel("");
+
+        plot.setBorderStyle(Plot.BorderStyle.NONE, null, null);
         series = new SimpleXYSeries[4];
         int scale = 1;
         for (int i = 0; i < 4; i++, scale *= 5) {
             series[i] = new SimpleXYSeries("S" + i);
             populateSeries(series[i], scale);
         }
-        mySimpleXYPlot.addSeries(series[3],
+        plot.addSeries(series[3],
                 new LineAndPointFormatter(Color.rgb(50, 0, 0), null,
-                        Color.rgb(100, 0, 0), null));
-        mySimpleXYPlot.addSeries(series[2],
+                        Color.argb(SERIES_ALPHA, 100, 0, 0), null));
+        plot.addSeries(series[2],
                 new LineAndPointFormatter(Color.rgb(50, 50, 0), null,
-                        Color.rgb(100, 100, 0), null));
-        mySimpleXYPlot.addSeries(series[1],
+                        Color.argb(SERIES_ALPHA, 100, 100, 0), null));
+        plot.addSeries(series[1],
                 new LineAndPointFormatter(Color.rgb(0, 50, 0), null,
-                        Color.rgb(0, 100, 0), null));
-        mySimpleXYPlot.addSeries(series[0],
+                        Color.argb(SERIES_ALPHA, 0, 100, 0), null));
+        plot.addSeries(series[0],
                 new LineAndPointFormatter(Color.rgb(0, 0, 0), null,
-                        Color.rgb(0, 0, 150), null));
-        mySimpleXYPlot.redraw();
-        mySimpleXYPlot.calculateMinMaxVals();
-        minXY = new PointF(mySimpleXYPlot.getCalculatedMinX().floatValue(),
-                mySimpleXYPlot.getCalculatedMinY().floatValue());
-        maxXY = new PointF(mySimpleXYPlot.getCalculatedMaxX().floatValue(),
-                mySimpleXYPlot.getCalculatedMaxY().floatValue());
+                        Color.argb(SERIES_ALPHA, 0, 0, 150), null));
+        plot.redraw();
+
+        // record min/max for the reset button:
+        plot.calculateMinMaxVals();
+        minXY = new PointF(plot.getCalculatedMinX().floatValue(),
+                plot.getCalculatedMinY().floatValue());
+        maxXY = new PointF(plot.getCalculatedMaxX().floatValue(),
+                plot.getCalculatedMaxY().floatValue());
+
+        // enable pan/zoom behavior:
+        panZoom = PanZoom.attach(plot);
+        initSpinners();
     }
 
     private void populateSeries(SimpleXYSeries series, int max) {
@@ -107,97 +121,36 @@ public class TouchZoomExampleActivity extends Activity implements OnTouchListene
         }
     }
 
-    // Definition of the touch states
-    static final int NONE = 0;
-    static final int ONE_FINGER_DRAG = 1;
-    static final int TWO_FINGERS_DRAG = 2;
-    int mode = NONE;
+    private void initSpinners() {
+        panSpinner.setAdapter(
+                new ArrayAdapter<>(this, R.layout.spinner_item, PanZoom.Pan.values()));
+        panSpinner.setSelection(panZoom.getPan().ordinal());
+        panSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                panZoom.setPan(PanZoom.Pan.values()[position]);
+            }
 
-    PointF firstFinger;
-    float distBetweenFingers;
-    boolean stopThread = false;
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // nothing to do
+            }
+        });
 
-    @Override
-    public boolean onTouch(View arg0, MotionEvent event) {
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN: // Start gesture
-                firstFinger = new PointF(event.getX(), event.getY());
-                mode = ONE_FINGER_DRAG;
-                stopThread = true;
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_UP:
-                mode = NONE;
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN: // second finger
-                distBetweenFingers = spacing(event);
-                // the distance check is done to avoid false alarms
-                if (distBetweenFingers > 5f) {
-                    mode = TWO_FINGERS_DRAG;
-                }
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (mode == ONE_FINGER_DRAG) {
-                    PointF oldFirstFinger = firstFinger;
-                    firstFinger = new PointF(event.getX(), event.getY());
-                    scroll(oldFirstFinger.x - firstFinger.x);
-                    mySimpleXYPlot.setDomainBoundaries(minXY.x, maxXY.x,
-                            BoundaryMode.FIXED);
-                    mySimpleXYPlot.redraw();
+        zoomSpinner.setAdapter(
+                new ArrayAdapter<>(this, R.layout.spinner_item, PanZoom.Zoom.values()));
+        zoomSpinner.setSelection(panZoom.getZoom().ordinal());
+        zoomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                panZoom.setZoom(PanZoom.Zoom.values()[position]);
+            }
 
-                } else if (mode == TWO_FINGERS_DRAG) {
-                    float oldDist = distBetweenFingers;
-                    distBetweenFingers = spacing(event);
-                    zoom(oldDist / distBetweenFingers);
-                    mySimpleXYPlot.setDomainBoundaries(minXY.x, maxXY.x,
-                            BoundaryMode.FIXED);
-                    mySimpleXYPlot.redraw();
-                }
-                break;
-        }
-        return true;
-    }
-
-    private void zoom(float scale) {
-        float domainSpan = maxXY.x - minXY.x;
-        float domainMidPoint = maxXY.x - domainSpan / 2.0f;
-        float offset = domainSpan * scale / 2.0f;
-
-        minXY.x = domainMidPoint - offset;
-        maxXY.x = domainMidPoint + offset;
-
-        minXY.x = Math.min(minXY.x, series[3].getX(series[3].size() - 3)
-                .floatValue());
-        maxXY.x = Math.max(maxXY.x, series[0].getX(1).floatValue());
-        clampToDomainBounds(domainSpan);
-    }
-
-    private void scroll(float pan) {
-        float domainSpan = maxXY.x - minXY.x;
-        float step = domainSpan / mySimpleXYPlot.getWidth();
-        float offset = pan * step;
-        minXY.x = minXY.x + offset;
-        maxXY.x = maxXY.x + offset;
-        clampToDomainBounds(domainSpan);
-    }
-
-    private void clampToDomainBounds(float domainSpan) {
-        float leftBoundary = series[0].getX(0).floatValue();
-        float rightBoundary = series[3].getX(series[3].size() - 1).floatValue();
-        // enforce left scroll boundary:
-        if (minXY.x < leftBoundary) {
-            minXY.x = leftBoundary;
-            maxXY.x = leftBoundary + domainSpan;
-        } else if (maxXY.x > series[3].getX(series[3].size() - 1).floatValue()) {
-            maxXY.x = rightBoundary;
-            minXY.x = rightBoundary - domainSpan;
-        }
-    }
-
-    private float spacing(MotionEvent event) {
-        float x = event.getX(0) - event.getX(1);
-        float y = event.getY(0) - event.getY(1);
-        return (float) Math.hypot(x, y);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // nothing to do
+            }
+        });
     }
 }
 

@@ -801,42 +801,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         getRangeTitle().setText(rangeLabel);
     }
 
-//    /**
-//     * Convenience method - wraps XYGraphWidget.getRangeValueFormat().
-//     *
-//     * @return
-//     */
-//    public Format getRangeValueFormat() {
-//        return graphWidget.getRangeValueFormat();
-//    }
-//
-//    /**
-//     * Convenience method - wraps XYGraphWidget.setRangeValueFormat().
-//     *
-//     * @param rangeValueFormat
-//     */
-//    public void setRangeValueFormat(Format rangeValueFormat) {
-//        graphWidget.setRangeValueFormat(rangeValueFormat);
-//    }
-//
-//    /**
-//     * Convenience method - wraps XYGraphWidget.getDomainValueFormat().
-//     *
-//     * @return
-//     */
-//    public Format getDomainValueFormat() {
-//        return graphWidget.getDomainValueFormat();
-//    }
-//
-//    /**
-//     * Convenience method - wraps XYGraphWidget.setDomainValueFormat().
-//     *
-//     * @param domainValueFormat
-//     */
-//    public void setDomainValueFormat(Format domainValueFormat) {
-//        graphWidget.setDomainValueFormat(domainValueFormat);
-//    }
-
     /**
      * Setup the boundary mode, boundary values only applicable in FIXED mode.
      *

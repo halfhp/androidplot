@@ -8,21 +8,22 @@ of [XYLegendWidget](#legend) which by default will automatically display legend 
 # XYSeries
 XYSeries is the interface Androidplot uses to retrieve your numeric data.  You may either create your own
 implementation of XYSeries or use SimpleXYSeries if you don't have tight performance requirements or
-if your numeric data is easily accessed as an array or list of values.  As a convenience, Androidplot provides
-an all-purpose implementation of the XYSeries interface called SimpleXYSeries.
+if your numeric data is easily accessed as an array or list of values.
 
 ## SimpleXYSeries
-SimpleXYSeries is used to wrap your raw data with an implementation of the XYSeries interface.  You can supply
-your data in several ways:
+As a convenience, Androidplot provides an all-purpose implementation of the XYSeries interface called 
+SimpleXYSeries.  SimpleXYSeries is used to wrap your raw data with an implementation of the XYSeries interface.  
 
-As a list of y-vals; the x-val is implicitly set to array index of each supplied y-val:
+You can supply your data in several ways:
+
+As a list of y-vals (x = i for each supplied y-val):
 ```java
 Number[] yVals = {1, 4, 2, 8, 4, 16, 8, 32, 16, 64};
 XYSeries series1 = new SimpleXYSeries(
     Arrays.asList(yVals), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "my series");
 ```               
 
-An interleaved list of x/y value pairs:
+An interleaved list of x/y value pairs (x[0] = 1, y[0] = 4, x[1] = 2, y[1] = 8, ...):
 ```java
 Number[] yVals = {1, 4, 2, 8, 4, 16, 8, 32, 16, 64};
 XYSeries series1 = new SimpleXYSeries(
@@ -36,9 +37,9 @@ Number[] yVals = {5, 2, 10, 5, 20, 10, 40, 20, 80, 40};
 XYSeries series = new SimpleXYSeries(xVals, yVals, "my series");
 ```             
 
-NOTE: SimpleXYSeries is designed to be easy to use for a broad number of applications,; it is not 
-designed for speed; if you are dynamically displaying data that needs to be refreshed more than several
-times a second, you'll probably want to write an implementation of XYSeries designed for your app's
+Keep in mind that SimpleXYSeries is designed to be easy to use for a broad number of applications; it's not 
+optimized for any specific scenario; if you are dynamically displaying data that needs to be refreshed more than several
+times a second, consider building your own implementation of XYSeries designed for your app's
 specific needs.
 
 # The Graph
@@ -100,6 +101,21 @@ the increment quantity is expressed in pixels.
 Androidplot supports labeling domain values on either or both the top and bottom  graph edges 
 and range values on either or both the left and right graph edges.  Most default styles show labels
 only on the left and bottom edges.
+
+### Line Label Insets
+Insets are used to control where line labels are drawn in relation to the graph space.  The Insets instance
+can be obtained via `XYPlot.getGraph().getLineLabelInsets()`.  For example, to
+move the range labels on the left of the graph further to the left by 5dp:
+
+**Programmatically:**
+```java
+plot.getGraph().getLineLabelInsets().setLeft(PixelUtils.dpToPix(-5));
+```
+
+**XML:**
+```xml
+ap:lineLabelInsetLeft="-5dp"
+```
 
 ### Dual Axis Labels
 Sometimes it is desirable to display additional labels for a single axis, each using it's own scale.
@@ -173,6 +189,26 @@ your own by either extending XYSeriesRenderer or one of the above implementation
 to create a matching implementation of XYSeriesFormatter that returns your XYSeriesRenderer's class 
 from it's `getRendererClass()` method.
 
+## LineAndPointRenderer
+TODO
+
+Androidplot includes two additional variations of LineAndPointRenderer: 
+
+* **FastLineAndPointRenderer** - intended for use in apps displaying large amounts of dynamic data where
+fast refresh rates are important.
+* **AdvancedLineAndPointRenderer** - provides capabilities for dynamically coloring individual line
+segments, etc. See the ECG  source in the demo app for a full source example.
+within a
+
+### Labeling Points
+TODO
+
+## BarRenderer
+See the [barcharts documentation](barchart.md).
+
+## CandlestickRenderer
+See the [candlestick documentation](candlestick.md)
+
 # Drawing Smooth Lines
 Smooth lines can be created by applying the 
 [Catmull-Rom interpolator](http://androidplot.com/smooth-curves-and-androidplot/) to your series' Format.
@@ -209,3 +245,25 @@ a TableOrder of COLUMN_MAJOR:
 plot.getLegend().setTableModel(new FixedTableModel(PixelUtils.dpToPix(300), 
     PixelUtils.dpToPix(100), TableOrder.COLUMN_MAJOR));
 ```                
+
+# Optimization Tips
+Here are a few suggestions to improve performance when plotting dynamic data:
+
+* Create your own implementation of XYSeries to work with your data in it's rawest form.
+* Use FastLineAndPointRenderer instead of LineAndPointRenderer:
+
+```java
+plot.addSeries(azimuthHistorySeries,
+    new FastLineAndPointRenderer.Formatter(
+        Color.rgb(100, 100, 200), null, null, null));
+``` 
+                       
+* Consider averaging or subsampling very large datasets before rendering.  If you have the time and
+inclination, [the LTTB algorithm](http://skemman.is/stream/get/1946/15343/37285/3/SS_MSthesis.pdf) is particularly well suited for downsampling XY Series data.
+* If possible, avoid rendering vertices (points).
+* Disable anti-aliasing on your Formatter's paint values:
+
+```java
+LineAndPointFormatter format = new LineAndPointFormatter(...);
+format.getLinePaint().setAntiAlias(false);
+```

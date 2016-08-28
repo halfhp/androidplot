@@ -29,6 +29,9 @@ import com.androidplot.util.PixelUtils;
 import com.androidplot.ui.HorizontalPositioning;
 import com.androidplot.ui.VerticalPositioning;
 
+/**
+ * Basic representation of a Pie Chart that displays a title and pie widget.
+ */
 public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
     private static final int DEFAULT_PIE_WIDGET_H_DP = 18;
@@ -36,6 +39,8 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
     private static final int DEFAULT_PIE_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_PIE_WIDGET_X_OFFSET_DP = 0;
+
+    private static final int DEFAULT_PADDING_DP = 5;
 
     public void setPie(PieWidget pie) {
         this.pie = pie;
@@ -74,7 +79,8 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
                 VerticalPositioning.ABSOLUTE_FROM_CENTER,
                 Anchor.CENTER);
 
-        pie.setPadding(10, 10, 10, 10);
+        final float padding = PixelUtils.dpToPix(DEFAULT_PADDING_DP);
+        pie.setPadding(padding, padding, padding, padding);
     }
 
     @Override

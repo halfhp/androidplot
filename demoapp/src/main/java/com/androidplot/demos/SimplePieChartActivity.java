@@ -27,6 +27,9 @@ import com.androidplot.pie.PieChart;
 import com.androidplot.pie.PieRenderer;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
+import com.androidplot.util.*;
+
+import java.util.*;
 
 /**
  * The simplest possible example of using AndroidPlot to plot some data.
@@ -34,10 +37,12 @@ import com.androidplot.pie.SegmentFormatter;
 public class SimplePieChartActivity extends Activity
 {
 
+    public static final int SELECTED_SEGMENT_OFFSET = 50;
+
     private TextView donutSizeTextView;
     private SeekBar donutSizeSeekBar;
 
-    private PieChart pie;
+    public PieChart pie;
 
     private Segment s1;
     private Segment s2;
@@ -54,6 +59,9 @@ public class SimplePieChartActivity extends Activity
         // initialize our XYPlot reference:
         pie = (PieChart) findViewById(R.id.mySimplePieChart);
 
+        final float padding = PixelUtils.dpToPix(30);
+        pie.getPie().setPadding(padding, padding, padding, padding);
+
         // detect segment clicks:
         pie.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -61,19 +69,36 @@ public class SimplePieChartActivity extends Activity
                 PointF click = new PointF(motionEvent.getX(), motionEvent.getY());
                 if(pie.getPie().containsPoint(click)) {
                     Segment segment = pie.getRenderer(PieRenderer.class).getContainingSegment(click);
-                    if(segment != null) {
-                        // handle the segment click...for now, just print
-                        // the clicked segment's title to the console:
-                        System.out.println("Clicked Segment: " + segment.getTitle());
-                    }
+                    final boolean isSelected = getFormatter(segment).getOffset() != 0;
+                    deselectAll();
+                    setSelected(segment, !isSelected);
+                    pie.redraw();
                 }
                 return false;
             }
+
+            private SegmentFormatter getFormatter(Segment segment) {
+                return pie.getFormatter(segment, PieRenderer.class);
+            }
+
+            private void deselectAll() {
+                List<Segment> segments = pie.getSeriesRegistry().getSeriesList();
+                for(Segment segment : segments) {
+                    setSelected(segment, false);
+                }
+            }
+
+            private void setSelected(Segment segment, boolean isSelected) {
+                SegmentFormatter f = getFormatter(segment);
+                if(isSelected) {
+                    f.setOffset(SELECTED_SEGMENT_OFFSET);
+                } else {
+                    f.setOffset(0);
+                }
+            }
         });
 
-
         donutSizeSeekBar = (SeekBar) findViewById(R.id.donutSizeSeekBar);
-
         donutSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {}
@@ -93,38 +118,38 @@ public class SimplePieChartActivity extends Activity
         donutSizeTextView = (TextView) findViewById(R.id.donutSizeTextView);
         updateDonutText();
 
-        s1 = new Segment("s1", 10);
+        s1 = new Segment("s1", 3);
         s2 = new Segment("s2", 1);
-        s3 = new Segment("s3", 10);
-        s4 = new Segment("s4", 10);
+        s3 = new Segment("s3", 7);
+        s4 = new Segment("s4", 9);
 
         EmbossMaskFilter emf = new EmbossMaskFilter(
                 new float[]{1, 1, 1}, 0.4f, 10, 8.2f);
 
         SegmentFormatter sf1 = new SegmentFormatter();
         sf1.configure(getApplicationContext(), R.xml.pie_segment_formatter1);
-
+        sf1.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
         sf1.getFillPaint().setMaskFilter(emf);
 
         SegmentFormatter sf2 = new SegmentFormatter();
         sf2.configure(getApplicationContext(), R.xml.pie_segment_formatter2);
-
+        sf2.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
         sf2.getFillPaint().setMaskFilter(emf);
 
         SegmentFormatter sf3 = new SegmentFormatter();
         sf3.configure(getApplicationContext(), R.xml.pie_segment_formatter3);
-
+        sf3.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
         sf3.getFillPaint().setMaskFilter(emf);
 
         SegmentFormatter sf4 = new SegmentFormatter();
         sf4.configure(getApplicationContext(), R.xml.pie_segment_formatter4);
-
+        sf4.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
         sf4.getFillPaint().setMaskFilter(emf);
 
-        pie.addSeries(s1, sf1);
-        pie.addSeries(s2, sf2);
-        pie.addSeries(s3, sf3);
-        pie.addSeries(s4, sf4);
+        pie.addSegment(s1, sf1);
+        pie.addSegment(s2, sf2);
+        pie.addSegment(s3, sf3);
+        pie.addSegment(s4, sf4);
 
         pie.getBorderPaint().setColor(Color.TRANSPARENT);
         pie.getBackgroundPaint().setColor(Color.TRANSPARENT);

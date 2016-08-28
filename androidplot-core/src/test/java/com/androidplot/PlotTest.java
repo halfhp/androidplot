@@ -24,7 +24,6 @@ import com.androidplot.ui.SeriesAndFormatter;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.Formatter;
 import com.androidplot.util.Configurator;
-import mockit.*;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -312,7 +311,7 @@ public class PlotTest {
     @Test
     public void testAddListener() throws Exception {
         Plot plot = new MockPlot("MockPlot");
-        ArrayList<PlotListener> listeners = Deencapsulation.getField(plot, "listeners");
+        ArrayList<PlotListener> listeners = plot.getListeners();
 
         assertEquals(0, listeners.size());
 
@@ -338,7 +337,7 @@ public class PlotTest {
     @Test
     public void testRemoveListener() throws Exception {
         Plot plot = new MockPlot("MockPlot");
-        ArrayList<PlotListener> listeners = Deencapsulation.getField(plot, "listeners");
+        ArrayList<PlotListener> listeners = plot.getListeners();
 
         assertEquals(0, listeners.size());
 

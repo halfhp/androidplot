@@ -5,7 +5,7 @@
 This tutorial will walk you through Adding Androidplot as a dependency and displaying an XYPlot with 
 two data series.  You can view this sample on your own device or emulator by installing the 
 [Demo App](https://play.google.com/store/apps/details?id=com.androidplot.demos) on your device and 
-clicking on the Simple XY Plot Example. Full source [available here](https://bitbucket.org/androidplot/androidplot/src/26bbcfccb8ad0ba05f45f2d59a7e7ae40957b579/demoapp/?at=master).
+clicking on the Simple XY Plot Example. Full source [available here](../demoapp/src/main/java/com/androidplot/demos/SimpleXYPlotActivity.java).
 
 You can also watch this tutorial in video form on [Youtube](https://youtu.be/wEFkzQY_wWI).
 
@@ -24,8 +24,8 @@ want add this to your proguard-rules.pro file:
 `-keep class com.androidplot.** { *; }`
 
 # Create your Activity XML Layout
-Once you’ve got the project skeleton created, it’s time to edit **res/layout/simple_xy_plot_example.xml** 
-and add an XYPlot view.  By default this file is usually named main.xml.  If it is, go ahead and rename it.
+Once you’ve got an Android project skeleton created, create **res/layout/simple_xy_plot_example.xml** 
+and add an XYPlot view:
 ```xml
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:ap="http://schemas.android.com/apk/res-auto"
@@ -45,19 +45,20 @@ and add an XYPlot view.  By default this file is usually named main.xml.  If it 
 </LinearLayout>
 ```
 This example uses a default style to decorate the plot.  The full list of styleable attributes is 
-[available here](../androiplot-core/src/main/res/attrs.xml).  While new attributes are added regularly, 
+[available here](../androidplot-core/src/main/res/attrs.xml).  While new attributes are added regularly, 
 not all configurable properties are yet available.  If something you need is missing, use the 
 [Configurator.](http://androidplot.com/docs/xml-styling-with-configurator/)
 
 # Create an Activity
-Let’s look at an example Activity that displays the XYPlot graphic shown above.  The basic steps to follow are:
+Now let's create an Activity to display the XYPlot we just defined in `simple_xy_plot_example.xml`.  
+The basic steps are:
 
 1. Create an instance of Series and populate it with data to be displayed.
-2. Register the series with the Plot along with a Formatter to describing how the data should be styled.
+2. Register one or more series with the plot instance along with a Formatter to describing how the series should look when drawn.
 3. Draw the Plot
 
-In our case, since we are working with XY data, we’ll be using an XYPlot, a SimpleXYSeries (which is an 
-implementation of the XYSeries interface) and a LineAndPointFormatter.
+Since we're working with XY data, we’ll use XYPlot, SimpleXYSeries (which is an 
+implementation of the XYSeries interface) and LineAndPointFormatter:
 
 ```java
 package com.androidplot.demos;

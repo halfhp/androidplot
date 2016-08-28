@@ -1,0 +1,44 @@
+
+dependencies:
+
+  pre:
+    - echo y | android update sdk --no-ui --all --filter "android-24"
+    - echo y | android update sdk --no-ui --all --filter "build-tools-24.0.2"
+
+test:
+
+  override:
+        - (./gradlew test assembleRelease javadoc):
+            timeout: 360
+
+  post:
+
+    # core lib:
+    - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/androidplot-core/build/outputs/aar/ $CIRCLE_ARTIFACTS
+
+    # demo app .apk:
+    - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/demoapp/build/outputs/apk/ $CIRCLE_ARTIFACTS
+
+    # javadoc:
+    - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/androidplot-core/build/docs/javadoc/ $CIRCLE_ARTIFACTS
+
+
+    # junit xml report:
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit-xml/
+    - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit-xml/ \;
+
+    # junit html report:
+    # TODO: recursively copy subdirs etc
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit-html/
+    - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/androidplot-core/build/reports/tests/release/* $CIRCLE_TEST_REPORTS/junit-html/
+
+    # lint report:
+    - mkdir -p $CIRCLE_TEST_REPORTS/lint/
+    - find . -type f -regex ".*/build/outputs/.*html" -exec cp {} $CIRCLE_TEST_REPORTS/lint/ \;
+
+deployment:
+    master:
+        branch: master
+        commands:
+            - (./gradlew bintrayUpload):
+                timeout: 360

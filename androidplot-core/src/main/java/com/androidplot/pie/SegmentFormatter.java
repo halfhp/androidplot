@@ -38,6 +38,11 @@ public class SegmentFormatter extends Formatter<PieChart> {
     private Paint labelPaint;
     private Paint labelMarkerPaint;
 
+    private float offset;
+    private float radialInset;
+    private float innerInset;
+    private float outerInset;
+
     {
         setFillPaint(new Paint());
         // outer edge:
@@ -64,7 +69,6 @@ public class SegmentFormatter extends Formatter<PieChart> {
         getLabelPaint().setTextSize(DEFAULT_LABEL_FONT_SIZE);
         getLabelPaint().setAntiAlias(true);
         getLabelPaint().setTextAlign(Paint.Align.CENTER);
-        //getLabelPaint().setShadowLayer(5, 4, 4, Color.BLACK);
 
         // label marker paint:
         setLabelMarkerPaint(new Paint());
@@ -175,5 +179,47 @@ public class SegmentFormatter extends Formatter<PieChart> {
 
     public void setLabelMarkerPaint(Paint labelMarkerPaint) {
         this.labelMarkerPaint = labelMarkerPaint;
+    }
+
+    public float getOffset() {
+        return offset;
+    }
+
+    /**
+     * Set an offset relative to the center of the pie chart at which this segment should be drawn;
+     * generally used to highlight specific segments.
+     * @param offset
+     */
+    public void setOffset(float offset) {
+        this.offset = offset;
+    }
+
+    public float getRadialInset() {
+        return radialInset;
+    }
+
+    /**
+     * Set an inset in degrees for the radial edges of this segment.
+     * generally used to highlight specific segments.
+     * @param radialInset
+     */
+    public void setRadialInset(float radialInset) {
+        this.radialInset = radialInset;
+    }
+
+    public float getInnerInset() {
+        return innerInset;
+    }
+
+    public void setInnerInset(float innerInset) {
+        this.innerInset = innerInset;
+    }
+
+    public float getOuterInset() {
+        return outerInset;
+    }
+
+    public void setOuterInset(float outerInset) {
+        this.outerInset = outerInset;
     }
 }

@@ -20,6 +20,8 @@ compatible with all versions of Android from 1.6 onward and is **used by over
 
 # Usage
 
+NOTE: When viewing this page on Github you may experience issues with some of the links below, due to a temporary issue on Github's side.  For now, [view this page on Bitbucket](https://bitbucket.org/androidplot/androidplot) instead.
+
 * :star: **[Quickstart](docs/quickstart.md)** 
 * [Full Documentation](docs/index.md)
 

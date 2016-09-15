@@ -1,4 +1,4 @@
-# 1.2.0
+# 1.2.1
 
 ### Pie Chart Enhancements
 Pie chart has been updated with new methods and format attributes to improve segment
@@ -15,6 +15,7 @@ See the [pie chart documentation](piechart.md) for usage details.
 * Added FastLineAndPointRenderer, updated OrientationSensorExampleActivity to use it.
 * Updated to target SDK 24, removed sdkmanager dependency, and other misc. updates to project deps etc.
 * Lots of additions and updates to documentation
+* Added CircleCI support
 
 # 1.1.0
 

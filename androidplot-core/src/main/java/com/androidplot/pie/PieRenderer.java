@@ -25,6 +25,9 @@ import com.androidplot.ui.RenderStack;
 
 import java.util.List;
 
+/**
+ * Basic renderer for drawing pie charts.
+ */
 public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormatter> {
 
     // starting angle to use when drawing the first radial line of the first segment.
@@ -79,9 +82,17 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     protected void drawSegment(Canvas canvas, RectF bounds, Segment seg, SegmentFormatter f,
                                float rad, float startAngle, float sweep) {
         canvas.save();
+        startAngle = startAngle + f.getRadialInset();
+        sweep = sweep - (f.getRadialInset() * 2);
 
-        float cx = bounds.centerX();
-        float cy = bounds.centerY();
+        // midpoint angle between startAngle and endAngle
+        final float halfSweepEndAngle = startAngle + (sweep/2);
+
+        PointF translated = calculateLineEnd(
+                bounds.centerX(), bounds.centerY(), f.getOffset(), halfSweepEndAngle);
+
+        final float cx = translated.x;
+        final float cy = translated.y;
 
         float donutSizePx;
         switch(donutMode) {
@@ -95,41 +106,55 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
                 throw new UnsupportedOperationException("Not yet implemented.");
         }
 
+        final float outerRad = rad - f.getOuterInset();
+        final float innerRad = donutSizePx == 0 ? 0 :  donutSizePx + f.getInnerInset();
+        //final float outerRad = rad;
+        //final float innerRad = donutSizePx;
+
         // do we have a pie chart of less than 100%
         if(Math.abs(sweep - 360f) > Float.MIN_VALUE) {
             // vertices of the first radial:
-            PointF r1Outer = calculateLineEnd(cx, cy, rad, startAngle);
-            PointF r1Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle);
+            PointF r1Outer = calculateLineEnd(cx, cy, outerRad, startAngle);
+            PointF r1Inner = calculateLineEnd(cx, cy, innerRad, startAngle);
 
             // vertices of the second radial:
-            PointF r2Outer = calculateLineEnd(cx, cy, rad, startAngle + sweep);
-            PointF r2Inner = calculateLineEnd(cx, cy, donutSizePx, startAngle + sweep);
+            PointF r2Outer = calculateLineEnd(cx, cy, outerRad, startAngle + sweep);
+            PointF r2Inner = calculateLineEnd(cx, cy, innerRad, startAngle + sweep);
 
             Path clip = new Path();
 
+            // outer arc:
             // leave plenty of room on the outside for stroked borders;
             // necessary because the clipping border is ugly
             // and cannot be easily anti aliased.  Really we only care about masking off the
             // radial edges.
-            clip.arcTo(new RectF(bounds.left - rad,
-                    bounds.top - rad,
-                    bounds.right + rad,
-                    bounds.bottom + rad),
+            clip.arcTo(new RectF(bounds.left - outerRad,
+                    bounds.top - outerRad,
+                    bounds.right + outerRad,
+                    bounds.bottom + outerRad),
                     startAngle, sweep);
             clip.lineTo(cx, cy);
             clip.close();
             canvas.clipPath(clip);
 
             Path p = new Path();
-            p.arcTo(bounds, startAngle, sweep);
+
+            // outer arc:
+            p.arcTo(new RectF(
+                    cx - outerRad,
+                    cy - outerRad,
+                    cx + outerRad,
+                    cy + outerRad)
+                    , startAngle, sweep);
             p.lineTo(r2Inner.x, r2Inner.y);
 
+            // inner arc:
             // sweep back to original angle:
             p.arcTo(new RectF(
-                    cx - donutSizePx,
-                    cy - donutSizePx,
-                    cx + donutSizePx,
-                    cy + donutSizePx),
+                    cx - innerRad,
+                    cy - innerRad,
+                    cx + innerRad,
+                    cy + innerRad),
                     startAngle + sweep, -sweep);
 
             p.close();
@@ -144,23 +169,23 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         else {
             canvas.save(Canvas.CLIP_SAVE_FLAG);
             Path chart = new Path();
-            chart.addCircle(cx, cy, rad, Path.Direction.CW);
+            chart.addCircle(cx, cy, outerRad, Path.Direction.CW);
             Path inside = new Path();
-            inside.addCircle(cx, cy, donutSizePx, Path.Direction.CW);
+            inside.addCircle(cx, cy, innerRad, Path.Direction.CW);
             canvas.clipPath(inside, Region.Op.DIFFERENCE);
             canvas.drawPath(chart, f.getFillPaint());
             canvas.restore();
         }
 
         // draw inner line:
-        canvas.drawCircle(cx, cy, donutSizePx, f.getInnerEdgePaint());
+        canvas.drawCircle(cx, cy, innerRad, f.getInnerEdgePaint());
 
         // draw outer line:
-        canvas.drawCircle(cx, cy, rad, f.getOuterEdgePaint());
+        canvas.drawCircle(cx, cy, outerRad, f.getOuterEdgePaint());
         canvas.restore();
 
         PointF labelOrigin = calculateLineEnd(cx, cy,
-                (rad-((rad- donutSizePx)/2)), startAngle + (sweep/2));
+                (outerRad-((outerRad- innerRad)/2)), halfSweepEndAngle);
 
         // TODO: move segment labelling outside the segment drawing loop
         // TODO: so that the labels will not be clipped by the edge of the next

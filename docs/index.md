@@ -19,7 +19,7 @@ specific plot types explaining styling and other advanced topics.
 * [Bar Charts](barchart.md)
 * [Candlestick Charts](candlestick.md)
 * [Pie Charts](piechart.md)
-* Dynamic Plots (TODO)
+* [Dynamic Plots](dynamicdata.md)
 
 # Examples
 Source code examples of the various plot types.

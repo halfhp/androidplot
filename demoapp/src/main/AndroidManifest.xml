@@ -20,10 +20,8 @@
     <!-- Used by Crittercism to report crashes -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
 
-    <!-- We must disable hardware acceleration otherwise some lines will not appear in our plots. -->
-    <application android:label="AndroidPlot API DemoApp"
+    <application android:label="Androidplot API DemoApp"
                  android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen"
                  android:icon="@drawable/ic_launcher">
 

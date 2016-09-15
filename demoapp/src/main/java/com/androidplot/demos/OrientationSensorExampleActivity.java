@@ -18,7 +18,7 @@ package com.androidplot.demos;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
+import android.graphics.*;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -110,13 +110,13 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         aprHistoryPlot.setRangeBoundaries(-180, 359, BoundaryMode.FIXED);
         aprHistoryPlot.setDomainBoundaries(0, HISTORY_SIZE, BoundaryMode.FIXED);
         aprHistoryPlot.addSeries(azimuthHistorySeries,
-                new LineAndPointFormatter(
+                new FastLineAndPointRenderer.Formatter(
                         Color.rgb(100, 100, 200), null, null, null));
         aprHistoryPlot.addSeries(pitchHistorySeries,
-                new LineAndPointFormatter(
+                new FastLineAndPointRenderer.Formatter(
                         Color.rgb(100, 200, 100), null, null, null));
         aprHistoryPlot.addSeries(rollHistorySeries,
-                new LineAndPointFormatter(
+                new FastLineAndPointRenderer.Formatter(
                         Color.rgb(200, 100, 100), null, null, null));
         aprHistoryPlot.setDomainStepMode(StepMode.INCREMENT_BY_VAL);
         aprHistoryPlot.setDomainStepValue(HISTORY_SIZE/10);

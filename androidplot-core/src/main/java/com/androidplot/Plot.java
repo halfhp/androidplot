@@ -548,6 +548,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         return listeners.remove(listener);
     }
 
+    protected ArrayList<PlotListener> getListeners() {
+        return listeners;
+    }
+
     protected void notifyListenersBeforeDraw(Canvas canvas) {
         for (PlotListener listener : listeners) {
             listener.onBeforeDraw(this, canvas);

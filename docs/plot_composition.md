@@ -18,10 +18,9 @@ behavior encapsulated by that Plot.  In addition to moving and scaling these Wid
 also extend them and replace the Plot's default instance with the derived implenentation in order to 
 get custom behavior.
 
-Internally, an instance of LayoutManager is used by Plot to manage it's Widgets.
-
 # The LayoutManager
-The LayoutManager provides the logic for visually positioning and scaling Widgets.  
+The LayoutManager provides the logic for visually positioning and scaling Widgets; all Plot implementations
+contain an instance of LayoutManager that can be retrieved via `Plot.getLayoutManager()`.
 
 ## Z-Indexing
 Z-indexing is a 2D drawing concept which associates each drawable entity with a value that determines

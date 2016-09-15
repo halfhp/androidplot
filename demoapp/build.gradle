@@ -14,8 +14,7 @@
  *    limitations under the License.
  */
 
-apply plugin: 'android-sdk-manager'
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
 	compile project(':androidplot-core')

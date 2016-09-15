@@ -25,7 +25,7 @@ import org.robolectric.RuntimeEnvironment;
 /**
  * Base class for all Androidplot tests that make use of Android platform classes.
  */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(MyTestRunner.class)
 public abstract class AndroidplotTest {
 
     /**

@@ -284,4 +284,25 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
     public Number getY(int index) {
         return yVals.get(index);
     }
+
+    public LinkedList<Number> getxVals() {
+        return xVals;
+    }
+
+    public LinkedList<Number> getyVals() {
+        return yVals;
+    }
+
+    /**
+     * Remove all values from the series
+     */
+    public void clear() {
+        lock.writeLock().lock();
+        try {
+            xVals.clear();
+            yVals.clear();
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
 }

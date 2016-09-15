@@ -19,7 +19,6 @@ package com.androidplot.xy;
 import android.graphics.*;
 import com.androidplot.Plot;
 import com.androidplot.test.AndroidplotTest;
-import mockit.*;
 import org.junit.After;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
@@ -28,13 +27,28 @@ import static junit.framework.Assert.assertEquals;
 
 public class XYLegendWidgetTest extends AndroidplotTest {
 
+    static class MockXYPlot extends XYPlot {
+
+        public MockXYPlot() {
+            super(RuntimeEnvironment.application, "Test",
+                    Plot.RenderMode.USE_MAIN_THREAD);
+        }
+
+        public void exposedOnSizeChanged(int w, int h, int oldw, int oldh) {
+            this.onSizeChanged(w, h, oldw, oldh);
+        }
+
+        public void exposedOnDraw(Canvas canvas) {
+            this.onDraw(canvas);
+        }
+    }
+
     @After
     public void tearDown() throws Exception {}
 
     @Test
     public void testDoOnDraw() throws Exception {
-        XYPlot plot = new XYPlot(RuntimeEnvironment.application, "Test",
-                Plot.RenderMode.USE_MAIN_THREAD);
+        MockXYPlot plot = new MockXYPlot();
 
         SimpleXYSeries s1 = new SimpleXYSeries((Arrays.asList(1, 2, 3)),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1");
@@ -44,11 +58,11 @@ public class XYLegendWidgetTest extends AndroidplotTest {
 
         assertEquals(1, plot.getSeriesRegistry().size());
 
-        Deencapsulation.invoke(plot, "onSizeChanged", 100, 100, 100, 100);
+        plot.exposedOnSizeChanged(100, 100, 100, 100);
         plot.redraw();
         // have to manually invoke this because the invalidate()
         // invoked by redraw() is a stub and will not result in onDraw being called.
-        Deencapsulation.invoke(plot, "onDraw", new Canvas());
+        plot.exposedOnDraw(new Canvas());
 
         plot.removeSeries(s1);
         assertEquals(0, plot.getSeriesRegistry().size());
@@ -57,7 +71,7 @@ public class XYLegendWidgetTest extends AndroidplotTest {
 
         // throws NullPointerException before fix
         // for ANDROIDPLOT-166 was applied.
-        Deencapsulation.invoke(plot, "onDraw", new Canvas());
+        plot.exposedOnDraw(new Canvas());
     }
 
 }

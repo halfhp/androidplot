@@ -64,9 +64,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private static final int DEFAULT_RANGE_LABEL_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_RANGE_LABEL_WIDGET_X_OFFSET_DP = 0;
 
-    private static final int DEFAULT_DOMAIN_LINE_EXTENSION_DP = 2;
-    private static final int DEFAULT_RANGE_LINE_EXTENSION_DP = 2;
-
     private static final int DEFAULT_PLOT_LEFT_MARGIN_DP = 1;
     private static final int DEFAULT_PLOT_RIGHT_MARGIN_DP = 1;
     private static final int DEFAULT_PLOT_TOP_MARGIN_DP = 1;
@@ -997,22 +994,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
      */
     public Number getCalculatedMaxY() {
         return calculatedMaxY != null ? calculatedMaxY : getDefaultBounds().getMaxY();
-    }
-
-    public boolean isDrawDomainOriginEnabled() {
-        return drawDomainOriginEnabled;
-    }
-
-    public void setDrawDomainOriginEnabled(boolean drawDomainOriginEnabled) {
-        this.drawDomainOriginEnabled = drawDomainOriginEnabled;
-    }
-
-    public boolean isDrawRangeOriginEnabled() {
-        return drawRangeOriginEnabled;
-    }
-
-    public void setDrawRangeOriginEnabled(boolean drawRangeOriginEnabled) {
-        this.drawRangeOriginEnabled = drawRangeOriginEnabled;
     }
 
     /**

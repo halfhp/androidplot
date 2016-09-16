@@ -26,8 +26,9 @@ import com.androidplot.ui.SeriesAndFormatter;
 import java.util.List;
 
 /**
- * Renders data to an XYPlot that potentially contains more than a single yVal per index.
- * Examples of such data are bar plot groups, candlestick charts, etc.
+ * Renders data to an XYPlot that potentially contains more than a single yVal per index, or in other
+ * words data with potentially more than two dimensions.
+ * Examples of such data are bar plot groups and candlestick charts.
  * @since 0.9.7
  */
 public abstract class GroupRenderer<FormatterType extends XYSeriesFormatter<XYRegionFormatter>>

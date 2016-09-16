@@ -23,6 +23,8 @@ public class XYCoords {
     public Number x;
     public Number y;
 
+    public XYCoords() {}
+
     public XYCoords(Number x, Number y) {
         this.x = x;
         this.y = y;

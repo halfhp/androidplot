@@ -18,9 +18,8 @@ package com.androidplot.xy;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
-import com.androidplot.LineRegion;
-import com.androidplot.util.ValPixConverter;
 
+import com.androidplot.Region;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,21 +30,47 @@ import java.util.List;
  */
 public class RectRegion {
 
-    LineRegion xLineRegion;
-    LineRegion yLineRegion;
+    Region xRegion;
+    Region yRegion;
     private String label;
 
+    public RectRegion() {
+        xRegion = new Region();
+        yRegion = new Region();
+    }
+
+    public static RectRegion withDefaults(RectRegion defaults) {
+        if(defaults == null || !defaults.isFullyDefined()) {
+            throw new IllegalArgumentException("When specifying defaults, RectRegion param must contain no null values.");
+        }
+
+        RectRegion r = new RectRegion();
+        r.xRegion = Region.withDefaults(defaults.getxRegion());
+        r.yRegion = Region.withDefaults(defaults.getyRegion());
+        return r;
+    }
+
+    public RectRegion(XYCoords min, XYCoords max) {
+        this(min.x, max.x, min.y, max.y);
+    }
+
     /**
-     *
      * @param minX
      * @param maxX
      * @param minY
      * @param maxY
      */
     public RectRegion(Number minX, Number maxX, Number minY, Number maxY, String label) {
-        xLineRegion = new LineRegion(minX, maxX);
-        yLineRegion = new LineRegion(minY, maxY);
+        xRegion = new Region(minX, maxX);
+        yRegion = new Region(minY, maxY);
         this.setLabel(label);
+    }
+
+    public RectRegion(RectF rect) {
+        this(rect.left < rect.right ? rect.left : rect.right,
+                rect.right > rect.left ? rect.right : rect.left,
+                rect.bottom < rect.top ? rect.bottom : rect.top,
+                rect.top > rect.bottom ? rect.top : rect.bottom);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -62,17 +87,90 @@ public class RectRegion {
     }
 
     public boolean containsDomainValue(Number value) {
-        return xLineRegion.contains(value);
+        return xRegion.contains(value);
     }
 
     public boolean containsRangeValue(Number value) {
-        return yLineRegion.contains(value);
+        return yRegion.contains(value);
+    }
+
+    public XYCoords transform(Number x, Number y, RectRegion region2, boolean flipX, boolean flipY) {
+        Number xx = xRegion.transform(x.doubleValue(), region2.xRegion, flipX);
+        Number yy = yRegion.transform(y.doubleValue(), region2.yRegion, flipY);
+        return new XYCoords(xx, yy);
+    }
+
+    public XYCoords transform(Number x, Number y, RectRegion region2) {
+        return transform(x, y, region2, false, false);
+    }
+
+    public XYCoords transform(XYCoords value, RectRegion region2) {
+        return transform(value.x, value.y, region2);
+    }
+
+    /**
+     * Transform a region (r) from the current region space (this) into the specified one (r2)
+     * @param r The region to which the transformation applies
+     * @param r2 The region into which r is being transformed
+     * @return
+     */
+    public RectRegion transform(RectRegion r, RectRegion r2, boolean flipX, boolean flipY) {
+        return new RectRegion(
+                transform(r.getMinX(), r.getMinY(), r2, flipX, flipY),
+                transform(r.getMaxX(), r.getMaxY(), r2, flipX, flipY)
+        );
+    }
+
+    /**
+     * Convenience method to transform into screen coordinate space.  Equivalent to invoking
+     * {@link #transform(Number, Number, RectF, boolean, boolean)} with
+     * flipX = false and flipY = true.
+     * @param x
+     * @param y
+     * @param region2
+     * @return
+     */
+    public PointF transformScreen(Number x, Number y, RectF region2) {
+        return transform(x, y, region2, false, true);
+    }
+
+    public PointF transform(Number x, Number y, RectF region2, boolean flipX, boolean flipY) {
+        float xx = (float) xRegion.transform(x.doubleValue(), region2.left, region2.right, flipX);
+        float yy = (float) yRegion.transform(y.doubleValue(), region2.top, region2.bottom, flipY);
+        return new PointF(xx, yy);
+    }
+
+    public PointF transformScreen(XYCoords value, RectF region2) {
+        return transform(value, region2, false, true);
+    }
+
+    /**
+     * Convenience method to transform into screen coordinate space.  Equivalent to invoking
+     * {@link #transform(XYCoords, RectF, boolean, boolean)} with flipX = false and flipY = true.
+     * @param value
+     * @param region2
+     * @param flipX
+     * @param flipY
+     * @return
+     */
+    public PointF transform(XYCoords value, RectF region2, boolean flipX, boolean flipY) {
+        return transform(value.x, value.y, region2, flipX, flipY);
+    }
+
+    /**
+     * Compares the input bounds xy min/max vals against this instance's current xy min/max vals.
+     * If the input.min is less than this.min then this.min will be set to input.min.
+     * If the input.max is greater than this.max then this.max will be set to input.max
+     * @param input
+     */
+    public void union(RectRegion input) {
+        xRegion.union(input.xRegion);
+        yRegion.union(input.yRegion);
     }
 
     public boolean intersects(RectRegion region) {
         return intersects(region.getMinX(), region.getMaxX(), region.getMinY(), region.getMaxY());
     }
-
 
     /**
      * Tests whether this region intersects the region defined by params.  Use
@@ -86,51 +184,62 @@ public class RectRegion {
      * @return
      */
     public boolean intersects(Number minX, Number maxX, Number minY, Number maxY) {
-        return xLineRegion.intersects(minX, maxX) && yLineRegion.intersects(minY, maxY);
+        return xRegion.intersects(minX, maxX) && yRegion.intersects(minY, maxY);
     }
 
-    public boolean intersects(RectF region, Number visMinX, Number visMaxX, Number visMinY, Number visMaxY) {
-
-        RectF thisRegion = getRectF(region, visMinX.doubleValue(), visMaxX.doubleValue(),
-                visMinY.doubleValue(), visMaxY.doubleValue());
-        return RectF.intersects(thisRegion, region);
+    public RectF asRectF() {
+        return new RectF(getMinX().floatValue(), getMinY().floatValue(),
+                getMaxX().floatValue(), getMaxY().floatValue());
     }
 
-    public RectF getRectF(RectF plotRect, Number visMinX, Number visMaxX, Number visMinY, Number visMaxY) {
-        PointF topLeftPoint = ValPixConverter.valToPix(
-                xLineRegion.getMinVal().doubleValue() != Double.NEGATIVE_INFINITY ? xLineRegion.getMinVal() : visMinX,
-                yLineRegion.getMaxVal().doubleValue() != Double.POSITIVE_INFINITY ? yLineRegion.getMaxVal() : visMaxY,
-                plotRect,
-                visMinX,
-                visMaxX,
-                visMinY,
-                visMaxY);
-        PointF bottomRightPoint = ValPixConverter.valToPix(
-                xLineRegion.getMaxVal().doubleValue() != Double.POSITIVE_INFINITY ? xLineRegion.getMaxVal() : visMaxX,
-                yLineRegion.getMinVal().doubleValue() != Double.NEGATIVE_INFINITY ? yLineRegion.getMinVal() : visMinY,
-                plotRect,
-                visMinX,
-                visMaxX,
-                visMinY,
-                visMaxY);
-        // TODO: figure out why the y-values are inverted
-        return new RectF(topLeftPoint.x, topLeftPoint.y, bottomRightPoint.x, bottomRightPoint.y);
+//    public RectF getRectF(RectF plotRect, Number visMinX, Number visMaxX, Number visMinY,
+//            Number visMaxY) {
+//        PointF topLeftPoint = transform(new XYCoords(
+//                xRegion.getMin().doubleValue() != Double.NEGATIVE_INFINITY
+//                ? xRegion.getMin() : visMinX,
+//                yRegion.getMax().doubleValue() != Double.POSITIVE_INFINITY
+//                ? yRegion.getMax() : visMaxY), plotRect, false, true);
+//
+//        PointF bottomRightPoint = transform(new XYCoords(
+//                xRegion.getMin().doubleValue() != Double.NEGATIVE_INFINITY
+//                ? xRegion.getMin() : visMaxX,
+//                yRegion.getMax().doubleValue() != Double.POSITIVE_INFINITY
+//                ? yRegion.getMax() : visMinY), plotRect, false, true);
+//        return new RectF(
+//                topLeftPoint.x,
+//                topLeftPoint.y,
+//                bottomRightPoint.x,
+//                bottomRightPoint.y);
+//    }
+
+    public void clip(RectRegion clippingBounds) {
+        if(getMinX().doubleValue() < clippingBounds.getMinX().doubleValue()) {
+            setMinX(clippingBounds.getMinX());
+        }
+
+        if(getMinY().doubleValue() < clippingBounds.getMinY().doubleValue()) {
+            setMinY(clippingBounds.getMinY());
+        }
+
+        if(getMaxX().doubleValue() > clippingBounds.getMaxX().doubleValue()) {
+            setMaxX(clippingBounds.getMaxX());
+        }
+
+        if(getMaxY().doubleValue() > clippingBounds.getMaxY().doubleValue()) {
+            setMaxY(clippingBounds.getMaxY());
+        }
     }
 
     /**
      * Returns a list of XYRegions that either completely or partially intersect the area
      * defined by params. A null value for any parameter represents infinity / no boundary.
      * @param regions The list of regions to search through
-     * @param minX
-     * @param maxX
-     * @param minY
-     * @param maxY
      * @return
      */
-    public static List<RectRegion> regionsWithin(List<RectRegion> regions, Number minX, Number maxX, Number minY, Number maxY) {
-        ArrayList<RectRegion> intersectingRegions = new ArrayList<RectRegion>();
-        for(RectRegion r : regions) {
-            if(r.intersects(minX, maxX, minY, maxY)) {
+    public List<RectRegion> intersects(List<RectRegion> regions) {
+        ArrayList<RectRegion> intersectingRegions = new ArrayList<>();
+        for (RectRegion r : regions) {
+            if (r.intersects(getMinX(), getMaxX(), getMinY(), getMaxY())) {
                 intersectingRegions.add(r);
             }
         }
@@ -138,7 +247,6 @@ public class RectRegion {
     }
 
     /**
-     *
      * @return Width of this region, in native units
      */
     public Number getWidth() {
@@ -146,7 +254,6 @@ public class RectRegion {
     }
 
     /**
-     *
      * @return Height of this region, in native units
      */
     public Number getHeight() {
@@ -163,36 +270,52 @@ public class RectRegion {
         return Math.abs(x.doubleValue() - y.doubleValue());
     }
 
-    public Number getMinX() {
-        return xLineRegion.getMinVal();
+    public boolean isMinXSet() {
+        return  xRegion.isMinSet();
     }
 
-    public void setMinX(double minX) {
-        xLineRegion.setMinVal(minX);
+    public Number getMinX() {
+        return xRegion.getMin();
+    }
+
+    public void setMinX(Number minX) {
+        xRegion.setMin(minX);
+    }
+
+    public boolean isMaxXSet() {
+        return  xRegion.isMaxSet();
     }
 
     public Number getMaxX() {
-        return xLineRegion.getMaxVal();
+        return xRegion.getMax();
     }
 
     public void setMaxX(Number maxX) {
-        xLineRegion.setMaxVal(maxX);
+        xRegion.setMax(maxX);
+    }
+
+    public boolean isMinYSet() {
+        return  yRegion.isMinSet();
     }
 
     public Number getMinY() {
-        return yLineRegion.getMinVal();
+        return yRegion.getMin();
     }
 
     public void setMinY(Number minY) {
-        yLineRegion.setMinVal(minY);
+        yRegion.setMin(minY);
+    }
+
+    public boolean isMaxYSet() {
+        return  yRegion.isMaxSet();
     }
 
     public Number getMaxY() {
-        return yLineRegion.getMaxVal();
+        return yRegion.getMax();
     }
 
     public void setMaxY(Number maxY) {
-        yLineRegion.setMaxVal(maxY);
+        yRegion.setMax(maxY);
     }
 
     public String getLabel() {
@@ -201,5 +324,29 @@ public class RectRegion {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public Region getxRegion() {
+        return xRegion;
+    }
+
+    public void setxRegion(Region xRegion) {
+        this.xRegion = xRegion;
+    }
+
+    public Region getyRegion() {
+        return yRegion;
+    }
+
+    public void setyRegion(Region yRegion) {
+        this.yRegion = yRegion;
+    }
+
+    /**
+     *
+     * @return True if both xRegion and yRegion are defined, false otherwise
+     */
+    public boolean isFullyDefined() {
+        return xRegion.isDefined() && yRegion.isDefined();
     }
 }

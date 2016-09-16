@@ -19,7 +19,6 @@ package com.androidplot.xy;
 import android.graphics.*;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesAndFormatter;
-import com.androidplot.util.ValPixConverter;
 
 import java.util.List;
 
@@ -39,10 +38,10 @@ import java.util.List;
  */
 public class CandlestickRenderer<FormatterType extends CandlestickFormatter> extends GroupRenderer<FormatterType> {
 
-    private static final int HIGH_INDEX = 0;
-    private static final int LOW_INDEX = 1;
-    private static final int OPEN_INDEX = 2;
-    private static final int CLOSE_INDEX = 3;
+    protected static final int HIGH_INDEX = 0;
+    protected static final int LOW_INDEX = 1;
+    protected static final int OPEN_INDEX = 2;
+    protected static final int CLOSE_INDEX = 3;
 
     public CandlestickRenderer(XYPlot plot) {
         super(plot);
@@ -53,57 +52,50 @@ public class CandlestickRenderer<FormatterType extends CandlestickFormatter> ext
     public void onRender(Canvas canvas, RectF plotArea, List<SeriesAndFormatter<XYSeries,
             ? extends FormatterType>> sfList, int seriesSize,  RenderStack stack) {
 
+        final FormatterType formatter = sfList.get(0).getFormatter();
         for(int i = 0; i < seriesSize; i++) {
 
-            // x-val for all series should be identical so just grab x from the first series:
-            Number x = sfList.get(HIGH_INDEX).getSeries().getX(i);
+            final XYSeries highSeries = sfList.get(HIGH_INDEX).getSeries();
+            final XYSeries lowSeries = sfList.get(LOW_INDEX).getSeries();
+            final XYSeries openSeries = sfList.get(OPEN_INDEX).getSeries();
+            final XYSeries closeSeries = sfList.get(CLOSE_INDEX).getSeries();
 
-            Number high = sfList.get(HIGH_INDEX).getSeries().getY(i);
-            Number low = sfList.get(LOW_INDEX).getSeries().getY(i);
-            Number open = sfList.get(OPEN_INDEX).getSeries().getY(i);
-            Number close = sfList.get(CLOSE_INDEX).getSeries().getY(i);
-            drawValue(canvas, plotArea, sfList.get(0).getFormatter(), x, high, low, open, close);
+            // x-val for all series should be identical so just grab x from the first series:
+            Number x = highSeries.getX(i);
+
+            Number high = highSeries.getY(i);
+            Number low = lowSeries.getY(i);
+            Number open = openSeries.getY(i);
+            Number close = closeSeries.getY(i);
+
+            // draw the candlestick:
+            final PointF highPix = getPlot().getBounds().transformScreen(x, high, plotArea);
+            final PointF lowPix = getPlot().getBounds().transformScreen(x, low, plotArea);
+            final PointF openPix = getPlot().getBounds().transformScreen(x, open, plotArea);
+            final PointF closePix = getPlot().getBounds().transformScreen(x, close, plotArea);
+
+            drawWick(canvas, highPix, lowPix, formatter);
+            drawBody(canvas, openPix, closePix, formatter);
+            drawUpperCap(canvas, highPix, formatter);
+            drawLowerCap(canvas, lowPix, formatter);
+
+            // draw labels, if any:
+            final PointLabelFormatter plf = formatter.hasPointLabelFormatter()
+                                            ? formatter.getPointLabelFormatter() : null;
+            final PointLabeler pointLabeler = formatter.getPointLabeler();
+            if(plf != null && pointLabeler != null) {
+                drawTextLabel(canvas, highPix, pointLabeler.getLabel(highSeries, i), plf);
+                drawTextLabel(canvas, lowPix, pointLabeler.getLabel(lowSeries, i), plf);
+                drawTextLabel(canvas, openPix, pointLabeler.getLabel(openSeries, i), plf);
+                drawTextLabel(canvas, closePix, pointLabeler.getLabel(closeSeries, i), plf);
+            }
         }
     }
 
-    protected void drawValue(Canvas canvas, RectF plotArea, FormatterType formatter,
-                             Number x, Number high, Number low, Number open, Number close) {
-        final PointF highPix = ValPixConverter.valToPix(
-                x, high,
-                plotArea,
-                getPlot().getCalculatedMinX(),
-                getPlot().getCalculatedMaxX(),
-                getPlot().getCalculatedMinY(),
-                getPlot().getCalculatedMaxY());
-
-        final PointF lowPix = ValPixConverter.valToPix(
-                x, low,
-                plotArea,
-                getPlot().getCalculatedMinX(),
-                getPlot().getCalculatedMaxX(),
-                getPlot().getCalculatedMinY(),
-                getPlot().getCalculatedMaxY());
-
-        final PointF openPix = ValPixConverter.valToPix(
-                x, open,
-                plotArea,
-                getPlot().getCalculatedMinX(),
-                getPlot().getCalculatedMaxX(),
-                getPlot().getCalculatedMinY(),
-                getPlot().getCalculatedMaxY());
-
-        final PointF closePix = ValPixConverter.valToPix(
-                x, close,
-                plotArea,
-                getPlot().getCalculatedMinX(),
-                getPlot().getCalculatedMaxX(),
-                getPlot().getCalculatedMinY(),
-                getPlot().getCalculatedMaxY());
-
-        drawWick(canvas, highPix, lowPix, formatter);
-        drawBody(canvas, openPix, closePix, formatter);
-        drawUpperCap(canvas, highPix, formatter);
-        drawLowerCap(canvas, lowPix, formatter);
+    protected void drawTextLabel(Canvas canvas, PointF coords, String text, PointLabelFormatter plf) {
+        if(text != null) {
+            canvas.drawText(text, coords.x + plf.hOffset, coords.y + plf.vOffset, plf.getTextPaint());
+        }
     }
 
     protected void drawWick(Canvas canvas, PointF min, PointF max, FormatterType formatter) {
@@ -121,11 +113,11 @@ public class CandlestickRenderer<FormatterType extends CandlestickFormatter> ext
                 formatter.getRisingBodyStrokePaint() : formatter.getFallingBodyStrokePaint();
 
         switch(formatter.getBodyStyle()) {
-            case Square:
+            case SQUARE:
                 canvas.drawRect(rect, bodyFillPaint);
                 canvas.drawRect(rect, bodyStrokePaint);
                 break;
-            case Triangle:
+            case TRIANGULAR:
                 drawTriangle(canvas, rect, bodyFillPaint, bodyStrokePaint);
         }
     }

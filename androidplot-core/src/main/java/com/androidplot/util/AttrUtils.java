@@ -18,8 +18,10 @@ package com.androidplot.util;
 
 import android.content.res.TypedArray;
 import android.graphics.Paint;
-import android.util.TypedValue;
+import android.util.*;
+
 import com.androidplot.ui.*;
+import com.androidplot.ui.Size;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.xy.StepMode;
 import com.androidplot.xy.StepModel;
@@ -29,6 +31,8 @@ import com.androidplot.xy.StepModel;
  *
  */
 public class AttrUtils {
+
+    private static final String TAG = AttrUtils.class.getName();
 
     public static void configureInsets(TypedArray attrs, Insets insets,
             int topAttr, int bottomAttr, int leftAttr, int rightAttr) {
@@ -100,11 +104,15 @@ public class AttrUtils {
         }
     }
 
-    private static void setColor(TypedArray attrs, Paint paint, int attrId) {
-        paint.setColor(attrs.getColor(attrId, paint.getColor()));
+    public static void setColor(TypedArray attrs, Paint paint, int attrId) {
+        if(paint == null) {
+            Log.w(TAG, "Attempt to configure null Paint property for attrId: " + attrId);
+        } else {
+            paint.setColor(attrs.getColor(attrId, paint.getColor()));
+        }
     }
 
-    private static void setTextSize(TypedArray attrs, Paint paint, int attrId) {
+    public static void setTextSize(TypedArray attrs, Paint paint, int attrId) {
         paint.setTextSize(attrs.getDimension(attrId, paint.getTextSize()));
     }
 
@@ -193,7 +201,7 @@ public class AttrUtils {
     public static void configurePositionMetrics(TypedArray attrs, PositionMetrics metrics, int xLayoutStyleAttr,
                                                 int xLayoutValueAttr, int yLayoutStyleAttr, int yLayoutValueAttr,
                                                 int anchorPositionAttr) {
-        if(attrs != null) {
+        if(attrs != null && metrics != null) {
             metrics.getXPositionMetric().set(
                     getIntFloatDimenValue(attrs, xLayoutValueAttr, metrics.getXPositionMetric().getValue()).floatValue(),
                     getXLayoutStyle(attrs, xLayoutStyleAttr, metrics.getXPositionMetric().getLayoutType()));

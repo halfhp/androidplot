@@ -1,10 +1,16 @@
-# Androidplot
-
-![image](docs/images/preview.png)
+# ![image](docs/images/aplogo_small.png) Androidplot [![CircleCI](https://circleci.com/gh/halfhp/androidplot.svg?style=shield)](https://circleci.com/gh/halfhp/androidplot) [![codecov](https://codecov.io/gh/halfhp/androidplot/branch/master/graph/badge.svg)](https://codecov.io/gh/halfhp/androidplot) [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/androidplot.svg?style=social&label=Follow%20Us)](https://twitter.com/androidplot)
 
 A library for creating dynamic and static charts in Android apps. It’s designed from the ground up for Android, 
 compatible with all versions of Android from 1.6 onward and is **used by over 
 [1,000 apps](http://www.appbrain.com/stats/libraries/details/androidplot/androidplot) on Google Play**.
+
+<img src="docs/images/screens/fx_vert.png" width="115">
+<img src="docs/images/screens/candlestick_vert.png" width="115">
+<img src="docs/images/screens/pie_vert.png" width="115">
+<img src="docs/images/screens/scatter_vert.png" width="115">
+<img src="docs/images/screens/step_vert.png" width="115">
+<img src="docs/images/screens/bubble_vert.png" width="115">
+<img src="docs/images/screens/bar_vert.png" width="115">
 
 **Features:**
 
@@ -14,13 +20,13 @@ compatible with all versions of Android from 1.6 onward and is **used by over
 * Pie Charts
 * Step Charts
 * Candlestick Charts
+* Bubble Charts
 * Dynamic plots
 * Pan & Zoom
 
-
 # Usage
 
-* :star: **[Quickstart](docs/quickstart.md)** 
+* **[Quickstart](docs/quickstart.md)** :star: 
 * [Full Documentation](docs/index.md)
 
 # Links
@@ -30,7 +36,7 @@ compatible with all versions of Android from 1.6 onward and is **used by over
 * [Bitbucket Repo](https://bitbucket.org/androidplot/androidplot)
 * [Demo App (Google Play Store)](https://play.google.com/store/apps/details?id=com.androidplot.demos&hl=en)
 * [Demo App Soure Code](https://bitbucket.org/androidplot/androidplot/src/1538c5dfa56aed0d2cfdcbc7cdc6173e605543cd/demoapp/?at=master)
-* :ant: [Bugs](https://github.com/halfhp/androidplot/issues)
+* [Bugs](https://github.com/halfhp/androidplot/issues) :ant: 
 * [Contributing Source Code](http://androidplot.com/docs/working-with-androidplot-source/)
 
 # Help

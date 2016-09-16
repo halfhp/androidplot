@@ -16,6 +16,7 @@
 
 package com.androidplot.pie;
 
+import android.content.*;
 import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
@@ -76,17 +77,16 @@ public class SegmentFormatter extends Formatter<PieChart> {
         getLabelMarkerPaint().setStrokeWidth(DEFAULT_LABEL_MARKER_THICKNESS);
     }
 
-    /**
-     * Should only be used in conjunction with calls to configure()...
-     */
-    public SegmentFormatter() {}
-
     public SegmentFormatter(Integer fillColor) {
         if(fillColor != null) {
             getFillPaint().setColor(fillColor);
         } else {
             getFillPaint().setColor(DEFAULT_FILL_COLOR);
         }
+    }
+
+    public SegmentFormatter(Context context, int xmlCfgId) {
+        configure(context, xmlCfgId);
     }
 
     public SegmentFormatter(Integer fillColor, Integer borderColor) {
@@ -99,8 +99,6 @@ public class SegmentFormatter extends Formatter<PieChart> {
     public SegmentFormatter(Integer fillColor, Integer outerEdgeColor,
                             Integer innerEdgeColor, Integer radialEdgeColor) {
         this(fillColor);
-
-
         if(getOuterEdgePaint() != null) {
             getOuterEdgePaint().setColor(outerEdgeColor);
         } else {

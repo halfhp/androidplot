@@ -16,6 +16,7 @@
 
 package com.androidplot.xy;
 
+import android.content.*;
 import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
@@ -45,8 +46,8 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
     private BodyStyle bodyStyle;
 
     public enum BodyStyle {
-        Square,
-        Triangle
+        SQUARE,
+        TRIANGULAR
     }
 
     protected static Paint getDefaultFillPaint(int color) {
@@ -65,6 +66,11 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
         return p;
     }
 
+    public CandlestickFormatter(Context context, int xmlCfgId) {
+        this();
+        configure(context, xmlCfgId);
+    }
+
     public CandlestickFormatter() {
         this(getDefaultStrokePaint(Color.YELLOW),
                 getDefaultFillPaint(Color.GREEN),
@@ -73,7 +79,7 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
                 getDefaultStrokePaint(Color.RED),
                 getDefaultStrokePaint(Color.YELLOW),
                 getDefaultStrokePaint(Color.YELLOW),
-                BodyStyle.Square);
+                BodyStyle.SQUARE);
     }
 
     public CandlestickFormatter(Paint wickPaint, Paint risingBodyFillPaint, Paint fallingBodyFillPaint,

@@ -16,6 +16,7 @@
 
 package com.androidplot.xy;
 
+import android.content.*;
 import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
@@ -29,14 +30,6 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
 
     private static final float DEFAULT_LINE_STROKE_WIDTH_DP   = 1.5f;
     private static final float DEFAULT_VERTEX_STROKE_WIDTH_DP = 4.5f;
-
-     // default implementation prints point's yVal:
-    private PointLabeler pointLabeler = new PointLabeler() {
-        @Override
-        public String getLabel(XYSeries series, int index) {
-            return series.getY(index) + "";
-        }
-    };
 
     public FillDirection getFillDirection() {
         return fillDirection;
@@ -56,10 +49,9 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     protected Paint vertexPaint;
     protected Paint fillPaint;
     protected InterpolationParams interpolationParams;
-    private PointLabelFormatter pointLabelFormatter;
 
-    {
-        initLinePaint(Color.BLACK);
+    public LineAndPointFormatter(Context context, int xmlCfgId) {
+        super(context, xmlCfgId);
     }
 
     /**
@@ -69,12 +61,13 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         this(Color.RED, Color.GREEN, Color.BLUE, null);
     }
 
-    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor, PointLabelFormatter plf) {
+    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor,
+            PointLabelFormatter plf) {
         this(lineColor, vertexColor, fillColor, plf, FillDirection.BOTTOM);
     }
 
-    public LineAndPointFormatter(Integer lineColor, Integer vertexColor,
-                                 Integer fillColor, PointLabelFormatter plf, FillDirection fillDir) {
+    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor,
+            PointLabelFormatter plf, FillDirection fillDir) {
         initLinePaint(lineColor);
         initVertexPaint(vertexColor);
         initFillPaint(fillColor);
@@ -127,20 +120,23 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     }
 
     /**
-     * Enables the shadow layer on linePaint and shadowPaint by calling
-     * setShadowLayer() with preset values.
+     *
+     * @return True if linePaint has been set, false otherwise.
      */
-    public void enableShadows() {
-        linePaint.setShadowLayer(1, 3, 3, Color.BLACK);
-        vertexPaint.setShadowLayer(1, 3, 3, Color.BLACK);
+    public boolean hasLinePaint() {
+        return linePaint != null;
     }
 
-    public void disableShadows() {
-        linePaint.setShadowLayer(0, 0, 0, Color.BLACK);
-        vertexPaint.setShadowLayer(0, 0, 0, Color.BLACK);
-    }
-
+    /**
+     * Get the {@link Paint} used to draw lines.  Will instantiate and a new default instance
+     * if it is currently null.  To check whether or not line paint has been set, use
+     * {@link #hasLinePaint()}.
+     * @return
+     */
     public Paint getLinePaint() {
+        if(linePaint == null) {
+            initLinePaint(Color.TRANSPARENT);
+        }
         return linePaint;
     }
 
@@ -148,7 +144,24 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         this.linePaint = linePaint;
     }
 
+    /**
+     *
+     * @return True if vertexPaint has been set, false otherwise.
+     */
+    public boolean hasVertexPaint() {
+        return vertexPaint != null;
+    }
+
+    /**
+     * Get the {@link Paint} used to draw vertices (points).  Will instantiate and a new default instance
+     * if it is currently null.  To check whether or not vertex paint has been set, use
+     * {@link #hasVertexPaint()}.
+     * @return
+     */
     public Paint getVertexPaint() {
+        if(vertexPaint == null) {
+            initVertexPaint(Color.TRANSPARENT);
+        }
         return vertexPaint;
     }
 
@@ -156,28 +169,28 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         this.vertexPaint = vertexPaint;
     }
 
+    /**
+     *
+     * @return True if fillPaint has been set, false otherwise.
+     */
+    public boolean hasFillPaint() {
+        return fillPaint != null;
+    }
+    /**
+     * Get the {@link Paint} used to fill series areas.  Will instantiate and a new default instance
+     * if it is currently null.  To check whether or not fill paint has been set, use
+     * {@link #hasFillPaint()}.
+     * @return
+     */
     public Paint getFillPaint() {
+        if(fillPaint == null) {
+            initFillPaint(Color.TRANSPARENT);
+        }
         return fillPaint;
     }
 
     public void setFillPaint(Paint fillPaint) {
         this.fillPaint = fillPaint;
-    }
-
-    public PointLabelFormatter getPointLabelFormatter() {
-        return pointLabelFormatter;
-    }
-
-    public void setPointLabelFormatter(PointLabelFormatter pointLabelFormatter) {
-        this.pointLabelFormatter = pointLabelFormatter;
-    }
-    
-    public PointLabeler getPointLabeler() {
-        return pointLabeler;
-    }
-
-    public void setPointLabeler(PointLabeler pointLabeler) {
-        this.pointLabeler = pointLabeler;
     }
 
     public InterpolationParams getInterpolationParams() {

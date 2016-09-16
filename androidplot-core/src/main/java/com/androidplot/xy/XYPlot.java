@@ -84,10 +84,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private XYConstraints constraints = new XYConstraints();
 
     // these are the final min/max used for dispplaying data
-    private Number calculatedMinX;
-    private Number calculatedMaxX;
-    private Number calculatedMinY;
-    private Number calculatedMaxY;
+//    private Number calculatedMinX;
+//    private Number calculatedMaxX;
+//    private Number calculatedMinY;
+//    private Number calculatedMaxY;
+    private RectRegion bounds = RectRegion.withDefaults(new RectRegion(-1, 1, -1, 1));
 
     // previous calculated min/max vals.
     // primarily used for GROW/SHRINK operations.
@@ -110,8 +111,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private Number userDomainOrigin;
     private Number userRangeOrigin;
 
-    private Number calculatedDomainOrigin;
-    private Number calculatedRangeOrigin;
+    private XYCoords calculatedOrigin = new XYCoords();
 
     @SuppressWarnings("FieldCanBeLocal")
     private Number domainOriginExtent = null;
@@ -119,13 +119,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     @SuppressWarnings("FieldCanBeLocal")
     private Number rangeOriginExtent = null;
 
-    private boolean drawDomainOriginEnabled = true;
-    private boolean drawRangeOriginEnabled = true;
-
     private ArrayList<YValueMarker> yValueMarkers;
     private ArrayList<XValueMarker> xValueMarkers;
-
-    private RectRegion defaultBounds;
 
     private PreviewMode previewMode;
     public enum PreviewMode {
@@ -239,8 +234,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         xValueMarkers = new ArrayList<>();
         yValueMarkers = new ArrayList<>();
 
-        setDefaultBounds(new RectRegion(-1, 1, -1, 1));
-
         domainStepModel = new StepModel(StepMode.SUBDIVIDE, 10);
         rangeStepModel = new StepModel(StepMode.SUBDIVIDE, 10);
     }
@@ -252,11 +245,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
             switch (previewMode) {
                 case LineAndPoint: {
-                    addSeries(new SimpleXYSeries(Arrays.asList(1, 2, 3, 3, 4), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Red"),
+                    addSeries(new SimpleXYSeries(Arrays.asList(1, 2, 3, 3, 4),
+                                    SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Red"),
                             new LineAndPointFormatter(Color.RED, null, null, null));
-                    addSeries(new SimpleXYSeries(Arrays.asList(2, 1, 4, 2, 5), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Green"),
+                    addSeries(new SimpleXYSeries(Arrays.asList(2, 1, 4, 2, 5),
+                                    SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Green"),
                             new LineAndPointFormatter(Color.GREEN, null, null, null));
-                    addSeries(new SimpleXYSeries(Arrays.asList(3, 3, 2, 3, 3), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Blue"),
+                    addSeries(new SimpleXYSeries(Arrays.asList(3, 3, 2, 3, 3),
+                                    SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Blue"),
                             new LineAndPointFormatter(Color.BLUE, null, null, null));
                 }
                 break;
@@ -378,25 +374,34 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     public void calculateMinMaxVals() {
-        prevMinX = calculatedMinX;
-        prevMaxX = calculatedMaxX;
-        prevMinY = calculatedMinY;
-        prevMaxY = calculatedMaxY;
+        prevMinX = bounds.isMinXSet() ? bounds.getMinX() : null;
+        prevMaxX = bounds.isMaxXSet() ? bounds.getMaxX() : null;
+        prevMinY = bounds.isMinYSet() ? bounds.getMinY() : null;
+        prevMaxY = bounds.isMaxYSet() ? bounds.getMaxY() : null;
 
-        calculatedMinX = constraints.getMinX();
-        calculatedMaxX = constraints.getMaxX();
-        calculatedMinY = constraints.getMinY();
-        calculatedMaxY = constraints.getMaxY();
+        bounds.setMinX(constraints.getMinX());
+        bounds.setMaxX(constraints.getMaxX());
+        bounds.setMinY(constraints.getMinY());
+        bounds.setMaxY(constraints.getMaxY());
 
         // only calculate if we must:
-        if(calculatedMinX == null || calculatedMaxX == null || calculatedMinY == null || calculatedMaxY == null) {
+        if(!bounds.isFullyDefined()) {
 
-            XYBounds bounds = SeriesUtils.minMax(constraints, getSeriesRegistry().getSeriesList());
+            RectRegion b = SeriesUtils.minMax(constraints, getSeriesRegistry().getSeriesList());
 
-            if(calculatedMinX == null) calculatedMinX = bounds.getMinX();
-            if(calculatedMaxX == null) calculatedMaxX = bounds.getMaxX();
-            if(calculatedMinY == null) calculatedMinY = bounds.getMinY();
-            if(calculatedMaxY == null) calculatedMaxY = bounds.getMaxY();
+            if(!bounds.isMinXSet()) {
+                bounds.setMinX(b.getMinX());
+            }
+            if(!bounds.isMaxXSet()) {
+                bounds.setMaxX(b.getMaxX());
+            }
+
+            if(!bounds.isMinYSet()) {
+                bounds.setMinY(b.getMinY());
+            }
+            if(!bounds.isMaxYSet()) {
+                bounds.setMaxY(b.getMaxY());
+            }
         }
 
         // at this point we now know what points are going to be visible on our
@@ -407,14 +412,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 updateDomainMinMaxForOriginModel();
                 break;
             case EDGE:
-                calculatedMaxX = getCalculatedUpperBoundary(
-                        constraints.getDomainUpperBoundaryMode(), prevMaxX, calculatedMaxX);
-                calculatedMinX = getCalculatedLowerBoundary(
-                        constraints.getDomainLowerBoundaryMode(), prevMinX, calculatedMinX);
-                calculatedMinX = applyUserMinMax(calculatedMinX, domainLeftMin,
-                        domainLeftMax);
-                calculatedMaxX = applyUserMinMax(calculatedMaxX,
-                        domainRightMin, domainRightMax);
+                bounds.setMaxX(applyUserMinMax(getCalculatedUpperBoundary(
+                        constraints.getDomainUpperBoundaryMode(), prevMaxX, bounds.getMaxX()),
+                        domainRightMin, domainRightMax));
+                bounds.setMinX(applyUserMinMax(getCalculatedLowerBoundary(
+                        constraints.getDomainLowerBoundaryMode(),
+                        prevMinX, bounds.getMinX()),
+                        domainLeftMin, domainLeftMax));
                 break;
             default:
                 throw new UnsupportedOperationException(
@@ -427,12 +431,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 break;
             case EDGE:
             	if (getSeriesRegistry().size() > 0) {
-                    calculatedMaxY = getCalculatedUpperBoundary(
-                            constraints.getRangeUpperBoundaryMode(), prevMaxY, calculatedMaxY);
-                    calculatedMinY = getCalculatedLowerBoundary(
-                            constraints.getRangeLowerBoundaryMode(), prevMinY, calculatedMinY);
-	                calculatedMinY = applyUserMinMax(calculatedMinY, rangeBottomMin, rangeBottomMax);
-	                calculatedMaxY = applyUserMinMax(calculatedMaxY, rangeTopMin, rangeTopMax);
+                    bounds.setMaxY(applyUserMinMax(getCalculatedUpperBoundary(
+                            constraints.getRangeUpperBoundaryMode(),
+                            prevMaxY, bounds.getMaxY()), rangeTopMin, rangeTopMax));
+                    bounds.setMinY(applyUserMinMax(getCalculatedLowerBoundary(
+                            constraints.getRangeLowerBoundaryMode(),
+                            prevMinY, bounds.getMinY()), rangeBottomMin, rangeBottomMax));
             	}
                 break;
             default:
@@ -440,11 +444,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                         "Range Framing Model not yet supported: " + constraints.getRangeFramingModel());
         }
 
-        calculatedDomainOrigin = userDomainOrigin != null ?
-                userDomainOrigin : getCalculatedMinX();
 
-        calculatedRangeOrigin = this.userRangeOrigin != null ?
-                userRangeOrigin : getCalculatedMinY();
+        calculatedOrigin.x = userDomainOrigin != null ?
+                userDomainOrigin : bounds.getMinX();
+
+        calculatedOrigin.y = this.userRangeOrigin != null ?
+                userRangeOrigin : bounds.getMinY();
     }
 
     protected Number getCalculatedUpperBoundary(BoundaryMode mode, Number previousMax, Number calculatedMax) {
@@ -606,15 +611,15 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public void updateDomainMinMaxForOriginModel() {
         double origin = userDomainOrigin.doubleValue();
-        double maxXDelta = distance(calculatedMaxX.doubleValue(), origin);
-        double minXDelta = distance(calculatedMinX.doubleValue(), origin);
+        double maxXDelta = distance(bounds.getMaxX().doubleValue(), origin);
+        double minXDelta = distance(bounds.getMinX().doubleValue(), origin);
         double delta = maxXDelta > minXDelta ? maxXDelta : minXDelta;
         double dlb = origin - delta;
         double dub = origin + delta;
         switch (domainOriginBoundaryMode) {
             case AUTO:
-                calculatedMinX = dlb;
-                calculatedMaxX = dub;
+                bounds.setMinX(dlb);
+                bounds.setMaxX(dub);
 
                 break;
             // if fixed, then the value already exists within "user" vals.
@@ -623,29 +628,29 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             case GROW: {
 
                 if (prevMinX == null || dlb < prevMinX.doubleValue()) {
-                    calculatedMinX = dlb;
+                    bounds.setMinX(dlb);
                 } else {
-                    calculatedMinX = prevMinX;
+                    bounds.setMinX(prevMinX);
                 }
 
                 if (prevMaxX == null || dub > prevMaxX.doubleValue()) {
-                    calculatedMaxX = dub;
+                    bounds.setMaxX(dub);
                 } else {
-                    calculatedMaxX = prevMaxX;
+                    bounds.setMaxX(prevMaxX);
                 }
             }
             break;
             case SHRINK:
                 if (prevMinX == null || dlb > prevMinX.doubleValue()) {
-                    calculatedMinX = dlb;
+                    bounds.setMinX(dlb);
                 } else {
-                    calculatedMinX = prevMinX;
+                    bounds.setMinX(prevMinX);
                 }
 
                 if (prevMaxX == null || dub < prevMaxX.doubleValue()) {
-                    calculatedMaxX = dub;
+                    bounds.setMaxX(dub);
                 } else {
-                    calculatedMaxX = prevMaxX;
+                    bounds.setMaxX(prevMaxX);
                 }
                 break;
             default:
@@ -657,14 +662,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         switch (rangeOriginBoundaryMode) {
             case AUTO:
                 double origin = userRangeOrigin.doubleValue();
-                double maxYDelta = distance(calculatedMaxY.doubleValue(), origin);
-                double minYDelta = distance(calculatedMinY.doubleValue(), origin);
+                double maxYDelta = distance(bounds.getMaxY().doubleValue(), origin);
+                double minYDelta = distance(bounds.getMinY().doubleValue(), origin);
                 if (maxYDelta > minYDelta) {
-                    calculatedMinY = origin - maxYDelta;
-                    calculatedMaxY = origin + maxYDelta;
+                    bounds.setMinY(origin - maxYDelta);
+                    bounds.setMaxY(origin + maxYDelta);
                 } else {
-                    calculatedMinY = origin - minYDelta;
-                    calculatedMaxY = origin + minYDelta;
+                    bounds.setMinY(origin - minYDelta);
+                    bounds.setMaxY(origin + minYDelta);
                 }
                 break;
             case FIXED:
@@ -928,12 +933,16 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         setRangeFramingModel(XYFramingModel.EDGE);
     }
 
+    public XYCoords getOrigin() {
+        return calculatedOrigin;
+    }
+
     public Number getDomainOrigin() {
-        return calculatedDomainOrigin;
+        return calculatedOrigin.x;
     }
 
     public Number getRangeOrigin() {
-        return calculatedRangeOrigin;
+        return calculatedOrigin.y;
     }
 
     public synchronized void setUserDomainOrigin(Number origin) {
@@ -961,39 +970,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     }
 
     /**
-     * CalculatedMinX value after the the framing model has been applied.
      *
-     * @return
+     * @return The current min/max values for real domain and range that fall within the visible
+     * graph space.
      */
-    public Number getCalculatedMinX() {
-        return calculatedMinX != null ? calculatedMinX : getDefaultBounds().getMinX();
-    }
-
-    /**
-     * CalculatedMaxX value after the the framing model has been applied.
-     *
-     * @return
-     */
-    public Number getCalculatedMaxX() {
-        return calculatedMaxX != null ? calculatedMaxX : getDefaultBounds().getMaxX();
-    }
-
-    /**
-     * CalculatedMinY value after the the framing model has been applied.
-     *
-     * @return
-     */
-    public Number getCalculatedMinY() {
-        return calculatedMinY != null ? calculatedMinY : getDefaultBounds().getMinY();
-    }
-
-    /**
-     * CalculatedMaxY value after the the framing model has been applied.
-     *
-     * @return
-     */
-    public Number getCalculatedMaxY() {
-        return calculatedMaxY != null ? calculatedMaxY : getDefaultBounds().getMaxY();
+    public RectRegion getBounds() {
+        return bounds;
     }
 
     /**
@@ -1091,13 +1073,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         return xValueMarkers;
     }
 
-    public RectRegion getDefaultBounds() {
-        return defaultBounds;
-    }
-
-    public void setDefaultBounds(RectRegion defaultBounds) {
-        this.defaultBounds = defaultBounds;
-    }
+//    public RectRegion getDefaultBounds() {
+//        return defaultBounds;
+//    }
+//
+//    public void setDefaultBounds(RectRegion defaultBounds) {
+//        this.defaultBounds = defaultBounds;
+//    }
 
     /**
      * @return the rangeTopMin

@@ -22,16 +22,14 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
 
+import com.androidplot.*;
+import com.androidplot.util.*;
 import com.androidplot.xy.CandlestickFormatter;
 import com.androidplot.xy.CandlestickMaker;
 import com.androidplot.xy.CandlestickSeries;
-import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.*;
 
-import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.Format;
-import java.text.ParsePosition;
+import java.text.*;
 
 /**
  * A simple example of a candlestick chart rendered on an {@link XYPlot}.
@@ -39,6 +37,8 @@ import java.text.ParsePosition;
 public class CandlestickChartActivity extends Activity {
 
     private XYPlot plot;
+
+    private DecimalFormat currencyFormat = new DecimalFormat("$0.00");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,13 +48,13 @@ public class CandlestickChartActivity extends Activity {
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.plot);
 
-        CandlestickSeries candlestickSeries = new CandlestickSeries(
-                new CandlestickSeries.Item(1, 10, 2, 9),
-                new CandlestickSeries.Item(4, 18, 6, 5),
-                new CandlestickSeries.Item(3, 11, 5, 10),
-                new CandlestickSeries.Item(2, 17, 2, 15),
-                new CandlestickSeries.Item(6, 11, 11, 7),
-                new CandlestickSeries.Item(8, 16, 10, 15));
+        final CandlestickSeries candlestickSeries = new CandlestickSeries(
+                new CandlestickSeries.Item(1, 10, 2, 9.04),
+                new CandlestickSeries.Item(4, 18, 6, 5.50),
+                new CandlestickSeries.Item(3, 11, 5, 9.21),
+                new CandlestickSeries.Item(2, 17, 2, 15.25),
+                new CandlestickSeries.Item(6, 11, 11, 7.12),
+                new CandlestickSeries.Item(8, 16, 10, 15.02));
 
         // draw a simple line plot of the close vals:
         LineAndPointFormatter lpf = new LineAndPointFormatter(Color.BLACK, Color.BLACK, null, null);
@@ -66,17 +66,12 @@ public class CandlestickChartActivity extends Activity {
 
         plot.addSeries(candlestickSeries.getCloseSeries(), lpf);
 
-        CandlestickFormatter formatter = new CandlestickFormatter();
-        Paint p = formatter.getWickPaint();
-        p.setColor(Color.BLACK);
-        formatter.setCapAndWickPaint(p);
-        formatter.setRisingBodyStrokePaint(p);
-        formatter.setFallingBodyStrokePaint(p);
+        CandlestickFormatter formatter = new CandlestickFormatter(this, R.xml.candlestick_formatter);
 
         // draw candlestick bodies as triangles instead of squares:
         // triangles will point up for items that closed higher than they opened
         // and down for those that closed lower:
-        formatter.setBodyStyle(CandlestickFormatter.BodyStyle.Square);
+        formatter.setBodyStyle(CandlestickFormatter.BodyStyle.SQUARE);
 
         // add the candlestick series data to the plot:
         CandlestickMaker.make(plot, formatter, candlestickSeries);
@@ -85,7 +80,18 @@ public class CandlestickChartActivity extends Activity {
         plot.setLinesPerRangeLabel(3);
 
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
-                setFormat(new DecimalFormat("$0.00"));
+                setFormat(currencyFormat);
+
+        // add some padding to range boundaries:
+        final Region minMax = SeriesUtils.minMax(
+                candlestickSeries.getHighSeries().getyVals(),
+                candlestickSeries.getLowSeries().getyVals());
+
+        plot.setRangeBoundaries(
+                minMax.getMin().doubleValue() - 1,
+                minMax.getMax().doubleValue() + 1,
+                BoundaryMode.FIXED);
+
 
         // setup the domain tick label formatting, etc:
         plot.setDomainBoundaries(-1, 6, BoundaryMode.FIXED);
@@ -125,6 +131,22 @@ public class CandlestickChartActivity extends Activity {
 
             @Override
             public Object parseObject(String string, ParsePosition position) {
+                return null;
+            }
+        });
+
+        formatter.setPointLabelFormatter(
+                new PointLabelFormatter(Color.BLACK, PixelUtils.dpToPix(8), 0));
+        formatter.getPointLabelFormatter().getTextPaint().setFakeBoldText(true);
+        formatter.getPointLabelFormatter().getTextPaint().setTextAlign(Paint.Align.LEFT);
+
+        // add labels for close vals:
+        formatter.setPointLabeler(new PointLabeler() {
+            @Override
+            public String getLabel(XYSeries series, int index) {
+                if(series == candlestickSeries.getCloseSeries()) {
+                    return currencyFormat.format(series.getY(index).doubleValue());
+                }
                 return null;
             }
         });

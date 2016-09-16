@@ -20,6 +20,7 @@ import android.content.res.*;
 import android.graphics.*;
 
 import com.androidplot.*;
+import com.androidplot.Region;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
 import com.androidplot.ui.widget.Widget;
@@ -129,38 +130,6 @@ public class XYGraphWidget extends Widget {
     private HashMap<Edge, LineLabelStyle> lineLabelStyles = getDefaultLineLabelStyles();
     private HashMap<Edge, LineLabelRenderer> lineLabelRenderers = getDefaultLineLabelRenderers();
 
-    public float getLineExtensionTop() {
-        return lineExtensionTop;
-    }
-
-    public void setLineExtensionTop(float lineExtensionTop) {
-        this.lineExtensionTop = lineExtensionTop;
-    }
-
-    public float getLineExtensionBottom() {
-        return lineExtensionBottom;
-    }
-
-    public void setLineExtensionBottom(float lineExtensionBottom) {
-        this.lineExtensionBottom = lineExtensionBottom;
-    }
-
-    public float getLineExtensionLeft() {
-        return lineExtensionLeft;
-    }
-
-    public void setLineExtensionLeft(float lineExtensionLeft) {
-        this.lineExtensionLeft = lineExtensionLeft;
-    }
-
-    public float getLineExtensionRight() {
-        return lineExtensionRight;
-    }
-
-    public void setLineExtensionRight(float lineExtensionRight) {
-        this.lineExtensionRight = lineExtensionRight;
-    }
-
     public static class LineLabelRenderer {
 
         public void drawLabel(Canvas canvas, LineLabelStyle style, Number val, float x, float y, boolean isOrigin) {
@@ -215,49 +184,6 @@ public class XYGraphWidget extends Widget {
         }
     }
 
-    protected HashMap<Edge, LineLabelStyle> getDefaultLineLabelStyles() {
-        HashMap<Edge, LineLabelStyle> defaults = new HashMap<>();
-        defaults.put(Edge.TOP, new LineLabelStyle());
-        defaults.put(Edge.BOTTOM, new LineLabelStyle());
-        defaults.put(Edge.LEFT, new LineLabelStyle());
-        defaults.put(Edge.RIGHT, new LineLabelStyle());
-        return defaults;
-    }
-
-    protected HashMap<Edge, LineLabelRenderer> getDefaultLineLabelRenderers() {
-        HashMap<Edge, LineLabelRenderer> defaults = new HashMap<>();
-        defaults.put(Edge.TOP, new LineLabelRenderer());
-        defaults.put(Edge.BOTTOM, new LineLabelRenderer());
-        defaults.put(Edge.LEFT, new LineLabelRenderer());
-        defaults.put(Edge.RIGHT, new LineLabelRenderer());
-        return defaults;
-    }
-
-    public LineLabelRenderer getLineLabelRenderer(Edge edge) {
-        return lineLabelRenderers.get(edge);
-    }
-
-    public void setLineLabelRenderer(Edge edge, LineLabelRenderer renderer) {
-        lineLabelRenderers.put(edge, renderer);
-    }
-
-    public LineLabelStyle getLineLabelStyle(Edge edge) {
-        return lineLabelStyles.get(edge);
-    }
-
-    public void setLineLabelStyle(Edge edge, LineLabelStyle style) {
-        lineLabelStyles.put(edge, style);
-    }
-
-    public CursorLabelFormatter getCursorLabelFormatter() {
-        return cursorLabelFormatter;
-    }
-
-    public void setCursorLabelFormatter(
-            CursorLabelFormatter cursorLabelFormatter) {
-        this.cursorLabelFormatter = cursorLabelFormatter;
-    }
-
     public interface CursorLabelFormatter {
 
         /**
@@ -273,6 +199,58 @@ public class XYGraphWidget extends Widget {
          */
         Paint getBackgroundPaint();
         String getLabelText(Number x, Number y);
+    }
+
+    public enum Edge {
+        LEFT(1),
+        RIGHT(2),
+        TOP(4),
+        BOTTOM(8);
+
+        private final int value;
+
+        Edge(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    {
+        gridBackgroundPaint = new Paint();
+        gridBackgroundPaint.setColor(Color.rgb(140, 140, 140));
+        gridBackgroundPaint.setStyle(Paint.Style.FILL);
+
+        final Paint defaultLinePaint = new Paint();
+        defaultLinePaint.setColor(Color.rgb(180, 180, 180));
+        defaultLinePaint.setAntiAlias(true);
+        defaultLinePaint.setStyle(Paint.Style.STROKE);
+
+        rangeGridLinePaint = new Paint(defaultLinePaint);
+        domainGridLinePaint = new Paint(defaultLinePaint);
+        domainSubGridLinePaint = new Paint(defaultLinePaint);
+        rangeSubGridLinePaint = new Paint(defaultLinePaint);
+        domainOriginLinePaint = new Paint(defaultLinePaint);
+        rangeOriginLinePaint = new Paint(defaultLinePaint);
+
+        domainCursorPaint = new Paint();
+        domainCursorPaint.setColor(Color.YELLOW);
+
+        rangeCursorPaint = new Paint();
+        rangeCursorPaint.setColor(Color.YELLOW);
+
+        setMarginTop(7);
+        setMarginRight(4);
+        setMarginBottom(4);
+        setClippingEnabled(true);
+    }
+
+    public XYGraphWidget(LayoutManager layoutManager, XYPlot plot, Size size) {
+        super(layoutManager, size);
+        this.plot = plot;
+        renderStack = new RenderStack(plot);
     }
 
     /**
@@ -401,163 +379,11 @@ public class XYGraphWidget extends Widget {
                 R.styleable.xy_XYPlot_rangeLineColor,
                 R.styleable.xy_XYPlot_rangeLineThickness);
 
-        getBackgroundPaint().setColor(attrs.getColor(
-                R.styleable.xy_XYPlot_graphBackgroundColor,
-                getBackgroundPaint().getColor()));
+        AttrUtils.setColor(attrs, getBackgroundPaint(),
+                R.styleable.xy_XYPlot_graphBackgroundColor);
 
-        getGridBackgroundPaint().setColor(attrs.getColor(
-                R.styleable.xy_XYPlot_gridBackgroundColor,
-                getGridBackgroundPaint().getColor()));
-    }
-
-    /**
-     * Grid insets
-     */
-    public Insets getGridInsets() {
-        return gridInsets;
-    }
-
-    public void setGridInsets(Insets gridInsets) {
-        this.gridInsets = gridInsets;
-    }
-
-    /**
-     * Domain / Range label insets
-     */
-    public Insets getLineLabelInsets() {
-        return lineLabelInsets;
-    }
-
-    public void setLineLabelInsets(Insets lineLabelInsets) {
-        this.lineLabelInsets = lineLabelInsets;
-    }
-
-    public RectF getGridRect() {
-        return gridRect;
-    }
-
-    public void setGridRect(RectF gridRect) {
-        this.gridRect = gridRect;
-    }
-
-    public RectF getLabelRect() {
-        return labelRect;
-    }
-
-    public void setLabelRect(RectF labelRect) {
-        this.labelRect = labelRect;
-    }
-
-    public boolean isGridClippingEnabled() {
-        return isGridClippingEnabled;
-    }
-
-    public void setGridClippingEnabled(boolean gridClippingEnabled) {
-        isGridClippingEnabled = gridClippingEnabled;
-    }
-
-    public boolean isLineLabelEnabled(Edge position) {
-        return lineLabelEdges.contains(position);
-    }
-
-    public void setLineLabelEdges(Edge... positions) {
-        Set<Edge> positionSet = new HashSet<>();
-        if(positions != null) {
-            for(Edge position : positions) {
-                positionSet.add(position);
-            }
-        }
-        setLineLabelEdges(positionSet);
-    }
-
-    public void setLineLabelEdges(Set<Edge> positions) {
-        this.lineLabelEdges = positions;
-    }
-
-    protected void setLineLabelEdges(int bitfield) {
-        for(Edge tp : Edge.values()) {
-            if((tp.value & bitfield) == tp.value) {
-                lineLabelEdges.add(tp);
-            }
-        }
-    }
-
-    public enum Edge {
-        LEFT(1),
-        RIGHT(2),
-        TOP(4),
-        BOTTOM(8);
-
-        private final int value;
-
-        Edge(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
-    public Paint getDomainCursorPaint() {
-        return domainCursorPaint;
-    }
-
-    /**
-     *
-     * @param domainCursorPaint The {@link Paint} used to draw the domain cursor line.
-     *                          Set to null (default) to disable.
-     */
-    public void setDomainCursorPaint(Paint domainCursorPaint) {
-        this.domainCursorPaint = domainCursorPaint;
-    }
-
-    public Paint getRangeCursorPaint() {
-        return rangeCursorPaint;
-    }
-
-    /**
-     *
-     * @param rangeCursorPaint The {@link Paint} used to draw the range cursor line.
-     *                         Set to null (default) to disable.
-     */
-    public void setRangeCursorPaint(Paint rangeCursorPaint) {
-        this.rangeCursorPaint = rangeCursorPaint;
-    }
-
-    {
-        gridBackgroundPaint = new Paint();
-        gridBackgroundPaint.setColor(Color.rgb(140, 140, 140));
-        gridBackgroundPaint.setStyle(Paint.Style.FILL);
-
-        final Paint defaultLinePaint = new Paint();
-        defaultLinePaint.setColor(Color.rgb(180, 180, 180));
-        defaultLinePaint.setAntiAlias(true);
-        defaultLinePaint.setStyle(Paint.Style.STROKE);
-
-        rangeGridLinePaint = new Paint(defaultLinePaint);
-        domainGridLinePaint = new Paint(defaultLinePaint);
-        domainSubGridLinePaint = new Paint(defaultLinePaint);
-        rangeSubGridLinePaint = new Paint(defaultLinePaint);
-        domainOriginLinePaint = new Paint(defaultLinePaint);
-        rangeOriginLinePaint = new Paint(defaultLinePaint);
-
-        domainCursorPaint = new Paint();
-        domainCursorPaint.setColor(Color.YELLOW);
-
-        rangeCursorPaint = new Paint();
-        rangeCursorPaint.setColor(Color.YELLOW);
-
-        setMarginTop(7);
-        setMarginRight(4);
-        setMarginBottom(4);
-        setClippingEnabled(true);
-    }
-
-    public XYGraphWidget(LayoutManager layoutManager, XYPlot plot, Size size) {
-        super(layoutManager, size);
-        this.plot = plot;
-        renderStack = new RenderStack(plot);
+        AttrUtils.setColor(attrs, getGridBackgroundPaint(),
+                R.styleable.xy_XYPlot_gridBackgroundColor);
     }
 
     /**
@@ -566,7 +392,7 @@ public class XYGraphWidget extends Widget {
      * @param point
      * @return
      */
-    public Double getYVal(PointF point) {
+    public Number getYVal(PointF point) {
         return getYVal(point.y);
     }
 
@@ -576,14 +402,12 @@ public class XYGraphWidget extends Widget {
      * @param yPix
      * @return
      */
-    public Double getYVal(float yPix) {
-        if (plot.getCalculatedMinY() == null
-                || plot.getCalculatedMaxY() == null) {
+    public Number getYVal(float yPix) {
+        if (!plot.getBounds().getyRegion().isDefined()) {
             return null;
         }
-        return ValPixConverter.pixToVal(yPix - gridRect.top, plot
-                .getCalculatedMinY().doubleValue(), plot.getCalculatedMaxY()
-                .doubleValue(), gridRect.height(), true);
+        return new Region(gridRect.top, gridRect.bottom)
+                .transform(yPix, plot.getBounds().getyRegion(), true);
     }
 
     /**
@@ -592,7 +416,7 @@ public class XYGraphWidget extends Widget {
      * @param point
      * @return
      */
-    public Double getXVal(PointF point) {
+    public Number getXVal(PointF point) {
         return getXVal(point.x);
     }
 
@@ -602,14 +426,12 @@ public class XYGraphWidget extends Widget {
      * @param xPix
      * @return
      */
-    public Double getXVal(float xPix) {
-        if (plot.getCalculatedMinX() == null
-                || plot.getCalculatedMaxX() == null) {
+    public Number getXVal(float xPix) {
+        if (!plot.getBounds().xRegion.isDefined()) {
             return null;
         }
-        return ValPixConverter.pixToVal(xPix - gridRect.left, plot
-                .getCalculatedMinX().doubleValue(), plot.getCalculatedMaxX()
-                .doubleValue(), gridRect.width(), false);
+        return new Region(gridRect.left, gridRect.right)
+                .transform(xPix, plot.getBounds().getxRegion());
     }
 
     @Override
@@ -626,10 +448,11 @@ public class XYGraphWidget extends Widget {
 
         // don't draw if we have no space to draw into
         if (gridRect.height() > ZERO && gridRect.width() > ZERO) {
-            if (plot.getCalculatedMinX() != null
-                    && plot.getCalculatedMaxX() != null
-                    && plot.getCalculatedMinY() != null
-                    && plot.getCalculatedMaxY() != null) {
+            final RectRegion bounds = plot.getBounds();
+            if (bounds.getMinX() != null
+                    && bounds.getMaxX() != null
+                    && bounds.getMinY() != null
+                    && bounds.getMaxY() != null) {
                 if(drawGridOnTop) {
                     drawData(canvas);
                     drawGrid(canvas);
@@ -645,7 +468,7 @@ public class XYGraphWidget extends Widget {
         }
     }
 
-    private void drawDomainLine(Canvas canvas, float xPix, Number xVal,
+    protected void drawDomainLine(Canvas canvas, float xPix, Number xVal,
             Paint linePaint, boolean isOrigin) {
 
         // lines
@@ -659,7 +482,7 @@ public class XYGraphWidget extends Widget {
         drawLineLabel(canvas, Edge.BOTTOM, xVal, xPix, labelRect.bottom, isOrigin);
     }
 
-    public void drawRangeLine(Canvas canvas, float yPix, Number yVal,
+    protected void drawRangeLine(Canvas canvas, float yPix, Number yVal,
             Paint linePaint, boolean isOrigin) {
         // lines
         if (linePaint != null) {
@@ -688,22 +511,17 @@ public class XYGraphWidget extends Widget {
             drawGridBackground(canvas);
         }
 
+
         double domainOrigin;
         if (plot.getDomainOrigin() != null) {
-            double domainOriginVal = plot.getDomainOrigin().doubleValue();
-            domainOrigin = ValPixConverter.valToPix(domainOriginVal, plot
-                    .getCalculatedMinX().doubleValue(), plot
-                    .getCalculatedMaxX().doubleValue(), gridRect.width(),
-                    false);
-            domainOrigin += gridRect.left;
-            // if no origin is set, use the leftmost value visible on the grid:
+            domainOrigin = plot.getBounds().getxRegion().transform(
+                    plot.getDomainOrigin().doubleValue(), gridRect.left, gridRect.right, false);
         } else {
+            // if no domain origin is set, use the leftmost value visible on the grid:
             domainOrigin = gridRect.left;
         }
 
-        Step domainStep = XYStepCalculator.getStep(plot, Axis.DOMAIN,
-                gridRect, plot.getCalculatedMinX().doubleValue(), plot
-                        .getCalculatedMaxX().doubleValue());
+        Step domainStep = XYStepCalculator.getStep(plot, Axis.DOMAIN, gridRect);
 
         // draw domain origin:
         if (domainOrigin >= gridRect.left
@@ -744,20 +562,14 @@ public class XYGraphWidget extends Widget {
 
         double rangeOrigin;
         if (plot.getRangeOrigin() != null) {
-            double rangeOriginD = plot.getRangeOrigin().doubleValue();
-            rangeOrigin = ValPixConverter.valToPix(rangeOriginD, plot
-                    .getCalculatedMinY().doubleValue(), plot
-                    .getCalculatedMaxY().doubleValue(),
-                    gridRect.height(), true);
-            rangeOrigin += gridRect.top;
-            // if no origin is set, use the leftmost value visible on the grid
+            rangeOrigin = plot.getBounds().getyRegion().transform(
+                    plot.getRangeOrigin().doubleValue(), gridRect.top, gridRect.bottom, true);
         } else {
+            // if no range origin is set, use the bottom-most value visible on the grid:
             rangeOrigin = gridRect.bottom;
         }
 
-        Step rangeStep = XYStepCalculator.getStep(plot, Axis.RANGE,
-                gridRect, plot.getCalculatedMinY().doubleValue(), plot
-                        .getCalculatedMaxY().doubleValue());
+        Step rangeStep = XYStepCalculator.getStep(plot, Axis.RANGE, gridRect);
 
         // draw range origin:
         if (rangeOrigin >= gridRect.top && rangeOrigin <= gridRect.bottom) {
@@ -825,38 +637,39 @@ public class XYGraphWidget extends Widget {
     }
 
     protected void drawMarkers(Canvas canvas) {
-        for (YValueMarker marker : plot.getYValueMarkers()) {
-            if (marker.getValue() != null) {
-                double yVal = marker.getValue().doubleValue();
-                float yPix = (float) ValPixConverter.valToPix(yVal, plot
-                        .getCalculatedMinY().doubleValue(), plot
-                        .getCalculatedMaxY().doubleValue(), gridRect.height(), true);
-                yPix += gridRect.top;
-                canvas.drawLine(gridRect.left, yPix,
-                        gridRect.right, yPix, marker.getLinePaint());
+        if(plot.getYValueMarkers() != null && plot.getYValueMarkers().size() > 0) {
+            for (YValueMarker marker : plot.getYValueMarkers()) {
+                if (marker.getValue() != null) {
+                    float yPix = (float) plot.getBounds().yRegion
+                            .transform(marker.getValue()
+                                    .doubleValue(), gridRect.top, gridRect.bottom, true);
+                    canvas.drawLine(gridRect.left, yPix,
+                            gridRect.right, yPix, marker.getLinePaint());
 
-                float xPix = marker.getTextPosition().getPixelValue(
-                        gridRect.width());
-                xPix += gridRect.left;
+                    float xPix = marker.getTextPosition().getPixelValue(
+                            gridRect.width());
+                    xPix += gridRect.left;
 
-                if (marker.getText() != null) {
-                    drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
+                    if (marker.getText() != null) {
+                        drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
+                    }
                 }
             }
         }
 
-        for (XValueMarker marker : plot.getXValueMarkers()) {
-            if (marker.getValue() != null) {
-                double xVal = marker.getValue().doubleValue();
-                float xPix = (float) ValPixConverter.valToPix(xVal, plot
-                        .getCalculatedMinX().doubleValue(), plot
-                        .getCalculatedMaxX().doubleValue(), gridRect.width(), false);
-                xPix += gridRect.left;
-                canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom, marker.getLinePaint());
-                float yPix = marker.getTextPosition().getPixelValue(gridRect.height());
-                yPix += gridRect.top;
-                if (marker.getText() != null) {
-                    drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
+        if(plot.getXValueMarkers() != null && plot.getXValueMarkers().size() > 0) {
+            for (XValueMarker marker : plot.getXValueMarkers()) {
+                if (marker.getValue() != null) {
+                    float xPix = (float) plot.getBounds().xRegion
+                            .transform(marker.getValue()
+                                    .doubleValue(), gridRect.left, gridRect.right, false);
+                    canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom,
+                            marker.getLinePaint());
+                    float yPix = marker.getTextPosition().getPixelValue(gridRect.height());
+                    yPix += gridRect.top;
+                    if (marker.getText() != null) {
+                        drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
+                    }
                 }
             }
         }
@@ -1073,7 +886,7 @@ public class XYGraphWidget extends Widget {
         return domainCursorPosition;
     }
 
-    public Double getDomainCursorVal() {
+    public Number getDomainCursorVal() {
         return getXVal(getDomainCursorPosition());
     }
 
@@ -1085,7 +898,7 @@ public class XYGraphWidget extends Widget {
         return rangeCursorPosition;
     }
 
-    public Double getRangeCursorVal() {
+    public Number getRangeCursorVal() {
         return getYVal(getRangeCursorPosition());
     }
 
@@ -1107,6 +920,179 @@ public class XYGraphWidget extends Widget {
 
     public void setDrawMarkersEnabled(boolean drawMarkersEnabled) {
         this.drawMarkersEnabled = drawMarkersEnabled;
+    }
+
+    public Paint getDomainCursorPaint() {
+        return domainCursorPaint;
+    }
+
+    /**
+     *
+     * @param domainCursorPaint The {@link Paint} used to draw the domain cursor line.
+     *                          Set to null (default) to disable.
+     */
+    public void setDomainCursorPaint(Paint domainCursorPaint) {
+        this.domainCursorPaint = domainCursorPaint;
+    }
+
+    public Paint getRangeCursorPaint() {
+        return rangeCursorPaint;
+    }
+
+    /**
+     *
+     * @param rangeCursorPaint The {@link Paint} used to draw the range cursor line.
+     *                         Set to null (default) to disable.
+     */
+    public void setRangeCursorPaint(Paint rangeCursorPaint) {
+        this.rangeCursorPaint = rangeCursorPaint;
+    }
+
+    public float getLineExtensionTop() {
+        return lineExtensionTop;
+    }
+
+    public void setLineExtensionTop(float lineExtensionTop) {
+        this.lineExtensionTop = lineExtensionTop;
+    }
+
+    public float getLineExtensionBottom() {
+        return lineExtensionBottom;
+    }
+
+    public void setLineExtensionBottom(float lineExtensionBottom) {
+        this.lineExtensionBottom = lineExtensionBottom;
+    }
+
+    public float getLineExtensionLeft() {
+        return lineExtensionLeft;
+    }
+
+    public void setLineExtensionLeft(float lineExtensionLeft) {
+        this.lineExtensionLeft = lineExtensionLeft;
+    }
+
+    public float getLineExtensionRight() {
+        return lineExtensionRight;
+    }
+
+    public void setLineExtensionRight(float lineExtensionRight) {
+        this.lineExtensionRight = lineExtensionRight;
+    }
+
+    protected HashMap<Edge, LineLabelStyle> getDefaultLineLabelStyles() {
+        HashMap<Edge, LineLabelStyle> defaults = new HashMap<>();
+        defaults.put(Edge.TOP, new LineLabelStyle());
+        defaults.put(Edge.BOTTOM, new LineLabelStyle());
+        defaults.put(Edge.LEFT, new LineLabelStyle());
+        defaults.put(Edge.RIGHT, new LineLabelStyle());
+        return defaults;
+    }
+
+    protected HashMap<Edge, LineLabelRenderer> getDefaultLineLabelRenderers() {
+        HashMap<Edge, LineLabelRenderer> defaults = new HashMap<>();
+        defaults.put(Edge.TOP, new LineLabelRenderer());
+        defaults.put(Edge.BOTTOM, new LineLabelRenderer());
+        defaults.put(Edge.LEFT, new LineLabelRenderer());
+        defaults.put(Edge.RIGHT, new LineLabelRenderer());
+        return defaults;
+    }
+
+    public LineLabelRenderer getLineLabelRenderer(Edge edge) {
+        return lineLabelRenderers.get(edge);
+    }
+
+    public void setLineLabelRenderer(Edge edge, LineLabelRenderer renderer) {
+        lineLabelRenderers.put(edge, renderer);
+    }
+
+    public LineLabelStyle getLineLabelStyle(Edge edge) {
+        return lineLabelStyles.get(edge);
+    }
+
+    public void setLineLabelStyle(Edge edge, LineLabelStyle style) {
+        lineLabelStyles.put(edge, style);
+    }
+
+    public CursorLabelFormatter getCursorLabelFormatter() {
+        return cursorLabelFormatter;
+    }
+
+    public void setCursorLabelFormatter(
+            CursorLabelFormatter cursorLabelFormatter) {
+        this.cursorLabelFormatter = cursorLabelFormatter;
+    }
+
+    /**
+     * Grid insets
+     */
+    public Insets getGridInsets() {
+        return gridInsets;
+    }
+
+    public void setGridInsets(Insets gridInsets) {
+        this.gridInsets = gridInsets;
+    }
+
+    /**
+     * Domain / Range label insets
+     */
+    public Insets getLineLabelInsets() {
+        return lineLabelInsets;
+    }
+
+    public void setLineLabelInsets(Insets lineLabelInsets) {
+        this.lineLabelInsets = lineLabelInsets;
+    }
+
+    public RectF getGridRect() {
+        return gridRect;
+    }
+
+    public void setGridRect(RectF gridRect) {
+        this.gridRect = gridRect;
+    }
+
+    public RectF getLabelRect() {
+        return labelRect;
+    }
+
+    public void setLabelRect(RectF labelRect) {
+        this.labelRect = labelRect;
+    }
+
+    public boolean isGridClippingEnabled() {
+        return isGridClippingEnabled;
+    }
+
+    public void setGridClippingEnabled(boolean gridClippingEnabled) {
+        isGridClippingEnabled = gridClippingEnabled;
+    }
+
+    public boolean isLineLabelEnabled(Edge position) {
+        return lineLabelEdges.contains(position);
+    }
+
+    public void setLineLabelEdges(Edge... positions) {
+        Set<Edge> positionSet = new HashSet<>();
+        if(positions != null) {
+            for(Edge position : positions) {
+                positionSet.add(position);
+            }
+        }
+        setLineLabelEdges(positionSet);
+    }
+
+    public void setLineLabelEdges(Set<Edge> positions) {
+        this.lineLabelEdges = positions;
+    }
+
+    protected void setLineLabelEdges(int bitfield) {
+        for(Edge tp : Edge.values()) {
+            if((tp.value & bitfield) == tp.value) {
+                lineLabelEdges.add(tp);
+            }
+        }
     }
 
     /**

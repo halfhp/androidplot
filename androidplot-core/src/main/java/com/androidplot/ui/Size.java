@@ -78,16 +78,6 @@ public class Size {
                 height.getPixelValue(canvasRect.height()));
     }
 
-    /**
-     * Same as getRectF but with edges rounded to the nearest full pixel.
-     * @param canvasRect
-     * @return
-     */
-    public RectF getRoundedRect(RectF canvasRect) {
-        return PixelUtils.nearestPixRect(0, 0, width.getPixelValue(canvasRect.width()),
-                height.getPixelValue(canvasRect.height()));
-    }
-
     public void setWidth(SizeMetric width) {
         this.width = width;
     }

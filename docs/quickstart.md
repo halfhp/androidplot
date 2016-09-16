@@ -14,7 +14,7 @@ To use the library in your gradle project add the following to your build.gradle
 
 ```groovy
 dependencies {
-    compile "com.androidplot:androidplot-core:1.2.1"
+    compile "com.androidplot:androidplot-core:1.2.2"
 }
 ```
 
@@ -46,8 +46,14 @@ and add an XYPlot view:
 ```
 This example uses a default style to decorate the plot.  The full list of styleable attributes is 
 [available here](../androidplot-core/src/main/res/attrs.xml).  While new attributes are added regularly, 
-not all configurable properties are yet available.  If something you need is missing, use the 
-[Configurator.](http://androidplot.com/docs/xml-styling-with-configurator/)
+not all configurable properties are yet available.  
+
+If something you need is missing, use [Fig Syntax](https://github.com/halfhp/fig)
+directly within your Plot's XML, prefixing each property with "androidPlot".  Example:
+
+```xml
+androidPlot.title="My Plot"
+```
 
 # Create an Activity
 Now let's create an Activity to display the XYPlot we just defined in `simple_xy_plot_example.xml`.  
@@ -61,10 +67,10 @@ Since we're working with XY data, we’ll use XYPlot, SimpleXYSeries (which is a
 implementation of the XYSeries interface) and LineAndPointFormatter:
 
 ```java
-package com.androidplot.demos;
 import android.app.Activity;
-import android.graphics.DashPathEffect;
+import android.graphics.*;
 import android.os.Bundle;
+
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYSeries;
@@ -105,23 +111,18 @@ public class SimpleXYPlotActivity extends Activity {
 
         // create formatters to use for drawing a series using LineAndPointRenderer
         // and configure them from xml:
-        LineAndPointFormatter series1Format = new LineAndPointFormatter();
-        series1Format.setPointLabelFormatter(new PointLabelFormatter());
-        series1Format.configure(getApplicationContext(),
-                R.xml.line_point_formatter_with_labels);
+        LineAndPointFormatter series1Format =
+                new LineAndPointFormatter(this, R.xml.line_point_formatter_with_labels);
 
-        LineAndPointFormatter series2Format = new LineAndPointFormatter();
-        series2Format.setPointLabelFormatter(new PointLabelFormatter());
-        series2Format.configure(getApplicationContext(),
-                R.xml.line_point_formatter_with_labels_2);
+        LineAndPointFormatter series2Format =
+                new LineAndPointFormatter(this, R.xml.line_point_formatter_with_labels_2);
 
         // add an "dash" effect to the series2 line:
-        series2Format.getLinePaint().setPathEffect(
-                new DashPathEffect(new float[] {
+        series2Format.getLinePaint().setPathEffect(new DashPathEffect(new float[] {
 
-                        // always use DP when specifying pixel sizes, to keep things consistent across devices:
-                        PixelUtils.dpToPix(20),
-                        PixelUtils.dpToPix(15)}, 0));
+                // always use DP when specifying pixel sizes, to keep things consistent across devices:
+                PixelUtils.dpToPix(20),
+                PixelUtils.dpToPix(15)}, 0));
 
         // just for fun, add some smoothing to the lines:
         // see: http://androidplot.com/smooth-curves-and-androidplot/
@@ -151,16 +152,15 @@ public class SimpleXYPlotActivity extends Activity {
 ```
 
 
-One potentially confusing section of the code above is LineAndPointFormatter and the usage of 
-configure(…).  This is actually more [Configurator magic.](http://androidplot.com/docs/xml-styling-with-configurator/)  
+One potentially confusing section of the code above are the initializations of LineAndPointFormatter   
+You probably noticed that they take a mysterious reference to an xml resource file. This is actually 
+using [Fig](https://github.com/halfhp/fig) to configure the instance properties from XML.  
 
-It's also possible to programmatically create and configure Formatters; just replace the code:
+If you'd prefer to avoid the XML and keep everything in Java, just replace the code:
 
 ```java
-LineAndPointFormatter series1Format = new LineAndPointFormatter();
-        series1Format.setPointLabelFormatter(new PointLabelFormatter());
-        series1Format.configure(getApplicationContext(),
-                R.xml.line_point_formatter_with_plf1);
+LineAndPointFormatter series1Format = 
+    new LineAndPointFormatter(this, R.xml.line_point_formatter_with_labels);
 ```
 
 with:
@@ -169,11 +169,11 @@ with:
 LineAndPointFormatter series1Format = new LineAndPointFormatter(Color.RED, Color.GREEN, Color.BLUE, null);
 ```
 
+In general XML configuration should be used over programmatic configuration when possible as it produces 
+more flexibility in terms of defining properties by screen density etc..  For more details on how to 
+programmatically configure Formatters etc. consult the latest Javadocs.
 
-Programmatic configration should be avoided in favor of XML configuration when possible as it produces 
-brittle UX code.  For more details on how to programmatically configure Formatters etc. consult the latest Javadocs.
-
-Continuing with the Configurator example, add these files to your **/res/xml** directory:
+Continuing with the original example above, add these files to your **/res/xml** directory:
 
 #### /res/xml/line_point_formatter_with_labels.xml
 ```xml

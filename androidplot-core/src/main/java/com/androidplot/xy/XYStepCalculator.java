@@ -17,7 +17,8 @@
 package com.androidplot.xy;
 
 import android.graphics.RectF;
-import com.androidplot.util.ValPixConverter;
+
+import com.androidplot.*;
 
 /**
  * Calculates "stepping" values for a plot.  These values are most commonly used for
@@ -30,44 +31,47 @@ public class XYStepCalculator {
      * Convenience method - wraps other form of getStep().
      * @param plot
      * @param axisType
-     * @param rect
-     * @param minVal
-     * @param maxVal
+     * @param pixRect
      * @return
      */
-    public static Step getStep(XYPlot plot, Axis axisType, RectF rect, Number minVal, Number maxVal) {
+    public static Step getStep(XYPlot plot, Axis axisType, RectF pixRect) {
         Step step = null;
         switch(axisType) {
             case DOMAIN:
-                step = getStep(plot.getDomainStepMode(), rect.width(), plot.getDomainStepValue(), minVal, maxVal);
+                step = getStep(plot.getDomainStepMode(),
+                        plot.getDomainStepValue(),
+                        plot.getBounds().getxRegion(),
+                        new Region(pixRect.left, pixRect.right));
                 break;
             case RANGE:
-                step = getStep(plot.getRangeStepMode(), rect.height(), plot.getRangeStepValue(), minVal, maxVal);
+                step = getStep(plot.getRangeStepMode(),
+                        plot.getRangeStepValue(),
+                        plot.getBounds().getyRegion(),
+                        new Region(pixRect.top, pixRect.bottom));
                 break;
         }
         return step;
     }
 
-    public static Step getStep(StepMode typeXY, float plotPixelSize, double stepValue, Number minVal, Number maxVal) {
-        //XYStep step = new XYStep();
+    public static Step getStep(StepMode typeXY, double stepValue, Region realBounds, Region pixelBounds) {
         double stepVal = 0;
         double stepPix = 0;
         double stepCount = 0;
         switch(typeXY) {
             case INCREMENT_BY_VAL:
                 stepVal = stepValue;
-                stepPix = stepValue / ValPixConverter.valPerPix(minVal.doubleValue(), maxVal.doubleValue(), plotPixelSize);
-                stepCount = plotPixelSize /stepPix;
+                stepPix = stepValue / realBounds.ratio(pixelBounds).doubleValue();
+                stepCount = pixelBounds.length().doubleValue() / stepPix;
                 break;
             case INCREMENT_BY_PIXELS:
                 stepPix = stepValue;
-                stepCount = plotPixelSize /stepPix;
-                stepVal = ValPixConverter.valPerPix(minVal.doubleValue(), maxVal.doubleValue(), plotPixelSize)*stepPix;
+                stepVal = realBounds.ratio(pixelBounds).doubleValue() * stepPix;
+                stepCount = pixelBounds.length().doubleValue() / stepPix;
                 break;
             case SUBDIVIDE:
                 stepCount = stepValue;
-                stepPix = (plotPixelSize /(stepCount-1));
-                stepVal = ValPixConverter.valPerPix(minVal.doubleValue(), maxVal.doubleValue(), plotPixelSize)*stepPix;
+                stepPix = pixelBounds.length().doubleValue() / (stepCount - 1);
+                stepVal = realBounds.ratio(pixelBounds).doubleValue() * stepPix;
                 break;
         }
         return new Step(stepCount, stepPix, stepVal);

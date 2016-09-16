@@ -20,7 +20,6 @@ import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesRenderer;
-import com.androidplot.util.ValPixConverter;
 
 import java.util.*;
 
@@ -51,10 +50,10 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
             points = new  float[series.size()*2];
         }
 
-        final Number minX = getPlot().getCalculatedMinX();
-        final Number maxX = getPlot().getCalculatedMaxX();
-        final Number minY = getPlot().getCalculatedMinY();
-        final Number maxY = getPlot().getCalculatedMaxY();
+//        final Number minX = getPlot().getCalculatedMinX();
+//        final Number maxX = getPlot().getCalculatedMaxX();
+//        final Number minY = getPlot().getCalculatedMinY();
+//        final Number maxY = getPlot().getCalculatedMaxY();
 
         int segmentLen = 0;
         boolean isLastPointNull = true;
@@ -70,11 +69,7 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
                     isLastPointNull = false;
                 }
 
-                thisPoint = ValPixConverter.valToPix(
-                        x, y,
-                        plotArea,
-                        minX, maxX,
-                        minY, maxY);
+                thisPoint = getPlot().getBounds().transformScreen(x, y, plotArea);
                 points[j] = thisPoint.x;
                 points[j+1] = thisPoint.y;
                 segmentLen+=2;
@@ -95,11 +90,6 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
                 final int len = segmentLengths.get(i);
                 final int offset = segmentOffsets.get(i);
                 drawSegment(canvas, points, offset, len, formatter);
-
-//                if(formatter.vertexPaint != null) {
-//                    // draw vertices:
-//                    canvas.drawPoints(points, offset, len, formatter.vertexPaint);
-//                }
             }
         }
     }
@@ -127,7 +117,7 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
 
     @Override
     protected void doDrawLegendIcon(Canvas canvas, RectF rect, Formatter formatter) {
-        if(formatter.getLinePaint() != null) {
+        if(formatter.hasLinePaint()) {
             canvas.drawLine(rect.left, rect.bottom, rect.right, rect.top, formatter.getLinePaint());
         }
     }

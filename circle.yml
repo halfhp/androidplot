@@ -1,9 +1,15 @@
 
+machine:
+  environment:
+    KEYSTORE: ${HOME}/${CIRCLE_PROJECT_REPONAME}/sigining.keystore
+    PUBLISHER_ACCT_JSON_FILE: ${HOME}/${CIRCLE_PROJECT_REPONAME}/publisher_profile.json
+
 dependencies:
 
   pre:
     - echo y | android update sdk --no-ui --all --filter "android-24"
     - echo y | android update sdk --no-ui --all --filter "build-tools-24.0.2"
+    - bash ./misc/download_keystore.sh
 
 test:
 
@@ -36,9 +42,17 @@ test:
     - mkdir -p $CIRCLE_TEST_REPORTS/lint/
     - find . -type f -regex ".*/build/outputs/.*html" -exec cp {} $CIRCLE_TEST_REPORTS/lint/ \;
 
+    # code coverage:
+    - ./gradlew jacocoTestReportDebug
+    - mkdir -p $CIRCLE_TEST_REPORTS/jacoco/
+    - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/androidplot-core/build/reports/jacoco/debug/. $CIRCLE_TEST_REPORTS/jacoco
+    - bash <(curl -s https://codecov.io/bash)
+
 deployment:
     master:
         branch: master
         commands:
             - (./gradlew bintrayUpload):
                 timeout: 360
+            - bash ./misc/download_google_publisher_json.sh
+            - ./gradlew publishApkRelease

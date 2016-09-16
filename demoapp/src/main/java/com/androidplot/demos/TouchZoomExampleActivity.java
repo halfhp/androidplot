@@ -104,10 +104,9 @@ public class TouchZoomExampleActivity extends Activity {
 
         // record min/max for the reset button:
         plot.calculateMinMaxVals();
-        minXY = new PointF(plot.getCalculatedMinX().floatValue(),
-                plot.getCalculatedMinY().floatValue());
-        maxXY = new PointF(plot.getCalculatedMaxX().floatValue(),
-                plot.getCalculatedMaxY().floatValue());
+        final RectRegion bounds = plot.getBounds();
+        minXY = new PointF(bounds.getMinX().floatValue(), bounds.getMinY().floatValue());
+        maxXY = new PointF(bounds.getMaxX().floatValue(), bounds.getMaxY().floatValue());
 
         // enable pan/zoom behavior:
         panZoom = PanZoom.attach(plot);

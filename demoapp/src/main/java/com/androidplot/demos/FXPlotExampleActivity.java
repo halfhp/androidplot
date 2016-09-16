@@ -87,9 +87,8 @@ public class FXPlotExampleActivity extends Activity {
 
         // create formatters to use for drawing a series using LineAndPointRenderer
         // and configure them from xml:
-        LineAndPointFormatter series1Format = new LineAndPointFormatter();
-        series1Format.configure(getApplicationContext(),
-                R.xml.line_point_formatter);
+        LineAndPointFormatter series1Format =
+                new LineAndPointFormatter(this, R.xml.line_point_formatter);
 
         // use our custom renderer to make origin labels red
         plot.getGraph().setLineLabelRenderer(XYGraphWidget.Edge.BOTTOM, new MyLineLabelRenderer());

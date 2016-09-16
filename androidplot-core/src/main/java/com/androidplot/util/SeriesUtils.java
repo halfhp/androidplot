@@ -16,23 +16,21 @@
 
 package com.androidplot.util;
 
-import com.androidplot.Bounds;
-import com.androidplot.xy.XYBounds;
-import com.androidplot.xy.XYConstraints;
-import com.androidplot.xy.XYSeries;
+import com.androidplot.*;
+import com.androidplot.xy.*;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Utilities for dealing with Series data.
  */
 public class SeriesUtils {
 
-    public static XYBounds minMax(List<XYSeries> seriesList) {
+    public static RectRegion minMax(List<XYSeries> seriesList) {
         return minMax(null, seriesList);
     }
 
-    public static XYBounds minMax(XYSeries... seriesList) {
+    public static RectRegion minMax(XYSeries... seriesList) {
         return minMax(null, seriesList);
     }
 
@@ -42,7 +40,7 @@ public class SeriesUtils {
      * @return
      * @since 0.9.7
      */
-    public static XYBounds minMax(XYConstraints constraints, List<XYSeries> seriesList) {
+    public static RectRegion minMax(XYConstraints constraints, List<XYSeries> seriesList) {
         // TODO: this is inefficient...clean it up!
         return minMax(constraints, seriesList.toArray(new XYSeries[seriesList.size()]));
     }
@@ -53,9 +51,9 @@ public class SeriesUtils {
      * @return
      * @since 0.9.7
      */
-    public static XYBounds minMax(XYConstraints constraints, XYSeries... seriesArray) {
+    public static RectRegion minMax(XYConstraints constraints, XYSeries... seriesArray) {
 
-        final XYBounds bounds = new XYBounds();
+        final RectRegion bounds = new RectRegion();
 
         // make sure there is series data to iterate over:
         if (seriesArray != null && seriesArray.length > 0) {
@@ -69,30 +67,47 @@ public class SeriesUtils {
 
                         // if constraints have been set, make sure this xy coordinate exists within them:
                         if (constraints == null || constraints.contains(xi, yi)) {
-                            if (xi != null) {
-                                if (bounds.getMinX() == null ||
-                                        xi.doubleValue() < bounds.getMinX().doubleValue()) {
-                                    bounds.setMinX(xi);
-                                }
-                                if (bounds.getMaxX() == null ||
-                                        xi.doubleValue() > bounds.getMaxX().doubleValue()) {
-                                    bounds.setMaxX(xi);
-                                }
-                            }
-                            if (yi != null) {
-
-                                if (bounds.getMinY() == null ||
-                                        yi.doubleValue() < bounds.getMinY().doubleValue()) {
-                                    bounds.setMinY(yi);
-                                }
-                                if (bounds.getMaxY() == null ||
-                                        yi.doubleValue() > bounds.getMaxY().doubleValue()) {
-                                    bounds.setMaxY(yi);
-                                }
-                            }
+                            minMax(bounds.getxRegion(), xi);
+                            minMax(bounds.getyRegion(), yi);
                         }
                     }
                 }
+            }
+        }
+        return bounds;
+    }
+
+    /**
+     *
+     * @param bounds Starting minMax values to work from; only lists values that are greater than or less
+     * than those in bounds will be be used.
+     * @param lists lists to be evaluated for min/max values.
+     * @return the original bounds instance passed in
+     */
+    public static Region minMax(Region bounds, List<Number>... lists) {
+        for (final List<Number> list : lists) {
+            for (final Number i : list) {
+                minMax(bounds, i);
+            }
+        }
+        return bounds;
+    }
+
+    /**
+     * Compares a number against the current min/max values in a region, updating the region
+     * with the new value if appropriate.
+     * @param bounds
+     * @param number
+     * @return
+     */
+    public static Region minMax(Region bounds, Number number) {
+        if (number != null) {
+            final double di = number.doubleValue();
+            if (bounds.getMin() == null || di < bounds.getMin().doubleValue()) {
+                bounds.setMin(number);
+            }
+            if (bounds.getMax() == null || di > bounds.getMax().doubleValue()) {
+                bounds.setMax(number);
             }
         }
         return bounds;
@@ -103,22 +118,27 @@ public class SeriesUtils {
      * @return
      * @since 0.9.7
      */
-    public static Bounds minMax(List<Number>... lists) {
-        Number min = null;
-        Number max = null;
-        for (List<Number> list : lists) {
-            for (Number i : list) {
-                if (i != null) {
-                    double di = i.doubleValue();
-                    if (min == null || di < min.doubleValue()) {
-                        min = i;
-                    }
-                    if (max == null || di > max.doubleValue()) {
-                        max = i;
-                    }
-                }
-            }
+    public static Region minMax(List<Number>... lists) {
+        return minMax(new Region(), lists);
+    }
+
+    public static void main(String[] args) {
+
+        // seed the list:
+        ArrayList<Number> values = new ArrayList<>();
+        for (int i = 0; i < 1000000; i++) {
+            values.add(Math.random() * 100);
         }
-        return new Bounds(min, max);
+        final int numIterations = 20;
+        long sumTime = 0;
+        for(int j = 0; j < numIterations; j++) {
+            final long startTime = System.currentTimeMillis();
+            Region bounds = minMax(values);
+            final long thisIteration = System.currentTimeMillis() - startTime;
+            System.out.println("thisIteration took: " + thisIteration + "ms");
+            sumTime += thisIteration;
+        }
+
+        System.out.println("Benchmark avg:" + (sumTime / numIterations) + "ms.");
     }
 }

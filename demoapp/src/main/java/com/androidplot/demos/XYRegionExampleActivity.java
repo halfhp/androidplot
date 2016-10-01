@@ -40,22 +40,16 @@ import java.util.Arrays;
 public class XYRegionExampleActivity extends Activity {
 
     private static final float HOME_RUN_DIST = 325;
-    private static final int LINE_THICKNESS_DP = 2;
-    private static final int POINT_SIZE_DP = 6;
+    private static final int LINE_THICKNESS_DP = 4;
+    private static final int POINT_SIZE_DP = 7;
     private XYPlot plot;
-    private final Number[] timHits = {105, 252, 220, 350, 12, 250, 353};
-    private final Number[] nickHits = {110, 191, 61, 371, 289, 101, 10};
-    private final Number[] joeHits = {25, 375, 364, 128, 178, 289, 346};
-    private final Number[] jamesHits = {250, 285, 295, 211, 311, 365, 241};
+    private final Number[] timHits = {105, 252, 216, 10, 301, 320, 220, 350, 12, 250, 353};
+    private final Number[] nickHits = {110, 191, 61, 300, 205, 40, 224, 371, 289, 101, 10};
     private LineAndPointFormatter timFormatter;
     private LineAndPointFormatter nickFormatter;
-    private LineAndPointFormatter joeFormatter;
-    private LineAndPointFormatter jamesFormatter;
 
     private XYSeries timSeries;
     private XYSeries nickSeries;
-    private XYSeries joeSeries;
-    private XYSeries jamesSeries;
 
     private RectRegion shortRegion;
     private RectRegion warmupRegion;
@@ -67,8 +61,6 @@ public class XYRegionExampleActivity extends Activity {
 
     private CheckBox timCB;
     private CheckBox nickCB;
-    private CheckBox joeCB;
-    private CheckBox jamesCB;
 
     private CheckBox r2CheckBox;
     private CheckBox r3CheckBox;
@@ -91,22 +83,6 @@ public class XYRegionExampleActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 onS2CheckBoxClicked();
-            }
-        });
-
-        joeCB = (CheckBox) findViewById(R.id.s3CheckBox);
-        joeCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                onS3CheckBoxClicked();
-            }
-        });
-
-        jamesCB = (CheckBox) findViewById(R.id.s4CheckBox);
-        jamesCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                onS4CheckBoxClicked();
             }
         });
 
@@ -165,24 +141,6 @@ public class XYRegionExampleActivity extends Activity {
         plot.redraw();
     }
 
-    private void onS3CheckBoxClicked() {
-        if (joeCB.isChecked()) {
-            plot.addSeries(joeSeries, joeFormatter);
-        } else {
-            plot.removeSeries(joeSeries);
-        }
-        plot.redraw();
-    }
-
-    private void onS4CheckBoxClicked() {
-        if (jamesCB.isChecked()) {
-            plot.addSeries(jamesSeries, jamesFormatter);
-        } else {
-            plot.removeSeries(jamesSeries);
-        }
-        plot.redraw();
-    }
-
     /**
      * Processes a check box event
      * @param cb The checkbox event origin
@@ -228,6 +186,8 @@ public class XYRegionExampleActivity extends Activity {
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM)
                 .setFormat(new DecimalFormat("#"));
 
+        plot.getGraph().setDomainGridLinePaint(null);
+
         plot.getLegend().setWidth(PixelUtils.dpToPix(100), SizeMode.FILL);
 
         // reposition the grid so that it rests above the bottom-left
@@ -249,12 +209,11 @@ public class XYRegionExampleActivity extends Activity {
     private void seriesSetup() {
 
         // TIM
-        timFormatter = new LineAndPointFormatter(
-                Color.rgb(100, 25, 20),
-                Color.rgb(100, 25, 20),
-                null, null);
+        timFormatter = new LineAndPointFormatter(Color.YELLOW, Color.YELLOW, null, null);
         timFormatter.getLinePaint().setStrokeWidth(PixelUtils.dpToPix(LINE_THICKNESS_DP));
         timFormatter.getVertexPaint().setStrokeWidth(PixelUtils.dpToPix(POINT_SIZE_DP));
+        timFormatter.setInterpolationParams(new CatmullRomInterpolator.Params(8,
+                CatmullRomInterpolator.Type.Centripetal));
 
         timSeries = new SimpleXYSeries(Arrays.asList(timHits),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Tim");
@@ -262,43 +221,16 @@ public class XYRegionExampleActivity extends Activity {
         plot.addSeries(timSeries, timFormatter);
 
         // SERIES #2:
-        nickFormatter = new LineAndPointFormatter(
-                Color.rgb(100, 25, 200),
-                Color.rgb(100, 25, 200),
-                null, null);
+        nickFormatter = new LineAndPointFormatter(Color.BLUE, Color.BLUE, null, null);
         nickFormatter.getLinePaint().setStrokeWidth(PixelUtils.dpToPix(LINE_THICKNESS_DP));
         nickFormatter.getVertexPaint().setStrokeWidth(PixelUtils.dpToPix(POINT_SIZE_DP));
+        nickFormatter.setInterpolationParams(new CatmullRomInterpolator.Params(8,
+                CatmullRomInterpolator.Type.Centripetal));
 
         nickSeries = new SimpleXYSeries(Arrays.asList(nickHits),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Nick");
 
         plot.addSeries(nickSeries, nickFormatter);
-
-        // SERIES #3:
-        joeFormatter = new LineAndPointFormatter(
-                Color.rgb(200, 25, 200),
-                Color.rgb(200, 25, 200),
-                null, null);
-        joeFormatter.getLinePaint().setStrokeWidth(PixelUtils.dpToPix(LINE_THICKNESS_DP));
-        joeFormatter.getVertexPaint().setStrokeWidth(PixelUtils.dpToPix(POINT_SIZE_DP));
-
-        joeSeries = new SimpleXYSeries(Arrays.asList(joeHits),
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Joe");
-
-        plot.addSeries(joeSeries, joeFormatter);
-
-        // SERIES #4:
-        jamesFormatter = new LineAndPointFormatter(
-                Color.rgb(220, 25, 20),
-                Color.rgb(220, 25, 20),
-                null, null);
-
-        jamesFormatter.getLinePaint().setStrokeWidth(PixelUtils.dpToPix(LINE_THICKNESS_DP));
-        jamesFormatter.getVertexPaint().setStrokeWidth(PixelUtils.dpToPix(POINT_SIZE_DP));
-
-        jamesSeries = new SimpleXYSeries(Arrays.asList(jamesHits),
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "James");
-        plot.addSeries(jamesSeries, jamesFormatter);
 
         plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 100);
         plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1);
@@ -366,36 +298,31 @@ public class XYRegionExampleActivity extends Activity {
 
         // and another region:
         shortRegionFormatter = new XYRegionFormatter(Color.RED);
-        shortRegionFormatter.getPaint().setAlpha(75);
-        shortRegion = new RectRegion(2, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY,
-                HOME_RUN_DIST, "Short");
+        shortRegionFormatter.getPaint().setAlpha(60);
+        shortRegion = new RectRegion(
+                2, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, HOME_RUN_DIST, "Short");
+
         timFormatter.addRegion(shortRegion, shortRegionFormatter);
         nickFormatter.addRegion(shortRegion, shortRegionFormatter);
-        joeFormatter.addRegion(shortRegion, shortRegionFormatter);
-        jamesFormatter.addRegion(shortRegion, shortRegionFormatter);
 
         // the next three regions are horizontal regions with minY/maxY
         // set to negative and positive infinity respectively.
-        warmupRegionFormatter = new XYRegionFormatter(Color.WHITE);
-        warmupRegionFormatter.getPaint().setAlpha(75);
+        warmupRegionFormatter = new XYRegionFormatter(Color.LTGRAY);
+        warmupRegionFormatter.getPaint().setAlpha(60);
 
-        warmupRegion = new RectRegion(0, 2, Double.NEGATIVE_INFINITY,
-                Double.POSITIVE_INFINITY, "Warmup");
+        warmupRegion = new RectRegion(
+                0, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, "Warmup");
+
         timFormatter.addRegion(warmupRegion, warmupRegionFormatter);
         nickFormatter.addRegion(warmupRegion, warmupRegionFormatter);
-        joeFormatter.addRegion(warmupRegion, warmupRegionFormatter);
-        jamesFormatter.addRegion(warmupRegion, warmupRegionFormatter);
 
         homeRunRegionFormatter = new XYRegionFormatter(Color.GREEN);
-        homeRunRegionFormatter.getPaint().setAlpha(75);
+        homeRunRegionFormatter.getPaint().setAlpha(60);
 
-        homeRunRegion = new RectRegion(2, Double.POSITIVE_INFINITY, HOME_RUN_DIST,
-                Double.POSITIVE_INFINITY, "H. Run");
+        homeRunRegion = new RectRegion(
+                2, Double.POSITIVE_INFINITY, HOME_RUN_DIST, Double.POSITIVE_INFINITY, "H. Run");
         timFormatter.addRegion(homeRunRegion, homeRunRegionFormatter);
         nickFormatter.addRegion(homeRunRegion, homeRunRegionFormatter);
-        joeFormatter.addRegion(homeRunRegion, homeRunRegionFormatter);
-        jamesFormatter.addRegion(homeRunRegion, homeRunRegionFormatter);
-
         nickFormatter.setFillDirection(FillDirection.RANGE_ORIGIN);
     }
 }

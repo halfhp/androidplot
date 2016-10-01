@@ -16,11 +16,14 @@
 
 package com.androidplot.xy;
 
+import android.graphics.*;
+
 import com.androidplot.test.AndroidplotTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -80,5 +83,41 @@ public class RectRegionTest extends AndroidplotTest{
         RectRegion region5 = new RectRegion(-100, 1, -100, 1, "");
         assertTrue(region1.intersects(region5));
         assertTrue(region5.intersects(region1));
+    }
+
+    @Test
+    public void testTransform() throws Exception {
+        RectRegion r1 = new RectRegion(1, 2, 0, 10);
+        RectRegion r2 = new RectRegion(2, 4, 10, 20);
+
+        final XYCoords trans1 = r1.transform(new XYCoords(1.5, 5), r2);
+        assertEquals(3.0, trans1.x);
+        assertEquals(15.0, trans1.y);
+
+        // try a screen transform:
+        RectF screen = new RectF(0, 0, 100, 100);
+        PointF result = r1.transform(2, 10, screen, false, true);
+        assertEquals(100f, result.x);
+        assertEquals(0f, result.y);
+
+        // now transform back to real:
+        RectRegion screenRegion = new RectRegion(screen);
+        XYCoords result2 = screenRegion.transform(result.x, result.y, r1, false, true);
+        assertEquals(2d, result2.x);
+        assertEquals(10d, result2.y);
+    }
+
+    @Test
+    public void testIntersects() throws Exception {
+        RectRegion r1 = new RectRegion(0, 10, 0, 10);
+        RectRegion r2 = new RectRegion(5, 15, 5, 15);
+        RectRegion r3 = new RectRegion(11, 21, 11, 21);
+
+        assertTrue(r1.intersects(r2));
+        assertTrue(r2.intersects(r1));
+        assertFalse(r1.intersects(r3));
+        assertFalse(r3.intersects(r1));
+        assertTrue(r2.intersects(r3));
+        assertTrue(r3.intersects(r2));
     }
 }

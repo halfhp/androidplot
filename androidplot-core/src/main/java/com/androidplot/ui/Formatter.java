@@ -18,7 +18,7 @@ package com.androidplot.ui;
 
 import android.content.Context;
 import com.androidplot.Plot;
-import com.androidplot.util.Configurator;
+import com.halfhp.fig.*;
 
 /**
  * Base class of all Formatters.  Encapsulates visual elements of a series; line style, color etc.
@@ -39,12 +39,15 @@ import com.androidplot.util.Configurator;
  */
 public abstract class Formatter<PlotType extends Plot> {
 
-    public Formatter<PlotType> configure(Context ctx, int xmlCfgId) {
-        Configurator.configure(ctx, this, xmlCfgId);
-        return this;
+    public Formatter() {}
+
+    public Formatter(Context ctx, int xmlCfgId) {
+        configure(ctx, xmlCfgId);
     }
 
-
+    public void configure(Context ctx, int xmlCfgId) {
+        Fig.configure(ctx, this, xmlCfgId);
+    }
 
     /**
      *

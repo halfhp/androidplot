@@ -15,10 +15,22 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.github.triplet.play'
 
 dependencies {
 	compile project(':androidplot-core')
     compile 'com.crittercism:crittercism-android-agent:5.4.0'
+}
+
+buildscript {
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
+    }
 }
 
 android {
@@ -33,10 +45,37 @@ android {
         applicationId "com.androidplot.demos"
     }
 
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("KEYSTORE") ?: "keystore.jks")
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
+
+    buildTypes {
+        release {
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            debuggable true
+        }
+    }
+
+
     /**
      * TODO: uncomment this and address all the lint issues.
      */
     lintOptions {
         abortOnError false
     }
+}
+
+play {
+    // see: https://github.com/Triple-T/gradle-play-publisher
+    jsonFile = file(System.getenv("PUBLISHER_ACCT_JSON_FILE") ?: "publisher.json")
+    track = 'beta'
 }

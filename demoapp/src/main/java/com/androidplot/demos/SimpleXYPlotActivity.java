@@ -16,8 +16,9 @@
 
 package com.androidplot.demos;
 import android.app.Activity;
-import android.graphics.DashPathEffect;
+import android.graphics.*;
 import android.os.Bundle;
+
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYSeries;
@@ -58,23 +59,18 @@ public class SimpleXYPlotActivity extends Activity {
 
         // create formatters to use for drawing a series using LineAndPointRenderer
         // and configure them from xml:
-        LineAndPointFormatter series1Format = new LineAndPointFormatter();
-        series1Format.setPointLabelFormatter(new PointLabelFormatter());
-        series1Format.configure(getApplicationContext(),
-                R.xml.line_point_formatter_with_labels);
+        LineAndPointFormatter series1Format =
+                new LineAndPointFormatter(this, R.xml.line_point_formatter_with_labels);
 
-        LineAndPointFormatter series2Format = new LineAndPointFormatter();
-        series2Format.setPointLabelFormatter(new PointLabelFormatter());
-        series2Format.configure(getApplicationContext(),
-                R.xml.line_point_formatter_with_labels_2);
+        LineAndPointFormatter series2Format =
+                new LineAndPointFormatter(this, R.xml.line_point_formatter_with_labels_2);
 
         // add an "dash" effect to the series2 line:
-        series2Format.getLinePaint().setPathEffect(
-                new DashPathEffect(new float[] {
+        series2Format.getLinePaint().setPathEffect(new DashPathEffect(new float[] {
 
-                        // always use DP when specifying pixel sizes, to keep things consistent across devices:
-                        PixelUtils.dpToPix(20),
-                        PixelUtils.dpToPix(15)}, 0));
+                // always use DP when specifying pixel sizes, to keep things consistent across devices:
+                PixelUtils.dpToPix(20),
+                PixelUtils.dpToPix(15)}, 0));
 
         // just for fun, add some smoothing to the lines:
         // see: http://androidplot.com/smooth-curves-and-androidplot/

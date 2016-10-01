@@ -19,9 +19,11 @@ package com.androidplot.ui;
 import android.graphics.RectF;
 
 /**
- * Encapsulates the functionality of a BoxModel.
- * See http://www.w3.org/TR/CSS21/box.html for a good explanation of how
- * the box model works.
+ * Defines the properties of a <a href="http://www.w3.org/TR/CSS21/box.html">BoxModel</a> as used
+ * by Androidplot.  Essentially, the BoxModel composes three nested (but not necessarily concentric) rectangles:
+ * * The bounding box, which is the outer-most box.
+ * * The marginated box, which is calculated by applying the margin insets to the bounding box.
+ * * The padded box, which is calculated by applying the padding insets to the marginated box.
  */
 public interface BoxModelable {
     /**

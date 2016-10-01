@@ -16,8 +16,7 @@
 
 package com.androidplot.util;
 
-import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.*;
 
 public class FontUtils {
 
@@ -62,6 +61,20 @@ public class FontUtils {
         paint.getTextBounds(text, ZERO, text.length(), size);
         size.bottom = size.top + (int) getFontHeight(paint);
         return size;
+    }
+
+    /**
+     * Draws text vertically centered on the specified coordinates
+     * @param canvas
+     * @param paint
+     * @param text
+     * @param cx
+     * @param cy
+     */
+    public static void drawTextVerticallyCentered(Canvas canvas, String text, float cx, float cy, Paint paint) {
+        Rect textBounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), textBounds);
+        canvas.drawText(text, cx, cy - textBounds.exactCenterY(), paint);
     }
 
 }

@@ -23,9 +23,9 @@ package com.androidplot.xy;
 public class XYConstraints {
 
     // used for  calculating the domain/range extents that will be displayed on the plot.
-    // using boundaries and origins are mutually exclusive.  because of this,
-    // setting one will disable the other.  when only setting the FramingModel,
-    // the origin or boundary is set to the current value of the plot.
+    // using boundaries and origins are mutually exclusive and enabling one will disable
+    // the other.  when only setting the FramingModel, the origin or boundary is set to
+    // the current value of the plot.
     private XYFramingModel domainFramingModel = XYFramingModel.EDGE;
     private XYFramingModel rangeFramingModel = XYFramingModel.EDGE;
 

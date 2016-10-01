@@ -38,17 +38,16 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 
-import com.androidplot.LineRegion;
+import com.androidplot.Region;
 import com.androidplot.ui.*;
 import com.androidplot.ui.widget.TextLabelWidget;
-import com.androidplot.util.PixelUtils;
+import com.androidplot.util.*;
 import com.androidplot.xy.*;
 
 /**
  * An example of a Bar Plot.
  */
-public class BarPlotExampleActivity extends Activity
-{
+public class BarPlotExampleActivity extends Activity {
 
     private static final String NO_SELECTION_TXT = "Touch bar to select.";
     private XYPlot plot;
@@ -57,9 +56,10 @@ public class BarPlotExampleActivity extends Activity
     private CheckBox series2CheckBox;
     private Spinner spRenderStyle, spWidthStyle, spSeriesSize;
     private SeekBar sbFixedWidth, sbVariableWidth;
-    
+
     private XYSeries series1;
     private XYSeries series2;
+
     private enum SeriesSize {
         TEN,
         TWENTY,
@@ -87,8 +87,7 @@ public class BarPlotExampleActivity extends Activity
     private Pair<Integer, XYSeries> selection;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bar_plot_example);
@@ -119,13 +118,11 @@ public class BarPlotExampleActivity extends Activity
                 Anchor.TOP_MIDDLE);
         selectionWidget.pack();
 
-
         // reduce the number of range labels
         plot.setLinesPerRangeLabel(3);
         plot.setRangeLowerBoundary(0, BoundaryMode.FIXED);
 
         plot.setLinesPerDomainLabel(2);
-
 
         // setup checkbox listers:
         series1CheckBox = (CheckBox) findViewById(R.id.s1CheckBox);
@@ -139,109 +136,128 @@ public class BarPlotExampleActivity extends Activity
         series2CheckBox = (CheckBox) findViewById(R.id.s2CheckBox);
         series2CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {onS2CheckBoxClicked(b);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                onS2CheckBoxClicked(b);
             }
         });
 
         plot.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     onPlotClicked(new PointF(motionEvent.getX(), motionEvent.getY()));
                 }
                 return true;
             }
         });
-        
+
         spRenderStyle = (Spinner) findViewById(R.id.spRenderStyle);
-        ArrayAdapter <BarRenderer.BarRenderStyle> adapter = new ArrayAdapter <BarRenderer.BarRenderStyle> (this, android.R.layout.simple_spinner_item, BarRenderer.BarRenderStyle.values() );
+        ArrayAdapter<BarRenderer.Style> adapter = new ArrayAdapter<BarRenderer.Style>(this,
+                android.R.layout.simple_spinner_item, BarRenderer.Style
+                .values());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spRenderStyle.setAdapter(adapter);
-        spRenderStyle.setSelection(BarRenderer.BarRenderStyle.OVERLAID.ordinal());
+        spRenderStyle.setSelection(BarRenderer.Style.OVERLAID.ordinal());
         spRenderStyle.setOnItemSelectedListener(new OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 updatePlot();
             }
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-        });             
-        
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+
         spWidthStyle = (Spinner) findViewById(R.id.spWidthStyle);
-        ArrayAdapter <BarRenderer.BarWidthStyle> adapter1 = new ArrayAdapter <BarRenderer.BarWidthStyle> (this, android.R.layout.simple_spinner_item, BarRenderer.BarWidthStyle.values() );
+        ArrayAdapter<BarRenderer.BarWidthMode> adapter1 = new ArrayAdapter<BarRenderer.BarWidthMode>(
+                this, android.R.layout.simple_spinner_item, BarRenderer.BarWidthMode
+                .values());
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spWidthStyle.setAdapter(adapter1);
-        spWidthStyle.setSelection(BarRenderer.BarWidthStyle.FIXED_WIDTH.ordinal());
+        spWidthStyle.setSelection(BarRenderer.BarWidthMode.FIXED_WIDTH.ordinal());
         spWidthStyle.setOnItemSelectedListener(new OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
-            	if (BarRenderer.BarWidthStyle.FIXED_WIDTH.equals(spWidthStyle.getSelectedItem())) {
-            		sbFixedWidth.setVisibility(View.VISIBLE);
-            		sbVariableWidth.setVisibility(View.INVISIBLE);
-            	} else {
-            		sbFixedWidth.setVisibility(View.INVISIBLE);
-            		sbVariableWidth.setVisibility(View.VISIBLE);
-            	}
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                if (BarRenderer.BarWidthMode.FIXED_WIDTH.equals(spWidthStyle.getSelectedItem())) {
+                    sbFixedWidth.setVisibility(View.VISIBLE);
+                    sbVariableWidth.setVisibility(View.INVISIBLE);
+                } else {
+                    sbFixedWidth.setVisibility(View.INVISIBLE);
+                    sbVariableWidth.setVisibility(View.VISIBLE);
+                }
                 updatePlot();
             }
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {    
-			}
-        });             
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
 
         spSeriesSize = (Spinner) findViewById(R.id.spSeriesSize);
-        ArrayAdapter <SeriesSize> adapter11 = new ArrayAdapter <SeriesSize> (this, android.R.layout.simple_spinner_item, SeriesSize.values() );
+        ArrayAdapter<SeriesSize> adapter11 = new ArrayAdapter<SeriesSize>(this,
+                android.R.layout.simple_spinner_item, SeriesSize.values());
         adapter11.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spSeriesSize.setAdapter(adapter11);
         spSeriesSize.setSelection(SeriesSize.TEN.ordinal());
         spSeriesSize.setOnItemSelectedListener(new OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
-                switch ((SeriesSize)arg0.getSelectedItem()) {
-				case TEN:
-					series1Numbers = series1Numbers10;
-					series2Numbers = series2Numbers10;
-					break;
-				case TWENTY:
-					series1Numbers = series1Numbers20;
-					series2Numbers = series2Numbers20;
-					break;
-				case SIXTY:
-					series1Numbers = series1Numbers60;
-					series2Numbers = series2Numbers60;
-					break;
-				default:
-					break;
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                final SeriesSize selectedSize = (SeriesSize) arg0.getSelectedItem();
+                switch (selectedSize) {
+                    case TEN:
+                        series1Numbers = series1Numbers10;
+                        series2Numbers = series2Numbers10;
+                        break;
+                    case TWENTY:
+                        series1Numbers = series1Numbers20;
+                        series2Numbers = series2Numbers20;
+                        break;
+                    case SIXTY:
+                        series1Numbers = series1Numbers60;
+                        series2Numbers = series2Numbers60;
+                        break;
+                    default:
+                        break;
                 }
-                updatePlot();
+                updatePlot(selectedSize);
             }
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-        });          
-        
-       
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+
         sbFixedWidth = (SeekBar) findViewById(R.id.sbFixed);
         sbFixedWidth.setProgress(50);
         sbFixedWidth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {updatePlot();}
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                updatePlot();
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
-        
-        
+
         sbVariableWidth = (SeekBar) findViewById(R.id.sbVariable);
         sbVariableWidth.setProgress(1);
         sbVariableWidth.setVisibility(View.INVISIBLE);
         sbVariableWidth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {updatePlot();}
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                updatePlot();
+            }
+
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
 
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).
@@ -272,35 +288,60 @@ public class BarPlotExampleActivity extends Activity
     }
 
     private void updatePlot() {
-    	
-    	// Remove all current series from each plot
+        updatePlot(null);
+    }
+
+    private void updatePlot(SeriesSize seriesSize) {
+
+        // Remove all current series from each plot
         plot.clear();
 
         // Setup our Series with the selected number of elements
-        series1 = new SimpleXYSeries(Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Us");
-        series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Them");
+        series1 = new SimpleXYSeries(Arrays.asList(series1Numbers),
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Us");
+        series2 = new SimpleXYSeries(Arrays.asList(series2Numbers),
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Them");
+
+        plot.setDomainBoundaries(-1, series1.size(), BoundaryMode.FIXED);
+        plot.setRangeUpperBoundary(
+                SeriesUtils.minMax(series1, series2).
+                        getMaxY().doubleValue() + 1, BoundaryMode.FIXED);
+
+        if(seriesSize != null) {
+            switch(seriesSize) {
+                case TEN:
+                    plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 2);
+                    break;
+                case TWENTY:
+                    plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 4);
+                    break;
+                case SIXTY:
+                    plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 6);
+                    break;
+            }
+        }
 
         // add a new series' to the xyplot:
         if (series1CheckBox.isChecked()) plot.addSeries(series1, formatter1);
-        if (series2CheckBox.isChecked()) plot.addSeries(series2, formatter2); 
+        if (series2CheckBox.isChecked()) plot.addSeries(series2, formatter2);
 
         // Setup the BarRenderer with our selected options
-        MyBarRenderer renderer = ((MyBarRenderer)plot.getRenderer(MyBarRenderer.class));
-        renderer.setBarRenderStyle((BarRenderer.BarRenderStyle)spRenderStyle.getSelectedItem());
-        renderer.setBarWidthStyle((BarRenderer.BarWidthStyle)spWidthStyle.getSelectedItem());
+        MyBarRenderer renderer = ((MyBarRenderer) plot.getRenderer(MyBarRenderer.class));
+        renderer.setStyle((BarRenderer.Style) spRenderStyle.getSelectedItem());
+        renderer.setBarWidthMode((BarRenderer.BarWidthMode) spWidthStyle.getSelectedItem());
         renderer.setBarWidth(sbFixedWidth.getProgress());
         renderer.setBarGap(sbVariableWidth.getProgress());
-        
-        if (BarRenderer.BarRenderStyle.STACKED.equals(spRenderStyle.getSelectedItem())) {
-        	plot.setRangeTopMin(15);
+
+        if (BarRenderer.Style.STACKED.equals(spRenderStyle.getSelectedItem())) {
+            plot.setRangeTopMin(15);
         } else {
-        	plot.setRangeTopMin(0);
+            plot.setRangeTopMin(0);
         }
-	        
+
         plot.redraw();
-    	
-    }  
-    
+
+    }
+
     private void onPlotClicked(PointF point) {
 
         // make sure the point lies within the graph area.  we use gridrect
@@ -309,23 +350,22 @@ public class BarPlotExampleActivity extends Activity
             Number x = plot.getXVal(point);
             Number y = plot.getYVal(point);
 
-
             selection = null;
             double xDistance = 0;
             double yDistance = 0;
 
-
             // find the closest value to the selection:
-            for (SeriesAndFormatter<XYSeries, ? extends XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
+            for (SeriesAndFormatter<XYSeries, ? extends XYSeriesFormatter> sfPair : plot
+                    .getSeriesRegistry()) {
                 XYSeries series = sfPair.getSeries();
                 for (int i = 0; i < series.size(); i++) {
                     Number thisX = series.getX(i);
                     Number thisY = series.getY(i);
                     if (thisX != null && thisY != null) {
                         double thisXDistance =
-                                LineRegion.measure(x, thisX).doubleValue();
+                                Region.measure(x, thisX).doubleValue();
                         double thisYDistance =
-                                LineRegion.measure(y, thisY).doubleValue();
+                                Region.measure(y, thisY).doubleValue();
                         if (selection == null) {
                             selection = new Pair<>(i, series);
                             xDistance = thisXDistance;
@@ -350,7 +390,7 @@ public class BarPlotExampleActivity extends Activity
             selection = null;
         }
 
-        if(selection == null) {
+        if (selection == null) {
             selectionWidget.setText(NO_SELECTION_TXT);
         } else {
             selectionWidget.setText("Selected: " + selection.second.getTitle() +
@@ -370,7 +410,7 @@ public class BarPlotExampleActivity extends Activity
 
     private void onS2CheckBoxClicked(boolean checked) {
         if (checked) {
-            plot.addSeries(series2, formatter2);  
+            plot.addSeries(series2, formatter2);
         } else {
             plot.removeSeries(series2);
         }
@@ -378,6 +418,7 @@ public class BarPlotExampleActivity extends Activity
     }
 
     class MyBarFormatter extends BarFormatter {
+
         public MyBarFormatter(int fillColor, int borderColor) {
             super(fillColor, borderColor);
         }
@@ -407,9 +448,9 @@ public class BarPlotExampleActivity extends Activity
          * @return
          */
         @Override
-        public MyBarFormatter getFormatter(int index, XYSeries series) { 
-            if(selection != null &&
-                    selection.second == series && 
+        public MyBarFormatter getFormatter(int index, XYSeries series) {
+            if (selection != null &&
+                    selection.second == series &&
                     selection.first == index) {
                 return selectionFormatter;
             } else {

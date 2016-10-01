@@ -16,9 +16,9 @@
 
 package com.androidplot.util;
 
-import com.androidplot.Bounds;
-import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XYBounds;
+import com.androidplot.*;
+import com.androidplot.xy.*;
+
 import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +48,7 @@ public class SeriesUtilsTest {
     @Test
     public void testSeriesMinMax() {
         SimpleXYSeries series = new SimpleXYSeries(LINEAR, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, null);
-        XYBounds minMax = SeriesUtils.minMax(series);
+        RectRegion minMax = SeriesUtils.minMax(series);
         assertEquals(0, minMax.getMinX());
         assertEquals(7, minMax.getMaxX());
         assertEquals(1, minMax.getMinY());
@@ -99,7 +99,7 @@ public class SeriesUtilsTest {
 
     @Test
     public void testListMinMax() {
-        Bounds minMax = SeriesUtils.minMax(LINEAR);
+        Region minMax = SeriesUtils.minMax(LINEAR);
         assertEquals(1, minMax.getMin());
         assertEquals(8, minMax.getMax());
 

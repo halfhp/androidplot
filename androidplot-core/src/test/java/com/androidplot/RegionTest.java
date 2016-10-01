@@ -20,10 +20,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class RegionTest {
+
     @Before
     public void setUp() throws Exception {
 
@@ -35,23 +38,97 @@ public class RegionTest {
     }
 
     @Test
+    public void testConstructor() throws Exception {
+        Region lr = new Region(0d, 0d);
+        assertEquals(0d, lr.getMin());
+        assertEquals(0d, lr.getMax());
+
+        lr = new Region(1.5d, -2d);
+        assertEquals(-2d, lr.getMin());
+        assertEquals(1.5d, lr.getMax());
+
+        lr = new Region(10d, 20d);
+        assertEquals(10d, lr.getMin());
+        assertEquals(20d, lr.getMax());
+    }
+
+
+    @Test
     public void testContains() throws Exception {
 
     }
 
     @Test
     public void testIntersects() throws Exception {
-        LineRegion line1 = new LineRegion(1, 10);
-        LineRegion line2 = new LineRegion(11, 20);
+        Region line1 = new Region(1, 10);
+        Region line2 = new Region(11, 20);
         assertFalse(line1.intersects(line2));
 
-        line1.setMaxVal(15);
+        line1.setMax(15);
         assertTrue(line1.intersects(line2));
 
-        line1.setMaxVal(30);
+        //l1end = 30;
+        line1.setMax(30);
         assertTrue(line1.intersects(line2));
 
-        line1.setMinVal(21);
+        //l1start = 21;
+        line1.setMin(21);
         assertFalse(line1.intersects(line2));
     }
+
+    @Test
+    public void testLength() throws Exception {
+        Region lr = new Region(0, 10);
+        assertEquals(10d, lr.length().doubleValue(), 0);
+
+        lr = new Region(-5, 5);
+        assertEquals(10d, lr.length().doubleValue(), 0);
+    }
+
+    @Test
+    public void testCenter() throws Exception {
+        Region r1 = new Region(1, 2);
+        assertEquals(1.5, r1.center());
+
+        Region r2 = new Region(-10, 10);
+        assertEquals(0.0, r2.center());
+
+        Region r3 = new Region(-2, -1);
+        assertEquals(-1.5, r3.center());
+    }
+
+    @Test
+    public void testTransform() throws Exception {
+        Region r1 = new Region(1, 2);
+        Region r2 = new Region(0, 10);
+
+        assertEquals(5.0, r1.transform(1.5, r2));
+        assertEquals(0.0, r1.transform(1, r2));
+        assertEquals(10.0, r1.transform(2, r2));
+
+        Region r3 = new Region(-10, 10);
+        assertEquals(-10.0, r1.transform(1, r3));
+    }
+
+    @Test
+    public void testTransformWithFlip() throws Exception {
+        Region r1 = new Region(1, 2);
+        Region r2 = new Region(0, 10);
+
+        assertEquals(5.0, r1.transform(1.5, r2, true));
+        assertEquals(10.0, r1.transform(1, r2, true));
+        assertEquals(0.0, r1.transform(2, r2, true));
+
+        Region r3 = new Region(-10, 10);
+        assertEquals(10.0, r1.transform(1, r3, true));
+    }
+
+    @Test
+    public void testRatio() throws Exception {
+        Region r1 = new Region(1, 2);
+        Region r2 = new Region(0, 100);
+        assertEquals(0.01, r1.ratio(r2));
+        assertEquals(100.0, r2.ratio(r1));
+    }
+
 }

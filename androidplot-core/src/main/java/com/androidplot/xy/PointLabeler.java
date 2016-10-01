@@ -16,7 +16,7 @@
 
 package com.androidplot.xy;
 
-public interface PointLabeler {
+public interface PointLabeler<SeriesType extends XYSeries> {
 
-    String getLabel(XYSeries series, int index);
+    String getLabel(SeriesType series, int index);
 }

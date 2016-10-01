@@ -16,9 +16,10 @@
 
 apply plugin: 'java'
 
-repositories {
-    mavenCentral()
-    jcenter()
+allprojects {
+    repositories {
+        jcenter()
+    }
 }
 
 ext {
@@ -26,8 +27,8 @@ ext {
     theCompileSdkVersion = 24
     theTargetSdkVersion = 24
     theMinSdkVersion = 5
-    theVersionName = '1.2.1'
-    theVersionCode = 19
+    theVersionName = '1.2.2'
+    theVersionCode = 20
 }
 
 buildscript {
@@ -37,9 +38,11 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0-beta3'
+        classpath 'com.android.tools.build:gradle:2.2.0'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.5.0'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
     }
 }
 
@@ -48,14 +51,6 @@ allprojects {
         mavenCentral()
     }
 }
-
-/*subprojects {
-// for now can't do this one here because it has to
-// be loaded *before* any other plugin in each submodule
-// and unless its listed at the top of the submodule plugin list,
-// that doesnt seem to happen.
-    apply plugin: 'android-sdk-manager'
-}*/
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.14.1'

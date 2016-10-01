@@ -111,6 +111,12 @@
                 style="@style/toc_button"
                 android:text="f(x) Example"
                 android:enabled="true"/>
+
+            <Button
+                android:id="@+id/bubbleChartExample"
+                style="@style/toc_button"
+                android:text="Bubble Chart Example"
+                android:enabled="true"/>
         </LinearLayout>
     </ScrollView>
 

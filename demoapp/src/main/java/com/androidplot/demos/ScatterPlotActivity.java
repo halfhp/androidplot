@@ -45,13 +45,11 @@ public class ScatterPlotActivity extends Activity
 
         // create formatters to use for drawing a series using LineAndPointRenderer
         // and configure them from xml:
-        LineAndPointFormatter series1Format = new LineAndPointFormatter();
-        series1Format.configure(getApplicationContext(),
-                R.xml.point_formatter);
+        LineAndPointFormatter series1Format =
+                new LineAndPointFormatter(this, R.xml.point_formatter);
 
-        LineAndPointFormatter series2Format = new LineAndPointFormatter();
-        series2Format.configure(getApplicationContext(),
-                R.xml.point_formatter_2);
+        LineAndPointFormatter series2Format =
+                new LineAndPointFormatter(this, R.xml.point_formatter_2);
 
         // add each series to the xyplot:
         plot.addSeries(series1, series1Format);
@@ -59,9 +57,6 @@ public class ScatterPlotActivity extends Activity
 
         // reduce the number of range labels
         plot.setLinesPerRangeLabel(3);
-
-        // rotate domain labels 45 degrees to make them more compact horizontally:
-        //plot.getGraphWidget().setLineLabelRotation(XYGraphWidget.Edge.BOTTOM, -45f);
     }
 
     /**

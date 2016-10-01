@@ -19,7 +19,7 @@ package com.androidplot.xy;
 import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
-import com.androidplot.util.ValPixConverter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,11 +50,11 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         if(formatter.getFillPaint() != null) {
             canvas.drawRect(rect, formatter.getFillPaint());
         }
-        if(formatter.getLinePaint() != null) {
+        if(formatter.hasLinePaint()) {
             canvas.drawLine(rect.left, rect.bottom, rect.right, rect.top, formatter.getLinePaint());
         }
 
-        if(formatter.getVertexPaint() != null) {
+        if(formatter.hasVertexPaint()) {
             canvas.drawPoint(centerX, centerY, formatter.getVertexPaint());
         }
     }
@@ -73,7 +73,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         PointF thisPoint;
         PointF lastPoint = null;
         PointF firstPoint = null;
-        Paint  linePaint = formatter.getLinePaint();
+        //Paint  linePaint = formatter.getLinePaint();
         Path path = null;
         ArrayList<PointF> points = new ArrayList<>(series.size());
         for (int i = 0; i < series.size(); i++) {
@@ -81,20 +81,14 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
             Number x = series.getX(i);
 
             if (y != null && x != null) {
-                thisPoint = ValPixConverter.valToPix(
-                        x, y,
-                        plotArea,
-                        getPlot().getCalculatedMinX(),
-                        getPlot().getCalculatedMaxX(),
-                        getPlot().getCalculatedMinY(),
-                        getPlot().getCalculatedMaxY());
+                thisPoint = getPlot().getBounds().transformScreen(x, y, plotArea);
                 points.add(thisPoint);
             } else {
                 thisPoint = null;
             }
 
             // don't need to do any of this if the line isnt going to be drawn:
-            if(linePaint != null && formatter.getInterpolationParams() == null) {
+            if(formatter.hasLinePaint() && formatter.getInterpolationParams() == null) {
                 if (thisPoint != null) {
 
                     // record the first point of the new Path
@@ -120,7 +114,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 }
             }
         }
-        if(linePaint != null) {
+        if(formatter.hasLinePaint()) {
             if(formatter.getInterpolationParams() != null) {
                 List<XYCoords> interpolatedPoints = getInterpolator(
                         formatter.getInterpolationParams()).interpolate(series,
@@ -158,32 +152,25 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     }
 
     protected PointF convertPoint(XYCoords coord, RectF plotArea) {
-        return ValPixConverter.valToPix(
-                coord.x.doubleValue(),
-                coord.y.doubleValue(),
-                plotArea,
-                getPlot().getCalculatedMinX(),
-                getPlot().getCalculatedMaxX(),
-                getPlot().getCalculatedMinY(),
-                getPlot().getCalculatedMaxY());
+        return getPlot().getBounds().transformScreen(coord, plotArea);
     }
 
     protected void renderPoints(Canvas canvas, RectF plotArea, XYSeries series, List<PointF> points,
                                 LineAndPointFormatter formatter) {
-        Paint vertexPaint = formatter.getVertexPaint();
-        PointLabelFormatter plf = formatter.getPointLabelFormatter();
-        if (vertexPaint != null || plf != null) {
+        //PointLabelFormatter plf = formatter.getPointLabelFormatter();
+        if (formatter.hasVertexPaint() || formatter.hasPointLabelFormatter()) {
             int i = 0;
             for (PointF p : points) {
                 PointLabeler pointLabeler = formatter.getPointLabeler();
 
                 // if vertexPaint is available, draw vertex:
-                if (vertexPaint != null) {
+                if (formatter.hasVertexPaint()) {
                     canvas.drawPoint(p.x, p.y, formatter.getVertexPaint());
                 }
 
                 // if textPaint and pointLabeler are available, draw point's text label:
-                if (plf != null && pointLabeler != null) {
+                if (formatter.hasPointLabelFormatter() && pointLabeler != null) {
+                    final PointLabelFormatter plf = formatter.getPointLabelFormatter();
                     canvas.drawText(pointLabeler.getLabel(series, i),
                             p.x + plf.hOffset, p.y + plf.vOffset, plf.getTextPaint());
                 }
@@ -210,41 +197,37 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 path.close();
                 break;
             case RANGE_ORIGIN:
-                float originPix = (float) ValPixConverter.valToPix(
-                        getPlot().getRangeOrigin().doubleValue(),
-                        getPlot().getCalculatedMinY().doubleValue(),
-                        getPlot().getCalculatedMaxY().doubleValue(),
-                        plotArea.height(),
-                        true);
-                originPix += plotArea.top;
-
+                float originPix = (float) getPlot().getBounds().getxRegion()
+                        .transform(getPlot().getRangeOrigin()
+                                .doubleValue(), plotArea.top, plotArea.bottom, true);
                 path.lineTo(lastPoint.x, originPix);
                 path.lineTo(firstPoint.x, originPix);
                 path.close();
                 break;
             default:
-                throw new UnsupportedOperationException("Fill direction not yet implemented: " + formatter.getFillDirection());
+                throw new UnsupportedOperationException(
+                        "Fill direction not yet implemented: " + formatter.getFillDirection());
         }
 
         if (formatter.getFillPaint() != null) {
             canvas.drawPath(path, formatter.getFillPaint());
         }
 
-        // draw any visible regions on top of the base region:
-        double minX = getPlot().getCalculatedMinX().doubleValue();
-        double maxX = getPlot().getCalculatedMaxX().doubleValue();
-        double minY = getPlot().getCalculatedMinY().doubleValue();
-        double maxY = getPlot().getCalculatedMaxY().doubleValue();
+        final RectRegion bounds = getPlot().getBounds();
+        final RectRegion plotRegion = new RectRegion(plotArea);
 
         // draw each region:
-        for (RectRegion r : RectRegion.regionsWithin(formatter.getRegions().elements(), minX, maxX, minY, maxY)) {
-            XYRegionFormatter f = formatter.getRegionFormatter(r);
-            RectF regionRect = r.getRectF(plotArea, minX, maxX, minY, maxY);
-            if (regionRect != null) {
+        for (RectRegion thisRegion : bounds.intersects(formatter.getRegions().elements())) {
+            XYRegionFormatter regionFormatter = formatter.getRegionFormatter(thisRegion);
+            RectRegion thisRegionTransformed = bounds
+                    .transform(thisRegion, plotRegion, false, true);
+            thisRegionTransformed.clip(plotRegion);
+            RectF thisRegionRectF = thisRegionTransformed.asRectF();
+            if (thisRegionRectF != null) {
                 try {
-                canvas.save(Canvas.ALL_SAVE_FLAG);
-                canvas.clipPath(path);
-                canvas.drawRect(regionRect, f.getPaint());
+                    canvas.save(Canvas.ALL_SAVE_FLAG);
+                    canvas.clipPath(path);
+                    canvas.drawRect(thisRegionRectF, regionFormatter.getPaint());
                 } finally {
                     canvas.restore();
                 }
@@ -252,7 +235,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
 
         // finally we draw the outline path on top of everything else:
-        if(formatter.getLinePaint() != null) {
+        if(formatter.hasLinePaint()) {
             canvas.drawPath(outlinePath, formatter.getLinePaint());
         }
 

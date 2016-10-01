@@ -31,11 +31,11 @@ import com.androidplot.ui.TextOrientation;
 import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.AttrUtils;
-import com.androidplot.util.Configurator;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.ui.HorizontalPositioning;
 import com.androidplot.ui.VerticalPositioning;
+import com.halfhp.fig.*;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -513,7 +513,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                     attrHash.put(attrName.substring(XML_ATTR_PREFIX.length() + 1), attrs.getAttributeValue(i));
                 }
             }
-            Configurator.configure(getContext(), this, attrHash);
+            Fig.configure(getContext(), this, attrHash);
         }
     }
 
@@ -691,8 +691,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         return getSeries(series, rendererClass).getFormatter();
     }
 
-    public RendererType getRenderer(Class<? extends RendererType> rendererClass) {
-        return getRenderers().get(rendererClass);
+    public <T extends RendererType> T getRenderer(Class<T> rendererClass) {
+        return (T) getRenderers().get(rendererClass);
     }
 
     public List<RendererType> getRendererList() {

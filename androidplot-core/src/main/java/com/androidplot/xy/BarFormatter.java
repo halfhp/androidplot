@@ -15,6 +15,7 @@
  */
 
 package com.androidplot.xy;
+import android.content.*;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
 
@@ -39,9 +40,11 @@ public class BarFormatter extends LineAndPointFormatter {
     private Paint fillPaint;
     private Paint borderPaint;
 
-    {
+    /**
+     * Should only be used in conjunction with calls to configure()...
+     */
+    public BarFormatter() {
         fillPaint = new Paint();
-        //fillPaint.setColor(Color.RED);
         fillPaint.setStyle(Paint.Style.FILL);
         fillPaint.setAlpha(100);
         borderPaint = new Paint();
@@ -49,15 +52,15 @@ public class BarFormatter extends LineAndPointFormatter {
         borderPaint.setAlpha(100);
     }
 
-    /**
-     * Should only be used in conjunction with calls to configure()...
-     */
-    public BarFormatter() {
-    }
-
     public BarFormatter(int fillColor, int borderColor) {
+        this();
         fillPaint.setColor(fillColor);
         borderPaint.setColor(borderColor);
+    }
+
+    public BarFormatter(Context context, int xmlCfgId) {
+        this();
+        configure(context, xmlCfgId);
     }
 
     @Override

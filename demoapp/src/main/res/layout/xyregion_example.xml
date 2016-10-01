@@ -28,9 +28,9 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         ap:graphMarginTop="10dp"
-        ap:graphMarginLeft="0dp"
+        ap:graphMarginLeft="25dp"
         ap:graphMarginRight="0dp"
-        ap:graphMarginBottom="3dp"
+        ap:graphMarginBottom="20dp"
         ap:title="Batting Practice Stats"
         ap:domainTitle="Pitch #"
         ap:rangeTitle="Distance"
@@ -57,19 +57,6 @@
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"/>
 
-        <CheckBox
-            android:id="@+id/s3CheckBox"
-            android:text="Joe"
-            android:checked="true"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"/>
-
-        <CheckBox
-            android:id="@+id/s4CheckBox"
-            android:text="James"
-            android:checked="true"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"/>
     </LinearLayout>
 
     <LinearLayout

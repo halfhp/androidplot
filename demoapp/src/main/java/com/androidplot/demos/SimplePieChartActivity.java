@@ -126,23 +126,19 @@ public class SimplePieChartActivity extends Activity
         EmbossMaskFilter emf = new EmbossMaskFilter(
                 new float[]{1, 1, 1}, 0.4f, 10, 8.2f);
 
-        SegmentFormatter sf1 = new SegmentFormatter();
-        sf1.configure(getApplicationContext(), R.xml.pie_segment_formatter1);
+        SegmentFormatter sf1 = new SegmentFormatter(this, R.xml.pie_segment_formatter1);
         sf1.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
         sf1.getFillPaint().setMaskFilter(emf);
 
-        SegmentFormatter sf2 = new SegmentFormatter();
-        sf2.configure(getApplicationContext(), R.xml.pie_segment_formatter2);
+        SegmentFormatter sf2 = new SegmentFormatter(this, R.xml.pie_segment_formatter2);
         sf2.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
         sf2.getFillPaint().setMaskFilter(emf);
 
-        SegmentFormatter sf3 = new SegmentFormatter();
-        sf3.configure(getApplicationContext(), R.xml.pie_segment_formatter3);
+        SegmentFormatter sf3 = new SegmentFormatter(this, R.xml.pie_segment_formatter3);
         sf3.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
         sf3.getFillPaint().setMaskFilter(emf);
 
-        SegmentFormatter sf4 = new SegmentFormatter();
-        sf4.configure(getApplicationContext(), R.xml.pie_segment_formatter4);
+        SegmentFormatter sf4 = new SegmentFormatter(this, R.xml.pie_segment_formatter4);
         sf4.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
         sf4.getFillPaint().setMaskFilter(emf);
 

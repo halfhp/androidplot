@@ -16,12 +16,11 @@
 
 package com.androidplot.xy;
 
+import android.content.*;
 import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesRenderer;
-import com.androidplot.util.ValPixConverter;
-import java.util.ArrayList;
 
 /**
  * This is an experimental (but stable) implementation of an {@link XYSeriesRenderer} that provides instrumentation
@@ -45,20 +44,13 @@ public class AdvancedLineAndPointRenderer extends XYSeriesRenderer<XYSeries, Adv
     protected void onRender(Canvas canvas, RectF plotArea, XYSeries series, Formatter formatter, RenderStack stack) throws PlotRenderException {
         PointF thisPoint;
         PointF lastPoint = null;
-        ArrayList<PointF> points = new ArrayList<>(series.size());
         for (int i = 0; i < series.size(); i++) {
             Number y = series.getY(i);
             Number x = series.getX(i);
 
             if (y != null && x != null) {
-                thisPoint = ValPixConverter.valToPix(
-                        x, y,
-                        plotArea,
-                        getPlot().getCalculatedMinX(),
-                        getPlot().getCalculatedMaxX(),
-                        getPlot().getCalculatedMinY(),
-                        getPlot().getCalculatedMaxY());
-                points.add(thisPoint);
+                thisPoint = getPlot().getBounds()
+                        .transformScreen(x, y, plotArea);
             } else {
                 thisPoint = null;
             }
@@ -91,12 +83,19 @@ public class AdvancedLineAndPointRenderer extends XYSeriesRenderer<XYSeries, Adv
      */
     public static class Formatter extends XYSeriesFormatter<XYRegionFormatter> {
 
+        private static final int DEFAULT_STROKE_WIDTH = 3;
+
         private Paint linePaint;
 
-        {
+        public Formatter() {
             linePaint = new Paint();
-            linePaint.setStrokeWidth(3);
+            linePaint.setStrokeWidth(DEFAULT_STROKE_WIDTH);
             linePaint.setColor(Color.RED);
+        }
+
+        public Formatter(Context context, int xmlConfigId) {
+            this();
+            configure(context, xmlConfigId);
         }
 
         @Override
@@ -124,7 +123,6 @@ public class AdvancedLineAndPointRenderer extends XYSeriesRenderer<XYSeries, Adv
         public Paint getLinePaint(int thisIndex, int latestIndex, int seriesSize) {
             return getLinePaint();
         }
-
 
         public void setLinePaint(Paint linePaint) {
             this.linePaint = linePaint;

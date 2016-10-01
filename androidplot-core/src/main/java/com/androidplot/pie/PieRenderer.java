@@ -190,7 +190,9 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         // TODO: move segment labelling outside the segment drawing loop
         // TODO: so that the labels will not be clipped by the edge of the next
         // TODO: segment being drawn.
-        drawSegmentLabel(canvas, labelOrigin, seg, f);
+        if(f.getLabelPaint() != null) {
+            drawSegmentLabel(canvas, labelOrigin, seg, f);
+        }
     }
 
     protected void drawSegmentLabel(Canvas canvas, PointF origin,

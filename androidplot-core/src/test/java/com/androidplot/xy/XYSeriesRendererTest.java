@@ -16,9 +16,10 @@
 
 package com.androidplot.xy;
 
-import android.graphics.*;
+import android.graphics.RectF;
+
+import com.androidplot.*;
 import com.androidplot.test.AndroidplotTest;
-import com.androidplot.util.ValPixConverter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,22 +48,21 @@ public class XYSeriesRendererTest extends AndroidplotTest {
         plot.setDomainBoundaries(0, 100, BoundaryMode.FIXED);
         plot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
         plot.calculateMinMaxVals();
-        Step domainStep = XYStepCalculator.getStep(plot, Axis.DOMAIN, gridRect, plot.getCalculatedMinX().doubleValue(), plot.getCalculatedMaxX().doubleValue());
+        Step domainStep = XYStepCalculator.getStep(plot, Axis.DOMAIN, gridRect);
+
+        Region xBounds = new Region(0, 9);
 
         int x = 0;
-        double val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false);
-
-        assertEquals(val, domainStep.getStepPix()*x);
+        double val = xBounds.transform(x, gridRect.left, gridRect.right, false);
+        assertEquals(val, (domainStep.getStepPix()*x) + gridRect.left);
 
         x = 1;
-        val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false);
-
-        assertEquals(val, domainStep.getStepPix()*x);
+        val = xBounds.transform(x, gridRect.left, gridRect.right, false);
+        assertEquals(val, (domainStep.getStepPix()*x) + gridRect.left);
 
         x = 9;
-        val = ValPixConverter.valToPix(x, 0, 9, gridRect.width(), false);
-
-        assertEquals(val, domainStep.getStepPix()*x);
+        val = xBounds.transform(x, gridRect.left, gridRect.right, false);
+        assertEquals(val, (domainStep.getStepPix()*x) + gridRect.left);
     }
 
 }

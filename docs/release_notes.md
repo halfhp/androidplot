@@ -1,3 +1,17 @@
+# 1.2.2
+
+* BarRenderer / BarFormatter cleanup
+* More documentation! 
+* Bounds and XYBounds have been merged into Region and RectRegion respectively.
+* ValPixConverter has been removed and it's functionality migrated to Region and RectRegion.
+* Added Region.transform(...) and RectRegion.transform(...)
+* Added Region.ratio(...) and RectRegion.ratio(...)
+* XYPlot.getCalculatedMinX(), XYPlot.getCalculatedMaxX(), XYPlot.getCalculatedMinY() and XYPlot.getCalculatedMinY()
+have been replaced with XYPlot.getBounds().
+* Configurator has become it's own library - [Fig!](https://github.com/halfhp/fig)
+* New constructors have been added to Formatters to simplify XML configuration via Fig.
+* Added Jacoco code coverage reporting
+
 # 1.2.1
 
 ### Pie Chart Enhancements

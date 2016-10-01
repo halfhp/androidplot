@@ -109,10 +109,11 @@ public class PanZoom implements View.OnTouchListener {
         if(mCalledBySelf) {
             mCalledBySelf = false;
         } else {
+            final RectRegion bounds = plot.getBounds();
             minXLimit = lowerBoundaryMode == BoundaryMode.FIXED ?
-                        lowerBoundary.floatValue() : plot.getCalculatedMinX().floatValue();
+                        lowerBoundary.floatValue() : bounds.getMinX().floatValue();
             maxXLimit = upperBoundaryMode == BoundaryMode.FIXED ?
-                        upperBoundary.floatValue() : plot.getCalculatedMaxX().floatValue();
+                        upperBoundary.floatValue() : bounds.getMaxX().floatValue();
             lastMinX = minXLimit;
             lastMaxX = maxXLimit;
         }
@@ -124,43 +125,24 @@ public class PanZoom implements View.OnTouchListener {
         if(mCalledBySelf) {
             mCalledBySelf = false;
         } else {
+            final RectRegion bounds = plot.getBounds();
             minYLimit = lowerBoundaryMode == BoundaryMode.FIXED ?
-                        lowerBoundary.floatValue() : plot.getCalculatedMinY().floatValue();
+                        lowerBoundary.floatValue() : bounds.getMinY().floatValue();
             maxYLimit = upperBoundaryMode == BoundaryMode.FIXED ?
-                        upperBoundary.floatValue() : plot.getCalculatedMaxY().floatValue();
+                        upperBoundary.floatValue() : bounds.getMaxY().floatValue();
             lastMinY = minYLimit;
             lastMaxY = maxYLimit;
         }
     }
 
     protected void setDomainBoundaries(final Number lowerBoundary,
-            final Number upperBoundary, final BoundaryMode mode) {
-        plot.setDomainBoundaries(lowerBoundary, upperBoundary, mode);
-        if(mCalledBySelf) {
-            mCalledBySelf = false;
-        } else {
-            minXLimit = mode == BoundaryMode.FIXED ?
-                        lowerBoundary.floatValue() : plot.getCalculatedMinX().floatValue();
-            maxXLimit = mode == BoundaryMode.FIXED ?
-                        upperBoundary.floatValue() : plot.getCalculatedMaxX().floatValue();
-            lastMinX = minXLimit;
-            lastMaxX = maxXLimit;
-        }
+final Number upperBoundary, final BoundaryMode mode) {
+        plot.setDomainBoundaries(lowerBoundary, mode, upperBoundary, mode);
     }
 
     protected synchronized void setRangeBoundaries(final Number lowerBoundary,
             final Number upperBoundary, final BoundaryMode mode) {
-        plot.setRangeBoundaries(lowerBoundary, upperBoundary, mode);
-        if(mCalledBySelf) {
-            mCalledBySelf = false;
-        } else {
-            minYLimit = mode == BoundaryMode.FIXED ?
-                        lowerBoundary.floatValue() : plot.getCalculatedMinY().floatValue();
-            maxYLimit = mode == BoundaryMode.FIXED ?
-                        upperBoundary.floatValue() : plot.getCalculatedMaxY().floatValue();
-            lastMinY = minYLimit;
-            lastMaxY = maxYLimit;
-        }
+        plot.setRangeBoundaries(lowerBoundary, mode, upperBoundary, mode);
     }
 
     @Override
@@ -231,7 +213,7 @@ public class PanZoom implements View.OnTouchListener {
 
     private float getMinXLimit() {
         if(minXLimit == Float.MAX_VALUE) {
-            minXLimit = plot.getCalculatedMinX().floatValue();
+            minXLimit = plot.getBounds().getMinX().floatValue();
             lastMinX = minXLimit;
         }
         return minXLimit;
@@ -239,7 +221,7 @@ public class PanZoom implements View.OnTouchListener {
 
     protected float getMaxXLimit() {
         if(maxXLimit == Float.MAX_VALUE) {
-            maxXLimit = plot.getCalculatedMaxX().floatValue();
+            maxXLimit = plot.getBounds().getMaxX().floatValue();
             lastMaxX = maxXLimit;
         }
         return maxXLimit;
@@ -247,7 +229,7 @@ public class PanZoom implements View.OnTouchListener {
 
     protected float getMinYLimit() {
         if(minYLimit == Float.MAX_VALUE) {
-            minYLimit = plot.getCalculatedMinY().floatValue();
+            minYLimit = plot.getBounds().getMinY().floatValue();
             lastMinY = minYLimit;
         }
         return minYLimit;
@@ -255,7 +237,7 @@ public class PanZoom implements View.OnTouchListener {
 
     protected float getMaxYLimit() {
         if(maxYLimit == Float.MAX_VALUE) {
-            maxYLimit = plot.getCalculatedMaxY().floatValue();
+            maxYLimit = plot.getBounds().getMaxY().floatValue();
             lastMaxY = maxYLimit;
         }
         return maxYLimit;
@@ -263,28 +245,28 @@ public class PanZoom implements View.OnTouchListener {
 
     protected float getLastMinX() {
         if(lastMinX == Float.MAX_VALUE) {
-            lastMinX = plot.getCalculatedMinX().floatValue();
+            lastMinX = plot.getBounds().getMinX().floatValue();
         }
         return lastMinX;
     }
 
     protected float getLastMaxX() {
         if(lastMaxX == Float.MAX_VALUE) {
-            lastMaxX = plot.getCalculatedMaxX().floatValue();
+            lastMaxX = plot.getBounds().getMaxX().floatValue();
         }
         return lastMaxX;
     }
 
     protected float getLastMinY() {
         if(lastMinY == Float.MAX_VALUE) {
-            lastMinY = plot.getCalculatedMinY().floatValue();
+            lastMinY = plot.getBounds().getMinY().floatValue();
         }
         return lastMinY;
     }
 
     private float getLastMaxY() {
         if(lastMaxY == Float.MAX_VALUE) {
-            lastMaxY = plot.getCalculatedMaxY().floatValue();
+            lastMaxY = plot.getBounds().getMaxY().floatValue();
         }
         return lastMaxY;
     }

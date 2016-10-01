@@ -18,7 +18,8 @@ package com.androidplot.xy;
 
 import android.content.Context;
 import android.graphics.Paint;
-import com.androidplot.util.Configurator;
+
+import com.halfhp.fig.*;
 
 /**
  * Base class of all XYRegionFormatters.
@@ -42,7 +43,7 @@ public class XYRegionFormatter {
     public XYRegionFormatter(Context ctx, int xmlCfgId) {
         // prevent configuration of classes derived from this one:
         if (getClass().equals(XYRegionFormatter.class)) {
-            Configurator.configure(ctx, this, xmlCfgId);
+            Fig.configure(ctx, this, xmlCfgId);
         }
     }
 

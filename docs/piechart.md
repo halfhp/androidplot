@@ -2,6 +2,8 @@
 Like all other primary chart and graph classes in Androidplot, PieChart is simply a composition
 of widgets along with convenience methods.  The real work is actually done by PieWidget.
 
+![image](images/screens/pie_horiz.png)
+
 # Basic Usage
 Pie charts are composed of one or more values called Segments which combines a vaue and a label:
 

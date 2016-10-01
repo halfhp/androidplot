@@ -20,10 +20,10 @@ import android.content.res.TypedArray;
 import android.graphics.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
-import com.androidplot.ui.SeriesAndFormatter;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.Formatter;
-import com.androidplot.util.Configurator;
+import com.halfhp.fig.*;
+
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -378,7 +378,7 @@ public class PlotTest {
         params.put("renderMode", param2);
         params.put("backgroundPaint.color", param3);
 
-        Configurator.configure(RuntimeEnvironment.application, plot, params);
+        Fig.configure(RuntimeEnvironment.application, plot, params);
 
         assertEquals(param1, plot.getTitle().getText());
         assertEquals(Plot.RenderMode.USE_BACKGROUND_THREAD, plot.getRenderMode());

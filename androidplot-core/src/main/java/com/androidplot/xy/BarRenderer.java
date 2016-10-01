@@ -28,26 +28,31 @@ import android.graphics.RectF;
 
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesAndFormatter;
-import com.androidplot.util.ValPixConverter;
 
 /**
  * Renders the points in an XYSeries as bars.
  */
 public class BarRenderer<FormatterType extends BarFormatter> extends GroupRenderer<FormatterType> {
 
-    private BarRenderStyle renderStyle = BarRenderStyle.OVERLAID;  // default Render Style
-	private BarWidthStyle widthStyle = BarWidthStyle.FIXED_WIDTH;  // default Width Style
+    private Style style = Style.OVERLAID;  // default Render Style
+	private BarWidthMode barWidthMode = BarWidthMode.FIXED_WIDTH;  // default Width Style
     private float barWidth = 5;
     private float barGap = 1;
     private Comparator<Bar> barComparator = new BarComparator();
 
-    public enum BarRenderStyle {
+	/**
+	 * How bars should be laid out when in a group of 2 or more series.
+	 */
+    public enum Style {
         OVERLAID,           // bars are overlaid in descending y-val order (largest val in back)
         STACKED,            // bars are drawn stacked vertically on top of each other
         SIDE_BY_SIDE        // bars are drawn horizontally next to each-other
     }
 
-    public enum BarWidthStyle {
+	/**
+	 * Mode with which to calculate the width of each bar.
+	 */
+	public enum BarWidthMode {
         FIXED_WIDTH,        // bar width is always barWidth
         VARIABLE_WIDTH      // bar width is calculated so that there is only barGap between each bar
     }
@@ -72,17 +77,25 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         this.barGap = barGap;
     }
 
-    public void setBarRenderStyle(BarRenderStyle renderStyle) {
-        this.renderStyle = renderStyle;
+    public void setStyle(Style renderStyle) {
+        this.style = renderStyle;
     }
+
+    public Style getStyle() {
+		return this.style;
+	}
     
-    public void setBarWidthStyle(BarWidthStyle widthStyle) {
-        this.widthStyle = widthStyle;
+    public void setBarWidthMode(BarWidthMode widthStyle) {
+        this.barWidthMode = widthStyle;
     }
+
+    public BarWidthMode getBarWidthMode() {
+		return this.barWidthMode;
+	}
     
-    public void setBarWidthStyle(BarWidthStyle style, float value) {
-    	setBarWidthStyle(style);
-        switch (style) {
+    public void setBarWidth(BarWidthMode mode, float value) {
+    	setBarWidthMode(mode);
+        switch (mode) {
         	case FIXED_WIDTH:
         		setBarWidth(value);
                 break;
@@ -103,7 +116,9 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
 
     @Override
     public void doDrawLegendIcon(Canvas canvas, RectF rect, BarFormatter formatter) {
-        canvas.drawRect(rect, formatter.getFillPaint());
+		if(formatter.hasFillPaint()) {
+			canvas.drawRect(rect, formatter.getFillPaint());
+		}
         canvas.drawRect(rect, formatter.getBorderPaint());
     }
 
@@ -183,7 +198,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
 			BarGroup barGroup = axisMap.get(key);
 
 			// Determine the exact left and right X for the Bar Group
-			switch (widthStyle) {
+			switch (barWidthMode) {
 			case FIXED_WIDTH:
     			// use intX and go halfwidth either side.
     			barGroup.leftX = barGroup.intX - (int) (barWidth / 2);
@@ -221,34 +236,33 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
     		 * Draw the bars within the barGroup area.
     		 */
             double rangeOrigin = getPlot().getRangeOrigin().doubleValue();
-            float basePositionY = (float) ValPixConverter.valToPix(rangeOrigin,
-                    getPlot().getCalculatedMinY().doubleValue(),
-                    getPlot().getCalculatedMaxY().doubleValue(),
-                    plotArea.height(), true) + plotArea.top;
+			float basePositionY = (float) getPlot().getBounds().yRegion
+					.transform(rangeOrigin, plotArea.top, plotArea.bottom, true);
 
-			switch (renderStyle) {
+			switch (style) {
 			case OVERLAID:
 				Collections.sort(barGroup.bars, barComparator);
 				for (Bar bar : barGroup.bars) {
 					BarFormatter formatter = bar.getFormatter();
-			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
+			        PointLabelFormatter plf = formatter.hasPointLabelFormatter()
+											  ? formatter.getPointLabelFormatter() : null;
 			        PointLabeler pointLabeler = null;
                 	if (formatter != null) {
                 		pointLabeler = formatter.getPointLabeler();
                 	}
 
                 	if (bar.yVal<rangeOrigin){ // falling bar
-                		if (bar.barGroup.width >= 2) {
+                		if (formatter.hasFillPaint() && bar.barGroup.width >= 2) {
                 			canvas.drawRect(bar.barGroup.leftX, basePositionY, bar.barGroup.rightX, bar.intY, formatter.getFillPaint());
                 		}
                 		canvas.drawRect(bar.barGroup.leftX, basePositionY, bar.barGroup.rightX, bar.intY, formatter.getBorderPaint());
                 	} else { // rising bar
-                		if (bar.barGroup.width >= 2) {
+                		if (formatter.hasFillPaint() && bar.barGroup.width >= 2) {
                 			canvas.drawRect(bar.barGroup.leftX, bar.intY, bar.barGroup.rightX, basePositionY, formatter.getFillPaint());
                 		}
                 		canvas.drawRect(bar.barGroup.leftX, bar.intY, bar.barGroup.rightX, basePositionY, formatter.getBorderPaint());
                 	}
-	        		if(plf != null && pointLabeler != null) {
+	        		if(plf != null && plf.hasTextPaint() && pointLabeler != null) {
 	                    canvas.drawText(pointLabeler.getLabel(bar.series, bar.seriesIndex), bar.intX + plf.hOffset, bar.intY + plf.vOffset, plf.getTextPaint());
 	                }
 	        	}
@@ -259,24 +273,25 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
 				Collections.sort(barGroup.bars, barComparator);
 				for (Bar bar : barGroup.bars) {
 					BarFormatter formatter = bar.getFormatter();
-			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
+			        PointLabelFormatter plf = formatter.hasPointLabelFormatter()
+											  ? formatter.getPointLabelFormatter() : null;
 			        PointLabeler pointLabeler = null;
                 	if (formatter != null) {
                 		pointLabeler = formatter.getPointLabeler();
                 	}
 
                 	if (bar.yVal<rangeOrigin){ // falling value
-                		if (bar.barGroup.width >= 2) {
+                		if (formatter.hasFillPaint() && bar.barGroup.width >= 2) {
                 			canvas.drawRect(leftX, basePositionY, leftX + width, bar.intY, formatter.getFillPaint());
                 		}
                 		canvas.drawRect(leftX, basePositionY, leftX + width, bar.intY, formatter.getBorderPaint());
                 	} else { // rising bar
-                		if (bar.barGroup.width >= 2) {
+                		if (formatter.hasFillPaint() && bar.barGroup.width >= 2) {
                 			canvas.drawRect(leftX, bar.intY, leftX + width, basePositionY, formatter.getFillPaint());
                 		}
                 		canvas.drawRect(leftX, bar.intY, leftX + width, basePositionY, formatter.getBorderPaint());
                 	}
-	        		if(plf != null && pointLabeler != null) {
+	        		if(plf != null && plf.hasTextPaint() && pointLabeler != null) {
 	                    canvas.drawText(pointLabeler.getLabel(bar.series, bar.seriesIndex), leftX + width/2 + plf.hOffset, bar.intY + plf.vOffset, plf.getTextPaint());
 	                }
 	        		leftX = leftX + width;
@@ -287,19 +302,20 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
 				Collections.sort(barGroup.bars, barComparator);
 				for (Bar b : barGroup.bars) {
 					BarFormatter formatter = b.getFormatter();
-			        PointLabelFormatter plf = formatter.getPointLabelFormatter();
+			        PointLabelFormatter plf = formatter.hasPointLabelFormatter()
+											  ? formatter.getPointLabelFormatter() : null;
 			        PointLabeler pointLabeler = null;
                 	if (formatter != null) {
                 		pointLabeler = formatter.getPointLabeler();
                 	}
 	        		int height = (int) b.barGroup.plotArea.bottom - b.intY;
 	        		int top = bottom - height;
-	    			if (b.barGroup.width >= 2) {
+	    			if (formatter.hasFillPaint() && b.barGroup.width >= 2) {
 	        			canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, formatter.getFillPaint());
 	        		}
 
 	        		canvas.drawRect(b.barGroup.leftX, top, b.barGroup.rightX, bottom, formatter.getBorderPaint());
-	        		if(plf != null && pointLabeler != null) {
+	        		if(plf != null && plf.hasTextPaint() && pointLabeler != null) {
 	                    //canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, b.intY + plf.vOffset, plf.getTextPaint());
                         // b.intY should be replaced by top as Text label should be drawn on top of each bar
                         canvas.drawText(pointLabeler.getLabel(b.series, b.seriesIndex), b.intX + plf.hOffset, top + plf.vOffset, plf.getTextPaint());
@@ -319,7 +335,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
 		public final int seriesIndex;
 		public final double yVal, xVal;
 		public final int intX, intY;
-		public final float pixX, pixY;
+		public final double pixX, pixY;
 		protected BarGroup barGroup;
     	
     	public Bar(XYSeries series, FormatterType formatter, int seriesIndex, RectF plotArea) {
@@ -328,15 +344,15 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
 			this.seriesIndex = seriesIndex;
 			
 			this.xVal = series.getX(seriesIndex).doubleValue();
-			this.pixX = (float) ValPixConverter.valToPix(xVal, getPlot().getCalculatedMinX().doubleValue(),
-					getPlot().getCalculatedMaxX().doubleValue(), plotArea.width(), false) + (plotArea.left);
-			this.intX = (int) pixX;
+			this.pixX = getPlot().getBounds().getxRegion()
+					.transform(xVal, plotArea.left, plotArea.right, false);
+			this.intX = (int) Math.round(pixX);
 			
 			if (series.getY(seriesIndex) != null) {
 				this.yVal = series.getY(seriesIndex).doubleValue();
-				this.pixY = (float) ValPixConverter.valToPix(yVal, getPlot().getCalculatedMinY().doubleValue(),
-						getPlot().getCalculatedMaxY().doubleValue(), plotArea.height(), true) + plotArea.top;
-				this.intY = (int) pixY;
+				this.pixY = getPlot().getBounds().yRegion
+						.transform(yVal, plotArea.top, plotArea.bottom, true);
+				this.intY = (int) Math.round(pixY);
 			} else {
 				this.yVal = 0;
 				this.pixY = plotArea.bottom;
@@ -375,7 +391,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
 
         @Override
         public int compare(Bar bar1, Bar bar2) {
-			switch (renderStyle) {
+			switch (style) {
 			case OVERLAID:
 				return Integer.valueOf(bar1.intY).compareTo(bar2.intY);
 			case SIDE_BY_SIDE:

@@ -12,13 +12,14 @@ up and running with a basic xy plot.  Plot Composition explains the common anato
 in the Androidplot library and lays the foundation for future topics.  The tutorials discuss 
 specific plot types explaining styling and other advanced topics.
 
-* :star: [Quickstart](quickstart.md)
-* :movie_camera: [Quickstart (YouTube Video)](https://www.youtube.com/watch?v=wEFkzQY_wWI)
+* [Quickstart](quickstart.md) :star:
+* [Quickstart (YouTube Video)](https://www.youtube.com/watch?v=wEFkzQY_wWI) :movie_camera:
 * [Plot Composition](plot_composition.md)
 * [XY Plots](xyplot.md)
 * [Bar Charts](barchart.md)
 * [Candlestick Charts](candlestick.md)
 * [Pie Charts](piechart.md)
+* [Bubble Charts](bubblechart.md)
 * [Dynamic Plots](dynamicdata.md)
 
 # Examples
@@ -35,11 +36,15 @@ Source code examples of the various plot types.
 * [An ECG Example](../demoapp/src/main/java/com/androidplot/demos/ECGExample.java)
 * [f(x) Plot](../demoapp/src/main/java/com/androidplot/demos/FXPlotExampleActivity.java)
 
+# Javadoc
+The latest Javadocs are [available here](https://circleci.com/api/v1/project/halfhp/androidplot/latest/artifacts/0/$CIRCLE_ARTIFACTS/javadoc/index.html).
+
+# Release Notes
+Full release notes are [available here](release_notes.md)
+
 # Old Versions
 Documentation for Androidplot 0.9.8 and earlier [can be found here](http://androidplot.com/docs/).
 
-# Misc
-* [Release Notes](release_notes.md)
-
+# Contributing
 _If you see something that isn't right or want to contribute, please [make a pull-request](https://help.github.com/articles/creating-a-pull-request/) - these docs 
 live the main repo in the top-level `/docs` directory._

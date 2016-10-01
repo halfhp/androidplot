@@ -164,5 +164,14 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(MainActivity.this, FXPlotExampleActivity.class));
             }
         });
+
+        // bubble chart
+        Button bubbleChartButton = (Button) findViewById(R.id.bubbleChartExample);
+        bubbleChartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, BubbleChartActivity.class));
+            }
+        });
     }
 }

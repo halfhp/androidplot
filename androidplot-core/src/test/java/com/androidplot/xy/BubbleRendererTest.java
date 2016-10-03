@@ -27,6 +27,9 @@ import org.mockito.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Tests {@link BubbleRenderer} and some of {@link BubbleFormatter}.
+ */
 public class BubbleRendererTest extends AndroidplotTest {
 
     XYPlot xyPlot;
@@ -57,18 +60,5 @@ public class BubbleRendererTest extends AndroidplotTest {
         xyPlot.addSeries(bs, formatter);
 
         renderer.onRender(canvas, plotArea, bs, formatter, renderStack);
-
-//        CandlestickFormatter formatter = spy(new CandlestickFormatter());
-//        CandlestickRenderer renderer = spy((CandlestickRenderer) formatter.getRendererInstance(xyPlot));
-//        doReturn(renderer.getClass()).when(formatter).getRendererClass();
-//        doReturn(renderer).when(formatter).getRendererInstance(any(XYPlot.class));
-//
-//        XYSeries openVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "open", 1, 2, 3, 4);
-//        XYSeries closeVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "open", 1, 2, 3, 4);
-//        XYSeries highVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "open", 1, 2, 3, 4);
-//        XYSeries lowVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "open", 1, 2, 3, 4);
-//        CandlestickMaker.make(xyPlot, formatter, openVals, closeVals, highVals, lowVals);
-//
-//        renderer.onRender(canvas, plotArea, openVals, formatter, renderStack);
     }
 }

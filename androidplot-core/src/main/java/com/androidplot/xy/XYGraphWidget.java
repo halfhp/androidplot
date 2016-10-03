@@ -512,29 +512,31 @@ public class XYGraphWidget extends Widget {
         }
 
 
-        double domainOrigin;
-        if (plot.getDomainOrigin() != null) {
-            domainOrigin = plot.getBounds().getxRegion().transform(
+        Number domainOrigin = plot.getDomainOrigin();
+        double domainOriginPix;
+        if (domainOrigin != null) {
+            domainOriginPix = plot.getBounds().getxRegion().transform(
                     plot.getDomainOrigin().doubleValue(), gridRect.left, gridRect.right, false);
         } else {
             // if no domain origin is set, use the leftmost value visible on the grid:
-            domainOrigin = gridRect.left;
+            domainOriginPix = gridRect.left;
+            domainOrigin=plot.getBounds().getMinX();
         }
 
         Step domainStep = XYStepCalculator.getStep(plot, Axis.DOMAIN, gridRect);
 
         // draw domain origin:
-        if (domainOrigin >= gridRect.left
-                && domainOrigin <= gridRect.right) {
-            drawDomainLine(canvas, (float) domainOrigin, plot.getDomainOrigin()
-                    .doubleValue(), domainOriginLinePaint, true);
+        if (domainOriginPix >= gridRect.left
+                && domainOriginPix <= gridRect.right) {
+            drawDomainLine(canvas, (float) domainOriginPix,
+                    domainOrigin, domainOriginLinePaint, true);
         }
 
         // draw lines LEFT of origin:
-        double xPix = domainOrigin - domainStep.getStepPix();
-        for (int i = ONE; xPix >= gridRect.left - FUDGE; xPix = domainOrigin
+        double xPix = domainOriginPix - domainStep.getStepPix();
+        for (int i = ONE; xPix >= gridRect.left - FUDGE; xPix = domainOriginPix
                 - (i * domainStep.getStepPix())) {
-            double xVal = plot.getDomainOrigin().doubleValue() - i
+            double xVal = domainOrigin.doubleValue() - i
                     * domainStep.getStepVal();
 
             if (xPix <= gridRect.right) {
@@ -546,10 +548,10 @@ public class XYGraphWidget extends Widget {
         }
 
         // draw lines RIGHT of origin:
-        xPix = domainOrigin + domainStep.getStepPix();
-        for (int i = ONE; xPix <= gridRect.right + FUDGE; xPix = domainOrigin
+        xPix = domainOriginPix + domainStep.getStepPix();
+        for (int i = ONE; xPix <= gridRect.right + FUDGE; xPix = domainOriginPix
                 + (i * domainStep.getStepPix())) {
-            double xVal = plot.getDomainOrigin().doubleValue() + i
+            double xVal = domainOrigin.doubleValue() + i
                     * domainStep.getStepVal();
 
             if (xPix >= gridRect.left) {
@@ -560,29 +562,31 @@ public class XYGraphWidget extends Widget {
             i++;
         }
 
-        double rangeOrigin;
-        if (plot.getRangeOrigin() != null) {
-            rangeOrigin = plot.getBounds().getyRegion().transform(
-                    plot.getRangeOrigin().doubleValue(), gridRect.top, gridRect.bottom, true);
+        Number rangeOrigin = plot.getRangeOrigin();
+        double rangeOriginPix;
+        if (rangeOrigin != null) {
+            rangeOriginPix = plot.getBounds().getyRegion().transform(
+                    rangeOrigin.doubleValue(), gridRect.top, gridRect.bottom, true);
         } else {
             // if no range origin is set, use the bottom-most value visible on the grid:
-            rangeOrigin = gridRect.bottom;
+            rangeOriginPix = gridRect.bottom;
+            rangeOrigin = plot.getBounds().getMinY();
         }
 
         Step rangeStep = XYStepCalculator.getStep(plot, Axis.RANGE, gridRect);
 
         // draw range origin:
-        if (rangeOrigin >= gridRect.top && rangeOrigin <= gridRect.bottom) {
-            drawRangeLine(canvas, (float) rangeOrigin, plot.getRangeOrigin()
-                    .doubleValue(), rangeOriginLinePaint, true);
+        if (rangeOriginPix >= gridRect.top && rangeOriginPix <= gridRect.bottom) {
+            drawRangeLine(canvas, (float) rangeOriginPix,
+                    rangeOrigin, rangeOriginLinePaint, true);
         }
 
         final double rangeStepPix = rangeStep.getStepPix();
 
         // draw lines ABOVE origin:
-        double yPix = rangeOrigin - rangeStep.getStepPix();
-        for (int i = ONE; yPix >= gridRect.top - FUDGE; yPix = rangeOrigin - (i * rangeStepPix)) {
-            double yVal = plot.getRangeOrigin().doubleValue() + i
+        double yPix = rangeOriginPix - rangeStep.getStepPix();
+        for (int i = ONE; yPix >= gridRect.top - FUDGE; yPix = rangeOriginPix - (i * rangeStepPix)) {
+            double yVal = rangeOrigin.doubleValue() + i
                     * rangeStep.getStepVal();
 
             if (yPix <= gridRect.bottom) {
@@ -594,9 +598,9 @@ public class XYGraphWidget extends Widget {
         }
 
         // draw lines BENEATH origin:
-        yPix = rangeOrigin + rangeStep.getStepPix();
-        for (int i = ONE; yPix <= gridRect.bottom + FUDGE; yPix = rangeOrigin + (i * rangeStepPix)) {
-            double yVal = plot.getRangeOrigin().doubleValue() - i
+        yPix = rangeOriginPix + rangeStep.getStepPix();
+        for (int i = ONE; yPix <= gridRect.bottom + FUDGE; yPix = rangeOriginPix + (i * rangeStepPix)) {
+            double yVal = rangeOrigin.doubleValue() - i
                     * rangeStep.getStepVal();
             if (yPix >= gridRect.top) {
                 final boolean isRangeTick = i% getLinesPerRangeLabel() == ZERO;

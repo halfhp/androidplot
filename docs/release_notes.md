@@ -1,3 +1,8 @@
+# 1.2.3
+
+* Added leakcanary
+* More unit test coverage
+
 # 1.2.2
 
 * BarRenderer / BarFormatter cleanup

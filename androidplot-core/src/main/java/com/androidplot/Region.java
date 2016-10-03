@@ -17,8 +17,6 @@
 
 package com.androidplot;
 
-import android.graphics.*;
-
 /**
  * A one dimensional region represented by a starting and ending value.
  */
@@ -125,6 +123,8 @@ public class Region {
      * Compares the input bounds min/max against this instance's current min/max.
      * If the input.min is less than this.min then this.min will be set to input.min.
      * If the input.max is greater than this.max then this.max will be set to input.max
+     *
+     * The result of a union will always be an equal or larger size region.
      * @param input
      */
     public void union(Region input) {
@@ -135,6 +135,20 @@ public class Region {
         if(getMax() == null || input.max != null && input.max.doubleValue() >
                 getMax().doubleValue()) {
             setMax(input.max);
+        }
+    }
+
+    /**
+     * The result of an intersect will always be an equal or smaller size region.
+     * @param input
+     */
+    public void intersect(Region input) {
+        if(getMin().doubleValue() < input.getMin().doubleValue()) {
+            setMin(input.getMin());
+        }
+
+        if(getMax().doubleValue() > input.getMax().doubleValue()) {
+            setMax(input.getMax());
         }
     }
 

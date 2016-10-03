@@ -78,22 +78,6 @@ public class RectRegion {
         this(minX, maxX, minY, maxY, null);
     }
 
-    public boolean containsPoint(PointF point) {
-        throw new UnsupportedOperationException("Not yet implemented.");
-    }
-
-    public boolean containsValue(Number x, Number y) {
-        throw new UnsupportedOperationException("Not yet implemented.");
-    }
-
-    public boolean containsDomainValue(Number value) {
-        return xRegion.contains(value);
-    }
-
-    public boolean containsRangeValue(Number value) {
-        return yRegion.contains(value);
-    }
-
     public XYCoords transform(Number x, Number y, RectRegion region2, boolean flipX, boolean flipY) {
         Number xx = xRegion.transform(x.doubleValue(), region2.xRegion, flipX);
         Number yy = yRegion.transform(y.doubleValue(), region2.yRegion, flipY);
@@ -161,6 +145,8 @@ public class RectRegion {
      * Compares the input bounds xy min/max vals against this instance's current xy min/max vals.
      * If the input.min is less than this.min then this.min will be set to input.min.
      * If the input.max is greater than this.max then this.max will be set to input.max
+     *
+     * The result will always have equal or greater area than the inputs.
      * @param input
      */
     public void union(RectRegion input) {
@@ -192,41 +178,19 @@ public class RectRegion {
                 getMaxX().floatValue(), getMaxY().floatValue());
     }
 
-//    public RectF getRectF(RectF plotRect, Number visMinX, Number visMaxX, Number visMinY,
-//            Number visMaxY) {
-//        PointF topLeftPoint = transform(new XYCoords(
-//                xRegion.getMin().doubleValue() != Double.NEGATIVE_INFINITY
-//                ? xRegion.getMin() : visMinX,
-//                yRegion.getMax().doubleValue() != Double.POSITIVE_INFINITY
-//                ? yRegion.getMax() : visMaxY), plotRect, false, true);
-//
-//        PointF bottomRightPoint = transform(new XYCoords(
-//                xRegion.getMin().doubleValue() != Double.NEGATIVE_INFINITY
-//                ? xRegion.getMin() : visMaxX,
-//                yRegion.getMax().doubleValue() != Double.POSITIVE_INFINITY
-//                ? yRegion.getMax() : visMinY), plotRect, false, true);
-//        return new RectF(
-//                topLeftPoint.x,
-//                topLeftPoint.y,
-//                bottomRightPoint.x,
-//                bottomRightPoint.y);
-//    }
-
-    public void clip(RectRegion clippingBounds) {
-        if(getMinX().doubleValue() < clippingBounds.getMinX().doubleValue()) {
-            setMinX(clippingBounds.getMinX());
-        }
-
-        if(getMinY().doubleValue() < clippingBounds.getMinY().doubleValue()) {
-            setMinY(clippingBounds.getMinY());
-        }
-
-        if(getMaxX().doubleValue() > clippingBounds.getMaxX().doubleValue()) {
-            setMaxX(clippingBounds.getMaxX());
-        }
-
-        if(getMaxY().doubleValue() > clippingBounds.getMaxY().doubleValue()) {
-            setMaxY(clippingBounds.getMaxY());
+    /**
+     * The result of an intersect is always a RectRegion with an equal or smaller area.
+     * @param clippingBounds
+     */
+    public void intersect(RectRegion clippingBounds) {
+        if(intersects(clippingBounds)) {
+            xRegion.intersect(clippingBounds.xRegion);
+            yRegion.intersect(clippingBounds.yRegion);
+        } else {
+            setMinY(null);
+            setMaxY(null);
+            setMinX(null);
+            setMaxX(null);
         }
     }
 

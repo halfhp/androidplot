@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class PanZoom implements View.OnTouchListener {
 
-    private static final float MIN_DIST_2_FING = 5f;
+    protected static final float MIN_DIST_2_FING = 5f;
 
     private XYPlot plot;
     private Pan pan;
@@ -187,7 +187,7 @@ final Number upperBoundary, final BoundaryMode mode) {
      * @param evt
      * @return
      */
-    private RectF getDistance(final MotionEvent evt) {
+    protected RectF getDistance(final MotionEvent evt) {
         float left;
         float right;
         float top;

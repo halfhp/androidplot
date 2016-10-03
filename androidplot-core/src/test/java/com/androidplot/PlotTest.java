@@ -18,16 +18,14 @@ package com.androidplot;
 
 import android.content.res.TypedArray;
 import android.graphics.*;
+
 import com.androidplot.exception.PlotRenderException;
+import com.androidplot.test.*;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.Formatter;
 import com.halfhp.fig.*;
-
-import org.junit.After;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,9 +34,11 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-@RunWith(RobolectricTestRunner.class)
-public class PlotTest {
+public class PlotTest extends AndroidplotTest {
 
     static class MockPlotListener implements PlotListener {
 
@@ -128,7 +128,6 @@ public class PlotTest {
         }
     }
 
-    //@MockClass(realClass = Plot.class)
     public static class MockPlot extends Plot<MockSeries, Formatter, SeriesRenderer> {
         public MockPlot(String title) {
             super(RuntimeEnvironment.application, title);
@@ -143,27 +142,15 @@ public class PlotTest {
         protected void processAttrs(TypedArray attrs) {
 
         }
-
-        /*@Override
-        protected SeriesRenderer doGetRendererInstance(Class clazz) {
-            if(clazz == MockRenderer1.class) {
-                return new MockRenderer1(this);
-            } else if(clazz == MockRenderer2.class) {
-                return new MockRenderer2(this);
-            } else {
-                return null;
-            }
-        }*/
     }
 
-    /*@Before
-    public void setUp() throws Exception {
-        Mockit.setUpMocks(MockPaint.class,MockContext.class);
-    }*/
+    @Test
+    public void testInit() throws Exception {
+        Plot plot = mock(Plot.class);
+        plot.init(RuntimeEnvironment.application, null, 0);
 
-    @After
-    public void tearDown() throws Exception {
-
+        verify(plot, times(1)).onPreInit();
+        verify(plot, times(1)).onAfterConfig();
     }
 
     @Test

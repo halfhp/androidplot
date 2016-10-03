@@ -254,7 +254,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     public Plot(Context context, String title, RenderMode mode) {
         super(context);
         this.renderMode = mode;
-        init(null, null, 0);
+        init(context, null, 0);
         getTitle().setText(title);
     }
 
@@ -337,9 +337,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         // nothing to do by default
     }
 
-
-    private void init(Context context, AttributeSet attrs, int defStyle) {
-        PixelUtils.init(getContext());
+    protected final void init(Context context, AttributeSet attrs, int defStyle) {
+        PixelUtils.init(context);
         layoutManager = new LayoutManager();
         title = new TextLabelWidget(layoutManager, new Size(25,
                 SizeMode.ABSOLUTE, 100,

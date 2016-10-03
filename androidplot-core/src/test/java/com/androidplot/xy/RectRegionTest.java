@@ -120,4 +120,79 @@ public class RectRegionTest extends AndroidplotTest{
         assertTrue(r2.intersects(r3));
         assertTrue(r3.intersects(r2));
     }
+
+    @Test
+    public void testClip_sameDimensions() throws Exception {
+        RectRegion r1 = new RectRegion(0, 10, 0, 10);
+        RectRegion r2 = new RectRegion(0, 10, 0, 10);
+
+        r1.intersect(r2);
+        assertEquals(0, r1.getMinX());
+        assertEquals(10, r1.getMaxX());
+        assertEquals(0, r1.getMinY());
+        assertEquals(10, r1.getMaxY());
+    }
+
+    @Test
+    public void testClip_intersectingDimensions() throws Exception {
+        RectRegion r1 = new RectRegion(0, 10, 0, 10);
+        RectRegion r2 = new RectRegion(5, 15, 5, 15);
+
+        r1.intersect(r2);
+        assertEquals(5, r1.getMinX());
+        assertEquals(10, r1.getMaxX());
+        assertEquals(5, r1.getMinY());
+        assertEquals(10, r1.getMaxY());
+
+        r1 = new RectRegion(0, 10, 0, 10);
+        r2 = new RectRegion(-5, 5, -5, 5);
+        r1.intersect(r2);
+
+        assertEquals(0, r1.getMinX());
+        assertEquals(5, r1.getMaxX());
+        assertEquals(0, r1.getMinY());
+        assertEquals(5, r1.getMaxY());
+    }
+
+    @Test
+    public void testClip_nonIntersectingDimensions() throws Exception {
+        RectRegion r1 = new RectRegion(0, 10, 0, 10);
+        RectRegion r2 = new RectRegion(100, 200, 100, 200);
+        r1.intersect(r2);
+
+        assertEquals(null, r1.getMinX());
+        assertEquals(null, r1.getMaxX());
+        assertEquals(null, r1.getMinY());
+        assertEquals(null, r1.getMaxY());
+
+        r1 = new RectRegion(0, 10, 0, 10);
+        r2 = new RectRegion(-200, -100, -200, -100);
+        r1.intersect(r2);
+
+        assertEquals(null, r1.getMinX());
+        assertEquals(null, r1.getMaxX());
+        assertEquals(null, r1.getMinY());
+        assertEquals(null, r1.getMaxY());
+    }
+
+    @Test
+    public void testUnion() throws Exception {
+        RectRegion r1 = new RectRegion(0, 10, 0, 10);
+        RectRegion r2 = new RectRegion(100, 200, 100, 200);
+
+        r1.union(r2);
+
+        assertEquals(0, r1.getMinX());
+        assertEquals(200, r1.getMaxX());
+        assertEquals(0, r1.getMinY());
+        assertEquals(200, r1.getMaxY());
+
+        r1 = new RectRegion(0, 10, 0, 10);
+        r2.union(r1);
+
+        assertEquals(0, r2.getMinX());
+        assertEquals(200, r2.getMaxX());
+        assertEquals(0, r2.getMinY());
+        assertEquals(200, r2.getMaxY());
+    }
 }

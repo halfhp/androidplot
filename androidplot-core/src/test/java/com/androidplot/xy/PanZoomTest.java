@@ -43,9 +43,12 @@ public class PanZoomTest extends AndroidplotTest {
     @Mock
     SeriesRegistry seriesRegistry;
 
+    RectRegion bounds = new RectRegion(0, 100, 0, 100);
+
     @Before
     public void setUp() throws Exception {
         when(xyPlot.getSeriesRegistry()).thenReturn(seriesRegistry);
+        when(xyPlot.getBounds()).thenReturn(bounds);
     }
 
     @After
@@ -87,6 +90,35 @@ public class PanZoomTest extends AndroidplotTest {
 
         verify(panZoom, times(1)).pan(moveEvent);
         verify(panZoom, times(0)).zoom(moveEvent);
+    }
+
+    @Test
+    public void testOnTouch_twoFingersZoom() throws Exception {
+        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE));
+
+        View.OnTouchListener listener = mock(View.OnTouchListener.class);
+        panZoom.setDelegate(listener);
+
+        MotionEvent moveEvent = mock(MotionEvent.class);
+
+        doNothing().when(panZoom).calculatePan(
+                any(PointF.class), any(PointF.class), anyBoolean());
+
+        when(moveEvent.getAction())
+                .thenReturn(MotionEvent.ACTION_DOWN)
+                .thenReturn(MotionEvent.ACTION_POINTER_DOWN)
+                .thenReturn(MotionEvent.ACTION_MOVE);
+
+        final float pinchDistance = PanZoom.MIN_DIST_2_FING + 1;
+
+        doReturn(new RectF(0, 0, pinchDistance, pinchDistance))
+                .when(panZoom).getDistance(any(MotionEvent.class));
+
+        panZoom.onTouch(xyPlot, moveEvent); // ACTION_DOWN
+        panZoom.onTouch(xyPlot, moveEvent); // ACTION_POINTER_DOWN
+        panZoom.onTouch(xyPlot, moveEvent); // ACTION_MOVE
+
+        verify(panZoom, times(1)).zoom(moveEvent);
     }
 
 }

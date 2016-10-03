@@ -29,6 +29,9 @@ import com.androidplot.util.*;
 public class BubbleFormatter extends XYSeriesFormatter<XYRegionFormatter> {
 
     private static final float DEFAULT_STROKE_PIX = 1;
+    private static final int DEFAULT_STROKE_COLOR = Color.BLACK;
+    private static final int DEFAULT_FILL_COLOR = Color.YELLOW;
+
 
     private Paint strokePaint;
     private Paint fillPaint;
@@ -38,9 +41,11 @@ public class BubbleFormatter extends XYSeriesFormatter<XYRegionFormatter> {
         strokePaint.setAntiAlias(true);
         strokePaint.setStrokeWidth(PixelUtils.dpToPix(DEFAULT_STROKE_PIX));
         strokePaint.setStyle(Paint.Style.STROKE);
+        strokePaint.setColor(DEFAULT_STROKE_COLOR);
 
         fillPaint = new Paint();
         fillPaint.setAntiAlias(true);
+        fillPaint.setColor(DEFAULT_FILL_COLOR);
 
         // default point labeler should draw z for bubbles:
         setPointLabeler(new PointLabeler<BubbleSeries>() {
@@ -51,7 +56,10 @@ public class BubbleFormatter extends XYSeriesFormatter<XYRegionFormatter> {
         });
     }
 
+    public BubbleFormatter() {}
+
     public BubbleFormatter(Context context, int xmlCfgId) {
+        this();
         configure(context, xmlCfgId);
     }
 

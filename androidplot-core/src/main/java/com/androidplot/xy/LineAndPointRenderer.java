@@ -221,15 +221,17 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
             XYRegionFormatter regionFormatter = formatter.getRegionFormatter(thisRegion);
             RectRegion thisRegionTransformed = bounds
                     .transform(thisRegion, plotRegion, false, true);
-            thisRegionTransformed.clip(plotRegion);
-            RectF thisRegionRectF = thisRegionTransformed.asRectF();
-            if (thisRegionRectF != null) {
-                try {
-                    canvas.save(Canvas.ALL_SAVE_FLAG);
-                    canvas.clipPath(path);
-                    canvas.drawRect(thisRegionRectF, regionFormatter.getPaint());
-                } finally {
-                    canvas.restore();
+            thisRegionTransformed.intersect(plotRegion);
+            if(thisRegion.isFullyDefined()) {
+                RectF thisRegionRectF = thisRegionTransformed.asRectF();
+                if (thisRegionRectF != null) {
+                    try {
+                        canvas.save(Canvas.ALL_SAVE_FLAG);
+                        canvas.clipPath(path);
+                        canvas.drawRect(thisRegionRectF, regionFormatter.getPaint());
+                    } finally {
+                        canvas.restore();
+                    }
                 }
             }
         }

@@ -23,6 +23,8 @@ import com.androidplot.Plot;
 import com.androidplot.util.Redrawer;
 import com.androidplot.xy.*;
 
+import java.lang.ref.*;
+
 /**
  * An example of a real-time plot displaying an asynchronously updated model of ECG data.  There are three
  * key items to pay attention to here:
@@ -36,8 +38,7 @@ import com.androidplot.xy.*;
  * 3 - The plot is set to render using a background thread via config attr in  R.layout.ecg_example.xml.
  * This ensures that the rest of the app will remain responsive during rendering.
  */
-public class ECGExample extends Activity
-{
+public class ECGExample extends Activity {
     private XYPlot plot;
 
     /**
@@ -54,13 +55,7 @@ public class ECGExample extends Activity
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.plot);
 
-        ECGModel ecgSeries = new ECGModel(2000, 200, new ECGModel.Listener() {
-            @Override
-            public void onUpdate(int latestIndex) {
-                ((AdvancedLineAndPointRenderer) plot.
-                        getRenderer(AdvancedLineAndPointRenderer.class)).setLatestIndex(latestIndex);
-            }
-        });
+        ECGModel ecgSeries = new ECGModel(2000, 200);
 
         // add a new series' to the xyplot:
         plot.addSeries(ecgSeries, new MyFadeFormatter(2000));
@@ -71,7 +66,7 @@ public class ECGExample extends Activity
         plot.setLinesPerRangeLabel(3);
 
         // start generating ecg data in the background:
-        ecgSeries.start();
+        ecgSeries.start(new WeakReference<>(plot.getRenderer(AdvancedLineAndPointRenderer.class)));
 
         // set a redraw rate of 30hz and start immediately:
         redrawer = new Redrawer(plot, 30, true);
@@ -121,25 +116,14 @@ public class ECGExample extends Activity
         private boolean keepRunning;
         private int latestIndex;
 
-        private Listener listener;
-
-        interface Listener {
-
-            /**
-             * Invoked whenever a new sample is added to the model
-             * @param latestIndex The new sample's index.
-             */
-            void onUpdate(int latestIndex);
-        }
+        private WeakReference<AdvancedLineAndPointRenderer> rendererRef;
 
         /**
          *
          * @param size Sample size contained within this model
          * @param updateFreqHz Frequency at which new samples are added to the model
-         * @param listener Listener to be notified whenever a new sample is "read".
          */
-        public ECGModel(int size, int updateFreqHz, Listener listener) {
-            this.listener = listener;
+        public ECGModel(int size, int updateFreqHz) {
             data = new Number[size];
             for(int i = 0; i < data.length; i++) {
                 data[i] = 0;
@@ -175,8 +159,12 @@ public class ECGExample extends Activity
                                 data[latestIndex +1] = null;
                             }
 
-                            ECGModel.this.listener.onUpdate(latestIndex);
-                            Thread.sleep(delayMs);
+                            if(rendererRef.get() != null) {
+                                rendererRef.get().setLatestIndex(latestIndex);
+                                Thread.sleep(delayMs);
+                            } else {
+                                keepRunning = false;
+                            }
                             latestIndex++;
                         }
                     } catch (InterruptedException e) {
@@ -186,7 +174,8 @@ public class ECGExample extends Activity
             });
         }
 
-        public void start() {
+        public void start(final WeakReference<AdvancedLineAndPointRenderer> rendererRef) {
+            this.rendererRef = rendererRef;
             keepRunning = true;
             thread.start();
         }

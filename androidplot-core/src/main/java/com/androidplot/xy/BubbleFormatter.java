@@ -74,7 +74,7 @@ public class BubbleFormatter extends XYSeriesFormatter<XYRegionFormatter> {
     }
 
     @Override
-    public SeriesRenderer getRendererInstance(XYPlot plot) {
+    public BubbleRenderer doGetRendererInstance(XYPlot plot) {
         return new BubbleRenderer(plot);
     }
 

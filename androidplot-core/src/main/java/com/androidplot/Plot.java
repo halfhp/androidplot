@@ -571,9 +571,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     public synchronized boolean addSeries(SeriesType series, FormatterType formatter) {
         Class rendererClass = formatter.getRendererClass();
 
-        if(getSeries(series, rendererClass) != null) {
-            return false;
-        }
+//        if(getSeries(series, rendererClass) != null) {
+//            return false;
+//        }
 
         // initialize the Renderer if necessary:
         if(!getRenderers().containsKey(rendererClass)) {

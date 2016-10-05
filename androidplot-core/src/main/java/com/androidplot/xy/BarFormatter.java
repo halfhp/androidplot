@@ -69,7 +69,7 @@ public class BarFormatter extends LineAndPointFormatter {
     }
 
     @Override
-    public SeriesRenderer getRendererInstance(XYPlot plot) {
+    public SeriesRenderer doGetRendererInstance(XYPlot plot) {
         return new BarRenderer(plot);
     }
 }

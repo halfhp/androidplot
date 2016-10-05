@@ -149,6 +149,18 @@ public class XYLegendWidget extends Widget {
         finishDrawingCell(canvas, cellRect, iconRect, seriesTitle);
     }
 
+    protected List<SeriesAndFormatter<XYSeries, XYSeriesFormatter>> getLegendEnabledSeriesAndFormatterList() {
+        List<SeriesAndFormatter<XYSeries, XYSeriesFormatter>> sfList = new ArrayList<>();
+        ListIterator<SeriesAndFormatter<XYSeries, XYSeriesFormatter>> it = plot.getSeriesRegistry().listIterator();
+        while(it.hasNext()) {
+            SeriesAndFormatter<XYSeries, XYSeriesFormatter> thisSf = it.next();
+            if(thisSf.getFormatter().isLegendIconEnabled()) {
+                sfList.add(thisSf);
+            }
+        }
+        return sfList;
+    }
+
     @Override
     protected synchronized void doOnDraw(Canvas canvas, RectF widgetRect) {
         if(plot.isEmpty()) {
@@ -174,7 +186,8 @@ public class XYLegendWidget extends Widget {
         RectF cellRect;
 
         // draw each series legend item:
-        for(SeriesAndFormatter<XYSeries, XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
+        for(SeriesAndFormatter<XYSeries, XYSeriesFormatter> sfPair : getLegendEnabledSeriesAndFormatterList()) {
+        //for(SeriesAndFormatter<XYSeries, XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
             cellRect = it.next();
             XYSeriesFormatter format = sfPair.getFormatter();
             drawSeriesLegendCell(canvas, plot.getRenderer(sfPair.getFormatter().getRendererClass()),

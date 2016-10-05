@@ -26,6 +26,8 @@ import com.androidplot.ui.*;
 import org.junit.*;
 import org.mockito.*;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyDouble;
@@ -34,6 +36,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -201,5 +204,41 @@ public class XYGraphWidgetTest extends AndroidplotTest {
 
         // no lines should be drawn onto the canvas:
         verify(canvas, times(0)).drawLine(anyFloat(), anyFloat(), anyFloat(), anyFloat(), any(Paint.class));
+    }
+
+    @Test
+    public void testDrawCursorLabel() throws Exception {
+        XYGraphWidget.CursorLabelFormatter clf = mock(XYGraphWidget.CursorLabelFormatter.class);
+        when(clf.getTextPaint()).thenReturn(new Paint());
+        when(clf.getLabelText(any(Number.class), any(Number.class))).thenReturn("bla");
+        when(graphWidget.getCursorLabelFormatter()).thenReturn(clf);
+        graphWidget.drawCursorLabel(canvas);
+        verify(canvas, times(1)).drawText(eq("bla"), anyFloat(), anyFloat(), any(Paint.class));
+    }
+
+    @Test
+    public void testSetLineLabelEdges() throws Exception {
+
+        graphWidget.setLineLabelEdges(XYGraphWidget.Edge.LEFT, XYGraphWidget.Edge.BOTTOM);
+        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.LEFT));
+        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.BOTTOM));
+
+        graphWidget.setLineLabelEdges(XYGraphWidget.Edge.NONE);
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.TOP));
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.BOTTOM));
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.LEFT));
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.RIGHT));
+    }
+
+    @Test
+    public void testSetLineLabelEdges_bitfield() throws Exception {
+
+        graphWidget.setLineLabelEdges(
+                XYGraphWidget.Edge.TOP.getValue() | XYGraphWidget.Edge.RIGHT.getValue());
+
+        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.TOP));
+        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.RIGHT));
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.BOTTOM));
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.LEFT));
     }
 }

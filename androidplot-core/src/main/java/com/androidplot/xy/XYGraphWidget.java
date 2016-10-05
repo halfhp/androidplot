@@ -202,6 +202,7 @@ public class XYGraphWidget extends Widget {
     }
 
     public enum Edge {
+        NONE(0),
         LEFT(1),
         RIGHT(2),
         TOP(4),
@@ -702,35 +703,39 @@ public class XYGraphWidget extends Widget {
         }
 
         if(getCursorLabelFormatter() != null && hasRangeCursor && hasDomainCursor) {
-            final String label = getCursorLabelFormatter().
-                    getLabelText(getDomainCursorVal(), getRangeCursorVal());
-
-            // convert the label dimensions rect into floating-point:
-            RectF cursorRect = new RectF(FontUtils.getPackedStringDimensions(
-                    label, getCursorLabelFormatter().getTextPaint()));
-            cursorRect.offsetTo(domainCursorPosition, rangeCursorPosition
-                    - cursorRect.height());
-
-            // if we are too close to the right edge of the plot, we will move
-            // the label to the left side of our cursor:
-            if (cursorRect.right >= gridRect.right) {
-                cursorRect.offsetTo(domainCursorPosition - cursorRect.width(),
-                        cursorRect.top);
-            }
-
-            // same thing for the top edge of the plot:
-            // dunno why but these rects can have negative values for top and bottom.
-            if (cursorRect.top <= gridRect.top) {
-                cursorRect.offsetTo(cursorRect.left, rangeCursorPosition);
-            }
-
-            if (getCursorLabelFormatter().getBackgroundPaint() != null) {
-                canvas.drawRect(cursorRect, getCursorLabelFormatter().getBackgroundPaint());
-            }
-
-            canvas.drawText(label, cursorRect.left, cursorRect.bottom,
-                    getCursorLabelFormatter().getTextPaint());
+            drawCursorLabel(canvas);
         }
+    }
+
+    protected void drawCursorLabel(Canvas canvas) {
+        final String label = getCursorLabelFormatter().
+                getLabelText(getDomainCursorVal(), getRangeCursorVal());
+
+        // convert the label dimensions rect into floating-point:
+        RectF cursorRect = new RectF(FontUtils.getPackedStringDimensions(
+                label, getCursorLabelFormatter().getTextPaint()));
+        cursorRect.offsetTo(domainCursorPosition, rangeCursorPosition
+                - cursorRect.height());
+
+        // if we are too close to the right edge of the plot, we will move
+        // the label to the left side of our cursor:
+        if (cursorRect.right >= gridRect.right) {
+            cursorRect.offsetTo(domainCursorPosition - cursorRect.width(),
+                    cursorRect.top);
+        }
+
+        // same thing for the top edge of the plot:
+        // dunno why but these rects can have negative values for top and bottom.
+        if (cursorRect.top <= gridRect.top) {
+            cursorRect.offsetTo(cursorRect.left, rangeCursorPosition);
+        }
+
+        if (getCursorLabelFormatter().getBackgroundPaint() != null) {
+            canvas.drawRect(cursorRect, getCursorLabelFormatter().getBackgroundPaint());
+        }
+
+        canvas.drawText(label, cursorRect.left, cursorRect.bottom,
+                getCursorLabelFormatter().getTextPaint());
     }
 
     protected void drawGridBackground(Canvas canvas) {

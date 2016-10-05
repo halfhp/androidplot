@@ -127,7 +127,7 @@ public class SegmentFormatter extends Formatter<PieChart> {
     }
 
     @Override
-    public SeriesRenderer getRendererInstance(PieChart plot) {
+    public SeriesRenderer doGetRendererInstance(PieChart plot) {
         return new PieRenderer(plot);
     }
 

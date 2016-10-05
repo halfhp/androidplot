@@ -39,6 +39,8 @@ import com.halfhp.fig.*;
  */
 public abstract class Formatter<PlotType extends Plot> {
 
+    private boolean isLegendIconEnabled = true;
+
     public Formatter() {}
 
     public Formatter(Context ctx, int xmlCfgId) {
@@ -47,6 +49,10 @@ public abstract class Formatter<PlotType extends Plot> {
 
     public void configure(Context ctx, int xmlCfgId) {
         Fig.configure(ctx, this, xmlCfgId);
+    }
+
+    public <T extends SeriesRenderer> T getRendererInstance(PlotType plot) {
+        return (T) doGetRendererInstance(plot);
     }
 
     /**
@@ -59,6 +65,17 @@ public abstract class Formatter<PlotType extends Plot> {
      *
      * @return An instance of SeriesRenderer that took plot as an argument to its constructor.
      */
-    public abstract SeriesRenderer getRendererInstance(PlotType plot);
+    protected abstract SeriesRenderer doGetRendererInstance(PlotType plot);
 
+    public boolean isLegendIconEnabled() {
+        return isLegendIconEnabled;
+    }
+
+    /**
+     * Sets whether or not a legend icon should be drawn for the series associated with this formatter.
+     * @param legendIconEnabled
+     */
+    public void setLegendIconEnabled(boolean legendIconEnabled) {
+        this.isLegendIconEnabled = legendIconEnabled;
+    }
 }

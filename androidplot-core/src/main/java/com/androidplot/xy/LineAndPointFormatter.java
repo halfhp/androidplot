@@ -81,7 +81,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     }
 
     @Override
-    public SeriesRenderer getRendererInstance(XYPlot plot) {
+    public SeriesRenderer doGetRendererInstance(XYPlot plot) {
         return new LineAndPointRenderer(plot);
     }
 

@@ -38,8 +38,7 @@ import java.util.Arrays;
 // See: http://developer.android.com/reference/android/hardware/SensorEvent.html
 public class OrientationSensorExampleActivity extends Activity implements SensorEventListener
 {
-
-    private static final int HISTORY_SIZE = 300;            // number of points to plot in history
+    private static final int HISTORY_SIZE = 300;
     private SensorManager sensorMgr = null;
     private Sensor orSensor = null;
 
@@ -48,7 +47,7 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
 
     private CheckBox hwAcceleratedCb;
     private CheckBox showFpsCb;
-    //private SimpleXYSeries aprLevelsSeries = null;
+
     private SimpleXYSeries aLvlSeries;
     private SimpleXYSeries pLvlSeries;
     private SimpleXYSeries rLvlSeries;
@@ -67,7 +66,6 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         // setup the APR Levels plot:
         aprLevelsPlot = (XYPlot) findViewById(R.id.aprLevelsPlot);
         aprLevelsPlot.setDomainBoundaries(-1, 1, BoundaryMode.FIXED);
-        //aprLevelsPlot.getGraphWidget().getDomainLineLabelPaint().setColor(Color.TRANSPARENT);
 
         aLvlSeries = new SimpleXYSeries("A");
         pLvlSeries = new SimpleXYSeries("P");
@@ -162,7 +160,7 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         });
 
         // get a ref to the BarRenderer so we can make some changes to it:
-        BarRenderer barRenderer = (BarRenderer) aprLevelsPlot.getRenderer(BarRenderer.class);
+        BarRenderer barRenderer = aprLevelsPlot.getRenderer(BarRenderer.class);
         if(barRenderer != null) {
             // make our bars a little thicker than the default so they can be seen better:
             barRenderer.setBarWidth(25);
@@ -243,7 +241,6 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         pitchHistorySeries.addLast(null, sensorEvent.values[1]);
         rollHistorySeries.addLast(null, sensorEvent.values[2]);
     }
-
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {

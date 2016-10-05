@@ -2,6 +2,11 @@
 
 * Added leakcanary
 * More unit test coverage
+* Fixed a bug that prevented an instance of a given series from being added more than once, even 
+when a unique formatter is supplied.
+* Added `Formatter.getLegendIconEnabled()` and `Formatter.setLegendIconEnabled(boolean)`, used to enable / disable drawing legend items for individual
+series / formatter pairs.
+* Added `XYGraphWidget.Edge.NONE` to be used with `XYGraphWidget.setLineLabelEdges(Edge...)` to disable all edges.
 
 # 1.2.2
 

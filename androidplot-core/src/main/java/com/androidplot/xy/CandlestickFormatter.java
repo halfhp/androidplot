@@ -101,7 +101,7 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
     }
 
     @Override
-    public SeriesRenderer getRendererInstance(XYPlot plot) {
+    public SeriesRenderer doGetRendererInstance(XYPlot plot) {
         return new CandlestickRenderer(plot);
     }
 

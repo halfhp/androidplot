@@ -213,21 +213,26 @@ See the [candlestick documentation](candlestick.md)
 Smooth lines can be created by applying the 
 [Catmull-Rom interpolator](http://androidplot.com/smooth-curves-and-androidplot/) to your series' Format.
 
-## <a name="legend"></a> The Legend
+# <a name="legend"></a> The Legend
 By default, Androidplot will automatically produce a legend for your Plot.  You however choose to hide the legend
 or you can customize it to suit your needs.
 
-In addition to the scaling and positioning operations common to all widgets, number and behavior of legend
-rows and columns can be configured.
+# Hiding Legend Items
+As mentioned above, Androidplot automatically produces a legend for your Plot.  This "auto legend" includes
+items for each series added to the plot.  If you wish to omit a series from the legend:
 
-### The TableModel
+```java
+formatter.setLegendIconEnabled(false);
+```
+
+## The TableModel
 The TableModel controls how and where each item in the legend is drawn.  Androidplot provides two
 default implementations; DynamicTableModel and FixedTableModel (detailed below).  All TableModel implementations
 organize elements into a grid.  This grid is populated with items based on the order which it's corresponding
 series was added to the plot.  This ordering can be further controlled by setting the TableModel's
 TableOrder param to either ROW_MAJOR (items are added left-to-right, top-down) or COLUMN_MAJOR (items are added top-down, left-to-right).
 
-#### DynamicTableModel
+### DynamicTableModel
 The DynamicTableModel takes a desired of numbered rows and columns and evenly subdivides the LegendWidget's
 visible space into cells.  For example, A 2x2 legend using ROW_MAJOR ordering:
 
@@ -235,7 +240,7 @@ visible space into cells.  For example, A 2x2 legend using ROW_MAJOR ordering:
 plot.getLegend().setTableModel(new DynamicTableModel(2, 2, TableOrder.ROW_MAJOR));
 ```
 
-#### FixedTableModel
+### FixedTableModel
 The FixedTableModel takes a desired size of each cell in pixels and adds cells using the specified TableOrder.
 It automatically wraps to the next row or column (based on TableOrder) when the cell being added
 exceeds the legend's available space on a given axis.  For example, A FixedTableModel using 300w*100h cells and

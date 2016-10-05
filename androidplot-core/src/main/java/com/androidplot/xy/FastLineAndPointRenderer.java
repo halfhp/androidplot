@@ -151,7 +151,7 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
         }
 
         @Override
-        public SeriesRenderer getRendererInstance(XYPlot plot) {
+        public SeriesRenderer doGetRendererInstance(XYPlot plot) {
             return new FastLineAndPointRenderer(plot);
         }
     }

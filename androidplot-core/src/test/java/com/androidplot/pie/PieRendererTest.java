@@ -29,12 +29,13 @@ import org.mockito.*;
 
 import static org.mockito.Mockito.*;
 
-public class TestPieRenderer extends AndroidplotTest {
+public class PieRendererTest extends AndroidplotTest {
+
+    RectF plotArea = new RectF(0, 0, 100, 100);
 
     @Mock
     LayoutManager layoutManager;
 
-    @Mock
     PieChart pieChart;
 
     @Mock
@@ -43,14 +44,12 @@ public class TestPieRenderer extends AndroidplotTest {
     @Mock
     SeriesRegistry seriesRegistry;
 
+    @Mock
+    RenderStack renderStack;
+
     @Before
     public void setUp() throws Exception {
-        //when(xyPlot.getSeriesRegistry()).thenReturn(seriesRegistry);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
+        pieChart = spy(new PieChart(getContext(), "My Pie"));
     }
 
     @Test
@@ -65,7 +64,7 @@ public class TestPieRenderer extends AndroidplotTest {
 
         pieRenderer.drawSegment(
                 new Canvas(),
-                new RectF(0, 0, 100, 100),
+                plotArea,
                 segment,
                 formatterWithoutTextPaint,
                 100, 100, 100);
@@ -74,7 +73,7 @@ public class TestPieRenderer extends AndroidplotTest {
 
         pieRenderer.drawSegment(
                 canvas,
-                new RectF(0, 0, 100, 100),
+                plotArea,
                 segment,
                 formatterWithTextPaint,
                 100, 100, 100);
@@ -92,5 +91,19 @@ public class TestPieRenderer extends AndroidplotTest {
                         any(PointF.class),
                         eq(segment),
                         eq(formatterWithTextPaint));
+    }
+
+    @Test
+    public void testOnRender() throws Exception {
+        Segment segment = spy(new Segment("My Segment", 100));
+        Canvas canvas = new Canvas();
+        SegmentFormatter formatter = spy(
+                new SegmentFormatter(Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN));
+        PieRenderer pr = formatter.getRendererInstance(pieChart);
+        PieRenderer renderer = spy(pr);
+        doReturn(renderer.getClass()).when(formatter).getRendererClass();
+        doReturn(renderer).when(formatter).getRendererInstance(any(PieChart.class));
+        pieChart.addSegment(segment, formatter);
+        renderer.onRender(canvas, plotArea, segment, formatter, renderStack);
     }
 }

@@ -429,7 +429,7 @@ public class BarPlotExampleActivity extends Activity {
         }
 
         @Override
-        public SeriesRenderer getRendererInstance(XYPlot plot) {
+        public SeriesRenderer doGetRendererInstance(XYPlot plot) {
             return new MyBarRenderer(plot);
         }
     }

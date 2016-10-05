@@ -104,7 +104,7 @@ public class AdvancedLineAndPointRenderer extends XYSeriesRenderer<XYSeries, Adv
         }
 
         @Override
-        public SeriesRenderer getRendererInstance(XYPlot plot) {
+        public AdvancedLineAndPointRenderer doGetRendererInstance(XYPlot plot) {
             return new AdvancedLineAndPointRenderer(plot);
         }
 

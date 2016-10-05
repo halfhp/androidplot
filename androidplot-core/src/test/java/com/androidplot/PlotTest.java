@@ -18,6 +18,7 @@ package com.androidplot;
 
 import android.content.res.TypedArray;
 import android.graphics.*;
+import android.util.*;
 
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.test.*;
@@ -34,9 +35,11 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class PlotTest extends AndroidplotTest {
 
@@ -110,7 +113,7 @@ public class PlotTest extends AndroidplotTest {
         }
 
         @Override
-        public SeriesRenderer getRendererInstance(MockPlot plot) {
+        public SeriesRenderer doGetRendererInstance(MockPlot plot) {
             return new MockRenderer1(plot);
         }
     }
@@ -123,7 +126,7 @@ public class PlotTest extends AndroidplotTest {
         }
 
         @Override
-        public SeriesRenderer getRendererInstance(MockPlot plot) {
+        public SeriesRenderer doGetRendererInstance(MockPlot plot) {
             return new MockRenderer2(plot);
         }
     }
@@ -145,12 +148,20 @@ public class PlotTest extends AndroidplotTest {
     }
 
     @Test
-    public void testInit() throws Exception {
+    public void testInit_withoutAttrs() throws Exception {
         Plot plot = mock(Plot.class);
         plot.init(RuntimeEnvironment.application, null, 0);
 
         verify(plot, times(1)).onPreInit();
         verify(plot, times(1)).onAfterConfig();
+    }
+
+    @Test
+    public void testInit_withAttrs() throws Exception {
+        Plot plot = new MockPlot("MockPlot");
+        AttributeSet attrs = mock(AttributeSet.class);
+        plot.init(RuntimeEnvironment.application, attrs, 0);
+        // TODO: verifications
     }
 
     @Test
@@ -163,11 +174,11 @@ public class PlotTest extends AndroidplotTest {
         plot.addSeries(m1, new MockFormatter1());
         assertEquals(1, plot.getSeriesRegistry().size());
 
-        // duplicate Renderer added, registry size should not grow:
+        // a new copy of m1 is added:
         plot.addSeries(m1, new MockFormatter1());
 
         assertEquals(1, plot.getRenderers().size());
-        assertEquals(1, plot.getRenderer(cl).getSeriesList().size());
+        assertEquals(2, plot.getRenderer(cl).getSeriesList().size());
 
         MockSeries m2 = new MockSeries();
 
@@ -176,8 +187,8 @@ public class PlotTest extends AndroidplotTest {
         // still should only be one renderer type:
         assertEquals(1, plot.getRendererList().size());
 
-        // we added a new instance of cl to the renderer so there should be 2 in the subregistry:
-        assertEquals(2, plot.getRenderer(cl).getSeriesList().size());
+        // we added a new instance of cl to the renderer so there should be 3 in the subregistry:
+        assertEquals(3, plot.getRenderer(cl).getSeriesList().size());
 
 
         // lets add another renderer:
@@ -232,12 +243,12 @@ public class PlotTest extends AndroidplotTest {
 
         // a quick sanity check:
         assertEquals(2, plot.getRendererList().size());
-        assertEquals(3, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
+        assertEquals(6, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
         assertEquals(3, plot.getRenderer(MockRenderer2.class).getSeriesList().size());
 
         // now lets try removing a series from all renderers:
         plot.removeSeries(m1);
-        assertEquals(2, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
+        assertEquals(4, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
         assertEquals(2, plot.getRenderer(MockRenderer2.class).getSeriesList().size());
 
         // and now lets remove the remaining series:

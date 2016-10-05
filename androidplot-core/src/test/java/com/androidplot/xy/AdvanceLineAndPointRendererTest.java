@@ -27,7 +27,11 @@ import org.mockito.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-public class CandlestickRendererTest extends AndroidplotTest {
+/**
+ * Tests {@link AdvancedLineAndPointRenderer} and some of
+ * {@link com.androidplot.xy.AdvancedLineAndPointRenderer.Formatter}.
+ */
+public class AdvanceLineAndPointRendererTest extends AndroidplotTest {
 
     XYPlot xyPlot;
 
@@ -46,17 +50,16 @@ public class CandlestickRendererTest extends AndroidplotTest {
 
     @Test
     public void testOnRender() throws Exception {
-        CandlestickFormatter formatter = spy(new CandlestickFormatter());
-        CandlestickRenderer renderer = spy((CandlestickRenderer) formatter.doGetRendererInstance(xyPlot));
+        AdvancedLineAndPointRenderer.Formatter formatter = spy(new AdvancedLineAndPointRenderer.Formatter());
+        AdvancedLineAndPointRenderer renderer = formatter.getRendererInstance(xyPlot);
+
         doReturn(renderer.getClass()).when(formatter).getRendererClass();
-        doReturn(renderer).when(formatter).doGetRendererInstance(any(XYPlot.class));
+        doReturn(renderer).when(formatter).getRendererInstance(any(XYPlot.class));
 
-        XYSeries openVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "open", 1, 2, 3, 4);
-        XYSeries closeVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "open", 1, 2, 3, 4);
-        XYSeries highVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "open", 1, 2, 3, 4);
-        XYSeries lowVals = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "open", 1, 2, 3, 4);
-        CandlestickMaker.make(xyPlot, formatter, openVals, closeVals, highVals, lowVals);
+        XYSeries s = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1", 1, 2, 3, 4);
 
-        renderer.onRender(canvas, plotArea, openVals, formatter, renderStack);
+        xyPlot.addSeries(s, formatter);
+
+        renderer.onRender(canvas, plotArea, s, formatter, renderStack);
     }
 }

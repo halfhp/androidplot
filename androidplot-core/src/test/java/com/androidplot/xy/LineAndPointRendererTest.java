@@ -32,14 +32,26 @@ import static org.mockito.Mockito.*;
 
 public class LineAndPointRendererTest extends AndroidplotTest {
 
+    private XYPlot xyPlot;
+
+    @Mock
+    Canvas canvas;
+
+    RectF plotArea = new RectF(0, 0, 100, 100);
+
     @Before
     public void setUp() throws Exception {
-
+        xyPlot = spy(new XYPlot(getContext(), "XYPlot"));
     }
 
-    @After
-    public void tearDown() throws Exception {
-
+    @Test
+    public void testDrawSeries_withInterpolation() throws Exception {
+        LineAndPointRenderer renderer = spy(new LineAndPointRenderer(xyPlot));
+        LineAndPointFormatter formatter = new LineAndPointFormatter();
+        formatter.setInterpolationParams(
+                new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
+        XYSeries series = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1", 1, 2, 3);
+        renderer.drawSeries(canvas, plotArea, series, formatter);
     }
 
     /**
@@ -65,7 +77,6 @@ public class LineAndPointRendererTest extends AndroidplotTest {
 
         plot.addSeries(series, formatter);
 
-        Canvas canvas = new Canvas();
         plot.calculateMinMaxVals();
         renderer.onRender(canvas, plotArea, series, formatter, null);
 

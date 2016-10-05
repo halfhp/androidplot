@@ -10,6 +10,7 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter "android-24"
     - echo y | android update sdk --no-ui --all --filter "build-tools-24.0.2"
     - bash ./misc/download_keystore.sh
+    - bash ./misc/inject_circle_build_number.sh
 
 test:
 

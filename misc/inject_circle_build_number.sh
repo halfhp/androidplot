@@ -1,6 +1,6 @@
 # uses the vcs build number as the android version code and adds it to the display version string.
 #MAJOR_MINOR=`cat version.txt`
-VERSION_CODE=$VCS_BUILD_NUMBER
+VERSION_CODE=$CIRCLE_BUILD_NUM
 VERSION_NAME="$MAJOR_MINOR.$VERSION_CODE"
 
 echo "Building with Version Name: $VERSION_NAME"

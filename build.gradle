@@ -27,8 +27,8 @@ ext {
     theCompileSdkVersion = 24
     theTargetSdkVersion = 24
     theMinSdkVersion = 5
-    theVersionName = '1.2.3'
-    theVersionCode = 22
+    theVersionName = '_dev_build_'
+    theVersionCode = 0
 }
 
 buildscript {

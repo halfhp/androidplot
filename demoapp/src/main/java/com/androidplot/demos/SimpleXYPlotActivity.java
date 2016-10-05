@@ -76,11 +76,9 @@ public class SimpleXYPlotActivity extends Activity {
         // see: http://androidplot.com/smooth-curves-and-androidplot/
         series1Format.setInterpolationParams(
                 new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
-        series1Format.setLegendIconEnabled(false);
 
         series2Format.setInterpolationParams(
                 new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
-        series2Format.setLegendIconEnabled(false);
 
         // add a new series' to the xyplot:
         plot.addSeries(series1, series1Format);

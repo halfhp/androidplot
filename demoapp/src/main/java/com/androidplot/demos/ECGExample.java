@@ -58,7 +58,9 @@ public class ECGExample extends Activity {
         ECGModel ecgSeries = new ECGModel(2000, 200);
 
         // add a new series' to the xyplot:
-        plot.addSeries(ecgSeries, new MyFadeFormatter(2000));
+        MyFadeFormatter formatter =new MyFadeFormatter(2000);
+        formatter.setLegendIconEnabled(false);
+        plot.addSeries(ecgSeries, formatter);
         plot.setRangeBoundaries(0, 10, BoundaryMode.FIXED);
         plot.setDomainBoundaries(0, 2000, BoundaryMode.FIXED);
 

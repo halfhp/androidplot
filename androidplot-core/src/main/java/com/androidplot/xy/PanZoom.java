@@ -1,18 +1,29 @@
 package com.androidplot.xy;
 
-import android.graphics.*;
+import android.graphics.RectF;
+import android.graphics.PointF;
+import android.util.*;
 import android.view.*;
+
+import com.androidplot.*;
 
 import java.util.*;
 
 /**
  * Enables basic pan/zoom touch behavior for an {@link XYPlot}.
+ * By default boundaries set on the associated plot will define the scroll/zoom extents as well as
+ * initial state of the plot's visible area.  If you wish to specify a scrollable / zoomable area
+ * that is greater than or less than the plot's boundaries, use
+ * {@link #setDomainBoundaries(Number, Number)} and
+ * {@link #setRangeBoundaries(Number, Number)}
  * TODO: zoom using dynamic center point
  * TODO: stretch both mode
  */
 public class PanZoom implements View.OnTouchListener {
 
     protected static final float MIN_DIST_2_FING = 5f;
+    protected static final int FIRST_FINGER = 0;
+    protected static final int SECOND_FINGER = 1;
 
     private XYPlot plot;
     private Pan pan;
@@ -20,36 +31,35 @@ public class PanZoom implements View.OnTouchListener {
     private boolean isEnabled = true;
 
     private DragState dragState = DragState.NONE;
-    private float minXLimit = Float.MAX_VALUE;
-    private float maxXLimit = Float.MAX_VALUE;
-    private float minYLimit = Float.MAX_VALUE;
-    private float maxYLimit = Float.MAX_VALUE;
-    private float lastMinX = Float.MAX_VALUE;
-    private float lastMaxX = Float.MAX_VALUE;
-    private float lastMinY = Float.MAX_VALUE;
-    private float lastMaxY = Float.MAX_VALUE;
+    RectRegion limits = new RectRegion();
+    RectRegion previousLimits = new RectRegion();
     private PointF firstFingerPos;
 
     // rectangle created by the space between two fingers
-    private RectF dist;
-    private boolean mCalledBySelf;
+    private RectF fingersRect;
     private View.OnTouchListener delegate;
 
     // Definition of the touch states
-    protected enum DragState
-    {
+    protected enum DragState {
         NONE,
         ONE_FINGER,
         TWO_FINGERS
     }
 
     public enum Pan {
+        NONE,
         HORIZONTAL,
         VERTICAL,
         BOTH
     }
 
     public enum Zoom {
+
+        /**
+         * Comletely disable panning
+         */
+        NONE,
+
         /**
          * Zoom on the horizontal axis only
          */
@@ -103,55 +113,34 @@ public class PanZoom implements View.OnTouchListener {
         isEnabled = enabled;
     }
 
-    protected void setDomainBoundaries(final Number lowerBoundary, final BoundaryMode lowerBoundaryMode,
-            final Number upperBoundary, final BoundaryMode upperBoundaryMode) {
-        plot.setDomainBoundaries(lowerBoundary, lowerBoundaryMode, upperBoundary, upperBoundaryMode);
-        if(mCalledBySelf) {
-            mCalledBySelf = false;
-        } else {
-            final RectRegion bounds = plot.getBounds();
-            minXLimit = lowerBoundaryMode == BoundaryMode.FIXED ?
-                        lowerBoundary.floatValue() : bounds.getMinX().floatValue();
-            maxXLimit = upperBoundaryMode == BoundaryMode.FIXED ?
-                        upperBoundary.floatValue() : bounds.getMaxX().floatValue();
-            lastMinX = minXLimit;
-            lastMaxX = maxXLimit;
-        }
+    /**
+     * Set the boundaries by which domain pan/zoom calculations will abide; differs from an {@link XYPlot}'s boundaries
+     * in that those boundaries define the plot's starting state.
+     * @param lowerBoundary
+     * @param upperBoundary
+     */
+    public void setDomainBoundaries(final Number lowerBoundary, final Number upperBoundary) {
+        limits.setMinX(lowerBoundary);
+        limits.setMaxX(upperBoundary);
     }
 
-    protected void setRangeBoundaries(final Number lowerBoundary, final BoundaryMode lowerBoundaryMode,
-            final Number upperBoundary, final BoundaryMode upperBoundaryMode) {
-        plot.setRangeBoundaries(lowerBoundary, lowerBoundaryMode, upperBoundary, upperBoundaryMode);
-        if(mCalledBySelf) {
-            mCalledBySelf = false;
-        } else {
-            final RectRegion bounds = plot.getBounds();
-            minYLimit = lowerBoundaryMode == BoundaryMode.FIXED ?
-                        lowerBoundary.floatValue() : bounds.getMinY().floatValue();
-            maxYLimit = upperBoundaryMode == BoundaryMode.FIXED ?
-                        upperBoundary.floatValue() : bounds.getMaxY().floatValue();
-            lastMinY = minYLimit;
-            lastMaxY = maxYLimit;
-        }
-    }
-
-    protected void setDomainBoundaries(final Number lowerBoundary,
-final Number upperBoundary, final BoundaryMode mode) {
-        plot.setDomainBoundaries(lowerBoundary, mode, upperBoundary, mode);
-    }
-
-    protected synchronized void setRangeBoundaries(final Number lowerBoundary,
-            final Number upperBoundary, final BoundaryMode mode) {
-        plot.setRangeBoundaries(lowerBoundary, mode, upperBoundary, mode);
+    /**
+     * Sets the range boundaries by which pan/zoom calculations will abide.
+     * @param lowerBoundary
+     * @param upperBoundary
+     */
+    public void setRangeBoundaries(final Number lowerBoundary, final Number upperBoundary) {
+        limits.setMinY(lowerBoundary);
+        limits.setMaxY(upperBoundary);
     }
 
     @Override
     public boolean onTouch(final View view, final MotionEvent event) {
         boolean isConsumed = false;
-        if(delegate != null) {
+        if (delegate != null) {
             isConsumed = delegate.onTouch(view, event);
         }
-        if(isEnabled() && !isConsumed) {
+        if (isEnabled() && !isConsumed) {
             switch (event.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN: // start gesture
                     firstFingerPos = new PointF(event.getX(), event.getY());
@@ -159,9 +148,9 @@ final Number upperBoundary, final BoundaryMode mode) {
                     break;
                 case MotionEvent.ACTION_POINTER_DOWN: // second finger
                 {
-                    dist = getDistance(event);
+                    fingersRect = fingerDistance(event);
                     // the distance check is done to avoid false alarms
-                    if (dist.width() > MIN_DIST_2_FING || dist.width() < -MIN_DIST_2_FING) {
+                    if (fingersRect.width() > MIN_DIST_2_FING || fingersRect.width() < -MIN_DIST_2_FING) {
                         dragState = DragState.TWO_FINGERS;
                     }
                     break;
@@ -169,12 +158,17 @@ final Number upperBoundary, final BoundaryMode mode) {
                 case MotionEvent.ACTION_POINTER_UP: // end zoom
                     dragState = DragState.NONE;
                     break;
+
                 case MotionEvent.ACTION_MOVE:
                     if (dragState == DragState.ONE_FINGER) {
                         pan(event);
                     } else if (dragState == DragState.TWO_FINGERS) {
                         zoom(event);
                     }
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    reset();
                     break;
             }
         }
@@ -184,226 +178,227 @@ final Number upperBoundary, final BoundaryMode mode) {
 
     /**
      * Calculates the distance between two finger motion events.
-     * @param evt
+     * @param firstFingerX
+     * @param firstFingerY
+     * @param secondFingerX
+     * @param secondFingerY
      * @return
      */
-    protected RectF getDistance(final MotionEvent evt) {
-        float left;
-        float right;
-        float top;
-        float bottom;
-        if(evt.getX(0) > evt.getX(1)) {
-            left = evt.getX(1);
-            right = evt.getX(0);
-        } else {
-            left = evt.getX(0);
-            right = evt.getX(1);
-        }
-
-        if(evt.getY(0) > evt.getY(1)) {
-            top = evt.getY(1);
-            bottom = evt.getY(0);
-        } else {
-            top = evt.getY(0);
-            bottom = evt.getY(1);
-        }
-
+    protected RectF fingerDistance(float firstFingerX, float firstFingerY, float secondFingerX, float secondFingerY) {
+        final float left = firstFingerX > secondFingerX ? secondFingerX : firstFingerX;
+        final float right = firstFingerX > secondFingerX ? firstFingerX : secondFingerX;
+        final float top = firstFingerY > secondFingerY ? secondFingerY : firstFingerY;
+        final float bottom = firstFingerY > secondFingerY ? firstFingerY : secondFingerY;
         return new RectF(left, top, right, bottom);
     }
 
-    private float getMinXLimit() {
-        if(minXLimit == Float.MAX_VALUE) {
-            minXLimit = plot.getBounds().getMinX().floatValue();
-            lastMinX = minXLimit;
-        }
-        return minXLimit;
+    /**
+     * Calculates the distance between two finger motion events.
+     * @param evt
+     * @return
+     */
+    protected RectF fingerDistance(final MotionEvent evt) {
+        return fingerDistance(
+                evt.getX(FIRST_FINGER),
+                evt.getY(FIRST_FINGER),
+                evt.getX(SECOND_FINGER),
+                evt.getY(SECOND_FINGER));
     }
 
-    protected float getMaxXLimit() {
-        if(maxXLimit == Float.MAX_VALUE) {
-            maxXLimit = plot.getBounds().getMaxX().floatValue();
-            lastMaxX = maxXLimit;
+    protected Number getMinXLimit() {
+        if (limits.getMinX() == null) {
+            limits.setMinX(plot.getBounds().getMinX().floatValue());
+            previousLimits.setMinX(limits.getMinX());
         }
-        return maxXLimit;
+        return limits.getMinX();
     }
 
-    protected float getMinYLimit() {
-        if(minYLimit == Float.MAX_VALUE) {
-            minYLimit = plot.getBounds().getMinY().floatValue();
-            lastMinY = minYLimit;
+    protected Number getMaxXLimit() {
+        if (limits.getMaxX() == null) {
+            limits.setMaxX(plot.getBounds().getMaxX().floatValue());
+            previousLimits.setMaxX(limits.getMaxX());
         }
-        return minYLimit;
+        return limits.getMaxX();
     }
 
-    protected float getMaxYLimit() {
-        if(maxYLimit == Float.MAX_VALUE) {
-            maxYLimit = plot.getBounds().getMaxY().floatValue();
-            lastMaxY = maxYLimit;
+    protected Number getMinYLimit() {
+        if (limits.getMinY() == null) {
+            limits.setMinY(plot.getBounds().getMinY().floatValue());
+            previousLimits.setMinY(limits.getMinY());
         }
-        return maxYLimit;
+        return limits.getMinY();
     }
 
-    protected float getLastMinX() {
-        if(lastMinX == Float.MAX_VALUE) {
-            lastMinX = plot.getBounds().getMinX().floatValue();
+    protected Number getMaxYLimit() {
+        if (limits.getMaxY() == null) {
+            limits.setMaxY(plot.getBounds().getMaxY().floatValue());
+            previousLimits.setMaxY(limits.getMaxY());
         }
-        return lastMinX;
+        return limits.getMaxY();
     }
 
-    protected float getLastMaxX() {
-        if(lastMaxX == Float.MAX_VALUE) {
-            lastMaxX = plot.getBounds().getMaxX().floatValue();
+    protected Number getLastMinX() {
+        if (previousLimits.getMinX() == null) {
+            previousLimits.setMinX(plot.getBounds().getMinX().floatValue());
         }
-        return lastMaxX;
+        return previousLimits.getMinX();
     }
 
-    protected float getLastMinY() {
-        if(lastMinY == Float.MAX_VALUE) {
-            lastMinY = plot.getBounds().getMinY().floatValue();
+    protected Number getLastMaxX() {
+        if (previousLimits.getMaxX() == null) {
+            previousLimits.setMaxX(plot.getBounds().getMaxX().floatValue());
         }
-        return lastMinY;
+        return previousLimits.getMaxX();
     }
 
-    private float getLastMaxY() {
-        if(lastMaxY == Float.MAX_VALUE) {
-            lastMaxY = plot.getBounds().getMaxY().floatValue();
+    protected Number getLastMinY() {
+        if (previousLimits.getMinY() == null) {
+            previousLimits.setMinY(plot.getBounds().getMinY().floatValue());
         }
-        return lastMaxY;
+        return previousLimits.getMinY();
+    }
+
+    private Number getLastMaxY() {
+        if (previousLimits.getMaxY() == null) {
+            previousLimits.setMaxY(plot.getBounds().getMaxY().floatValue());
+        }
+        return previousLimits.getMaxY();
     }
 
     protected void pan(final MotionEvent motionEvent) {
+        if (pan == Pan.NONE) {
+            return;
+        }
+
         final PointF oldFirstFinger = firstFingerPos; //save old position of finger
         firstFingerPos = new PointF(motionEvent.getX(), motionEvent.getY()); //update finger position
-        PointF newX = new PointF();
-        if(EnumSet.of(Pan.HORIZONTAL, Pan.BOTH).contains(pan)) {
-            calculatePan(oldFirstFinger, newX, true);
-            mCalledBySelf = true;
-            setDomainBoundaries(newX.x, newX.y, BoundaryMode.FIXED);
-            lastMinX = newX.x;
-            lastMaxX = newX.y;
+        Region newBounds = new Region();
+        if (EnumSet.of(Pan.HORIZONTAL, Pan.BOTH).contains(pan)) {
+            calculatePan(oldFirstFinger, newBounds, true);
+            plot.setDomainBoundaries(newBounds.getMin(), newBounds.getMax(), BoundaryMode.FIXED);
+            previousLimits.setMinX(newBounds.getMin());
+            previousLimits.setMaxX(newBounds.getMax());
         }
-        if(EnumSet.of(Pan.VERTICAL, Pan.BOTH).contains(pan)) {
-            calculatePan(oldFirstFinger, newX, false);
-            mCalledBySelf = true;
-            setRangeBoundaries(newX.x, newX.y, BoundaryMode.FIXED);
-            lastMinY = newX.x;
-            lastMaxY = newX.y;
+        if (EnumSet.of(Pan.VERTICAL, Pan.BOTH).contains(pan)) {
+            calculatePan(oldFirstFinger, newBounds, false);
+            plot.setRangeBoundaries(newBounds.getMin(), newBounds.getMax(), BoundaryMode.FIXED);
+            previousLimits.setMinY(newBounds.getMin());
+            previousLimits.setMaxY(newBounds.getMax());
         }
         plot.redraw();
     }
 
-    protected void calculatePan(final PointF oldFirstFinger, PointF newX, final boolean horizontal) {
+    protected void calculatePan(final PointF oldFirstFinger, Region bounds, final boolean horizontal) {
         final float offset;
         // multiply the absolute finger movement for a factor.
         // the factor is dependent on the calculated min and max
-        if(horizontal) {
-            newX.x = getLastMinX();
-            newX.y = getLastMaxX();
-            offset = (oldFirstFinger.x - firstFingerPos.x) * ((newX.y - newX.x) / plot.getWidth());
+        if (horizontal) {
+            bounds.setMin(getLastMinX());
+            bounds.setMax(getLastMaxX());
+            offset = (oldFirstFinger.x - firstFingerPos.x) *
+                    ((bounds.getMax().floatValue() - bounds.getMin().floatValue()) / plot.getWidth());
         } else {
-            newX.x = getLastMinY();
-            newX.y = getLastMaxY();
-            offset = -(oldFirstFinger.y - firstFingerPos.y) * ((newX.y - newX.x) / plot.getHeight());
+            bounds.setMin(getLastMinY());
+            bounds.setMax(getLastMaxY());
+            offset = -(oldFirstFinger.y - firstFingerPos.y) *
+                    ((bounds.getMax().floatValue() - bounds.getMin().floatValue()) / plot.getHeight());
         }
         // move the calculated offset
-        newX.x = newX.x + offset;
-        newX.y = newX.y + offset;
+        bounds.setMin(bounds.getMin().floatValue() + offset);
+        bounds.setMax(bounds.getMax().floatValue() + offset);
 
         //get the distance between max and min
-        final float diff = newX.y - newX.x;
+        final float diff = bounds.length().floatValue();
 
         //check if we reached the limit of panning
-        if(horizontal) {
-            if(newX.x < getMinXLimit()) {
-                newX.x = getMinXLimit();
-                newX.y = newX.x + diff;
+        if (horizontal) {
+            if (bounds.getMin().floatValue() < getMinXLimit().floatValue()) {
+                bounds.setMin(getMinXLimit());
+                bounds.setMax(bounds.getMin().floatValue() + diff);
             }
-            if(newX.y > getMaxXLimit()) {
-                newX.y = getMaxXLimit();
-                newX.x = newX.y - diff;
+            if (bounds.getMax().floatValue() > getMaxXLimit().floatValue()) {
+                bounds.setMax(getMaxXLimit());
+                bounds.setMin(bounds.getMax().floatValue() - diff);
             }
         } else {
-            if(newX.x < getMinYLimit()) {
-                newX.x = getMinYLimit();
-                newX.y = newX.x + diff;
+            if (bounds.getMin().floatValue() < getMinYLimit().floatValue()) {
+                bounds.setMin(getMinYLimit());
+                bounds.setMax(bounds.getMin().floatValue() + diff);
             }
-            if(newX.y > getMaxYLimit()) {
-                newX.y = getMaxYLimit();
-                newX.x = newX.y - diff;
+            if (bounds.getMax().floatValue() > getMaxYLimit().floatValue()) {
+                bounds.setMax(getMaxYLimit());
+                bounds.setMin(bounds.getMax().floatValue() - diff);
             }
         }
     }
 
     protected boolean isValidScale(float scale) {
-        if(Float.isInfinite(scale) || Float.isNaN(scale) || scale > -0.001 && scale < 0.001) {
+        if (Float.isInfinite(scale) || Float.isNaN(scale) || scale > -0.001 && scale < 0.001) {
             return false;
         }
         return true;
     }
 
     protected void zoom(final MotionEvent motionEvent) {
-        final RectF oldDist = dist;
-        final RectF newDist = getDistance(motionEvent);
-        dist = newDist;
+        if (zoom == Zoom.NONE) {
+            return;
+        }
+        final RectF oldFingersRect = fingersRect;
+        final RectF newFingersRect = fingerDistance(motionEvent);
+        fingersRect = newFingersRect;
         RectF newRect = new RectF();
 
         float scaleX = 1;
         float scaleY = 1;
-        switch(zoom) {
+        switch (zoom) {
             case STRETCH_HORIZONTAL:
-                scaleX = oldDist.width()  / dist.width();
-                if(!isValidScale(scaleX)) {
+                scaleX = oldFingersRect.width() / fingersRect.width();
+                if (!isValidScale(scaleX)) {
                     return;
                 }
                 break;
             case STRETCH_VERTICAL:
-                scaleY = oldDist.height()  / dist.height();
-                if(!isValidScale(scaleY)) {
+                scaleY = oldFingersRect.height() / fingersRect.height();
+                if (!isValidScale(scaleY)) {
                     return;
                 }
                 break;
             case STRETCH_BOTH:
-                scaleX = oldDist.width()  / dist.width();
-                scaleY = oldDist.height()  / dist.height();
-                if(!isValidScale(scaleX) || !isValidScale(scaleY)) {
+                scaleX = oldFingersRect.width() / fingersRect.width();
+                scaleY = oldFingersRect.height() / fingersRect.height();
+                if (!isValidScale(scaleX) || !isValidScale(scaleY)) {
                     return;
                 }
                 break;
             case SCALE:
-                scaleX = oldDist.width() / dist.width();
-                scaleY = oldDist.height()  / dist.height();
-
-                // use the greater value to scale each axis evenly:
-                if(scaleX > scaleY) {
-                    scaleY = scaleX;
-                } else {
-                    scaleX = scaleY;
-                }
-                if(!isValidScale(scaleX) || !isValidScale(scaleY)) {
+                float sc1 = (float) Math.hypot(oldFingersRect.height(), oldFingersRect.width());
+                float sc2 = (float) Math.hypot(fingersRect.height(), fingersRect.width());
+                float sc = sc1 / sc2;
+                scaleX = sc;
+                scaleY = sc;
+                if (!isValidScale(scaleX) || !isValidScale(scaleY)) {
                     return;
                 }
                 break;
         }
 
-        if(EnumSet.of(
+        if (EnumSet.of(
                 Zoom.STRETCH_HORIZONTAL,
                 Zoom.STRETCH_BOTH,
                 Zoom.SCALE).contains(zoom)) {
             calculateZoom(newRect, scaleX, true);
-            mCalledBySelf = true;
-            setDomainBoundaries(newRect.left, newRect.right, BoundaryMode.FIXED);
-            lastMinX = newRect.left;
-            lastMaxX = newRect.right;
+            plot.setDomainBoundaries(newRect.left, newRect.right, BoundaryMode.FIXED);
+            previousLimits.setMinX(newRect.left);
+            previousLimits.setMaxX(newRect.right);
         }
-        if(EnumSet.of(
+        if (EnumSet.of(
                 Zoom.STRETCH_VERTICAL,
                 Zoom.STRETCH_BOTH,
                 Zoom.SCALE).contains(zoom)) {
             calculateZoom(newRect, scaleY, false);
-            mCalledBySelf = true;
-            setRangeBoundaries(newRect.top, newRect.bottom, BoundaryMode.FIXED);
-            lastMinY = newRect.top;
-            lastMaxY = newRect.bottom;
+            plot.setRangeBoundaries(newRect.top, newRect.bottom, BoundaryMode.FIXED);
+            previousLimits.setMinY(newRect.top);
+            previousLimits.setMaxY(newRect.bottom);
         }
         plot.redraw();
     }
@@ -412,34 +407,34 @@ final Number upperBoundary, final BoundaryMode mode) {
 
         final float calcMax;
         final float span;
-        if(isHorizontal) {
-            calcMax = getLastMaxX();
-            span = calcMax - getLastMinX();
+        if (isHorizontal) {
+            calcMax = getLastMaxX().floatValue();
+            span = calcMax - getLastMinX().floatValue();
         } else {
-            calcMax = getLastMaxY();
-            span = calcMax - getLastMinY();
+            calcMax = getLastMaxY().floatValue();
+            span = calcMax - getLastMinY().floatValue();
         }
 
         final float midPoint = calcMax - (span / 2.0f);
         final float offset = span * scale / 2.0f;
 
-        if(isHorizontal) {
+        if (isHorizontal) {
             newRect.left = midPoint - offset;
             newRect.right = midPoint + offset;
-            if(newRect.left < getMinXLimit()) {
-                newRect.left = getMinXLimit();
+            if (newRect.left < getMinXLimit().floatValue()) {
+                newRect.left = getMinXLimit().floatValue();
             }
-            if(newRect.right > getMaxXLimit()) {
-                newRect.right = getMaxXLimit();
+            if (newRect.right > getMaxXLimit().floatValue()) {
+                newRect.right = getMaxXLimit().floatValue();
             }
         } else {
             newRect.top = midPoint - offset;
             newRect.bottom = midPoint + offset;
-            if(newRect.top < getMinYLimit()) {
-                newRect.top = getMinYLimit();
+            if (newRect.top < getMinYLimit().floatValue()) {
+                newRect.top = getMinYLimit().floatValue();
             }
-            if(newRect.bottom > getMaxYLimit()) {
-                newRect.bottom = getMaxYLimit();
+            if (newRect.bottom > getMaxYLimit().floatValue()) {
+                newRect.bottom = getMaxYLimit().floatValue();
             }
         }
     }
@@ -473,5 +468,12 @@ final Number upperBoundary, final BoundaryMode mode) {
      */
     public void setDelegate(View.OnTouchListener delegate) {
         this.delegate = delegate;
+    }
+
+    public void reset() {
+        Log.d("PanZoom", "Reset invoked");
+        this.previousLimits = new RectRegion();
+        this.firstFingerPos = null;
+        this.fingersRect = null;
     }
 }

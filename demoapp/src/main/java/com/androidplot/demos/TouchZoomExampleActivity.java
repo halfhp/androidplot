@@ -21,12 +21,12 @@ import java.util.Random;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.os.Bundle;
-import android.view.View;
+import android.view.*;
 import android.widget.*;
 
 import com.androidplot.Plot;
+import com.androidplot.util.*;
 import com.androidplot.xy.*;
 
 /***********************************
@@ -43,8 +43,6 @@ public class TouchZoomExampleActivity extends Activity {
     private Spinner panSpinner;
     private Spinner zoomSpinner;
     private SimpleXYSeries[] series = null;
-    private PointF minXY;
-    private PointF maxXY;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +51,7 @@ public class TouchZoomExampleActivity extends Activity {
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                minXY.x = series[0].getX(0).floatValue();
-                maxXY.x = series[3].getX(series[3].size() - 1).floatValue();
-                plot.setDomainBoundaries(minXY.x, maxXY.x, BoundaryMode.FIXED);
-                plot.redraw();
+                reset();
             }
         });
         plot = (XYPlot) findViewById(R.id.plot);
@@ -83,8 +78,8 @@ public class TouchZoomExampleActivity extends Activity {
 
         plot.setBorderStyle(Plot.BorderStyle.NONE, null, null);
         series = new SimpleXYSeries[4];
-        int scale = 1;
-        for (int i = 0; i < 4; i++, scale *= 5) {
+        int scale = 3;
+        for (int i = 0; i < 4; i++, scale *= 4) {
             series[i] = new SimpleXYSeries("S" + i);
             populateSeries(series[i], scale);
         }
@@ -100,17 +95,18 @@ public class TouchZoomExampleActivity extends Activity {
         plot.addSeries(series[0],
                 new LineAndPointFormatter(Color.rgb(0, 0, 0), null,
                         Color.argb(SERIES_ALPHA, 0, 0, 150), null));
-        plot.redraw();
 
-        // record min/max for the reset button:
-        plot.calculateMinMaxVals();
-        final RectRegion bounds = plot.getBounds();
-        minXY = new PointF(bounds.getMinX().floatValue(), bounds.getMinY().floatValue());
-        maxXY = new PointF(bounds.getMaxX().floatValue(), bounds.getMaxY().floatValue());
-
-        // enable pan/zoom behavior:
+        reset();
         panZoom = PanZoom.attach(plot);
+        panZoom.setDomainBoundaries(0, 200);
         initSpinners();
+    }
+
+    private void reset() {
+        RectRegion minMax = SeriesUtils.minMax(series);
+        plot.setDomainBoundaries(minMax.getMinX().doubleValue() - 1, minMax.getMaxX().doubleValue() + 1, BoundaryMode.FIXED);
+        plot.setRangeBoundaries(minMax.getMinY(), minMax.getMaxY(), BoundaryMode.FIXED);
+        plot.redraw();
     }
 
     private void populateSeries(SimpleXYSeries series, int max) {

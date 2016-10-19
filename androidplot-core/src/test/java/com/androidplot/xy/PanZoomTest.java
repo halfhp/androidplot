@@ -21,12 +21,14 @@ import android.graphics.*;
 import android.view.*;
 
 import com.androidplot.*;
+import com.androidplot.Region;
 import com.androidplot.test.*;
 import com.androidplot.ui.*;
 
 import org.junit.*;
 import org.mockito.*;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class PanZoomTest extends AndroidplotTest {
@@ -79,17 +81,20 @@ public class PanZoomTest extends AndroidplotTest {
         MotionEvent moveEvent = mock(MotionEvent.class);
 
         doNothing().when(panZoom).calculatePan(
-                any(PointF.class), any(PointF.class), anyBoolean());
+                any(PointF.class), any(Region.class), anyBoolean());
 
         when(moveEvent.getAction())
                 .thenReturn(MotionEvent.ACTION_DOWN)
-                .thenReturn(MotionEvent.ACTION_MOVE);
+                .thenReturn(MotionEvent.ACTION_MOVE)
+                .thenReturn(MotionEvent.ACTION_UP);
 
         panZoom.onTouch(xyPlot, moveEvent); // fires ACTION_DOWN
         panZoom.onTouch(xyPlot, moveEvent); // fires ACTION_MOVE
+        panZoom.onTouch(xyPlot, moveEvent); // fires ACTION_UP
 
-        verify(panZoom, times(1)).pan(moveEvent);
-        verify(panZoom, times(0)).zoom(moveEvent);
+        verify(panZoom).pan(moveEvent);
+        verify(panZoom, never()).zoom(moveEvent);
+        verify(panZoom).reset();
     }
 
     @Test
@@ -102,23 +107,43 @@ public class PanZoomTest extends AndroidplotTest {
         MotionEvent moveEvent = mock(MotionEvent.class);
 
         doNothing().when(panZoom).calculatePan(
-                any(PointF.class), any(PointF.class), anyBoolean());
+                any(PointF.class), any(Region.class), anyBoolean());
 
         when(moveEvent.getAction())
                 .thenReturn(MotionEvent.ACTION_DOWN)
                 .thenReturn(MotionEvent.ACTION_POINTER_DOWN)
-                .thenReturn(MotionEvent.ACTION_MOVE);
+                .thenReturn(MotionEvent.ACTION_MOVE)
+                .thenReturn(MotionEvent.ACTION_UP);
 
         final float pinchDistance = PanZoom.MIN_DIST_2_FING + 1;
 
         doReturn(new RectF(0, 0, pinchDistance, pinchDistance))
-                .when(panZoom).getDistance(any(MotionEvent.class));
+                .when(panZoom).fingerDistance(any(MotionEvent.class));
 
         panZoom.onTouch(xyPlot, moveEvent); // ACTION_DOWN
         panZoom.onTouch(xyPlot, moveEvent); // ACTION_POINTER_DOWN
         panZoom.onTouch(xyPlot, moveEvent); // ACTION_MOVE
+        panZoom.onTouch(xyPlot, moveEvent); // fires ACTION_UP
 
-        verify(panZoom, times(1)).zoom(moveEvent);
+        verify(panZoom).zoom(moveEvent);
+        verify(panZoom).reset();
     }
 
+    @Test
+    public void testFingerDistance() {
+        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE));
+
+        RectF distance = panZoom.fingerDistance(0, 0, 10, 10);
+        assertEquals(0f, distance.left);
+        assertEquals(0f, distance.top);
+        assertEquals(10f, distance.right);
+        assertEquals(10f, distance.bottom);
+
+        // no matter what order the coords are supplied, make sure the same rect is calculated:
+        distance = panZoom.fingerDistance(10, 10, 0, 0);
+        assertEquals(0f, distance.left);
+        assertEquals(0f, distance.top);
+        assertEquals(10f, distance.right);
+        assertEquals(10f, distance.bottom);
+    }
 }

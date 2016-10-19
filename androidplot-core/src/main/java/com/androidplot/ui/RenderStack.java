@@ -40,20 +40,20 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
      * An element on the render stack.
      */
     public class StackElement<SeriesType extends Series, FormatterType extends Formatter> {
-        private SeriesAndFormatter<SeriesType, FormatterType> seriesAndFormatter;
+        private SeriesBundle<SeriesType, FormatterType> seriesBundle;
         private boolean isEnabled = true;
 
-        public StackElement(SeriesAndFormatter<SeriesType, FormatterType> seriesAndFormatter) {
-            set(seriesAndFormatter);
+        public StackElement(SeriesBundle<SeriesType, FormatterType> seriesBundle) {
+            set(seriesBundle);
         }
 
 
-        public SeriesAndFormatter<SeriesType, FormatterType> get() {
-            return seriesAndFormatter;
+        public SeriesBundle<SeriesType, FormatterType> get() {
+            return seriesBundle;
         }
 
-        public void set(SeriesAndFormatter<SeriesType, FormatterType> seriesAndFormatter) {
-            this.seriesAndFormatter = seriesAndFormatter;
+        public void set(SeriesBundle<SeriesType, FormatterType> seriesBundle) {
+            this.seriesBundle = seriesBundle;
         }
 
         public boolean isEnabled() {
@@ -72,7 +72,7 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
 
     public RenderStack(Plot plot) {
         this.plot = plot;
-        elements = new ArrayList<>(plot.getSeriesRegistry().size());
+        elements = new ArrayList<>(plot.getRegistry().size());
     }
 
     /**
@@ -84,8 +84,9 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
          * TODO: rendering performance *might* be improved by reusing StackElement instances but I'm skeptical...
          */
         getElements().clear();
-        List<SeriesAndFormatter<SeriesType, FormatterType>> pairList = plot.getSeriesRegistry();
-        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair: pairList) {
+        List<SeriesBundle<SeriesType, FormatterType>> pairList
+                = plot.getRegistry().getSeriesAndFormatterList();
+        for(SeriesBundle<SeriesType, FormatterType> thisPair: pairList) {
             getElements().add(new StackElement<>(thisPair));
         }
     }

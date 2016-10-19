@@ -16,9 +16,16 @@
 
 package com.androidplot.xy;
 
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PointF;
+import android.graphics.RectF;
+
+import com.androidplot.Region;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
+import com.androidplot.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +38,8 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
 
     protected static final int ZERO = 0;
     protected static final int ONE = 1;
+
+    private final Path path = new Path();
 
     public LineAndPointRenderer(XYPlot plot) {
         super(plot);
@@ -68,23 +77,67 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         path.lineTo(thisPoint.x, thisPoint.y);
     }
 
+    final ArrayList<PointF> points = new ArrayList<>();
+
+    // avoids needless new allocations of the points array
+    protected void resizePointsArray(int newSize) {
+        if(points.size() < newSize) {
+            while(points.size() < newSize) {
+                points.add(null);
+            }
+        } else if(points.size() > newSize) {
+            while(points.size() > newSize) {
+                points.remove(0);
+            }
+        }
+    }
 
     protected void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, LineAndPointFormatter formatter) {
         PointF thisPoint;
         PointF lastPoint = null;
         PointF firstPoint = null;
-        //Paint  linePaint = formatter.getLinePaint();
-        Path path = null;
-        ArrayList<PointF> points = new ArrayList<>(series.size());
-        for (int i = 0; i < series.size(); i++) {
-            Number y = series.getY(i);
-            Number x = series.getX(i);
+        final int seriesSize = series.size();
+        path.reset();
+        resizePointsArray(seriesSize);
+
+        int iStart = 0;
+        int iEnd = seriesSize;
+        if(SeriesUtils.getXYOrder(series) == OrderedXYSeries.XOrder.ASCENDING) {
+            final Region iBounds = SeriesUtils.iBounds(series, getPlot().getBounds());
+            iStart = iBounds.getMin().intValue();
+            if(iStart > 0) {
+                iStart--;
+            }
+            iEnd = iBounds.getMax().intValue();
+            if(iEnd < seriesSize - 1) {
+                iEnd++;
+            }
+        }
+        final double minX = getPlot().getBounds().getMinX().doubleValue();
+        final double maxX = getPlot().getBounds().getMaxX().doubleValue();
+        for (int i = iStart; i < iEnd; i++) {
+            final Number y = series.getY(i);
+            final Number x = series.getX(i);
+            PointF iPoint = points.get(i);
+
+            final double dx = x.doubleValue();
+            if(i > 0 && i < seriesSize - 1) {
+                if (dx < minX || dx > maxX) {
+                    continue;
+                }
+            }
 
             if (y != null && x != null) {
-                thisPoint = getPlot().getBounds().transformScreen(x, y, plotArea);
-                points.add(thisPoint);
+                if(iPoint == null) {
+                    iPoint = new PointF();
+                    points.set(i, iPoint);
+                }
+                thisPoint = iPoint;
+                getPlot().getBounds().transformScreen(thisPoint, x, y, plotArea);
             } else {
                 thisPoint = null;
+                iPoint = null;
+                points.set(i, iPoint);
             }
 
             // don't need to do any of this if the line isnt going to be drawn:
@@ -93,7 +146,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
 
                     // record the first point of the new Path
                     if (firstPoint == null) {
-                        path = new Path();
+                        path.reset();
                         firstPoint = thisPoint;
 
                         // create our first point at the bottom/x position so filling will look good:
@@ -114,6 +167,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 }
             }
         }
+
         if(formatter.hasLinePaint()) {
             if(formatter.getInterpolationParams() != null) {
                 List<XYCoords> interpolatedPoints = getInterpolator(
@@ -121,7 +175,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                         formatter.getInterpolationParams());
                 firstPoint = convertPoint(interpolatedPoints.get(ZERO), plotArea);
                 lastPoint = convertPoint(interpolatedPoints.get(interpolatedPoints.size()-ONE), plotArea);
-                path = new Path();
+                path.reset();
                 path.moveTo(firstPoint.x, firstPoint.y);
                 for(int i = 1; i < interpolatedPoints.size(); i++) {
                     thisPoint = convertPoint(interpolatedPoints.get(i), plotArea);
@@ -160,17 +214,20 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         //PointLabelFormatter plf = formatter.getPointLabelFormatter();
         if (formatter.hasVertexPaint() || formatter.hasPointLabelFormatter()) {
             int i = 0;
+            final Paint vertexPaint = formatter.hasVertexPaint() ? formatter.getVertexPaint() : null;
+            final boolean hasPointLabelFormatter = formatter.hasPointLabelFormatter();
+            final PointLabelFormatter plf = hasPointLabelFormatter ? formatter.getPointLabelFormatter() : null;
+            final PointLabeler pointLabeler = hasPointLabelFormatter ? formatter.getPointLabeler() : null;
             for (PointF p : points) {
-                PointLabeler pointLabeler = formatter.getPointLabeler();
 
                 // if vertexPaint is available, draw vertex:
-                if (formatter.hasVertexPaint()) {
-                    canvas.drawPoint(p.x, p.y, formatter.getVertexPaint());
+                if (vertexPaint != null) {
+                    canvas.drawPoint(p.x, p.y, vertexPaint);
                 }
 
                 // if textPaint and pointLabeler are available, draw point's text label:
-                if (formatter.hasPointLabelFormatter() && pointLabeler != null) {
-                    final PointLabelFormatter plf = formatter.getPointLabelFormatter();
+                if (pointLabeler != null) {
+                    //final PointLabelFormatter plf = formatter.getPointLabelFormatter();
                     canvas.drawText(pointLabeler.getLabel(series, i),
                             p.x + plf.hOffset, p.y + plf.vOffset, plf.getTextPaint());
                 }

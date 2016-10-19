@@ -38,7 +38,7 @@ import java.util.Arrays;
 // See: http://developer.android.com/reference/android/hardware/SensorEvent.html
 public class OrientationSensorExampleActivity extends Activity implements SensorEventListener
 {
-    private static final int HISTORY_SIZE = 300;
+    private static final int HISTORY_SIZE = 1000;
     private SensorManager sensorMgr = null;
     private Sensor orSensor = null;
 
@@ -108,13 +108,13 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         aprHistoryPlot.setRangeBoundaries(-180, 359, BoundaryMode.FIXED);
         aprHistoryPlot.setDomainBoundaries(0, HISTORY_SIZE, BoundaryMode.FIXED);
         aprHistoryPlot.addSeries(azimuthHistorySeries,
-                new FastLineAndPointRenderer.Formatter(
+                new LineAndPointFormatter(
                         Color.rgb(100, 100, 200), null, null, null));
         aprHistoryPlot.addSeries(pitchHistorySeries,
-                new FastLineAndPointRenderer.Formatter(
+                new LineAndPointFormatter(
                         Color.rgb(100, 200, 100), null, null, null));
         aprHistoryPlot.addSeries(rollHistorySeries,
-                new FastLineAndPointRenderer.Formatter(
+                new LineAndPointFormatter(
                         Color.rgb(200, 100, 100), null, null, null));
         aprHistoryPlot.setDomainStepMode(StepMode.INCREMENT_BY_VAL);
         aprHistoryPlot.setDomainStepValue(HISTORY_SIZE/10);

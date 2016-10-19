@@ -43,7 +43,9 @@ import java.util.*;
 /**
  * Base class for all Plot implementations.
  */
-public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter, RendererType extends SeriesRenderer>
+public abstract class Plot<SeriesType extends Series, FormatterType extends Formatter,
+        RendererType extends SeriesRenderer, BundleType extends SeriesBundle<SeriesType, FormatterType>,
+        RegistryType extends SeriesRegistry<BundleType, SeriesType, FormatterType>>
         extends View implements Resizable {
     private static final String TAG = Plot.class.getName();
     private static final String XML_ATTR_PREFIX      = "androidplot";
@@ -66,9 +68,22 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      * Associates lists series and getFormatter pairs with the class of the Renderer used to render them.
      */
-    public SeriesRegistry<SeriesType, FormatterType> getSeriesRegistry() {
-        return seriesRegistry;
+    public RegistryType getRegistry() {
+        return registry;
     }
+
+    public void setRegistry(RegistryType registry) {
+        this.registry = registry;
+        for(BundleType bundle : registry.getSeriesAndFormatterList()) {
+            attachSeries(bundle.getSeries(), bundle.getFormatter());
+        }
+    }
+
+    /**
+     *
+     * @return A new instance of RegistryType
+     */
+    protected abstract RegistryType getRegistryInstance();
 
     public TextLabelWidget getTitle() {
         return title;
@@ -152,7 +167,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private final Object renderSynch = new Object();
 
     private HashMap<Class<? extends RendererType>, RendererType> renderers;
-    private SeriesRegistry<SeriesType, FormatterType> seriesRegistry;
+
+    private RegistryType registry;
     private final ArrayList<PlotListener> listeners;
 
     private Thread renderThread;
@@ -161,7 +177,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     {
         listeners = new ArrayList<>();
-        seriesRegistry = new SeriesRegistry<>();
+        registry = getRegistryInstance();
         renderers = new HashMap<>();
 
         borderPaint = new Paint();
@@ -459,8 +475,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             styleableName = styleableName.replace('.', '_');
             try {
                 /**
-                 * Use reflection to safely check for the existence of styleable defs for Plot
-                 * and it's derivatives.  This safety check is necessary to avoid runtime exceptions
+                 * Use reflection to safely run for the existence of styleable defs for Plot
+                 * and it's derivatives.  This safety run is necessary to avoid runtime exceptions
                  * in apps that don't include Androidplot as a .aar and won't have access to
                  * the resources defined in the core library.
                  */
@@ -507,7 +523,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             for (int i = 0; i < attrs.getAttributeCount(); i++) {
                 String attrName = attrs.getAttributeName(i);
 
-                // case insensitive check to see if this attr begins with our prefix:
+                // case insensitive run to see if this attr begins with our prefix:
                 if (attrName != null && attrName.toUpperCase().startsWith(XML_ATTR_PREFIX.toUpperCase())) {
                     attrHash.put(attrName.substring(XML_ATTR_PREFIX.length() + 1), attrs.getAttributeValue(i));
                 }
@@ -569,11 +585,14 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @return True if the series was added or false if the series / formatter pair already exists in the registry.
      */
     public synchronized boolean addSeries(SeriesType series, FormatterType formatter) {
-        Class rendererClass = formatter.getRendererClass();
+        final boolean result = getRegistry().add(series, formatter);
+        attachSeries(series, formatter);
+        return result;
+    }
 
-//        if(getSeries(series, rendererClass) != null) {
-//            return false;
-//        }
+    protected void attachSeries(SeriesType series, FormatterType formatter) {
+
+        Class rendererClass = formatter.getRendererClass();
 
         // initialize the Renderer if necessary:
         if(!getRenderers().containsKey(rendererClass)) {
@@ -584,20 +603,17 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         if(series instanceof PlotListener) {
             addListener((PlotListener)series);
         }
-
-        getSeriesRegistry().add(new SeriesAndFormatter<>(series, formatter));
-        return true;
     }
 
     /**
      *
      * @param series
      * @param rendererClass
-     * @return The {@link SeriesAndFormatter} that matches the series and rendererClass params, or null if one is not found.
+     * @return The {@link SeriesBundle} that matches the series and rendererClass params, or null if one is not found.
      */
-    protected SeriesAndFormatter<SeriesType, FormatterType> getSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
-        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : seriesRegistry) {
-            if(thisPair.getSeries() == series && thisPair.getFormatter().getRendererClass() == rendererClass) {
+    protected SeriesBundle<SeriesType, FormatterType> getSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
+        for(SeriesBundle<SeriesType, FormatterType> thisPair : getSeries(series)) {
+            if(thisPair.getFormatter().getRendererClass() == rendererClass) {
                 return thisPair;
             }
         }
@@ -607,17 +623,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      *
      * @param series
-     * @return A List of {@link SeriesAndFormatter} instances that reference series.
+     * @return A List of {@link SeriesBundle} instances that reference series.
      */
-    protected List<SeriesAndFormatter<SeriesType, FormatterType>> getSeries(SeriesType series) {
-        List<SeriesAndFormatter<SeriesType, FormatterType>> results =
-                new ArrayList<>();
-        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : seriesRegistry) {
-            if(thisPair.getSeries() == series) {
-                results.add(thisPair);
-            }
-        }
-        return results;
+    protected List<SeriesBundle<SeriesType, FormatterType>> getSeries(SeriesType series) {
+        return getRegistry().get(series);
     }
 
     /**
@@ -626,26 +635,18 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * from the plot completely.
      * @param series
      * @param rendererClass
-     * @return The SeriesAndFormatterPair that was removed or null if nothing was removed.
+     * @return True if anything was removed, false otherwise
      */
-    public synchronized SeriesAndFormatter<SeriesType, FormatterType> removeSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
+    public synchronized boolean removeSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
 
-        List<SeriesAndFormatter<SeriesType, FormatterType>> results = getSeries(series);
-        SeriesAndFormatter<SeriesType, FormatterType> result = null;
-        for(SeriesAndFormatter<SeriesType, FormatterType> thisPair : results) {
-            if(thisPair.getFormatter().getRendererClass() == rendererClass) {
-                result = thisPair;
-                getSeriesRegistry().remove(result);
-                break;
-            }
-        }
+        List removedItems = getRegistry().remove(series, rendererClass);
 
         // if series implements PlotListener and is not assigned to any other renderers remove it as a listener:
-        if(series instanceof PlotListener && results.size() == 1) {
+        if (removedItems.size() == 1 && series instanceof PlotListener) {
             removeListener((PlotListener) series);
+            return true;
         }
-
-        return result;
+        return false;
     }
 
     /**
@@ -653,31 +654,28 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param series
      */
     public synchronized void removeSeries(SeriesType series) {
-
-        for(Iterator<SeriesAndFormatter<SeriesType, FormatterType>> it = getSeriesRegistry().iterator(); it.hasNext();) {
-            if(it.next().getSeries() == series) {
-                it.remove();
-            }
-        }
-
         // if series implements PlotListener, remove it from listeners:
         if (series instanceof PlotListener) {
             removeListener((PlotListener) series);
         }
+
+        getRegistry().remove(series);
     }
 
     /**
      * Remove all series from the plot.
      */
     public void clear() {
-        for(Iterator<SeriesAndFormatter<SeriesType, FormatterType>> it = getSeriesRegistry().iterator(); it.hasNext();) {
-            it.next();
-            it.remove();
+        for(SeriesType series : getRegistry().getSeriesList()) {
+            if(series instanceof  PlotListener) {
+                removeListener((PlotListener) series);
+            }
         }
+        getRegistry().clear();
     }
 
     public boolean isEmpty() {
-        return getSeriesRegistry().isEmpty();
+        return getRegistry().isEmpty();
     }
 
     /**
@@ -754,7 +752,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         PixelUtils.init(getContext());
 
         // disable hardware acceleration if it's not explicitly supported
-        // by the current Plot implementation. this check only applies to
+        // by the current Plot implementation. this run only applies to
         // honeycomb and later environments.
         if (Build.VERSION.SDK_INT >= 11) {
             if (!isHwAccelerationSupported() && isHardwareAccelerated()) {
@@ -831,12 +829,13 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             } catch (Exception e) {
                 Log.e(TAG, "Exception while rendering Plot.", e);
             }
-        } finally {
+
             isIdle = true;
             // any series interested in synchronizing with plot should
             // implement PlotListener.onAfterDraw(...) and do a read unlock from within that
             // invocation. This is the entry point for that invocation.
             notifyListenersAfterDraw(canvas);
+        } finally {
         }
     }
 

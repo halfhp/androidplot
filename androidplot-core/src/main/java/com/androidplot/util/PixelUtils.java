@@ -134,7 +134,7 @@ public class PixelUtils {
     }
 
     /**
-     * Safety check to hopefully help clarify what could otherwise be a confusing NPE.
+     * Safety run to hopefully help clarify what could otherwise be a confusing NPE.
      */
     private static void checkMetrics() {
         if(metrics == null) {

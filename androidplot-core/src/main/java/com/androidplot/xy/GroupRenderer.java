@@ -21,7 +21,7 @@ import android.graphics.RectF;
 import android.util.Log;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
-import com.androidplot.ui.SeriesAndFormatter;
+import com.androidplot.ui.SeriesBundle;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public abstract class GroupRenderer<FormatterType extends XYSeriesFormatter<XYRe
 
 
         // get all the data  associated with this renderer:
-        List<SeriesAndFormatter<XYSeries, ? extends FormatterType>> sfList = getSeriesAndFormatterList();
+        List<SeriesBundle<XYSeries, ? extends FormatterType>> sfList = getSeriesAndFormatterList();
 
         // no data to render so exit:
         if(sfList == null) {
@@ -80,6 +80,6 @@ public abstract class GroupRenderer<FormatterType extends XYSeriesFormatter<XYRe
      * @param sfList
      * @param stack
      */
-    public abstract void  onRender(Canvas canvas, RectF plotArea, List<SeriesAndFormatter<XYSeries,
-            ? extends FormatterType>> sfList, int size, RenderStack stack);
+    public abstract void  onRender(Canvas canvas, RectF plotArea, List<SeriesBundle<XYSeries,
+                ? extends FormatterType>> sfList, int size, RenderStack stack);
 }

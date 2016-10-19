@@ -19,6 +19,7 @@ package com.androidplot.xy;
 import android.graphics.Canvas;
 import com.androidplot.Plot;
 import com.androidplot.PlotListener;
+import com.androidplot.util.*;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -27,7 +28,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * A convenience class used to create instances of XYPlot generated from Lists of Numbers.
  */
-public class SimpleXYSeries implements XYSeries, PlotListener {
+public class SimpleXYSeries implements EditableXYSeries, PlotListener {
 
     private static final String TAG = SimpleXYSeries.class.getName();
 
@@ -46,11 +47,11 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
         XY_VALS_INTERLEAVED
     }
 
-    private volatile LinkedList<Number> xVals = new LinkedList<Number>();
-    private volatile LinkedList<Number> yVals = new LinkedList<Number>();
+    private volatile LinkedList<Number> xVals = new LinkedList<>();
+    private volatile LinkedList<Number> yVals = new LinkedList<>();
     private volatile String title = null;
-    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
 
+    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
 
     public SimpleXYSeries(String title) {
         this.title = title;
@@ -183,6 +184,27 @@ public class SimpleXYSeries implements XYSeries, PlotListener {
         lock.writeLock().lock();
         try {
             yVals.set(index, value);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void resize(int size) {
+        try {
+            lock.writeLock().lock();
+            if (xVals.size() < size) {
+
+                for (int i = xVals.size(); i < size; i++) {
+                    xVals.add(null);
+                    yVals.add(null);
+                }
+            } else if(xVals.size() > size) {
+                for(int i = xVals.size(); i > size; i--) {
+                    xVals.removeLast();
+                    yVals.removeLast();
+                }
+            }
         } finally {
             lock.writeLock().unlock();
         }

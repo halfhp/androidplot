@@ -82,7 +82,7 @@ public class SimplePieChartActivity extends Activity
             }
 
             private void deselectAll() {
-                List<Segment> segments = pie.getSeriesRegistry().getSeriesList();
+                List<Segment> segments = pie.getRegistry().getSeriesList();
                 for(Segment segment : segments) {
                     setSelected(segment, false);
                 }

@@ -129,7 +129,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
 
     /**
      * Get the {@link Paint} used to draw lines.  Will instantiate and a new default instance
-     * if it is currently null.  To check whether or not line paint has been set, use
+     * if it is currently null.  To run whether or not line paint has been set, use
      * {@link #hasLinePaint()}.
      * @return
      */
@@ -154,7 +154,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
 
     /**
      * Get the {@link Paint} used to draw vertices (points).  Will instantiate and a new default instance
-     * if it is currently null.  To check whether or not vertex paint has been set, use
+     * if it is currently null.  To run whether or not vertex paint has been set, use
      * {@link #hasVertexPaint()}.
      * @return
      */
@@ -178,7 +178,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     }
     /**
      * Get the {@link Paint} used to fill series areas.  Will instantiate and a new default instance
-     * if it is currently null.  To check whether or not fill paint has been set, use
+     * if it is currently null.  To run whether or not fill paint has been set, use
      * {@link #hasFillPaint()}.
      * @return
      */

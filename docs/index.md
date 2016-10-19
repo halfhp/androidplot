@@ -21,6 +21,7 @@ specific plot types explaining styling and other advanced topics.
 * [Pie Charts](piechart.md)
 * [Bubble Charts](bubblechart.md)
 * [Dynamic Plots](dynamicdata.md)
+* [Advanced XY Plot Topics](advanced_xy_plot.md)
 
 # Examples
 Source code examples of the various plot types.

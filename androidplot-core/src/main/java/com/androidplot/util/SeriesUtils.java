@@ -60,15 +60,29 @@ public class SeriesUtils {
 
             // iterate over each series
             for (XYSeries series : seriesArray) {
-                if (series.size() > 0) {
+
+                // if this is an advanced xy series then minMax have already been calculated for us:
+                if(series instanceof FastXYSeries) {
+                    final RectRegion b = ((FastXYSeries) series).minMax();
+                    if(constraints == null) {
+                        bounds.union(b);
+                    } else {
+                        if(constraints.contains(b.getMinX(), b.getMinY())) {
+                            bounds.union(b.getMinX(), b.getMinY());
+                        }
+                        if(constraints.contains(b.getMaxX(), b.getMaxY())) {
+                            bounds.union(b.getMaxX(), b.getMaxY());
+                        }
+                    }
+
+                } else if (series.size() > 0) {
                     for (int i = 0; i < series.size(); i++) {
                         final Number xi = series.getX(i);
                         final Number yi = series.getY(i);
 
                         // if constraints have been set, make sure this xy coordinate exists within them:
                         if (constraints == null || constraints.contains(xi, yi)) {
-                            minMax(bounds.getxRegion(), xi);
-                            minMax(bounds.getyRegion(), yi);
+                            bounds.union(xi, yi);
                         }
                     }
                 }
@@ -87,30 +101,134 @@ public class SeriesUtils {
     public static Region minMax(Region bounds, List<Number>... lists) {
         for (final List<Number> list : lists) {
             for (final Number i : list) {
-                minMax(bounds, i);
+                //minMax(bounds, i);
+                bounds.union(i);
             }
         }
         return bounds;
     }
 
     /**
-     * Compares a number against the current min/max values in a region, updating the region
-     * with the new value if appropriate.
-     * @param bounds
-     * @param number
+     * Compute the range of visible i-vals in the specified series.  Assumes that x-vals are
+     * in strict ascending order; behavior is undefined otherwise.
+     * @param series
+     * @param visibleBounds The visible constraints of the plot
      * @return
      */
-    public static Region minMax(Region bounds, Number number) {
-        if (number != null) {
-            final double di = number.doubleValue();
-            if (bounds.getMin() == null || di < bounds.getMin().doubleValue()) {
-                bounds.setMin(number);
-            }
-            if (bounds.getMax() == null || di > bounds.getMax().doubleValue()) {
-                bounds.setMax(number);
+    public static Region iBounds(XYSeries series, RectRegion visibleBounds) {
+        final float step = series.size() >= 200 ? 50 : 1;
+        final int iBoundsMin = iBoundsMin(series, visibleBounds.getMinX().doubleValue(), step);
+        final int iBoundsMax = iBoundsMax(series, visibleBounds.getMaxX().doubleValue(), step);
+        return new Region(iBoundsMin, iBoundsMax);
+    }
+
+    /**
+     * TODO: This is a poor alternative to a true binary search implementation.  Unfortunately writing
+     * TODO a binary search algorithm that also supports nulls is not trivial and would not likely
+     * TODO result in any noticeable performance increase here.  It's a task for another day!
+     * @param series
+     * @param visibleMax
+     * @param step
+     * @return The index of the smallest non-null value that is greater than visibleMax, or the index
+     * of the last element if no such value exists.
+     */
+    protected static int iBoundsMax(XYSeries series, double visibleMax, float step) {
+        int max = series.size() - 1;
+        final int seriesSize = series.size();
+        final int steps = (int) Math.ceil(seriesSize / step);
+        for (int stepIndex = steps; stepIndex >= 0; stepIndex--) {
+            final int i = stepIndex * (int) step;
+            for (int ii = 0; ii < step; ii++) {
+                final int iii = i + ii;
+                if(iii < seriesSize) {
+                    final Number thisX = series.getX(iii);
+                    if (thisX != null) {
+                        final double thisDouble = thisX.doubleValue();
+                        if (thisDouble > visibleMax) {
+                            // this is the smallest non-null value in this block, so skip
+                            // to the next block:
+                            max = iii;
+                            break;
+                        } else if (thisDouble == visibleMax) {
+                            return iii;
+                        } else {
+                            return max;
+                        }
+                    }
+                }
             }
         }
-        return bounds;
+        return max;
+    }
+
+    /**
+     * TODO: This is a poor alternative to a true binary search implementation.  Unfortunately writing
+     * TODO a binary search algorithm that also supports nulls is not trivial and would not likely
+     * TODO result in any noticeable performance increase here.  It's a task for another day!
+     * @param series
+     * @param visibleMin
+     * @param step
+     * @return The index of the largest non-null value that is less than visible, or 0
+     * (the first element index) if no such value exists.
+     */
+    protected static int iBoundsMin(XYSeries series, double visibleMin, float step) {
+        int min = 0;
+        final int steps = (int) Math.ceil(series.size() / step);
+        for (int stepIndex = 1; stepIndex <= steps; stepIndex++) {
+            final int i = stepIndex * (int) step;
+            for (int ii = 1; ii <= step; ii++) {
+                final int iii = i - ii;
+                if(iii < 0) {
+                    break;
+                }
+                if(iii < series.size()) {
+                    final Number thisX = series.getX(iii);
+                    if (thisX != null) {
+                        if (thisX.doubleValue() < visibleMin) {
+                            // this is the largest non-null value in this block, so skip
+                            // to the next block:
+                            min = iii;
+                            break;
+                        } else if (thisX.doubleValue() == visibleMin) {
+                            return iii;
+                        } else {
+                            return min;
+                        }
+                    }
+                }
+            }
+        }
+        return min;
+    }
+
+    /**
+     * Determine the minMax iVals of the xVals surrounding a range of one or more null values.
+     * @param series
+     * @param index index of the null value in question
+     * @return The iVals of the non-null values surrounding the null range. If the null range is unbounded on
+     * either side then either or both min and max values will also be null.
+     */
+    protected static Region getNullRegion(XYSeries series, int index) {
+        Region region = new Region();
+        if(series.getX(index) != null) {
+            throw new IllegalArgumentException("Attempt to find null region for non null index: " + index);
+        }
+        for(int i = index - 1; i >= 0; i--) {
+            Number val = series.getX(i);
+            if(val != null) {
+                region.setMin(i);
+                break;
+            }
+        }
+
+        for(int i = index + 1; i < series.size(); i++) {
+            Number val = series.getX(i);
+            if(val != null) {
+                region.setMax(i);
+                break;
+            }
+        }
+        return region;
     }
 
     /**
@@ -140,5 +258,16 @@ public class SeriesUtils {
         }
 
         System.out.println("Benchmark avg:" + (sumTime / numIterations) + "ms.");
+    }
+
+    /**
+     * Determine the XVal order of an XYSeries.  If series does not implement {@link OrderedXYSeries}
+     * then {@link com.androidplot.xy.OrderedXYSeries.XOrder#NONE} is assumed.
+     * @param series
+     * @return The {@link com.androidplot.xy.OrderedXYSeries.XOrder} of the series.
+     */
+    public static OrderedXYSeries.XOrder getXYOrder(XYSeries series) {
+        return series instanceof OrderedXYSeries ?
+               ((OrderedXYSeries) series).getXOrder() : OrderedXYSeries.XOrder.NONE;
     }
 }

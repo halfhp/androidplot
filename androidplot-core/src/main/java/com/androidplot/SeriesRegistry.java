@@ -17,8 +17,9 @@
 package com.androidplot;
 
 import com.androidplot.ui.Formatter;
-import com.androidplot.ui.SeriesAndFormatter;
+import com.androidplot.ui.SeriesBundle;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,14 +28,98 @@ import java.util.List;
  * Manages a list of {@link Series} and their associated {@link Formatter} in the context of a {@link Plot}.
  * @since 0.9.7
  */
-public class SeriesRegistry<SeriesType extends Series, FormatterType extends Formatter>
-        extends ArrayList<SeriesAndFormatter<SeriesType, FormatterType>> {
+public abstract class SeriesRegistry
+        <BundleType extends SeriesBundle<SeriesType, FormatterType>,
+                SeriesType extends Series, FormatterType extends Formatter> implements Serializable {
 
+    private ArrayList<BundleType> registry = new ArrayList<>();
+
+    public List<BundleType> getSeriesAndFormatterList() {
+        return registry;
+    }
     public List<SeriesType> getSeriesList() {
         List<SeriesType> result = new ArrayList<>();
-        for(SeriesAndFormatter<SeriesType, FormatterType> sfPair : this) {
+        for(SeriesBundle<SeriesType, FormatterType> sfPair : registry) {
             result.add(sfPair.getSeries());
         }
         return result;
+    }
+
+    public int size() {
+        return registry.size();
+    }
+
+    public boolean isEmpty() {
+        return registry.isEmpty();
+    }
+
+    public boolean add(SeriesType series, FormatterType formatter) {
+        return registry.add(newSeriesBundle(series, formatter));
+    }
+
+    protected abstract BundleType newSeriesBundle(SeriesType series, FormatterType formatter);
+
+    /**
+     *
+     * @param series
+     * @return A List of {@link SeriesBundle} instances that reference series.
+     */
+    protected List<SeriesBundle<SeriesType, FormatterType>> get(SeriesType series) {
+        List<SeriesBundle<SeriesType, FormatterType>> results =
+                new ArrayList<>();
+        for(SeriesBundle<SeriesType, FormatterType> thisPair : registry) {
+            if(thisPair.getSeries() == series) {
+                results.add(thisPair);
+            }
+        }
+        return results;
+    }
+
+    public synchronized List<BundleType> remove(SeriesType series, Class rendererClass) {
+        ArrayList<BundleType> removedItems = new ArrayList<>();
+        for(Iterator<BundleType> it = registry.iterator(); it.hasNext();) {
+            BundleType b = it.next();
+            if(b.getSeries() == series && b.getFormatter().getRendererClass() == rendererClass) {
+                it.remove();
+                removedItems.add(b);
+            }
+        }
+        return removedItems;
+    }
+
+    /**
+     * Remove all occurrences of series regardless of the associated Renderer.
+     * @param series
+     */
+    public synchronized boolean remove(SeriesType series) {
+        boolean result = false;
+        for(Iterator<BundleType> it = registry.iterator(); it.hasNext();) {
+            if(it.next().getSeries() == series) {
+                it.remove();
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Remove all series from the plot.
+     */
+    public void clear() {
+        for(Iterator<BundleType> it
+            = registry.iterator(); it.hasNext();) {
+            it.next();
+            it.remove();
+        }
+    }
+
+    public List<SeriesBundle<SeriesType, FormatterType>> getLegendEnabledItems() {
+        List<SeriesBundle<SeriesType, FormatterType>> sfList = new ArrayList<>();
+        for(SeriesBundle<SeriesType, FormatterType> sf : registry) {
+            if(sf.getFormatter().isLegendIconEnabled()) {
+                sfList.add(sf);
+            }
+        }
+        return sfList;
     }
 }

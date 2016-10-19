@@ -127,4 +127,23 @@ public class SimpleXYSeriesTest {
         assertEquals(size, series.size());
     }
 
+    @Test
+    public void testResize() throws Exception {
+        SimpleXYSeries series = new SimpleXYSeries("series");
+        series.resize(10);
+        assertEquals(10, series.size());
+
+        series.resize(20);
+        assertEquals(20, series.size());
+
+        series.resize(1);
+        assertEquals(1, series.size());
+
+        series.resize(0);
+        assertEquals(0, series.size());
+
+        series.resize(0);
+        assertEquals(0, series.size());
+    }
+
 }

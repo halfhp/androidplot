@@ -142,7 +142,7 @@ public class XYRegionExampleActivity extends Activity {
     }
 
     /**
-     * Processes a check box event
+     * Processes a run box event
      * @param cb The checkbox event origin
      * @param lpf LineAndPointFormatter with which rr and rf are to be added/removed
      * @param rf The XYRegionFormatter with which rr should be rendered

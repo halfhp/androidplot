@@ -27,7 +27,7 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 
 import com.androidplot.ui.RenderStack;
-import com.androidplot.ui.SeriesAndFormatter;
+import com.androidplot.ui.SeriesBundle;
 
 /**
  * Renders the points in an XYSeries as bars.
@@ -136,8 +136,8 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
 
 
 	@Override
-	public void onRender(Canvas canvas, RectF plotArea, List<SeriesAndFormatter<XYSeries,
-			? extends FormatterType>> sfList, int seriesSize, RenderStack stack) {
+	public void onRender(Canvas canvas, RectF plotArea, List<SeriesBundle<XYSeries,
+                ? extends FormatterType>> sfList, int seriesSize, RenderStack stack) {
 
     	TreeMap<Number, BarGroup> axisMap = new TreeMap<Number, BarGroup>();
 
@@ -145,7 +145,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
          * Build the axisMap (yVal,BarGroup)... a TreeMap of BarGroups
          * BarGroups represent a point on the X axis where a single or group of bars need to be drawn.
          */
-        for(SeriesAndFormatter<XYSeries, ? extends FormatterType> thisPair : sfList) {
+        for(SeriesBundle<XYSeries, ? extends FormatterType> thisPair : sfList) {
         	BarGroup barGroup;
 
             // For each value in the series

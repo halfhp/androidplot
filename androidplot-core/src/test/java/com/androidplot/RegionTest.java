@@ -40,16 +40,16 @@ public class RegionTest {
     @Test
     public void testConstructor() throws Exception {
         Region lr = new Region(0d, 0d);
-        assertEquals(0d, lr.getMin());
-        assertEquals(0d, lr.getMax());
+        assertEquals(0d, lr.getMin().doubleValue(), 0);
+        assertEquals(0d, lr.getMax().doubleValue(), 0);
 
         lr = new Region(1.5d, -2d);
-        assertEquals(-2d, lr.getMin());
-        assertEquals(1.5d, lr.getMax());
+        assertEquals(-2f, lr.getMin().floatValue(), 0);
+        assertEquals(1.5f, lr.getMax().floatValue(), 0);
 
         lr = new Region(10d, 20d);
-        assertEquals(10d, lr.getMin());
-        assertEquals(20d, lr.getMax());
+        assertEquals(10l, lr.getMin().longValue(), 0);
+        assertEquals(20l, lr.getMax().longValue(), 0);
     }
 
 
@@ -129,6 +129,34 @@ public class RegionTest {
         Region r2 = new Region(0, 100);
         assertEquals(0.01, r1.ratio(r2));
         assertEquals(100.0, r2.ratio(r1));
+
+        r1 = new Region(0f, 21402646f);
+        r2 = new Region(0, 999);
+
+        //assertTrue(r2.ratio(r1).doubleValue() > 0);
+    }
+
+    @Test
+    public void testRegionRegionUnion() throws Exception {
+        Region r1 = new Region(1, 2);
+        Region r2 = new Region(0, 100);
+
+        r1.union(r2);
+        assertEquals(0, r1.getMin().doubleValue(), 0);
+        assertEquals(100, r1.getMax().doubleValue(), 0);
+    }
+
+    @Test
+    public void testRegionPointUnion() throws Exception {
+        Region r1 = new Region(1, 2);
+
+        r1.union(0);
+        assertEquals(0, r1.getMin().doubleValue(), 0);
+        assertEquals(2, r1.getMax().doubleValue(), 0);
+
+        r1.union(100);
+        assertEquals(0, r1.getMin().doubleValue(), 0);
+        assertEquals(100, r1.getMax().doubleValue(), 0);
     }
 
 }

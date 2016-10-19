@@ -69,7 +69,11 @@ plot.addListener(new PlotListener() {
         // unlock any locked series
     }
 });
-```        
+```   
+Note that if your custom series implements the PlotListener interface, it's onBeforeDraw and onAfterDraw
+methods will be automatically called when the series is rendered, without the need for adding it
+as a listener to the plot.  SimpleXYSeries provides a reference implementation of this synchronization
+technique.
 
 In-depth usage of thread synchronization and read-write locks is beyond scope for this doc but you can 
 check out the source code of the SimpleXYSeries class for a functional example of ReentrantReadWriteLock

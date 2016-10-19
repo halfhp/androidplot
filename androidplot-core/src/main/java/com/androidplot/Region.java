@@ -17,12 +17,16 @@
 
 package com.androidplot;
 
+import com.androidplot.util.*;
+
 /**
  * A one dimensional region represented by a starting and ending value.
  */
 public class Region {
-    private Number min;
-    private Number max;
+    private FastNumber min;
+    private FastNumber max;
+    private FastNumber cachedLength;
+
     private Region defaults = this;
 
     public Region() {}
@@ -46,6 +50,11 @@ public class Region {
         }
     }
 
+    public void setMinMax(Region region) {
+        setMin(region.getMin());
+        setMax(region.getMax());
+    }
+
     /**
      *
      * @param v1
@@ -58,8 +67,14 @@ public class Region {
     }
 
     public Number length() {
-        return getMax() == null || getMin() == null ?
-               null : getMax().doubleValue() - getMin().doubleValue();
+        if(cachedLength == null) {
+            Number l = getMax() == null || getMin() == null ?
+                   null : getMax().doubleValue() - getMin().doubleValue();
+            if(l != null) {
+                cachedLength = new FastNumber(l);
+            }
+        }
+        return cachedLength;
     }
 
     /**
@@ -95,7 +110,7 @@ public class Region {
     }
 
     public Number transform(double value, Region region2, boolean flip) {
-        return transform(value, region2.min.doubleValue(), region2.max.doubleValue(), flip);
+        return transform(value, region2.getMin().doubleValue(), region2.getMax().doubleValue(), flip);
     }
 
     public double transform(double value, double min, double max, boolean flip) {
@@ -112,11 +127,33 @@ public class Region {
     }
 
     public Number ratio(Region r2) {
-        return ratio(r2.min.doubleValue(), r2.max.doubleValue());
+        return ratio(r2.getMin().doubleValue(), r2.getMax().doubleValue());
     }
 
+    /**
+     *
+     * @param min
+     * @param max
+     * @return length of this series divided by the length of the distance between min and max.
+     */
     public double ratio(double min, double max) {
         return length().doubleValue() / (max - min);
+    }
+
+
+    public void union(Number value) {
+        if(value == null) {
+            return;
+        }
+        double val = value.doubleValue();
+        if(getMin() == null ||
+                val < getMin().doubleValue()) {
+            setMin(value);
+        }
+        if(getMax() == null || val >
+                getMax().doubleValue()) {
+            setMax(value);
+        }
     }
 
     /**
@@ -128,14 +165,8 @@ public class Region {
      * @param input
      */
     public void union(Region input) {
-        if(getMin() == null || input.min != null &&
-                input.min.doubleValue() < getMin().doubleValue()) {
-            setMin(input.min);
-        }
-        if(getMax() == null || input.max != null && input.max.doubleValue() >
-                getMax().doubleValue()) {
-            setMax(input.max);
-        }
+        union(input.getMin());
+        union(input.getMax());
     }
 
     /**
@@ -176,10 +207,17 @@ public class Region {
     }
 
     public void setMin(Number min) {
-        if(min == null && defaults == null) {
-            throw new NullPointerException("Region values cannot be null unless defaults have been set.");
+        cachedLength = null;
+        if(min == null) {
+            if(defaults == null) {
+                throw new NullPointerException(
+                        "Region values cannot be null unless defaults have been set.");
+            } else {
+                this.min = null;
+            }
+        } else {
+            this.min = new FastNumber(min);
         }
-        this.min = min;
     }
 
     public boolean isMaxSet() {
@@ -191,10 +229,17 @@ public class Region {
     }
 
     public void setMax(Number max) {
-        if(max == null && defaults == null) {
-            throw new NullPointerException("Region values can never be null unless defaults have been set.");
+        cachedLength = null;
+        if(max == null) {
+            if(defaults == null) {
+                throw new NullPointerException(
+                        "Region values can never be null unless defaults have been set.");
+            } else {
+                this.max = null;
+            }
+        } else {
+            this.max = new FastNumber(max);
         }
-        this.max = max;
     }
 
     /**

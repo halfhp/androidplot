@@ -1,6 +1,9 @@
-# 1.2.3
+# 1.3.0
 
-* Added leakcanary
+* Added sampling support.  See the [Advanced XY Plot](advanced_xy_plot.md) doc for details.
+* PanZoom performance enhancements & bug fixes.  If you're currently using PanZoom you'll likely need to 
+update your code as the interface has slightly changed. 
+* Added leakcanary to DemoApp for debug builds.
 * More unit test coverage
 * Fixed a bug that prevented an instance of a given series from being added more than once, even 
 when a unique formatter is supplied.

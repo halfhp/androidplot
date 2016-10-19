@@ -51,19 +51,26 @@ public abstract class Formatter<PlotType extends Plot> {
         Fig.configure(ctx, this, xmlCfgId);
     }
 
+    /**
+     *
+     * @param plot
+     * @param <T>
+     * @return @return An instance of SeriesRenderer constructed with the specified plot.
+     */
     public <T extends SeriesRenderer> T getRendererInstance(PlotType plot) {
         return (T) doGetRendererInstance(plot);
     }
 
     /**
      *
-     * @return The Class of SeriesRenderer that should be used.
+     * @return The Class of SeriesRenderer that should be used when rendering series associated
+     * with instances of this formatter.
      */
     public abstract Class<? extends SeriesRenderer> getRendererClass();
 
     /**
      *
-     * @return An instance of SeriesRenderer that took plot as an argument to its constructor.
+     * @return An instance of SeriesRenderer constructed with the specified plot.
      */
     protected abstract SeriesRenderer doGetRendererInstance(PlotType plot);
 

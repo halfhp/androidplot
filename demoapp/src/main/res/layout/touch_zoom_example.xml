@@ -24,6 +24,7 @@
     <com.androidplot.xy.XYPlot
         style="@style/APDefacto.Dark"
         android:id="@+id/plot"
+        ap:renderMode="use_background_thread"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         ap:title="A Simple XY Plot"

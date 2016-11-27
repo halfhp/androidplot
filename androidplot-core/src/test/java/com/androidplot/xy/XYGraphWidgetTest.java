@@ -19,7 +19,6 @@ package com.androidplot.xy;
 import android.content.res.*;
 import android.graphics.*;
 
-import com.androidplot.*;
 import com.androidplot.test.*;
 import com.androidplot.ui.*;
 
@@ -30,10 +29,8 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -53,7 +50,7 @@ public class XYGraphWidgetTest extends AndroidplotTest {
     TypedArray typedArray;
 
     @Mock
-    SeriesRegistry seriesRegistry;
+    XYSeriesRegistry seriesRegistry;
 
     RectRegion bounds = new RectRegion(0, 100, 0, 100);
 
@@ -71,7 +68,7 @@ public class XYGraphWidgetTest extends AndroidplotTest {
     public void setUp() throws Exception {
         size = spy(new Size(100, SizeMode.ABSOLUTE, 100, SizeMode.ABSOLUTE));
         xyPlot = spy(new XYPlot(getContext(), "XYPlot"));
-        when(xyPlot.getSeriesRegistry()).thenReturn(seriesRegistry);
+        when(xyPlot.getRegistry()).thenReturn(seriesRegistry);
         when(xyPlot.getBounds()).thenReturn(bounds);
         when(xyPlot.getDomainOrigin()).thenReturn(0);
         when(xyPlot.getRangeOrigin()).thenReturn(0);

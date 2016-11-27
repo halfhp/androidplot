@@ -61,8 +61,8 @@ public class XYPlotTest extends AndroidplotTest {
         plot.calculateMinMaxVals();
 
 
-        assertEquals(3.0, plot.getBounds().getMinX());
-        assertEquals(7.0, plot.getBounds().getMaxX());
+        assertEquals(3.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(7.0, plot.getBounds().getMaxX().doubleValue(), 0);
     }
 
     @Test
@@ -71,14 +71,14 @@ public class XYPlotTest extends AndroidplotTest {
         plot.centerOnDomainOrigin(5);
         plot.calculateMinMaxVals();
 
-        assertEquals(10.0, plot.getBounds().getMaxX()); // symmetry is @ 10, not 9
-        assertEquals(0.0, plot.getBounds().getMinX());
+        assertEquals(10.0, plot.getBounds().getMaxX().doubleValue(), 0); // symmetry is @ 10, not 9
+        assertEquals(0.0, plot.getBounds().getMinX().doubleValue(), 0);
 
         plot.centerOnRangeOrigin(50);
         plot.calculateMinMaxVals();
 
-        assertEquals(100.0, plot.getBounds().getMaxY());
-        assertEquals(0.0, plot.getBounds().getMinY());
+        assertEquals(100.0, plot.getBounds().getMaxY().doubleValue(), 0);
+        assertEquals(0.0, plot.getBounds().getMinY().doubleValue(), 0);
 
     }
 
@@ -88,22 +88,22 @@ public class XYPlotTest extends AndroidplotTest {
         plot.centerOnDomainOrigin(5, null, BoundaryMode.GROW);
         plot.calculateMinMaxVals();
 
-        assertEquals(0.0, plot.getBounds().getMinX());
-        assertEquals(10.0, plot.getBounds().getMaxX());
+        assertEquals(0.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(10.0, plot.getBounds().getMaxX().doubleValue(), 0);
 
         // introduce a larger domain set.  boundaries should change
         series1.setModel(numList2, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
 
-        assertEquals(-1.0, plot.getBounds().getMinX());
-        assertEquals(11.0, plot.getBounds().getMaxX());
+        assertEquals(-1.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(11.0, plot.getBounds().getMaxX().doubleValue(), 0);
 
         // revert series model back to the previous set.  boundaries should remain the same
         series1.setModel(numList1, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
 
-        assertEquals(-1.0, plot.getBounds().getMinX());
-        assertEquals(11.0, plot.getBounds().getMaxX());
+        assertEquals(-1.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(11.0, plot.getBounds().getMaxX().doubleValue(), 0);
     }
 
     @Test
@@ -112,14 +112,14 @@ public class XYPlotTest extends AndroidplotTest {
         plot.centerOnDomainOrigin(5, null, BoundaryMode.SHRINK);
         plot.calculateMinMaxVals();
 
-        assertEquals(0.0, plot.getBounds().getMinX());
-        assertEquals(10.0, plot.getBounds().getMaxX());
+        assertEquals(0.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(10.0, plot.getBounds().getMaxX().doubleValue(), 0);
 
         // update with more extreme values...nothing should change in shrink mode:
         series1.setModel(numList2,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 
-        assertEquals(0.0, plot.getBounds().getMinX());
-        assertEquals(10.0, plot.getBounds().getMaxX());
+        assertEquals(0.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(10.0, plot.getBounds().getMaxX().doubleValue(), 0);
                 
     }
 
@@ -130,49 +130,49 @@ public class XYPlotTest extends AndroidplotTest {
         plot.addSeries(series1, new LineAndPointFormatter());
         plot.calculateMinMaxVals();
 
-        // default to auto so check them
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(9, plot.getBounds().getMaxX());
+        // default to auto so run them
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(9, plot.getBounds().getMaxX().doubleValue(), 0);
 
         plot.setDomainBoundaries(2, BoundaryMode.FIXED, 8, BoundaryMode.FIXED);
         plot.calculateMinMaxVals();
 
         // fixed
-        assertEquals(2, plot.getBounds().getMinX());
-        assertEquals(8, plot.getBounds().getMaxX());
+        assertEquals(2, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(8, plot.getBounds().getMaxX().doubleValue(), 0);
 
         // back to auto
         plot.setDomainBoundaries(2, BoundaryMode.AUTO, 8, BoundaryMode.AUTO);
         plot.calculateMinMaxVals();
 
-        // check again
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(9, plot.getBounds().getMaxX());
+        // run again
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(9, plot.getBounds().getMaxX().doubleValue(), 0);
         
         // we are not testing MinY well with this dataset.
         // try grow
         plot.setDomainBoundaries(2, BoundaryMode.GROW, 8, BoundaryMode.GROW);
         plot.calculateMinMaxVals();
 
-        // check inital
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(9, plot.getBounds().getMaxX());
+        // run inital
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(9, plot.getBounds().getMaxX().doubleValue(), 0);
         
         // update with more extreme values...
         series1.setModel(numList2,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
 
         // after growing
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(11, plot.getBounds().getMaxX());
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(11, plot.getBounds().getMaxX().doubleValue(), 0);
 
         // back to previous
         series1.setModel(numList1,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
         
         // should not of changed.
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(11, plot.getBounds().getMaxX());
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(11, plot.getBounds().getMaxX().doubleValue(), 0);
 
         // back to big
         series1.setModel(numList2,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
@@ -180,33 +180,33 @@ public class XYPlotTest extends AndroidplotTest {
         plot.setDomainBoundaries(2, BoundaryMode.SHRINK, 8, BoundaryMode.SHRINK);
         plot.calculateMinMaxVals();
 
-        // check inital
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(11, plot.getBounds().getMaxX());
+        // run inital
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(11, plot.getBounds().getMaxX().doubleValue(), 0);
         
         // now small
         series1.setModel(numList1,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
 
         // after shrinking
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(9, plot.getBounds().getMaxX());
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(9, plot.getBounds().getMaxX().doubleValue(), 0);
 
         // back to previous
         series1.setModel(numList2,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
         
         // should not of changed.
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(9, plot.getBounds().getMaxX());
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(9, plot.getBounds().getMaxX().doubleValue(), 0);
 
         // back to auto
         plot.setDomainBoundaries(2, BoundaryMode.AUTO, 8, BoundaryMode.AUTO);
         plot.calculateMinMaxVals();
         
         // should of changed.
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(11, plot.getBounds().getMaxX());
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(11, plot.getBounds().getMaxX().doubleValue(), 0);
     }
     
     @Test
@@ -214,48 +214,48 @@ public class XYPlotTest extends AndroidplotTest {
         plot.addSeries(series1, new LineAndPointFormatter());
         plot.calculateMinMaxVals();
 
-        // default to auto so check them
-        assertEquals(0, plot.getBounds().getMinY());
-        assertEquals(100, plot.getBounds().getMaxY());
+        // default to auto so run them
+        assertEquals(0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100, plot.getBounds().getMaxY().doubleValue(), 0);
 
         plot.setRangeBoundaries(5, BoundaryMode.FIXED, 80, BoundaryMode.FIXED);
         plot.calculateMinMaxVals();
 
         // fixed
-        assertEquals(5, plot.getBounds().getMinY());
-        assertEquals(80, plot.getBounds().getMaxY());
+        assertEquals(5, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(80, plot.getBounds().getMaxY().doubleValue(), 0);
 
         // back to auto
         plot.setRangeBoundaries(2, BoundaryMode.AUTO, 8, BoundaryMode.AUTO);
         plot.calculateMinMaxVals();
 
-        // check again
-        assertEquals(0, plot.getBounds().getMinY());
-        assertEquals(100, plot.getBounds().getMaxY());
+        // run again
+        assertEquals(0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100, plot.getBounds().getMaxY().doubleValue(), 0);
         
         // try grow
         plot.setRangeBoundaries(2, BoundaryMode.GROW, 8, BoundaryMode.GROW);
         plot.calculateMinMaxVals();
 
-        // check inital
-        assertEquals(0, plot.getBounds().getMinY());
-        assertEquals(100, plot.getBounds().getMaxY());
+        // run inital
+        assertEquals(0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100, plot.getBounds().getMaxY().doubleValue(), 0);
         
         // update with more extreme values...
         series1.setModel(numList2,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
 
         // after growing
-        assertEquals(-100, plot.getBounds().getMinY());
-        assertEquals(200, plot.getBounds().getMaxY());
+        assertEquals(-100, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(200, plot.getBounds().getMaxY().doubleValue(), 0);
 
         // back to previous
         series1.setModel(numList1,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
         
         // should not of changed.
-        assertEquals(-100, plot.getBounds().getMinY());
-        assertEquals(200, plot.getBounds().getMaxY());
+        assertEquals(-100, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(200, plot.getBounds().getMaxY().doubleValue(), 0);
 
         // back to big
         series1.setModel(numList2,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
@@ -263,33 +263,33 @@ public class XYPlotTest extends AndroidplotTest {
         plot.setRangeBoundaries(2, BoundaryMode.SHRINK, 8, BoundaryMode.SHRINK);
         plot.calculateMinMaxVals();
 
-        // check inital
-        assertEquals(-100, plot.getBounds().getMinY());
-        assertEquals(200, plot.getBounds().getMaxY());
+        // run inital
+        assertEquals(-100, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(200, plot.getBounds().getMaxY().doubleValue(), 0);
         
         // now small
         series1.setModel(numList1,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
 
         // after shrinking
-        assertEquals(0, plot.getBounds().getMinY());
-        assertEquals(100, plot.getBounds().getMaxY());
+        assertEquals(0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100, plot.getBounds().getMaxY().doubleValue(), 0);
 
         // back to previous
         series1.setModel(numList2,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
         
         // should not of changed.
-        assertEquals(0, plot.getBounds().getMinY());
-        assertEquals(100, plot.getBounds().getMaxY());
+        assertEquals(0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100, plot.getBounds().getMaxY().doubleValue(), 0);
 
         // back to auto
         plot.setRangeBoundaries(2, BoundaryMode.AUTO, 8, BoundaryMode.AUTO);
         plot.calculateMinMaxVals();
         
         // should of changed.
-        assertEquals(-100, plot.getBounds().getMinY());
-        assertEquals(200, plot.getBounds().getMaxY());
+        assertEquals(-100, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(200, plot.getBounds().getMaxY().doubleValue(), 0);
     }
     
     @Test
@@ -297,54 +297,58 @@ public class XYPlotTest extends AndroidplotTest {
         plot.addSeries(series1, new LineAndPointFormatter());
         plot.calculateMinMaxVals();
 
-        // default to auto so check them
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(9, plot.getBounds().getMaxX());
-        
-        plot.setDomainRightMax(10);
+        // default to auto so run them
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(9, plot.getBounds().getMaxX().doubleValue(), 0);
+
+        plot.getOuterLimits().setMaxX(10);
+        //plot.setDomainRightMax(10);
         plot.calculateMinMaxVals();
 
         // same values.
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(9, plot.getBounds().getMaxX());
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(9, plot.getBounds().getMaxX().doubleValue(), 0);
 
         series1.setModel(numList2,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
 
         // on RightMax
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(10, plot.getBounds().getMaxX());
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(10, plot.getBounds().getMaxX().doubleValue(), 0);
 
-        plot.setDomainRightMax(null);
+        //plot.setDomainRightMax(null);
+        plot.getOuterLimits().setMaxX(null);
         plot.calculateMinMaxVals();
 
         // back to full
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(11, plot.getBounds().getMaxX());
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(11, plot.getBounds().getMaxX().doubleValue(), 0);
         
         // now the RightMin
-        plot.setDomainRightMin(10);
+        //plot.setDomainRightMin(10);
+        plot.getInnerLimits().setMaxX(10);
         plot.calculateMinMaxVals();
 
         // still to full
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(11, plot.getBounds().getMaxX());
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(11, plot.getBounds().getMaxX().doubleValue(), 0);
 
         // small list
         series1.setModel(numList1,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
         
         // on RightMin
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(10, plot.getBounds().getMaxX());
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(10, plot.getBounds().getMaxX().doubleValue(), 0);
 
         // now off again
-        plot.setDomainRightMin(null);
+        //plot.setDomainRightMin(null);
+        plot.getInnerLimits().setMaxX(null);
         plot.calculateMinMaxVals();
 
         // small values.
-        assertEquals(0, plot.getBounds().getMinX());
-        assertEquals(9, plot.getBounds().getMaxX());
+        assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(9, plot.getBounds().getMaxX().doubleValue(), 0);
     }
     
     @Test
@@ -352,58 +356,66 @@ public class XYPlotTest extends AndroidplotTest {
         plot.addSeries(series1, new LineAndPointFormatter());
         plot.calculateMinMaxVals();
 
-        // default to auto so check them
-        assertEquals(0, plot.getBounds().getMinY());
-        assertEquals(100, plot.getBounds().getMaxY());
-        
-        plot.setRangeTopMax(110);
-        plot.setRangeBottomMin(-50);
+        // default to auto so run them
+        assertEquals(0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100, plot.getBounds().getMaxY().doubleValue(), 0);
+
+        plot.getOuterLimits().setMaxY(110);
+        plot.getOuterLimits().setMinY(-50);
+        //plot.setRangeTopMax(110);
+        //plot.setRangeBottomMin(-50);
         plot.calculateMinMaxVals();
 
         // same values.
-        assertEquals(0, plot.getBounds().getMinY());
-        assertEquals(100, plot.getBounds().getMaxY());
+        assertEquals(0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100, plot.getBounds().getMaxY().doubleValue(), 0);
 
         series1.setModel(numList2,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
 
         // on Limits
-        assertEquals(-50, plot.getBounds().getMinY());
-        assertEquals(110, plot.getBounds().getMaxY());
+        assertEquals(-50, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(110, plot.getBounds().getMaxY().doubleValue(), 0);
 
-        plot.setRangeTopMax(null);
-        plot.setRangeBottomMin(null);
+        plot.getOuterLimits().setMaxY(null);
+        plot.getOuterLimits().setMinY(null);
+        //plot.setRangeTopMax(null);
+        //plot.setRangeBottomMin(null);
         plot.calculateMinMaxVals();
 
         // back to full
-        assertEquals(-100, plot.getBounds().getMinY());
-        assertEquals(200, plot.getBounds().getMaxY());
+        assertEquals(-100, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(200, plot.getBounds().getMaxY().doubleValue(), 0);
         
         // now the Min
-        plot.setRangeTopMin(150);
-        plot.setRangeBottomMax(-60);
+        plot.getInnerLimits().setMaxY(150);
+        plot.getInnerLimits().setMinY(-60);
+        //plot.setRangeTopMin(150);
+        //plot.setRangeBottomMax(-60);
         plot.calculateMinMaxVals();
 
         // still to full
-        assertEquals(-100, plot.getBounds().getMinY());
-        assertEquals(200, plot.getBounds().getMaxY());
+        assertEquals(-100, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(200, plot.getBounds().getMaxY().doubleValue(), 0);
 
         // small list
         series1.setModel(numList1,SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
         plot.calculateMinMaxVals();
         
         // on Limits
-        assertEquals(-60, plot.getBounds().getMinY());
-        assertEquals(150, plot.getBounds().getMaxY());
+        assertEquals(-60, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(150, plot.getBounds().getMaxY().doubleValue(), 0);
 
         // now off again
-        plot.setRangeTopMin(null);
-        plot.setRangeBottomMax(null);
+        plot.getInnerLimits().setMaxY(null);
+        plot.getInnerLimits().setMinY(null);
+        //plot.setRangeTopMin(null);
+        //plot.setRangeBottomMax(null);
         plot.calculateMinMaxVals();
 
         // small values.
-        assertEquals(0, plot.getBounds().getMinY());
-        assertEquals(100, plot.getBounds().getMaxY());
+        assertEquals(0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100, plot.getBounds().getMaxY().doubleValue(), 0);
     }
     
     @Test

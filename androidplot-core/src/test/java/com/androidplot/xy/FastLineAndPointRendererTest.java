@@ -48,7 +48,7 @@ public class FastLineAndPointRendererTest extends AndroidplotTest {
         XYPlot plot = new XYPlot(getContext(), "Test");
 
         FastLineAndPointRenderer.Formatter formatter =
-                new FastLineAndPointRenderer.Formatter(Color.RED, Color.RED, null, null);
+                new FastLineAndPointRenderer.Formatter(Color.RED, Color.RED, null);
 
 
         // create a series composed of 3 "segments"; series portions separated by null values:

@@ -21,6 +21,7 @@ import android.graphics.*;
 import com.androidplot.test.AndroidplotTest;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -127,10 +128,10 @@ public class RectRegionTest extends AndroidplotTest{
         RectRegion r2 = new RectRegion(0, 10, 0, 10);
 
         r1.intersect(r2);
-        assertEquals(0, r1.getMinX());
-        assertEquals(10, r1.getMaxX());
-        assertEquals(0, r1.getMinY());
-        assertEquals(10, r1.getMaxY());
+        assertEquals(0, r1.getMinX().doubleValue(), 0);
+        assertEquals(10, r1.getMaxX().doubleValue(), 0);
+        assertEquals(0, r1.getMinY().doubleValue(), 0);
+        assertEquals(10, r1.getMaxY().doubleValue(), 0);
     }
 
     @Test
@@ -139,19 +140,19 @@ public class RectRegionTest extends AndroidplotTest{
         RectRegion r2 = new RectRegion(5, 15, 5, 15);
 
         r1.intersect(r2);
-        assertEquals(5, r1.getMinX());
-        assertEquals(10, r1.getMaxX());
-        assertEquals(5, r1.getMinY());
-        assertEquals(10, r1.getMaxY());
+        assertEquals(5, r1.getMinX().doubleValue(), 0);
+        assertEquals(10, r1.getMaxX().doubleValue(), 0);
+        assertEquals(5, r1.getMinY().doubleValue(), 0);
+        assertEquals(10, r1.getMaxY().doubleValue(), 0);
 
         r1 = new RectRegion(0, 10, 0, 10);
         r2 = new RectRegion(-5, 5, -5, 5);
         r1.intersect(r2);
 
-        assertEquals(0, r1.getMinX());
-        assertEquals(5, r1.getMaxX());
-        assertEquals(0, r1.getMinY());
-        assertEquals(5, r1.getMaxY());
+        assertEquals(0, r1.getMinX().doubleValue(), 0);
+        assertEquals(5, r1.getMaxX().doubleValue(), 0);
+        assertEquals(0, r1.getMinY().doubleValue(), 0);
+        assertEquals(5, r1.getMaxY().doubleValue(), 0);
     }
 
     @Test
@@ -182,17 +183,68 @@ public class RectRegionTest extends AndroidplotTest{
 
         r1.union(r2);
 
-        assertEquals(0, r1.getMinX());
-        assertEquals(200, r1.getMaxX());
-        assertEquals(0, r1.getMinY());
-        assertEquals(200, r1.getMaxY());
+        assertEquals(0, r1.getMinX().doubleValue(), 0);
+        assertEquals(200, r1.getMaxX().doubleValue(), 0);
+        assertEquals(0, r1.getMinY().doubleValue(), 0);
+        assertEquals(200, r1.getMaxY().doubleValue(), 0);
 
         r1 = new RectRegion(0, 10, 0, 10);
         r2.union(r1);
 
-        assertEquals(0, r2.getMinX());
-        assertEquals(200, r2.getMaxX());
-        assertEquals(0, r2.getMinY());
-        assertEquals(200, r2.getMaxY());
+        assertEquals(0, r2.getMinX().doubleValue(), 0);
+        assertEquals(200, r2.getMaxX().doubleValue(), 0);
+        assertEquals(0, r2.getMinY().doubleValue(), 0);
+        assertEquals(200, r2.getMaxY().doubleValue(), 0);
+    }
+
+    /**
+     * Currently ignored as the base implementation does not currently pass.
+     */
+    @Ignore
+    @Test
+    public void testOverlapsLine() {
+        RectRegion r1 = new RectRegion(0, 100, 0, 100);
+
+//        assertFalse(r1.intersectsWithLine(200, 200, 400, 400));
+//        assertFalse(r1.intersectsWithLine(-1, -1, -1, 100));
+//        assertTrue(r1.intersectsWithLine(0, 0, 100, 100));
+//        assertTrue(r1.intersectsWithLine(50, 50, 200, 200));
+
+        // lines running parallel to region edges:
+        assertTrue(r1.intersectsWithLine(0, 0, 0, 100));
+        assertTrue(r1.intersectsWithLine(0, 0, 100, 0));
+        assertTrue(r1.intersectsWithLine(0, 100, 0, 0));
+        assertTrue(r1.intersectsWithLine(100, 0, 0, 0));
+
+        assertTrue(r1.intersectsWithLine(100, 0, 0, 0));
+        assertTrue(r1.intersectsWithLine(0, 100, 0, 0));
+        assertTrue(r1.intersectsWithLine(0, 0, 100, 0));
+        assertTrue(r1.intersectsWithLine(0, 0, 0, 100));
+
+        // lines passing through top & bottom edges only:
+        assertTrue(r1.intersectsWithLine(50, -1000, 50, 1000));
+        assertTrue(r1.intersectsWithLine(50, 1000, 50, -1000));
+
+        // lines passing through left & right edges only:
+        assertTrue(r1.intersectsWithLine(-1000, 50, 1000, 50));
+        assertTrue(r1.intersectsWithLine(1000, 50, -100, 50));
+
+        // diagonal passing through bottom-left and top-right corners:
+        assertTrue(r1.intersectsWithLine(-100, -100, 200, 200));
+
+        // diagonal passing inside upper-left edge
+        assertTrue(r1.intersectsWithLine(-20, 80, 20, 120));
+        assertTrue(r1.intersectsWithLine(20, 120, -20, 80));
+
+        // diagonal passing outside upper-left edge
+
+        // diagonal passing inside lower-left edge
+        // diagonal passing outside lower-left edge
+
+        // diagonal passing inside upper-right edge
+        // diagonal passing outside upper-right edge
+
+        // diagonal passing inside lower-right edge
+        // diagonal passing outside lower-right edge
     }
 }

@@ -55,7 +55,7 @@ public class LineAndPointRendererTest extends AndroidplotTest {
     }
 
     /**
-     * Sanity check to make sure that at the end of the day, points are being drawn at the expected
+     * Sanity run to make sure that at the end of the day, points are being drawn at the expected
      * screen-coords.
      * @throws Exception
      */
@@ -67,7 +67,7 @@ public class LineAndPointRendererTest extends AndroidplotTest {
         XYPlot plot = new XYPlot(getContext(), "Test");
 
         FastLineAndPointRenderer.Formatter formatter =
-                new FastLineAndPointRenderer.Formatter(Color.RED, Color.RED, null, null);
+                new FastLineAndPointRenderer.Formatter(Color.RED, Color.RED, null);
 
         // create a series composed of 3 "segments"; series portions separated by null values:
         XYSeries series = new SimpleXYSeries(

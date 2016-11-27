@@ -16,7 +16,7 @@
 
 package com.androidplot.xy;
 
-import com.androidplot.ui.SeriesAndFormatter;
+import com.androidplot.ui.SeriesBundle;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.Layerable;
 
@@ -40,7 +40,7 @@ public abstract class XYSeriesRenderer<SeriesType extends XYSeries, XYFormatterT
     public Hashtable<XYRegionFormatter, String> getUniqueRegionFormatters() {
 
         Hashtable<XYRegionFormatter, String> found = new Hashtable<>();
-        for(SeriesAndFormatter<SeriesType, ? extends XYFormatterType> sfPair : getSeriesAndFormatterList()) {
+        for(SeriesBundle<SeriesType, ? extends XYFormatterType> sfPair : getSeriesAndFormatterList()) {
             Layerable<RectRegion> regionIndexer = sfPair.getFormatter().getRegions();
             for (RectRegion region : regionIndexer.elements()) {
                 XYRegionFormatter f = sfPair.getFormatter().getRegionFormatter(region);

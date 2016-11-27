@@ -47,5 +47,4 @@ public interface XYSeries extends Series {
      * @return The y-value.
      */
     Number getY(int index);
-
 }

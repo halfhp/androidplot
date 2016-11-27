@@ -18,7 +18,7 @@ package com.androidplot.xy;
 
 import android.graphics.*;
 import com.androidplot.ui.LayoutManager;
-import com.androidplot.ui.SeriesAndFormatter;
+import com.androidplot.ui.SeriesBundle;
 import com.androidplot.ui.Size;
 import com.androidplot.ui.TableModel;
 import com.androidplot.ui.widget.Widget;
@@ -149,17 +149,17 @@ public class XYLegendWidget extends Widget {
         finishDrawingCell(canvas, cellRect, iconRect, seriesTitle);
     }
 
-    protected List<SeriesAndFormatter<XYSeries, XYSeriesFormatter>> getLegendEnabledSeriesAndFormatterList() {
-        List<SeriesAndFormatter<XYSeries, XYSeriesFormatter>> sfList = new ArrayList<>();
-        ListIterator<SeriesAndFormatter<XYSeries, XYSeriesFormatter>> it = plot.getSeriesRegistry().listIterator();
-        while(it.hasNext()) {
-            SeriesAndFormatter<XYSeries, XYSeriesFormatter> thisSf = it.next();
-            if(thisSf.getFormatter().isLegendIconEnabled()) {
-                sfList.add(thisSf);
-            }
-        }
-        return sfList;
-    }
+//    protected List<SeriesAndFormatter<XYSeries, XYSeriesFormatter>> getLegendEnabledSeriesAndFormatterList() {
+//        List<SeriesAndFormatter<XYSeries, XYSeriesFormatter>> sfList = new ArrayList<>();
+//        ListIterator<SeriesAndFormatter<XYSeries, XYSeriesFormatter>> it = plot.getSeriesRegistry().listIterator();
+//        while(it.hasNext()) {
+//            SeriesAndFormatter<XYSeries, XYSeriesFormatter> thisSf = it.next();
+//            if(thisSf.getFormatter().isLegendIconEnabled()) {
+//                sfList.add(thisSf);
+//            }
+//        }
+//        return sfList;
+//    }
 
     @Override
     protected synchronized void doOnDraw(Canvas canvas, RectF widgetRect) {
@@ -171,7 +171,7 @@ public class XYLegendWidget extends Widget {
         TreeSet<Map.Entry<XYRegionFormatter, String>> sortedRegions = new TreeSet<Map.Entry<XYRegionFormatter, String>>(new RegionEntryComparator());
 
         // Calculate the number of cells needed to draw the Legend:
-        int seriesCount = plot.getSeriesRegistry().size();
+        int seriesCount = plot.getRegistry().size();
 
         for(XYSeriesRenderer renderer : plot.getRendererList()) {
             Hashtable<XYRegionFormatter, String> urf = renderer.getUniqueRegionFormatters();
@@ -186,7 +186,7 @@ public class XYLegendWidget extends Widget {
         RectF cellRect;
 
         // draw each series legend item:
-        for(SeriesAndFormatter<XYSeries, XYSeriesFormatter> sfPair : getLegendEnabledSeriesAndFormatterList()) {
+        for(SeriesBundle<XYSeries, XYSeriesFormatter> sfPair : plot.getRegistry().getLegendEnabledItems()) {
         //for(SeriesAndFormatter<XYSeries, XYSeriesFormatter> sfPair : plot.getSeriesRegistry()) {
             cellRect = it.next();
             XYSeriesFormatter format = sfPair.getFormatter();

@@ -333,9 +333,9 @@ public class BarPlotExampleActivity extends Activity {
         renderer.setBarGap(sbVariableWidth.getProgress());
 
         if (BarRenderer.Style.STACKED.equals(spRenderStyle.getSelectedItem())) {
-            plot.setRangeTopMin(15);
+            plot.getInnerLimits().setMaxY(15);
         } else {
-            plot.setRangeTopMin(0);
+            plot.getInnerLimits().setMaxY(0);
         }
 
         plot.redraw();
@@ -355,8 +355,8 @@ public class BarPlotExampleActivity extends Activity {
             double yDistance = 0;
 
             // find the closest value to the selection:
-            for (SeriesAndFormatter<XYSeries, ? extends XYSeriesFormatter> sfPair : plot
-                    .getSeriesRegistry()) {
+            for (SeriesBundle<XYSeries, ? extends XYSeriesFormatter> sfPair : plot
+                    .getRegistry().getSeriesAndFormatterList()) {
                 XYSeries series = sfPair.getSeries();
                 for (int i = 0; i < series.size(); i++) {
                     Number thisX = series.getX(i);

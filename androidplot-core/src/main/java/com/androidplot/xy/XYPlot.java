@@ -23,8 +23,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
-import com.androidplot.Plot;
-import com.androidplot.R;
+
+import com.androidplot.*;
 import com.androidplot.ui.*;
 import com.androidplot.ui.TextOrientation;
 import com.androidplot.ui.widget.TextLabelWidget;
@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * A View to graphically display x/y coordinates.
  */
-public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> {
+public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, XYSeriesBundle, XYSeriesRegistry> {
 
     private static final int DEFAULT_LEGEND_WIDGET_H_DP = 10;
     private static final int DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP = 7;
@@ -83,11 +83,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     private XYConstraints constraints = new XYConstraints();
 
-    // these are the final min/max used for dispplaying data
-//    private Number calculatedMinX;
-//    private Number calculatedMaxX;
-//    private Number calculatedMinY;
-//    private Number calculatedMaxY;
+    // min/max used for displaying data
     private RectRegion bounds = RectRegion.withDefaults(new RectRegion(-1, 1, -1, 1));
 
     // previous calculated min/max vals.
@@ -97,16 +93,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private Number prevMinY;
     private Number prevMaxY;
 
-    // uses set boundary min and max values
-    // should be null if not used.
-    private Number rangeTopMin = null;
-    private Number rangeTopMax = null;
-    private Number rangeBottomMin = null;
-    private Number rangeBottomMax = null;
-    private Number domainLeftMin = null;
-    private Number domainLeftMax = null;
-    private Number domainRightMin = null;
-    private Number domainRightMax = null;
+    private final RectRegion innerLimits = new RectRegion();
+    private final RectRegion outerLimits = new RectRegion();
 
     private Number userDomainOrigin;
     private Number userRangeOrigin;
@@ -123,6 +111,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     private ArrayList<XValueMarker> xValueMarkers;
 
     private PreviewMode previewMode;
+
     public enum PreviewMode {
         LineAndPoint,
         Candlestick,
@@ -330,10 +319,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
     protected void notifyListenersBeforeDraw(Canvas canvas) {
         super.notifyListenersBeforeDraw(canvas);
 
+        calculateMinMaxVals();
+
         // this call must be AFTER the notify so that if the listener
         // is a synchronized series, it has the opportunity to
         // place a read lock on it's data.
-        calculateMinMaxVals();
+        getRegistry().estimate(this); // TODO: clean this mechanism up!!!
     }
 
     /**
@@ -365,6 +356,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         getGraph().setCursorPosition(x, y);
     }
 
+    public Number getXVal(float xPix) {
+        return getGraph().getXVal(xPix);
+    }
+
+    public Number getYVal(float yPix) {
+        return getGraph().getYVal(yPix);
+    }
+
     public Number getYVal(PointF point) {
         return getGraph().getYVal(point);
     }
@@ -387,7 +386,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         // only calculate if we must:
         if(!bounds.isFullyDefined()) {
 
-            RectRegion b = SeriesUtils.minMax(constraints, getSeriesRegistry().getSeriesList());
+            RectRegion b = SeriesUtils.minMax(constraints, getRegistry().getSeriesList());
 
             if(!bounds.isMinXSet()) {
                 bounds.setMinX(b.getMinX());
@@ -414,11 +413,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
             case EDGE:
                 bounds.setMaxX(applyUserMinMax(getCalculatedUpperBoundary(
                         constraints.getDomainUpperBoundaryMode(), prevMaxX, bounds.getMaxX()),
-                        domainRightMin, domainRightMax));
+                        innerLimits.getMaxX(), outerLimits.getMaxX()));
                 bounds.setMinX(applyUserMinMax(getCalculatedLowerBoundary(
                         constraints.getDomainLowerBoundaryMode(),
                         prevMinX, bounds.getMinX()),
-                        domainLeftMin, domainLeftMax));
+                        outerLimits.getMinX(), innerLimits.getMinX()));
                 break;
             default:
                 throw new UnsupportedOperationException(
@@ -430,13 +429,13 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
                 updateRangeMinMaxForOriginModel();
                 break;
             case EDGE:
-            	if (getSeriesRegistry().size() > 0) {
+            	if (getRegistry().size() > 0) {
                     bounds.setMaxY(applyUserMinMax(getCalculatedUpperBoundary(
                             constraints.getRangeUpperBoundaryMode(),
-                            prevMaxY, bounds.getMaxY()), rangeTopMin, rangeTopMax));
+                            prevMaxY, bounds.getMaxY()), innerLimits.getMaxY(), outerLimits.getMaxY()));
                     bounds.setMinY(applyUserMinMax(getCalculatedLowerBoundary(
                             constraints.getRangeLowerBoundaryMode(),
-                            prevMinY, bounds.getMinY()), rangeBottomMin, rangeBottomMax));
+                            prevMinY, bounds.getMinY()), outerLimits.getMinY(), innerLimits.getMinY()));
             	}
                 break;
             default:
@@ -1073,124 +1072,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
         return xValueMarkers;
     }
 
-//    public RectRegion getDefaultBounds() {
-//        return defaultBounds;
-//    }
-//
-//    public void setDefaultBounds(RectRegion defaultBounds) {
-//        this.defaultBounds = defaultBounds;
-//    }
-
-    /**
-     * @return the rangeTopMin
-     */
-    public Number getRangeTopMin() {
-        return rangeTopMin;
+    public RectRegion getInnerLimits() {
+        return innerLimits;
     }
 
-    /**
-     * @param rangeTopMin the rangeTopMin to set
-     */
-    public synchronized void setRangeTopMin(Number rangeTopMin) {
-        this.rangeTopMin = rangeTopMin;
-    }
-
-    /**
-     * @return the rangeTopMax
-     */
-    public Number getRangeTopMax() {
-        return rangeTopMax;
-    }
-
-    /**
-     * @param rangeTopMax the rangeTopMax to set
-     */
-    public synchronized void setRangeTopMax(Number rangeTopMax) {
-        this.rangeTopMax = rangeTopMax;
-    }
-
-    /**
-     * @return the rangeBottomMin
-     */
-    public Number getRangeBottomMin() {
-        return rangeBottomMin;
-    }
-
-    /**
-     * @param rangeBottomMin the rangeBottomMin to set
-     */
-    public synchronized void setRangeBottomMin(Number rangeBottomMin) {
-        this.rangeBottomMin = rangeBottomMin;
-    }
-
-    /**
-     * @return the rangeBottomMax
-     */
-    public Number getRangeBottomMax() {
-        return rangeBottomMax;
-    }
-
-    /**
-     * @param rangeBottomMax the rangeBottomMax to set
-     */
-    public synchronized void setRangeBottomMax(Number rangeBottomMax) {
-        this.rangeBottomMax = rangeBottomMax;
-    }
-
-    /**
-     * @return the domainLeftMin
-     */
-    public Number getDomainLeftMin() {
-        return domainLeftMin;
-    }
-
-    /**
-     * @param domainLeftMin the domainLeftMin to set
-     */
-    public synchronized void setDomainLeftMin(Number domainLeftMin) {
-        this.domainLeftMin = domainLeftMin;
-    }
-
-    /**
-     * @return the domainLeftMax
-     */
-    public Number getDomainLeftMax() {
-        return domainLeftMax;
-    }
-
-    /**
-     * @param domainLeftMax the domainLeftMax to set
-     */
-    public synchronized void setDomainLeftMax(Number domainLeftMax) {
-        this.domainLeftMax = domainLeftMax;
-    }
-
-    /**
-     * @return the domainRightMin
-     */
-    public Number getDomainRightMin() {
-        return domainRightMin;
-    }
-
-    /**
-     * @param domainRightMin the domainRightMin to set
-     */
-    public synchronized void setDomainRightMin(Number domainRightMin) {
-        this.domainRightMin = domainRightMin;
-    }
-
-    /**
-     * @return the domainRightMax
-     */
-    public Number getDomainRightMax() {
-        return domainRightMax;
-    }
-
-    /**
-     * @param domainRightMax the domainRightMax to set
-     */
-    public synchronized void setDomainRightMax(Number domainRightMax) {
-        this.domainRightMax = domainRightMax;
+    public RectRegion getOuterLimits() {
+        return outerLimits;
     }
 
     public StepModel getDomainStepModel() {
@@ -1207,5 +1094,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer> 
 
     public void setRangeStepModel(StepModel rangeStepModel) {
         this.rangeStepModel = rangeStepModel;
+    }
+
+    @Override
+    protected XYSeriesRegistry getRegistryInstance() {
+        XYSeriesRegistry registry = new XYSeriesRegistry();
+        return registry;
     }
 }

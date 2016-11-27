@@ -54,8 +54,8 @@ public abstract class SeriesRenderer
      * @param sfPair The series / formatter pair to be rendered
      * @throws PlotRenderException
      */
-    public void render(Canvas canvas, RectF plotArea, SeriesAndFormatter<SeriesType,
-            SeriesFormatterType> sfPair, RenderStack stack) throws PlotRenderException {
+    public void render(Canvas canvas, RectF plotArea, SeriesBundle<SeriesType,
+                SeriesFormatterType> sfPair, RenderStack stack) throws PlotRenderException {
         onRender(canvas, plotArea, sfPair.getSeries(), sfPair.getFormatter(), stack);
     }
 
@@ -91,14 +91,14 @@ public abstract class SeriesRenderer
 
     /**
      *
-     * @return A List of all {@link SeriesAndFormatter} instances currently associated
+     * @return A List of all {@link SeriesBundle} instances currently associated
      * with this Renderer.
      */
-    public List<SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType>> getSeriesAndFormatterList() {
-        List<SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType>> results = new ArrayList<>();
-        ArrayList<SeriesAndFormatter> sfList = getPlot().getSeriesRegistry();
-
-        for(SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType> thisPair : sfList) {
+    public List<SeriesBundle<SeriesType, ? extends SeriesFormatterType>> getSeriesAndFormatterList() {
+        List<SeriesBundle<SeriesType, ? extends SeriesFormatterType>> results = new ArrayList<>();
+        List<SeriesBundle> sfList = getPlot().getRegistry().getSeriesAndFormatterList();
+        getPlot().getRegistry().getSeriesAndFormatterList();
+        for(SeriesBundle<SeriesType, ? extends SeriesFormatterType> thisPair : sfList) {
             if(thisPair.rendersWith(this)) {
                 results.add(thisPair);
             }
@@ -113,9 +113,9 @@ public abstract class SeriesRenderer
      */
     public List<SeriesType> getSeriesList() {
         List<SeriesType> results = new ArrayList<>();
-        ArrayList<SeriesAndFormatter> sfList = getPlot().getSeriesRegistry();
+        List<SeriesBundle> sfList = getPlot().getRegistry().getSeriesAndFormatterList();
 
-        for(SeriesAndFormatter<SeriesType, ? extends SeriesFormatterType> thisPair : sfList) {
+        for(SeriesBundle<SeriesType, ? extends SeriesFormatterType> thisPair : sfList) {
             if(thisPair.rendersWith(this)) {
                 results.add(thisPair.getSeries());
             }

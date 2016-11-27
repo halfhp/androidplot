@@ -143,7 +143,7 @@ public class TextLabelWidget extends Widget {
     public void setLabelPaint(Paint labelPaint) {
         this.labelPaint = labelPaint;
 
-        // when paint changes, packing params change too so check
+        // when paint changes, packing params change too so run
         // to see if we need to resize:
         if(autoPackEnabled) {
             pack();

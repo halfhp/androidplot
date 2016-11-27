@@ -19,20 +19,17 @@ package com.androidplot.pie;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import com.androidplot.Plot;
-import com.androidplot.R;
-import com.androidplot.ui.Anchor;
-import com.androidplot.ui.SizeMode;
-import com.androidplot.ui.Size;
+
+import com.androidplot.*;
+import com.androidplot.ui.*;
 import com.androidplot.util.AttrUtils;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.ui.HorizontalPositioning;
-import com.androidplot.ui.VerticalPositioning;
 
 /**
  * Basic representation of a Pie Chart that displays a title and pie widget.
  */
-public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
+public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer,
+        SegmentBundle, SegmentRegistry> {
 
     private static final int DEFAULT_PIE_WIDGET_H_DP = 18;
     private static final int DEFAULT_PIE_WIDGET_W_DP = 10;
@@ -48,6 +45,11 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer> {
 
     @SuppressWarnings("FieldCanBeLocal")
     private PieWidget pie;
+
+    @Override
+    protected SegmentRegistry getRegistryInstance() {
+        return new SegmentRegistry();
+    }
 
     public PieChart(Context context, String title) {
         super(context, title);

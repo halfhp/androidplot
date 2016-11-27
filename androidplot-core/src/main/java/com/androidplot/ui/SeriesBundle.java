@@ -19,14 +19,15 @@ package com.androidplot.ui;
 import com.androidplot.Series;
 
 /**
- * Defines an association between a Series and a Formatter.
+ * Defines a relationship between a Series instance and other elements needed to unique render that instance
+ * such as a Formatter etc.
  */
-public class SeriesAndFormatter<SeriesType extends Series, FormatterType extends Formatter> {
+public class SeriesBundle<SeriesType extends Series, FormatterType extends Formatter> {
 
     private final SeriesType series;
     private final FormatterType formatter;
 
-    public SeriesAndFormatter(SeriesType series, FormatterType formatter) {
+    public SeriesBundle(SeriesType series, FormatterType formatter) {
         this.series = series;
         this.formatter = formatter;
     }

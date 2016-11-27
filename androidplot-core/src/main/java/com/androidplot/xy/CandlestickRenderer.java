@@ -18,7 +18,7 @@ package com.androidplot.xy;
 
 import android.graphics.*;
 import com.androidplot.ui.RenderStack;
-import com.androidplot.ui.SeriesAndFormatter;
+import com.androidplot.ui.SeriesBundle;
 
 import java.util.List;
 
@@ -49,8 +49,8 @@ public class CandlestickRenderer<FormatterType extends CandlestickFormatter> ext
 
 
     @Override
-    public void onRender(Canvas canvas, RectF plotArea, List<SeriesAndFormatter<XYSeries,
-            ? extends FormatterType>> sfList, int seriesSize,  RenderStack stack) {
+    public void onRender(Canvas canvas, RectF plotArea, List<SeriesBundle<XYSeries,
+                ? extends FormatterType>> sfList, int seriesSize,  RenderStack stack) {
 
         final FormatterType formatter = sfList.get(0).getFormatter();
         for(int i = 0; i < seriesSize; i++) {

@@ -26,8 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.androidplot.Plot;
-import com.androidplot.Series;
-import com.androidplot.ui.SeriesAndFormatter;
+import com.androidplot.ui.SeriesBundle;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.*;
 
@@ -41,7 +40,7 @@ public class ListViewActivity extends Activity {
     private static final int NUM_SERIES_PER_PLOT = 5;
     private ListView lv;
 
-    private List<List<SeriesAndFormatter<XYSeries, LineAndPointFormatter>>> seriesData = new ArrayList<>(NUM_PLOTS);
+    private List<List<SeriesBundle<XYSeries, LineAndPointFormatter>>> seriesData = new ArrayList<>(NUM_PLOTS);
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +54,7 @@ public class ListViewActivity extends Activity {
     protected void generateData() {
         Random generator = new Random();
         for(int i = 0; i < NUM_PLOTS; i++) {
-            List<SeriesAndFormatter<XYSeries, LineAndPointFormatter>> seriesList
+            List<SeriesBundle<XYSeries, LineAndPointFormatter>> seriesList
                     = new ArrayList<>(NUM_SERIES_PER_PLOT);
 
             for (int k = 0; k < NUM_SERIES_PER_PLOT; k++) {
@@ -83,7 +82,7 @@ public class ListViewActivity extends Activity {
                 lpf.setInterpolationParams(
                         new CatmullRomInterpolator.Params(20, CatmullRomInterpolator.Type.Centripetal));
 
-                seriesList.add(new SeriesAndFormatter<XYSeries, LineAndPointFormatter>(
+                seriesList.add(new SeriesBundle<XYSeries, LineAndPointFormatter>(
                         new SimpleXYSeries(nums, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "S" + k),
                         lpf));
             }
@@ -114,8 +113,8 @@ public class ListViewActivity extends Activity {
             p.clear();
             p.getTitle().setText("plot" + pos);
 
-            List<SeriesAndFormatter<XYSeries, LineAndPointFormatter>> thisSeriesList = seriesData.get(pos);
-            for(SeriesAndFormatter<XYSeries, LineAndPointFormatter> sf : thisSeriesList) {
+            List<SeriesBundle<XYSeries, LineAndPointFormatter>> thisSeriesList = seriesData.get(pos);
+            for(SeriesBundle<XYSeries, LineAndPointFormatter> sf : thisSeriesList) {
                 p.addSeries(sf.getSeries(), sf.getFormatter());
             }
             p.redraw();

@@ -121,7 +121,7 @@ public class BubbleRenderer<FormatterType extends BubbleFormatter> extends XYSer
 
     protected Region calculateBounds() {
         Region bounds = new Region();
-        for(SeriesAndFormatter<BubbleSeries, ? extends FormatterType> f : getSeriesAndFormatterList()) {
+        for(SeriesBundle<BubbleSeries, ? extends FormatterType> f : getSeriesAndFormatterList()) {
             SeriesUtils.minMax(bounds, f.getSeries().getZVals());
         }
 

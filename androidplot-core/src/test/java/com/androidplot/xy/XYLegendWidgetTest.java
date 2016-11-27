@@ -56,7 +56,7 @@ public class XYLegendWidgetTest extends AndroidplotTest {
         plot.addSeries(s1, new LineAndPointFormatter(
                 Color.RED, Color.GREEN, Color.BLUE, null));
 
-        assertEquals(1, plot.getSeriesRegistry().size());
+        assertEquals(1, plot.getRegistry().size());
 
         plot.exposedOnSizeChanged(100, 100, 100, 100);
         plot.redraw();
@@ -65,7 +65,7 @@ public class XYLegendWidgetTest extends AndroidplotTest {
         plot.exposedOnDraw(new Canvas());
 
         plot.removeSeries(s1);
-        assertEquals(0, plot.getSeriesRegistry().size());
+        assertEquals(0, plot.getRegistry().size());
         plot.addSeries(s1, new BarFormatter(Color.RED, Color.GREEN));
         plot.redraw();
 

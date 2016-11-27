@@ -27,6 +27,7 @@ import java.util.*;
  * A faster implementation of of {@link LineAndPointRenderer}.  For performance reasons, has these constraints:
  * - Interpolation is not supported
  * - Does not draw fill
+ * - Does not support null values
  * @since 1.2.0
  */
 public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLineAndPointRenderer.Formatter> {
@@ -128,13 +129,8 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
      */
     public static class Formatter extends LineAndPointFormatter {
 
-        public Formatter(Integer lineColor, Integer vertexColor, Integer fillColor, PointLabelFormatter plf) {
-            super(lineColor, vertexColor, fillColor, plf);
-        }
-
-        public Formatter(Integer lineColor, Integer vertexColor,
-                Integer fillColor, PointLabelFormatter plf, FillDirection fillDir) {
-            super(lineColor, vertexColor, fillColor, plf, fillDir);
+        public Formatter(Integer lineColor, Integer vertexColor, PointLabelFormatter plf) {
+            super(lineColor, vertexColor, null, plf);
         }
 
         @Override

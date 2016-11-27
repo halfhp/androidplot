@@ -22,9 +22,7 @@ import android.util.*;
 
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.test.*;
-import com.androidplot.ui.RenderStack;
-import com.androidplot.ui.SeriesRenderer;
-import com.androidplot.ui.Formatter;
+import com.androidplot.ui.*;
 import com.halfhp.fig.*;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
@@ -39,7 +37,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class PlotTest extends AndroidplotTest {
 
@@ -131,9 +128,27 @@ public class PlotTest extends AndroidplotTest {
         }
     }
 
-    public static class MockPlot extends Plot<MockSeries, Formatter, SeriesRenderer> {
+    public static class MockSeriesBundle extends SeriesBundle<MockSeries, Formatter> {
+
+        public MockSeriesBundle(MockSeries series, Formatter formatter) {
+            super(series, formatter);
+        }
+    }
+
+    public static class MockPlot extends Plot<MockSeries, Formatter, SeriesRenderer, MockSeriesBundle, SeriesRegistry<MockSeriesBundle, MockSeries, Formatter>> {
         public MockPlot(String title) {
             super(RuntimeEnvironment.application, title);
+        }
+
+        @Override
+        protected SeriesRegistry<MockSeriesBundle, MockSeries, Formatter> getRegistryInstance() {
+            return new SeriesRegistry<MockSeriesBundle, MockSeries, Formatter>() {
+                @Override
+                protected MockSeriesBundle newSeriesBundle(
+                        MockSeries series, Formatter formatter) {
+                    return new MockSeriesBundle(series, formatter);
+                }
+            };
         }
 
         @Override
@@ -172,7 +187,7 @@ public class PlotTest extends AndroidplotTest {
         Class cl = MockRenderer1.class;
 
         plot.addSeries(m1, new MockFormatter1());
-        assertEquals(1, plot.getSeriesRegistry().size());
+        assertEquals(1, plot.getRegistry().size());
 
         // a new copy of m1 is added:
         plot.addSeries(m1, new MockFormatter1());
@@ -215,7 +230,7 @@ public class PlotTest extends AndroidplotTest {
         plot.addSeries(m3, new MockFormatter2());
 
 
-        // a quick sanity check:
+        // a quick sanity run:
         assertEquals(2, plot.getRendererList().size());
         assertEquals(3, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
         assertEquals(3, plot.getRenderer(MockRenderer2.class).getSeriesList().size());
@@ -241,7 +256,7 @@ public class PlotTest extends AndroidplotTest {
         plot.addSeries(m3, new MockFormatter1());
 
 
-        // a quick sanity check:
+        // a quick sanity run:
         assertEquals(2, plot.getRendererList().size());
         assertEquals(6, plot.getRenderer(MockRenderer1.class).getSeriesList().size());
         assertEquals(3, plot.getRenderer(MockRenderer2.class).getSeriesList().size());

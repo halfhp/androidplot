@@ -166,6 +166,14 @@ to enable pan and zoom (stretch) on the horizontal axis only:
 PanZoom.attach(plot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.STRETCH_HORIZONTAL);
 ```
 
+Pan and zoom operations abide by your plot's defined outer limits limits.  If no such limits have been set
+then the plot will pan and zoom on both axes infinitely.  To set the plot's outer limits:
+
+```java
+// cap pan/zoom limits for panning and zooming to a 100x100 space:
+plot.getOuterLimits().set(0, 100, 0, 100);
+```
+
 For a more detailed look at pan & zoom behavior, check out the [Touch Zoom Example source code](../demoapp/src/main/java/com/androidplot/demos/TouchZoomExampleActivity.java).
 
 # Series Renderers
@@ -230,7 +238,7 @@ The TableModel controls how and where each item in the legend is drawn.  Android
 default implementations; DynamicTableModel and FixedTableModel (detailed below).  All TableModel implementations
 organize elements into a grid.  This grid is populated with items based on the order which it's corresponding
 series was added to the plot.  This ordering can be further controlled by setting the TableModel's
-TableOrder param to either ROW_MAJOR (items are added left-to-right, top-down) or COLUMN_MAJOR (items are added top-down, left-to-right).
+TableOrder param to either [ROW_MAJOR](https://en.wikipedia.org/wiki/Row-major_order) (items are added left-to-right, top-down) or COLUMN_MAJOR (items are added top-down, left-to-right).
 
 ### DynamicTableModel
 The DynamicTableModel takes a desired of numbered rows and columns and evenly subdivides the LegendWidget's

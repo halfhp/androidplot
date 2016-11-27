@@ -83,7 +83,7 @@ Sampler sampler = ...
 new LTTBSampler().run(origalSeries, sampledSeries);
 ```
 
-Currently [LTTBSampler](https://79-1424783-gh.circle-artifacts.com/0/tmp/circle-artifacts.6QRuxN1/javadoc/com/androidplot/xy/LTTBSampler.java) is the only available implementation.
+Currently LTTBSampler is the only available implementation.
 
 # Storing series data in onSaveInstanceState
 TODO

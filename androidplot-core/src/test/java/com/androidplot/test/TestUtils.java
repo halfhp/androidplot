@@ -10,14 +10,26 @@ import org.robolectric.shadows.*;
 import static org.robolectric.Shadows.shadowOf;
 
 /**
- * Created by halfhp on 10/8/16.
+ * Utilities to help with unit testing
  */
 public abstract class TestUtils {
 
     public static XYSeries generateXYSeries(String title, int size) {
+        return generateXYSeries(title, size, 0, 1);
+    }
+
+    /**
+     * Generate a series of random numbers within a min/max range
+     * @param title
+     * @param size
+     * @param min
+     * @param max
+     * @return
+     */
+    public static XYSeries generateXYSeries(String title, int size, double min, double max) {
         SimpleXYSeries series = new SimpleXYSeries(title);
         for(int i = 0; i < size; i++) {
-            series.addLast(i, Math.random());
+            series.addLast(i, Math.random() * max - min);
         }
         return series;
     }

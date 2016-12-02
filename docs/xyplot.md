@@ -107,18 +107,62 @@ Insets are used to control where line labels are drawn in relation to the graph 
 can be obtained via `XYPlot.getGraph().getLineLabelInsets()`.  For example, to
 move the range labels on the left of the graph further to the left by 5dp:
 
-**Programmatically:**
-```java
-plot.getGraph().getLineLabelInsets().setLeft(PixelUtils.dpToPix(-5));
-```
-
-**XML:**
+xml
 ```xml
 ap:lineLabelInsetLeft="-5dp"
 ```
 
+java
+```java
+plot.getGraph().getLineLabelInsets().setLeft(PixelUtils.dpToPix(-5));
+```
+
 ### Dual Axis Labels
-Sometimes it is desirable to display additional labels for a single axis, each using it's own scale.
+Androidplot provides methods for enabling / disabling axis labels along all edges of the graph.  By
+default, only the left and bottom edge labels are enabled.  To enable labels on the right edge:
+
+xml
+```xml
+ap:lineLabels="left|bottom|right"
+```
+
+java
+```java
+plot.getGraph().setLineLabelEdges(
+    XYGraphWidget.Edge.BOTTOM, 
+    XYGraphWidget.Edge.LEFT, 
+    XYGraphWidget.Edge.RIGHT);
+```
+
+Once the edge has been enabled, text formatting can be controlled by enabling a custom formatter
+for the desired edge:
+
+```java
+plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.RIGHT).setFormat(new Format() {
+    @Override
+    public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
+        // obj contains the raw Number value representing the position of the label being drawn.
+        // customize the labeling however you want here:
+        int i = Math.round(((Number) obj).floatValue());
+        return toAppendTo.append(i + " thingies");
+    }
+            
+    @Override
+    public Object parseObject(String source, ParsePosition pos) {
+        // unused
+        return null;
+    }
+});
+```
+ 
+If you are working on a dual scale implementation, you're likely also going to need to normalize
+your series data in order to get it to display properly.  To help simplify this step, Androidplot provides 
+[NormedXYSeries](advanced_xy_plot.md#normedxyseries) which can be used to wrap any XYSeries to provide the 
+normalized representation of it's data.
+
+There's a full [reference implementation](../demoapp/src/main/java/com/androidplot/demos/DualScaleActivity.java) 
+of a dual scale plot using a custom Formatter and NormedXYSeries in the DemoApp.
+
 
 ### Line Label Interval
 Androidplot allows you to configure the interval at which labels are rendered for domain and range lines:
@@ -257,7 +301,22 @@ a TableOrder of COLUMN_MAJOR:
 ```java
 plot.getLegend().setTableModel(new FixedTableModel(PixelUtils.dpToPix(300), 
     PixelUtils.dpToPix(100), TableOrder.COLUMN_MAJOR));
-```                
+```
+
+# Graph Rotation
+Androidplot provides the Widget.setRotation(Widget.Rotation) method for controlling the orientation
+of Widgets.  For example, if you wanted to create a bar graph where the bars extended across the screen 
+from left to right:
+
+xml
+```xml
+ap:graphRotation="ninety_degrees"
+```
+
+java
+```java
+plot.getGraph().setRotation(Widget.Rotation.NINETY_DEGREES);
+```
 
 # Optimization Tips
 Here are a few suggestions to improve performance when plotting dynamic data:

@@ -1,3 +1,11 @@
+# 1.3.1
+* Added [NormedXYSeries](advanced_xy_plot.md#normedxyseries) wrapper to simplify the process of normalizing xy series data.
+* Added [DualScaleActivity](../demoapp/src/main/java/com/androidplot/demos/DualScaleActivity.java) demonstrating NormedXYSeries usage to present dual range scales.
+* LineAndPointRenderer options for cases where two or mode series' of different size have been added.
+* Fixed a bug causing points scrolled off-screen to occasionally accumulate and render along the left edge of the graph.
+* Fixed a bug that could cause render jitter when extreme zoom levels were applied.
+* Fixed a bug that prevented PanZoom from working properly on plots with an undefined outer limit.
+
 # 1.3.0
 
 * Added sampling support.  See the [Advanced XY Plot](advanced_xy_plot.md) doc for details.

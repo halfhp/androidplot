@@ -85,7 +85,6 @@ public class LayoutManager extends LinkedLayerList<Widget>
             drawSpacing(canvas, displayDims.marginatedRect, displayDims.paddedRect, paddingPaint);
         }
         for (Widget widget : elements()) {
-            //int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG); // preserve clipping etc
             try {
                 canvas.save(Canvas.ALL_SAVE_FLAG);
                 PositionMetrics metrics = widget.getPositionMetrics();

@@ -355,7 +355,10 @@ public class XYGraphWidget extends Widget {
                 R.styleable.xy_XYPlot_rangeTitleVerticalPositioning, R.styleable.xy_XYPlot_rangeTitleVerticalPosition,
                 R.styleable.xy_XYPlot_rangeTitleAnchor, R.styleable.xy_XYPlot_rangeTitleVisible);
 
-        // graphWidget
+        // rotation
+        AttrUtils.configureWidgetRotation(attrs, this, R.styleable.xy_XYPlot_graphRotation);
+
+        // padding & margin
         AttrUtils.configureBoxModelable(attrs, this,
                 R.styleable.xy_XYPlot_graphMarginTop, R.styleable.xy_XYPlot_graphMarginBottom,
                 R.styleable.xy_XYPlot_graphMarginLeft, R.styleable.xy_XYPlot_graphMarginRight,

@@ -188,6 +188,12 @@ public class AttrUtils {
         }
     }
 
+    public static void configureWidgetRotation(TypedArray attrs, Widget widget, int rotationAttr) {
+        if(attrs != null) {
+            widget.setRotation(getWidgetRotation(attrs, rotationAttr, Widget.Rotation.NONE));
+        }
+    }
+
     /**
      * Configure a {@link Widget} from xml attrs.
      * @param attrs
@@ -243,6 +249,10 @@ public class AttrUtils {
 
     private static VerticalPositioning getYLayoutStyle(TypedArray attrs, int attr, VerticalPositioning defaultValue) {
         return VerticalPositioning.values()[attrs.getInt(attr, defaultValue.ordinal())];
+    }
+
+    private static Widget.Rotation getWidgetRotation(TypedArray attrs, int attr, Widget.Rotation defaultValue) {
+        return Widget.Rotation.values()[attrs.getInt(attr, defaultValue.ordinal())];
     }
 
     private static Anchor getAnchorPosition(TypedArray attrs, int attr, Anchor defaultValue) {

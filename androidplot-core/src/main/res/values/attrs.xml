@@ -186,6 +186,15 @@
         <enum name="fill" value="2"/>
     </attr>
 
+    <attr name="graphRotation" format="enum">
+        <enum name="ninety_degrees" value="0"/>
+        <enum name="negative_ninety_degrees" value="1"/>
+
+        <!-- Graph widget is rendered upside-down -->
+        <enum name="one_hundred_eighty_degrees" value="2"/>
+        <enum name="none" value="3"/>
+    </attr>
+
     <attr name="graphHorizontalPositioning" format="enum">
         <enum name="absolute_from_left" value="0"/>
         <enum name="absolute_from_right" value="1"/>
@@ -327,6 +336,7 @@
         <attr name="graphWidthMode"/>
         <attr name="graphHeight" format="dimension|float|integer"/>
         <attr name="graphWidth" format="dimension|float|integer"/>
+        <attr name="graphRotation"/>
         <attr name="graphHorizontalPositioning"/>
         <attr name="graphVerticalPositioning"/>
         <attr name="graphHorizontalPosition" format="dimension|float|integer"/>
@@ -383,8 +393,7 @@
         <attr name="domainOriginLineColor" format="color"/>
         <attr name="rangeOriginLineColor" format="color"/>
 
-        <!-- text color & size params for line labels
-        TODO: break these into separate params for each edge -->
+        <!-- text color & size params for line labels-->
         <attr name="lineLabelTextSizeTop" format="dimension"/>
         <attr name="lineLabelTextSizeBottom" format="dimension"/>
         <attr name="lineLabelTextSizeLeft" format="dimension"/>

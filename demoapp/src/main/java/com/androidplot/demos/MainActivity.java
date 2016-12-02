@@ -98,6 +98,14 @@ public class MainActivity extends Activity {
             }
         });
 
+        Button startDualScaleExButton = (Button) findViewById(R.id.startDualScaleExButton);
+        startDualScaleExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, DualScaleActivity.class));
+            }
+        });
+
         Button startTimeSeriesExButon = (Button) findViewById(R.id.startTimeSeriesExButton);
         startTimeSeriesExButon.setOnClickListener(new View.OnClickListener() {
             @Override

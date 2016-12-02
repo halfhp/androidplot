@@ -19,7 +19,6 @@ package com.androidplot.xy;
 import android.graphics.Canvas;
 import com.androidplot.Plot;
 import com.androidplot.PlotListener;
-import com.androidplot.util.*;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -28,9 +27,49 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * A convenience class used to create instances of XYPlot generated from Lists of Numbers.
  */
-public class SimpleXYSeries implements EditableXYSeries, PlotListener {
+public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotListener {
 
     private static final String TAG = SimpleXYSeries.class.getName();
+
+    private volatile LinkedList<Number> xVals = new LinkedList<>();
+    private volatile LinkedList<Number> yVals = new LinkedList<>();
+    private volatile String title = null;
+
+    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
+    private XOrder xOrder = XOrder.NONE;
+
+    public enum ArrayFormat {
+        Y_VALS_ONLY,
+        XY_VALS_INTERLEAVED
+    }
+
+    public SimpleXYSeries(String title) {
+        this.title = title;
+    }
+
+    public SimpleXYSeries(ArrayFormat format, String title, Number... model) {
+        this(asNumberList(model), format, title);
+    }
+
+    /**
+     * Retrieve the current x-ordering specified for this series.  Default is
+     * {@link com.androidplot.xy.OrderedXYSeries.XOrder#NONE}.
+     * @return
+     */
+    @Override
+    public XOrder getXOrder() {
+        return xOrder;
+    }
+
+    /**
+     * If XVals are in strict ascending order, use this method to set
+     * {@link com.androidplot.xy.OrderedXYSeries.XOrder#ASCENDING} to provide an optimization
+     * hint to the renderer.
+     * @param xOrder
+     */
+    public void setXOrder(XOrder xOrder) {
+        this.xOrder = xOrder;
+    }
 
     @Override
     public void onBeforeDraw(Plot source, Canvas canvas) {
@@ -40,25 +79,6 @@ public class SimpleXYSeries implements EditableXYSeries, PlotListener {
     @Override
     public void onAfterDraw(Plot source, Canvas canvas) {
         lock.readLock().unlock();
-    }
-
-    public enum ArrayFormat {
-        Y_VALS_ONLY,
-        XY_VALS_INTERLEAVED
-    }
-
-    private volatile LinkedList<Number> xVals = new LinkedList<>();
-    private volatile LinkedList<Number> yVals = new LinkedList<>();
-    private volatile String title = null;
-
-    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
-
-    public SimpleXYSeries(String title) {
-        this.title = title;
-    }
-
-    public SimpleXYSeries(ArrayFormat format, String title, Number... model) {
-        this(asNumberList(model), format, title);
     }
 
     protected static List<Number> asNumberList(Number... model) {

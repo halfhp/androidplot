@@ -22,6 +22,8 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.androidplot.Plot;
+import com.androidplot.PlotListener;
 import com.androidplot.Region;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
@@ -29,6 +31,7 @@ import com.androidplot.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Renders a point as a line with the vertices marked.  Requires 2 or more points to
@@ -41,8 +44,22 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
 
     private final Path path = new Path();
 
+    protected final ConcurrentHashMap<XYSeries, ArrayList<PointF>> pointsCaches
+            = new ConcurrentHashMap<>(2, 0.75f, 2);
+
     public LineAndPointRenderer(XYPlot plot) {
         super(plot);
+        plot.addListener(new PlotListener() {
+            @Override
+            public void onBeforeDraw(Plot source, Canvas canvas) {
+                cullPointsCache();
+            }
+
+            @Override
+            public void onAfterDraw(Plot source, Canvas canvas) {
+
+            }
+        });
     }
 
     @Override
@@ -77,17 +94,38 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         path.lineTo(thisPoint.x, thisPoint.y);
     }
 
-    final ArrayList<PointF> points = new ArrayList<>();
+    /**
+     * Retrieves or initializes a list for storing calculated screen-coords to render as points.
+     * Also handles automatic resizing and culling of unused caches.
+     * Should only be called once per render cycle.
+     * @param series
+     * @return
+     */
+    protected ArrayList<PointF> getPointsCache(XYSeries series) {
+        ArrayList<PointF> pointsCache = pointsCaches.get(series);
+        final int seriesSize = series.size();
+        if(pointsCache == null) {
+            pointsCache = new ArrayList<>(seriesSize);
+            pointsCaches.put(series, pointsCache);
+        }
 
-    // avoids needless new allocations of the points array
-    protected void resizePointsArray(int newSize) {
-        if(points.size() < newSize) {
-            while(points.size() < newSize) {
-                points.add(null);
+        if(pointsCache.size() < seriesSize) {
+            while(pointsCache.size() < seriesSize) {
+                pointsCache.add(null);
             }
-        } else if(points.size() > newSize) {
-            while(points.size() > newSize) {
-                points.remove(0);
+        } else if(pointsCache.size() > seriesSize) {
+            while(pointsCache.size() > seriesSize) {
+                pointsCache.remove(0);
+            }
+        }
+        return pointsCache;
+    }
+
+    protected void cullPointsCache() {
+        for(XYSeries series : pointsCaches.keySet()) {
+            if(!getPlot().getRegistry().contains(series, LineAndPointFormatter.class)) {
+                //pointsCaches.put(series, null);
+                pointsCaches.remove(series);
             }
         }
     }
@@ -96,36 +134,26 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         PointF thisPoint;
         PointF lastPoint = null;
         PointF firstPoint = null;
-        final int seriesSize = series.size();
         path.reset();
-        resizePointsArray(seriesSize);
+        final List<PointF> points = getPointsCache(series);
 
         int iStart = 0;
-        int iEnd = seriesSize;
+        int iEnd = series.size();
         if(SeriesUtils.getXYOrder(series) == OrderedXYSeries.XOrder.ASCENDING) {
             final Region iBounds = SeriesUtils.iBounds(series, getPlot().getBounds());
             iStart = iBounds.getMin().intValue();
             if(iStart > 0) {
                 iStart--;
             }
-            iEnd = iBounds.getMax().intValue();
-            if(iEnd < seriesSize - 1) {
+            iEnd = iBounds.getMax().intValue() + 1;
+            if(iEnd < series.size() - 1) {
                 iEnd++;
             }
         }
-        final double minX = getPlot().getBounds().getMinX().doubleValue();
-        final double maxX = getPlot().getBounds().getMaxX().doubleValue();
         for (int i = iStart; i < iEnd; i++) {
             final Number y = series.getY(i);
             final Number x = series.getX(i);
             PointF iPoint = points.get(i);
-
-            final double dx = x.doubleValue();
-            if(i > 0 && i < seriesSize - 1) {
-                if (dx < minX || dx > maxX) {
-                    continue;
-                }
-            }
 
             if (y != null && x != null) {
                 if(iPoint == null) {
@@ -187,7 +215,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 renderPath(canvas, plotArea, path, firstPoint, lastPoint, formatter);
             }
         }
-        renderPoints(canvas, plotArea, series, points, formatter);
+        renderPoints(canvas, plotArea, series, iStart, iEnd, points, formatter);
     }
 
     /**
@@ -209,16 +237,15 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         return getPlot().getBounds().transformScreen(coord, plotArea);
     }
 
-    protected void renderPoints(Canvas canvas, RectF plotArea, XYSeries series, List<PointF> points,
+    protected void renderPoints(Canvas canvas, RectF plotArea, XYSeries series, int iStart, int iEnd, List<PointF> points,
                                 LineAndPointFormatter formatter) {
-        //PointLabelFormatter plf = formatter.getPointLabelFormatter();
         if (formatter.hasVertexPaint() || formatter.hasPointLabelFormatter()) {
-            int i = 0;
             final Paint vertexPaint = formatter.hasVertexPaint() ? formatter.getVertexPaint() : null;
             final boolean hasPointLabelFormatter = formatter.hasPointLabelFormatter();
             final PointLabelFormatter plf = hasPointLabelFormatter ? formatter.getPointLabelFormatter() : null;
             final PointLabeler pointLabeler = hasPointLabelFormatter ? formatter.getPointLabeler() : null;
-            for (PointF p : points) {
+            for(int i = iStart; i < iEnd; i++) {
+                PointF p = points.get(i);
 
                 // if vertexPaint is available, draw vertex:
                 if (vertexPaint != null) {
@@ -227,11 +254,9 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
 
                 // if textPaint and pointLabeler are available, draw point's text label:
                 if (pointLabeler != null) {
-                    //final PointLabelFormatter plf = formatter.getPointLabelFormatter();
                     canvas.drawText(pointLabeler.getLabel(series, i),
                             p.x + plf.hOffset, p.y + plf.vOffset, plf.getTextPaint());
                 }
-                i++;
             }
         }
     }

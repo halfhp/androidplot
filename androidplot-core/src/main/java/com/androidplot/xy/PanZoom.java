@@ -186,12 +186,13 @@ public class PanZoom implements View.OnTouchListener {
 
         final PointF oldFirstFinger = firstFingerPos; //save old position of finger
         firstFingerPos = new PointF(motionEvent.getX(), motionEvent.getY()); //update finger position
-        Region newBounds = new Region();
         if (EnumSet.of(Pan.HORIZONTAL, Pan.BOTH).contains(pan)) {
+            Region newBounds = new Region();
             calculatePan(oldFirstFinger, newBounds, true);
             plot.setDomainBoundaries(newBounds.getMin(), newBounds.getMax(), BoundaryMode.FIXED);
         }
         if (EnumSet.of(Pan.VERTICAL, Pan.BOTH).contains(pan)) {
+            Region newBounds = new Region();
             calculatePan(oldFirstFinger, newBounds, false);
             plot.setRangeBoundaries(newBounds.getMin(), newBounds.getMax(), BoundaryMode.FIXED);
         }
@@ -335,9 +336,9 @@ public class PanZoom implements View.OnTouchListener {
 
         if (isHorizontal ) {
             final RectRegion limits = plot.getOuterLimits();
+            newRect.left = midPoint - offset;
+            newRect.right = midPoint + offset;
             if(limits.isFullyDefined()) {
-                newRect.left = midPoint - offset;
-                newRect.right = midPoint + offset;
                 if (newRect.left < limits.getMinX().floatValue()) {
                     newRect.left =  limits.getMinX().floatValue();
                 }
@@ -347,9 +348,9 @@ public class PanZoom implements View.OnTouchListener {
             }
         } else {
             final RectRegion limits = plot.getOuterLimits();
+            newRect.top = midPoint - offset;
+            newRect.bottom = midPoint + offset;
             if(limits.isFullyDefined()) {
-                newRect.top = midPoint - offset;
-                newRect.bottom = midPoint + offset;
                 if (newRect.top < limits.getMinY().floatValue()) {
                     newRect.top = limits.getMinY().floatValue();
                 }

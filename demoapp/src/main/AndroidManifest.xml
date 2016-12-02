@@ -99,6 +99,7 @@
         <activity android:name=".ECGExample"/>
         <activity android:name=".FXPlotExampleActivity"/>
         <activity android:name=".BubbleChartActivity"/>
+        <activity android:name=".DualScaleActivity"/>
         
         <!-- receiver for demo app widget -->
         <receiver

@@ -29,7 +29,7 @@ import com.androidplot.Plot;
 import com.androidplot.xy.*;
 
 public class TouchZoomExampleActivity extends Activity {
-    private static final int SERIES_SIZE = 10000;
+    private static final int SERIES_SIZE = 3000;
     private static final int SERIES_ALPHA = 255;
     private XYPlot plot;
     private PanZoom panZoom;
@@ -53,7 +53,7 @@ public class TouchZoomExampleActivity extends Activity {
         // move dynamically with the data when the users pans or zooms:
         plot.setUserDomainOrigin(0);
         plot.setUserRangeOrigin(0);
-        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1000);
+        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 500);
         plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 100);
 
         panSpinner = (Spinner) findViewById(R.id.pan_spinner);
@@ -72,7 +72,7 @@ public class TouchZoomExampleActivity extends Activity {
         plot.setBorderStyle(Plot.BorderStyle.NONE, null, null);
 
         panZoom = PanZoom.attach(plot);
-        plot.getOuterLimits().set(0, 10000, 0, 1000);
+        plot.getOuterLimits().set(0, 3000, 0, 1000);
         initSpinners();
 
         // enable autoselect of sampling level based on visible boundaries:

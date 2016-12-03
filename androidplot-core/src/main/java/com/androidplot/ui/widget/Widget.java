@@ -41,6 +41,15 @@ public abstract class Widget implements BoxModelable, Resizable {
     private PositionMetrics positionMetrics;
     private LayoutManager layoutManager;
 
+    private Rotation rotation = Rotation.NONE;
+
+    public enum Rotation {
+        NINETY_DEGREES,
+        NEGATIVE_NINETY_DEGREES,
+        ONE_HUNDRED_EIGHTY_DEGREES,
+        NONE,
+    }
+
     public Widget(LayoutManager layoutManager, SizeMetric heightMetric, SizeMetric widthMetric) {
         this(layoutManager, new Size(heightMetric, widthMetric));
     }
@@ -113,7 +122,6 @@ public abstract class Widget implements BoxModelable, Resizable {
      * @return
      */
     public boolean containsPoint(PointF point) {
-        //return outlineRect != null && outlineRect.contains(point.x, point.y);
         return widgetDimensions.canvasRect.contains(point.x, point.y);
     }
 
@@ -344,12 +352,53 @@ public abstract class Widget implements BoxModelable, Resizable {
             if (backgroundPaint != null) {
                 drawBackground(canvas, widgetDimensions.canvasRect);
             }
-            doOnDraw(canvas, widgetDimensions.paddedRect);
+            canvas.save();
+            final RectF paddedRect = applyRotation(canvas, widgetDimensions.paddedRect);
+            doOnDraw(canvas, paddedRect);
+            canvas.restore();
 
             if (borderPaint != null) {
-                drawBorder(canvas, widgetDimensions.paddedRect);
+                drawBorder(canvas, paddedRect);
             }
         }
+    }
+
+    protected RectF applyRotation(Canvas canvas, RectF rect) {
+        float rotationDegs = 0;
+        final float cx = widgetDimensions.paddedRect.centerX();
+        final float cy = widgetDimensions.paddedRect.centerY();
+        final float halfHeight = widgetDimensions.paddedRect.height() / 2;
+        final float halfWidth = widgetDimensions.paddedRect.width() / 2;
+        switch (rotation) {
+            case NINETY_DEGREES:
+                rotationDegs = 90;
+                rect = new RectF(
+                        cx - halfHeight,
+                        cy - halfWidth,
+                        cx + halfHeight,
+                        cy + halfWidth);
+                break;
+            case NEGATIVE_NINETY_DEGREES:
+                rotationDegs = -90;
+                rect = new RectF(
+                        cx - halfHeight,
+                        cy - halfWidth,
+                        cx + halfHeight,
+                        cy + halfWidth);
+                break;
+            case ONE_HUNDRED_EIGHTY_DEGREES:
+                rotationDegs = 180;
+                // fall through
+            case NONE:
+                break;
+            default:
+                throw new UnsupportedOperationException("Not yet implemented.");
+
+        }
+        if(rotation != Rotation.NONE) {
+            canvas.rotate(rotationDegs, cx, cy);
+        }
+        return rect;
     }
 
     protected void drawBorder(Canvas canvas, RectF paddedRect) {
@@ -404,5 +453,13 @@ public abstract class Widget implements BoxModelable, Resizable {
 
     public void setPositionMetrics(PositionMetrics positionMetrics) {
         this.positionMetrics = positionMetrics;
+    }
+
+    public Rotation getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(Rotation rotation) {
+        this.rotation = rotation;
     }
 }

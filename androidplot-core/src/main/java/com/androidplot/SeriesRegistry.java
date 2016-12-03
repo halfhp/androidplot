@@ -54,6 +54,9 @@ public abstract class SeriesRegistry
     }
 
     public boolean add(SeriesType series, FormatterType formatter) {
+        if(series == null || formatter == null) {
+            throw new IllegalArgumentException("Neither series nor formatter param may be null.");
+        }
         return registry.add(newSeriesBundle(series, formatter));
     }
 
@@ -121,5 +124,14 @@ public abstract class SeriesRegistry
             }
         }
         return sfList;
+    }
+
+    public boolean contains(SeriesType series, Class<? extends FormatterType> formatterClass) {
+        for(BundleType b : registry) {
+            if(b.getFormatter().getClass() == formatterClass && b.getSeries() == series) {
+                return true;
+            }
+        }
+        return false;
     }
 }

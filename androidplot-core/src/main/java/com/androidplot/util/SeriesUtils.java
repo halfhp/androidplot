@@ -34,6 +34,26 @@ public class SeriesUtils {
         return minMax(null, seriesList);
     }
 
+    public static Region minMaxX(XYSeries... seriesList) {
+        final Region bounds = new Region();
+        for (XYSeries series : seriesList) {
+            for (int i = 0; i < series.size(); i++) {
+                bounds.union(series.getX(i));
+            }
+        }
+        return bounds;
+    }
+
+    public static Region minMaxY(XYSeries... seriesList) {
+        final Region bounds = new Region();
+        for (XYSeries series : seriesList) {
+            for (int i = 0; i < series.size(); i++) {
+                bounds.union(series.getY(i));
+            }
+        }
+        return bounds;
+    }
+
     /**
      * @param constraints may be null.
      * @param seriesList
@@ -101,7 +121,6 @@ public class SeriesUtils {
     public static Region minMax(Region bounds, List<Number>... lists) {
         for (final List<Number> list : lists) {
             for (final Number i : list) {
-                //minMax(bounds, i);
                 bounds.union(i);
             }
         }

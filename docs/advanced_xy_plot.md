@@ -15,16 +15,17 @@ By default, Androidplot iterates over every element in each series every render 
 determine it's current min/max values.  This is necessary in order to support dynamic plots where
 data can change at any moment and invalidate the previously calculated min/max vals.
 
-FastXYSeries allows the developer to avoid the high overhead of this iteration by calculating these
-min/max values more efficiently.  For example, if you have data whose YVals are strictly ascending,
-the first and last YVal of the series will always be the min/max YVals respectively.
+FastXYSeries allows the developer to provide a more efficient algorithm to obtain min/max XVals 
+and avoid the high overhead of this iteration.  For example, if you know your XVals will always 
+be in strict ascending order then the first and last XVal of the series will always contain the 
+min/max XVals respectively.
 
 XYSeries implementation supports a min/max algorithm implementation that is more efficient than doing 
 a comparison on each point of the series via iteration. It's a good idea to implement this interface
 if your series will contain more than about 500 points
 
 ## OrderedXYSeries
-If the YVals of your series are in ascending order, implementing this interface provides a hint to
+If the XVals of your series are in ascending order, implementing this interface provides a hint to
 the series renderer that allows it to avoid iterating over points that are outside the screen's
 visible domain.  For larger data sets, implementing this interface can mean the difference between
 smooth animations and freezing.
@@ -62,6 +63,51 @@ plot.getRegistry().setEstimator(new ZoomEstimator());
 If you want to take advantage of the performance benefits of sampling but don't need pan/zoom support
 check out the Sampling section below.
 
+## NormedXYSeries
+A convenience wrapper to simplify normalizing XYSeries data in the range of 0 to 1.  Usage is straightforward:
+
+```java
+XYSeries normedSeries = new NormedXYSeries(series);
+```
+
+which is equivalent to:
+
+```java
+XYSeries normedSeries = new NormedXYSeries(series, null, new Norm(null, 0, false));
+```
+
+The first null argument pertains to the normalization being applied to the x axis values.  While normalization
+can certainly be applied on this axis, it's typically unused, which is why the single argument constructor
+defaults to a null value here.
+
+Both examples auto normalize the passed in series, maximizing the resolution of the
+output result.  Sometimes however, it's desirable to control the output resolution for the purpose
+of visually shifting the result up or down in the graph.  This can be done by using the `NormedXYSeries.Norm`
+constructor's second and third arguments: `offset` and `useOffsetCompression`.
+
+##### offset
+This value is added to the original normalized value to effectively shift the series data up or down
+within the normalized range.  If the offset is large enough and offset compression is not used, this 
+can cause normalized values to exceed the norm range of 0 to 1.
+
+##### useOffsetCompression
+If you want to shift a normalized series up or down in the graph but do not want the shift to potentially
+move values offscreen, you can set `useOffsetComression` to true.  This tells `NormedXYSeries` to shrink
+the scale of the associated series relative to the offset being used to ensure that normed values
+stay within the range of 0 to 1.  If set to true and you supply an offset <0 or >1, an 
+`IllegalArgumentException` will be thrown.
+
+We've not talked about the first argument to the `NormedXYSeries.Norm` constructor: `minMax`.  This is an
+optional optimization value that reflects min/max values in the series data being passed in.  If they
+are known, you can pass these in to speed up normalization, otherwise just pass in null and they will
+be auto calculated.
+
+IMPORTANT: If your series data is dynamic and it's min/max values change at runtime, you'll need to invoke
+`NormedXYSeries.normalize(Norm, Norm)` immediately following each change in order to maintain accuracy.
+
+There's a [reference implementation](../demoapp/src/main/java/com/androidplot/demos/DualScaleActivity.java) 
+of a dual scale plot that demonstrates NormedXYSeries usage in the DemoApp.
+
 # Sampling
 Series size is generally the biggest factor when it comes to rendering performance.  If you're plotting 
 very large datasets, its generally a good idea to sample the data to improve performance.
@@ -70,20 +116,48 @@ the 200 points that most accurately represent the profile of the original series
 
 ```java
 // An instance of any implementation of XYSeries.  Assume it's size is 10,000
-XYSeries origalSeries = ...;
+XYSeries originalSeries = ...;
 
 // Sampled series of size 200:
 EditableXYSeries sampledSeries = new FixedSizeEditableXYSeries(
-    origalSeries.getTitle(), 200);
+    originalSeries.getTitle(), 200);
 
 // an instance of an implementation of Sampler:
 Sampler sampler = ...
 
 // do the actual sampling:
-new LTTBSampler().run(origalSeries, sampledSeries);
+new LTTBSampler().run(originalSeries, sampledSeries);
 ```
 
 Currently LTTBSampler is the only available implementation.
 
 # Storing series data in onSaveInstanceState
-TODO
+If your series data requires a non trivial amount of preprocessing (subsampling etc.) or your data samples
+stream in periodically, you'll likely want to persist your series data.
+
+Androidplot provides a simplified mechanism for preserving any registered series and formatter data
+provided they are serializable implementations. (All implementations of XYSeries that ship 
+with Androidplot are serializable)  
+
+To persist series / formatter data:
+```java
+// persist plot series / formatter configuration:
+@Override
+public void onSaveInstanceState(Bundle bundle) {
+    bundle.putSerializable("seriesRegistry", plot.getRegistry());
+}
+```
+
+To restore series / formatter data:
+```java
+public void onCreate(Bundle savedInstanceState) {
+    ...
+    if(savedInstanceState != null && savedInstanceState.containsKey("seriesRegistry")) {
+        XYSeriesRegistry registry = (XYSeriesRegistry) savedInstanceState.getSerializable("seriesRegistry");
+        plot.setRegistry(registry);
+    } else {
+        // first-time setup as usual
+        ...
+    }
+}
+```

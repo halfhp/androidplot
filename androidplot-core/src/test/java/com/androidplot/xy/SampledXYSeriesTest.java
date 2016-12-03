@@ -9,7 +9,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 /**
- * Created by halfhp on 10/8/16.
+ * Tests {@link SampledXYSeries}
  */
 public class SampledXYSeriesTest extends AndroidplotTest {
 

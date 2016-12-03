@@ -61,6 +61,11 @@
                 android:text="Realtime Orientation Sensor Plot"/>
 
             <Button
+                android:id="@+id/startDualScaleExButton"
+                style="@style/toc_button"
+                android:text="Dual Scale XY"/>
+
+            <Button
                 android:id="@+id/startTimeSeriesExButton"
                 style="@style/toc_button"
                 android:text="@string/ts_title"/>

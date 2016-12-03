@@ -21,7 +21,6 @@ import android.graphics.*;
 import com.androidplot.test.*;
 
 import org.junit.*;
-import org.junit.runner.*;
 import org.mockito.*;
 
 import java.util.*;
@@ -60,12 +59,10 @@ public class LineAndPointRendererTest extends AndroidplotTest {
      * @throws Exception
      */
     @Test
-    public void testRenderPoints() throws Exception {
+    public void testDrawSeries() throws Exception {
 
         // 100x100 plot space:
-        RectF plotArea = new RectF(0, 0, 99, 99);
-        XYPlot plot = new XYPlot(getContext(), "Test");
-
+        plotArea = new RectF(0, 0, 99, 99);
         FastLineAndPointRenderer.Formatter formatter =
                 new FastLineAndPointRenderer.Formatter(Color.RED, Color.RED, null);
 
@@ -73,12 +70,12 @@ public class LineAndPointRendererTest extends AndroidplotTest {
         XYSeries series = new SimpleXYSeries(
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "some data", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
-        LineAndPointRenderer renderer = Mockito.spy(new LineAndPointRenderer(plot));
+        LineAndPointRenderer renderer = Mockito.spy(new LineAndPointRenderer(xyPlot));
 
-        plot.addSeries(series, formatter);
+        xyPlot.addSeries(series, formatter);
 
-        plot.calculateMinMaxVals();
-        renderer.onRender(canvas, plotArea, series, formatter, null);
+        xyPlot.calculateMinMaxVals();
+        renderer.drawSeries(canvas, plotArea, series, formatter);
 
         PointF[] expectedPoints = new PointF[] {
                 new PointF(0, 99),
@@ -98,6 +95,8 @@ public class LineAndPointRendererTest extends AndroidplotTest {
                 eq(canvas),
                 eq(plotArea),
                 eq(series),
+                eq(0),
+                eq(expectedPoints.length),
                 capturedPoints.capture(),
                 eq(formatter));
 
@@ -142,5 +141,80 @@ public class LineAndPointRendererTest extends AndroidplotTest {
         // {9, 10}
         assertEquals(expectedPoints[9].x, pList.get(9).x);
         assertEquals(expectedPoints[9].y, pList.get(9).y);
+    }
+
+    @Test
+    public void testDrawSeries_supportsOrderedXYSeries() throws Exception {
+        // 100x100 plot space:
+        //RectF plotArea = new RectF(0, 0, 99, 99);
+        FastLineAndPointRenderer.Formatter formatter =
+                new FastLineAndPointRenderer.Formatter(Color.RED, Color.RED, null);
+
+        // create a series composed of 3 "segments"; series portions separated by null values:
+        SimpleXYSeries series = new SimpleXYSeries(
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "some data", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        LineAndPointRenderer renderer = Mockito.spy(new LineAndPointRenderer(xyPlot));
+
+        xyPlot.addSeries(series, formatter);
+
+        xyPlot.calculateMinMaxVals();
+        renderer.drawSeries(canvas, plotArea, series, formatter);
+
+        verify(renderer, times(1)).renderPoints(
+                eq(canvas),
+                eq(plotArea),
+                eq(series),
+                eq(0),
+                eq(series.size()),
+                any(List.class),
+                eq(formatter));
+
+        xyPlot.setDomainBoundaries(5, 6, BoundaryMode.FIXED);
+        series.setXOrder(OrderedXYSeries.XOrder.ASCENDING);
+        xyPlot.calculateMinMaxVals();
+        renderer.drawSeries(canvas, plotArea, series, formatter);
+
+        verify(renderer, times(1)).renderPoints(
+                eq(canvas),
+                eq(plotArea),
+                eq(series),
+                eq(4),
+                eq(8),
+                any(List.class),
+                eq(formatter));
+
+    }
+
+    @Test
+    public void testCullPointsCache() throws Exception {
+        LineAndPointFormatter formatter =
+                new LineAndPointFormatter(0, 0, 0, null);
+
+        // create a series composed of 3 "segments"; series portions separated by null values:
+        SimpleXYSeries series = new SimpleXYSeries(
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "some data", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        xyPlot.addSeries(series, formatter);
+        LineAndPointRenderer renderer = xyPlot.getRenderer(LineAndPointRenderer.class);
+
+        assertEquals(0, renderer.pointsCaches.size());
+
+        // should generate a new pointCache:
+        renderer.getPointsCache(series);
+        assertEquals(1, renderer.pointsCaches.size());
+
+        // culling should not delete it since it is
+        // registered in the series registry:
+        renderer.getPointsCache(series);
+        assertEquals(1, renderer.pointsCaches.size());
+        renderer.cullPointsCache();
+        assertEquals(1, renderer.pointsCaches.size());
+
+        // unregister the series.  this time, culling should remove the series
+        // from the points cache:
+        xyPlot.removeSeries(series);
+        renderer.cullPointsCache();
+        assertEquals(0, renderer.pointsCaches.size());
     }
 }

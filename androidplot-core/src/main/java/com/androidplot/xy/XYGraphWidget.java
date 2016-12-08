@@ -112,8 +112,8 @@ public class XYGraphWidget extends Widget {
     private Paint domainOriginLinePaint;
     private Paint rangeOriginLinePaint;
 
-    private float domainCursorPosition;
-    private float rangeCursorPosition;
+    private Float domainCursorPosition;
+    private Float rangeCursorPosition;
 
     private boolean drawMarkersEnabled = true;
     private boolean drawGridOnTop;
@@ -687,6 +687,7 @@ public class XYGraphWidget extends Widget {
         boolean hasDomainCursor = false;
         // draw the domain cursor:
         if (domainCursorPaint != null
+                && domainCursorPosition != null
                 && domainCursorPosition <= gridRect.right
                 && domainCursorPosition >= gridRect.left) {
             hasDomainCursor = true;
@@ -698,6 +699,7 @@ public class XYGraphWidget extends Widget {
         boolean hasRangeCursor = false;
         // draw the range cursor:
         if (rangeCursorPaint != null
+                && rangeCursorPosition != null
                 && rangeCursorPosition >= gridRect.top
                 && rangeCursorPosition <= gridRect.bottom) {
             hasRangeCursor = true;
@@ -885,7 +887,7 @@ public class XYGraphWidget extends Widget {
         this.rangeOriginLinePaint = rangeOriginLinePaint;
     }
 
-    public void setCursorPosition(float x, float y) {
+    public void setCursorPosition(Float x, Float y) {
         setDomainCursorPosition(x);
         setRangeCursorPosition(y);
     }
@@ -894,7 +896,7 @@ public class XYGraphWidget extends Widget {
         setCursorPosition(point.x, point.y);
     }
 
-    public float getDomainCursorPosition() {
+    public Float getDomainCursorPosition() {
         return domainCursorPosition;
     }
 
@@ -902,11 +904,11 @@ public class XYGraphWidget extends Widget {
         return getXVal(getDomainCursorPosition());
     }
 
-    public void setDomainCursorPosition(float domainCursorPosition) {
+    public void setDomainCursorPosition(Float domainCursorPosition) {
         this.domainCursorPosition = domainCursorPosition;
     }
 
-    public float getRangeCursorPosition() {
+    public Float getRangeCursorPosition() {
         return rangeCursorPosition;
     }
 
@@ -914,7 +916,7 @@ public class XYGraphWidget extends Widget {
         return getYVal(getRangeCursorPosition());
     }
 
-    public void setRangeCursorPosition(float rangeCursorPosition) {
+    public void setRangeCursorPosition(Float rangeCursorPosition) {
         this.rangeCursorPosition = rangeCursorPosition;
     }
 

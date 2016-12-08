@@ -179,12 +179,14 @@ public class XYGraphWidgetTest extends AndroidplotTest {
     }
 
     @Test
-    public void testDrawCursors_ifCursorPaintIsSet() throws Exception {
+    public void testDrawCursors_ifCursorPaintAndPositionAreSet() throws Exception {
         final Paint domainCursorPaint = new Paint();
         graphWidget.setDomainCursorPaint(domainCursorPaint);
 
         final Paint rangeCursorPaint = new Paint();
         graphWidget.setRangeCursorPaint(rangeCursorPaint);
+        graphWidget.setRangeCursorPosition(0f);
+        graphWidget.setDomainCursorPosition(0f);
         graphWidget.drawCursors(canvas);
 
         // expect one line to be drawn for each cursor:
@@ -193,7 +195,7 @@ public class XYGraphWidgetTest extends AndroidplotTest {
     }
 
     @Test
-    public void testDrawCursors_ifCursorPaintIsNotSet() throws Exception {
+    public void testDrawCursors_ifCursorPaintAndPositionAreNotSet() throws Exception {
         graphWidget.setDomainCursorPaint(null);
         graphWidget.setRangeCursorPaint(null);
 
@@ -205,6 +207,8 @@ public class XYGraphWidgetTest extends AndroidplotTest {
 
     @Test
     public void testDrawCursorLabel() throws Exception {
+        graphWidget.setDomainCursorPosition(0f);
+        graphWidget.setRangeCursorPosition(0f);
         XYGraphWidget.CursorLabelFormatter clf = mock(XYGraphWidget.CursorLabelFormatter.class);
         when(clf.getTextPaint()).thenReturn(new Paint());
         when(clf.getLabelText(any(Number.class), any(Number.class))).thenReturn("bla");

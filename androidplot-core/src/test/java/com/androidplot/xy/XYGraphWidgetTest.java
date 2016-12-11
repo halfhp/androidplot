@@ -25,8 +25,10 @@ import com.androidplot.ui.*;
 import org.junit.*;
 import org.mockito.*;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyFloat;
@@ -241,5 +243,75 @@ public class XYGraphWidgetTest extends AndroidplotTest {
         assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.RIGHT));
         assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.BOTTOM));
         assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.LEFT));
+    }
+
+    @Test
+    public void testScreenToSeries() throws Exception {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        XYCoords coords = graphWidget.screenToSeries(new PointF(0, 0));
+        assertEquals(-100, coords.x.intValue());
+        assertEquals(100, coords.y.intValue());
+
+        coords = graphWidget.screenToSeries(new PointF(100, 100));
+        assertEquals(100, coords.x.intValue());
+        assertEquals(-100, coords.y.intValue());
+
+        coords = graphWidget.screenToSeries(new PointF(50, 50));
+        assertEquals(0, coords.x.intValue());
+        assertEquals(0, coords.y.intValue());
+    }
+
+    @Test
+    public void testSeriesToScreen() throws Exception {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        PointF point = graphWidget.seriesToScreen(new XYCoords(-100, 100));
+        assertEquals(0f, point.x);
+        assertEquals(0f, point.y);
+
+        point = graphWidget.seriesToScreen(new XYCoords(100, -100));
+        assertEquals(100f, point.x);
+        assertEquals(100f, point.y);
+
+        point = graphWidget.seriesToScreen(new XYCoords(0, 0));
+        assertEquals(50f, point.x);
+        assertEquals(50f, point.y);
+    }
+
+    @Test
+    public void testScreenToSeriesX() throws Exception {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        assertEquals(-100, graphWidget.screenToSeriesX(new PointF(0, 0)).intValue());
+        assertEquals(100, graphWidget.screenToSeriesX(new PointF(100, 100)).intValue());
+        assertEquals(0, graphWidget.screenToSeriesX(new PointF(50, 50)).intValue());
+    }
+
+    @Test
+    public void testScreenToSeriesY() throws Exception {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        assertEquals(100, graphWidget.screenToSeriesY(new PointF(0, 0)).intValue());
+        assertEquals(-100, graphWidget.screenToSeriesY(new PointF(100, 100)).intValue());
+        assertEquals(0, graphWidget.screenToSeriesY(new PointF(50, 50)).intValue());
+    }
+
+    @Test
+    public void testSeriesToScreenX() throws Exception {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        assertEquals(0f, graphWidget.seriesToScreenX(-100));
+        assertEquals(100f, graphWidget.seriesToScreenX(100));
+        assertEquals(50f, graphWidget.seriesToScreenX(0));
+    }
+
+    @Test
+    public void testSeriesToScreenY() throws Exception {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        assertEquals(0f, graphWidget.seriesToScreenY(100));
+        assertEquals(100f, graphWidget.seriesToScreenY(-100));
+        assertEquals(50f, graphWidget.seriesToScreenY(0));
     }
 }

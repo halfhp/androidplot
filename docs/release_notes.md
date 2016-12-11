@@ -1,3 +1,10 @@
+# 1.3.2
+* `XYPlot.getXVal(..)` and `XYPlot.getYVal(...)` methods have been deprecated and will be removed in 1.4.0.
+`XYPlot.screenToSeries(...)` and `XYPlot.seriesToScreen(...)` should be used instead.
+* Domain and range cursors are now disabled by default.  To enable, set a valid cursor position using
+`XYGraphWidget.setCursorPosition(float, float)`.  Cursor position values are expressed in screen coordinates;
+you can convert between screen and series values using `XYPlot.screenToSeries(...)` and `XYPlot.seriesToScreen(...)`.
+
 # 1.3.1
 * Added [NormedXYSeries](advanced_xy_plot.md#normedxyseries) wrapper to simplify the process of normalizing xy series data.
 * Added [DualScaleActivity](../demoapp/src/main/java/com/androidplot/demos/DualScaleActivity.java) demonstrating NormedXYSeries usage to present dual range scales.

@@ -391,22 +391,69 @@ public class XYGraphWidget extends Widget {
     }
 
     /**
-     * Convenience method. Wraps getYVal(float)
+     * Convenience method. Wraps screenToSeriesY(float)
+     * This is a relatively slow operation and should not be used for operations that are a part of
+     * the main render loop of a dynamic plot.
      *
      * @param point
      * @return
      */
-    public Number getYVal(PointF point) {
-        return getYVal(point.y);
+    protected XYCoords screenToSeries(PointF point) {
+        if(!plot.getBounds().isFullyDefined()) {
+            return null;
+        }
+        return new RectRegion(gridRect)
+                .transform(point.x, point.y, plot.getBounds(), false, true);
+    }
+
+    /**
+     * Convenience method. Wraps screenToSeriesX(float)
+     * This is a relatively slow operation and should not be used for operations that are a part of
+     * the main render loop of a dynamic plot.
+     *
+     * @param point
+     * @return
+     */
+    protected Number screenToSeriesX(PointF point) {
+        return screenToSeriesX(point.x);
+    }
+
+    /**
+     * Convenience method. Wraps screenToSeriesY(float)
+     * This is a relatively slow operation and should not be used for operations that are a part of
+     * the main render loop of a dynamic plot.
+     *
+     * @param point
+     * @return
+     */
+    protected Number screenToSeriesY(PointF point) {
+        return screenToSeriesY(point.y);
+    }
+
+    /**
+     * Converts an x pixel into an x value.
+     * This is a relatively slow operation and should not be used for operations that are a part of
+     * the main render loop of a dynamic plot.
+     *
+     * @param xPix
+     * @return
+     */
+    protected Number screenToSeriesX(float xPix) {
+        if (!plot.getBounds().xRegion.isDefined()) {
+            return null;
+        }
+        return new Region(gridRect.left, gridRect.right)
+                .transform(xPix, plot.getBounds().getxRegion());
     }
 
     /**
      * Converts a y pixel to a y value.
-     *
+     * This is a relatively slow operation and should not be used for operations that are a part of
+     * the main render loop of a dynamic plot.
      * @param yPix
      * @return
      */
-    public Number getYVal(float yPix) {
+    protected Number screenToSeriesY(float yPix) {
         if (!plot.getBounds().getyRegion().isDefined()) {
             return null;
         }
@@ -414,28 +461,21 @@ public class XYGraphWidget extends Widget {
                 .transform(yPix, plot.getBounds().getyRegion(), true);
     }
 
-    /**
-     * Convenience method. Wraps getXVal(float)
-     *
-     * @param point
-     * @return
-     */
-    public Number getXVal(PointF point) {
-        return getXVal(point.x);
-    }
-
-    /**
-     * Converts an x pixel into an x value.
-     *
-     * @param xPix
-     * @return
-     */
-    public Number getXVal(float xPix) {
-        if (!plot.getBounds().xRegion.isDefined()) {
+    protected PointF seriesToScreen(XYCoords xy) {
+        if(!plot.getBounds().isFullyDefined()) {
             return null;
         }
-        return new Region(gridRect.left, gridRect.right)
-                .transform(xPix, plot.getBounds().getxRegion());
+        return plot.getBounds().transform(xy, gridRect, false, true);
+    }
+
+    protected float seriesToScreenX(Number x) {
+        return (float) plot.getBounds().getxRegion().
+                transform(x.doubleValue(), gridRect.left, gridRect.right, false);
+    }
+
+    protected float seriesToScreenY(Number y) {
+        return (float) plot.getBounds().getyRegion().
+                transform(y.doubleValue(), gridRect.left, gridRect.right, true);
     }
 
     @Override
@@ -887,11 +927,20 @@ public class XYGraphWidget extends Widget {
         this.rangeOriginLinePaint = rangeOriginLinePaint;
     }
 
+    /**
+     * Set domain and range cursor position using screen coordinates
+     * @param x
+     * @param y
+     */
     public void setCursorPosition(Float x, Float y) {
         setDomainCursorPosition(x);
         setRangeCursorPosition(y);
     }
 
+    /**
+     * Set domain and range cursor position using screen coordinates
+     * @param point
+     */
     public void setCursorPosition(PointF point) {
         setCursorPosition(point.x, point.y);
     }
@@ -901,9 +950,13 @@ public class XYGraphWidget extends Widget {
     }
 
     public Number getDomainCursorVal() {
-        return getXVal(getDomainCursorPosition());
+        return screenToSeriesX(getDomainCursorPosition());
     }
 
+    /**
+     * Set domain cursor position using screen coordinates
+     * @param domainCursorPosition
+     */
     public void setDomainCursorPosition(Float domainCursorPosition) {
         this.domainCursorPosition = domainCursorPosition;
     }
@@ -913,9 +966,13 @@ public class XYGraphWidget extends Widget {
     }
 
     public Number getRangeCursorVal() {
-        return getYVal(getRangeCursorPosition());
+        return screenToSeriesY(getRangeCursorPosition());
     }
 
+    /**
+     * Set range cursor position using screen coordinates
+     * @param rangeCursorPosition
+     */
     public void setRangeCursorPosition(Float rangeCursorPosition) {
         this.rangeCursorPosition = rangeCursorPosition;
     }

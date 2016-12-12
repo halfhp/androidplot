@@ -42,6 +42,14 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.main);
 
+        Button startAnimatedXYPlotExButton = (Button) findViewById(R.id.animatedXYPlotExButton);
+        startAnimatedXYPlotExButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AnimatedXYPlotActivity.class));
+            }
+        });
+
         Button startScatterPlotExButton = (Button) findViewById(R.id.startScatterExButton);
         startScatterPlotExButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -30,7 +30,6 @@ import org.mockito.Mock;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyFloat;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -62,7 +61,7 @@ public class BarRendererTest extends AndroidplotTest {
 
         BarFormatter barFormatter = spy(new BarFormatter(Color.RED, Color.RED));
         BarRenderer renderer = spy((BarRenderer)barFormatter.getRendererInstance(xyPlot));
-        renderer.setStyle(BarRenderer.Style.STACKED);
+        renderer.setBarOrientation(BarRenderer.BarOrientation.STACKED);
 
         xyPlot.addSeries(s1, barFormatter);
         xyPlot.addSeries(s2, barFormatter);
@@ -129,7 +128,7 @@ public class BarRendererTest extends AndroidplotTest {
 
         BarFormatter barFormatter = spy(new BarFormatter(Color.RED, Color.RED));
         BarRenderer renderer = spy((BarRenderer)barFormatter.getRendererInstance(xyPlot));
-        renderer.setStyle(BarRenderer.Style.SIDE_BY_SIDE);
+        renderer.setBarOrientation(BarRenderer.BarOrientation.SIDE_BY_SIDE);
 
         xyPlot.addSeries(s1, barFormatter);
         xyPlot.addSeries(s2, barFormatter);
@@ -187,7 +186,7 @@ public class BarRendererTest extends AndroidplotTest {
 
         BarFormatter barFormatter = spy(new BarFormatter(Color.RED, Color.RED));
         BarRenderer renderer = spy((BarRenderer)barFormatter.getRendererInstance(xyPlot));
-        renderer.setStyle(BarRenderer.Style.OVERLAID);
+        renderer.setBarOrientation(BarRenderer.BarOrientation.OVERLAID);
 
         xyPlot.addSeries(s1, barFormatter);
         xyPlot.addSeries(s2, barFormatter);

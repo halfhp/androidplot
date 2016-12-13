@@ -1,5 +1,6 @@
 # 1.3.2
 
+* Major refactor of `BarRenderer`.  [Documentation](barchart.md) has been updated to reflect these changes. (TODO) 
 * Added `ScalingXYSeries` which wraps other instances of XYSeries to be dynamically scaled.  This is
 particularly useful for creating animated intros using `XYSeries` data.
 * Added [AnimatedXYPlotActivity](../demoapp/src/main/java/com/androidplot/demos/AnimatedXYPlotActivity.java) 

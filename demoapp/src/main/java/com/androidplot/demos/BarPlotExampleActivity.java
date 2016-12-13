@@ -152,12 +152,12 @@ public class BarPlotExampleActivity extends Activity {
         });
 
         spRenderStyle = (Spinner) findViewById(R.id.spRenderStyle);
-        ArrayAdapter<BarRenderer.Style> adapter = new ArrayAdapter<BarRenderer.Style>(this,
-                android.R.layout.simple_spinner_item, BarRenderer.Style
+        ArrayAdapter<BarRenderer.BarOrientation> adapter = new ArrayAdapter<BarRenderer.BarOrientation>(this,
+                android.R.layout.simple_spinner_item, BarRenderer.BarOrientation
                 .values());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spRenderStyle.setAdapter(adapter);
-        spRenderStyle.setSelection(BarRenderer.Style.OVERLAID.ordinal());
+        spRenderStyle.setSelection(BarRenderer.BarOrientation.OVERLAID.ordinal());
         spRenderStyle.setOnItemSelectedListener(new OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 updatePlot();
@@ -174,10 +174,10 @@ public class BarPlotExampleActivity extends Activity {
                 .values());
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spWidthStyle.setAdapter(adapter1);
-        spWidthStyle.setSelection(BarRenderer.BarWidthMode.FIXED_WIDTH.ordinal());
+        spWidthStyle.setSelection(BarRenderer.BarWidthMode.FIXED_BAR_WIDTH.ordinal());
         spWidthStyle.setOnItemSelectedListener(new OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                if (BarRenderer.BarWidthMode.FIXED_WIDTH.equals(spWidthStyle.getSelectedItem())) {
+                if (BarRenderer.BarWidthMode.FIXED_BAR_WIDTH.equals(spWidthStyle.getSelectedItem())) {
                     sbFixedWidth.setVisibility(View.VISIBLE);
                     sbVariableWidth.setVisibility(View.INVISIBLE);
                 } else {
@@ -327,12 +327,12 @@ public class BarPlotExampleActivity extends Activity {
 
         // Setup the BarRenderer with our selected options
         MyBarRenderer renderer = ((MyBarRenderer) plot.getRenderer(MyBarRenderer.class));
-        renderer.setStyle((BarRenderer.Style) spRenderStyle.getSelectedItem());
+        renderer.setBarOrientation((BarRenderer.BarOrientation) spRenderStyle.getSelectedItem());
         renderer.setBarWidthMode((BarRenderer.BarWidthMode) spWidthStyle.getSelectedItem());
         renderer.setBarWidth(sbFixedWidth.getProgress());
         renderer.setBarGap(sbVariableWidth.getProgress());
 
-        if (BarRenderer.Style.STACKED.equals(spRenderStyle.getSelectedItem())) {
+        if (BarRenderer.BarOrientation.STACKED.equals(spRenderStyle.getSelectedItem())) {
             plot.getInnerLimits().setMaxY(15);
         } else {
             plot.getInnerLimits().setMaxY(0);

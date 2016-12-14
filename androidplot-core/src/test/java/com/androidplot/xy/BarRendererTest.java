@@ -26,8 +26,13 @@ import com.androidplot.ui.RenderStack;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Matchers.eq;
@@ -45,13 +50,37 @@ public class BarRendererTest extends AndroidplotTest {
 
     RectF plotArea = new RectF(0, 0, 100, 100);
 
+    BarFormatter barFormatter;
+
     @Mock
     RenderStack renderStack;
+
+    @Captor
+    ArgumentCaptor<BarRenderer.Bar> barCaptor;
+
+    @Captor
+    ArgumentCaptor<RectF> rectCaptor;
 
     @Before
     public void setUp() throws Exception {
         canvas = spy(new Canvas());
         xyPlot = spy(new XYPlot(getContext(), "My Plot"));
+        barFormatter = spy(new BarFormatter(Color.RED, Color.RED));
+    }
+
+    @Test
+    public void testOnRender_handlesNullValues() throws Exception {
+        XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", null, 5, null);
+        XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", null, 5, null);
+
+        BarRenderer renderer = setupRendererForTesting(s1, s2);
+
+        xyPlot.setRangeBoundaries(0, 10, BoundaryMode.FIXED);
+        xyPlot.calculateMinMaxVals();
+        renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);
+
+        verify(renderer, times(6))
+                .drawBar(eq(canvas), barCaptor.capture(), rectCaptor.capture());
     }
 
     @Test
@@ -59,66 +88,35 @@ public class BarRendererTest extends AndroidplotTest {
         XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 2, 5, 7);
         XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 8, 5, 3);
 
-        BarFormatter barFormatter = spy(new BarFormatter(Color.RED, Color.RED));
-        BarRenderer renderer = spy((BarRenderer)barFormatter.getRendererInstance(xyPlot));
+        BarRenderer renderer = setupRendererForTesting(s1, s2);
+
         renderer.setBarOrientation(BarRenderer.BarOrientation.STACKED);
-
-        xyPlot.addSeries(s1, barFormatter);
-        xyPlot.addSeries(s2, barFormatter);
-
-        doReturn(renderer.getClass()).when(barFormatter).getRendererClass();
 
         xyPlot.setRangeBoundaries(0, 10, BoundaryMode.FIXED);
         xyPlot.calculateMinMaxVals();
         renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);
 
+        // make sure the expected number of bars draws were attempted:
+        verify(renderer, times(s1.size() + s2.size())).
+                drawBar(eq(canvas), any(BarRenderer.Bar.class), any(RectF.class));
+
         // s1[0]
-        verify(canvas, times(2)).drawRect(
-                anyFloat(),
-                eq(80f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(80, 100, barFormatter, 1);
 
         // s2[0]
-        verify(canvas, times(2)).drawRect(
-                anyFloat(),
-                eq(0f),
-                anyFloat(),
-                eq(80f),
-                any(Paint.class));
+        verifyBarHeight(0, 80, barFormatter, 1);
 
         // s1[1]
-        verify(canvas, times(2)).drawRect(
-                anyFloat(),
-                eq(50f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(50, 100, barFormatter, 1);
 
         // s2[1]
-        verify(canvas, times(2)).drawRect(
-                anyFloat(),
-                eq(0f),
-                anyFloat(),
-                eq(50f),
-                any(Paint.class));
+        verifyBarHeight(0, 50, barFormatter, 1);
 
         // s1[2]
-        verify(canvas, times(2)).drawRect(
-                anyFloat(),
-                eq(30f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(30, 100, barFormatter, 1);
 
         // s2[2]
-        verify(canvas, times(2)).drawRect(
-                anyFloat(),
-                eq(0f),
-                anyFloat(),
-                eq(30f),
-                any(Paint.class));
+        verifyBarHeight(0, 30, barFormatter, 1);
     }
 
     @Test
@@ -126,57 +124,30 @@ public class BarRendererTest extends AndroidplotTest {
         XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 0, 5, 10);
         XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 1, 7.5, 10);
 
-        BarFormatter barFormatter = spy(new BarFormatter(Color.RED, Color.RED));
-        BarRenderer renderer = spy((BarRenderer)barFormatter.getRendererInstance(xyPlot));
+        BarRenderer renderer = setupRendererForTesting(s1, s2);
         renderer.setBarOrientation(BarRenderer.BarOrientation.SIDE_BY_SIDE);
-
-        xyPlot.addSeries(s1, barFormatter);
-        xyPlot.addSeries(s2, barFormatter);
-
-        doReturn(renderer.getClass()).when(barFormatter).getRendererClass();
 
         xyPlot.calculateMinMaxVals();
         renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);
 
+        // make sure the expected number of bars draws were attempted:
+        verify(renderer, times(s1.size() + s2.size())).
+                drawBar(eq(canvas), any(BarRenderer.Bar.class), any(RectF.class));
+
         // s1[0] has zero height so should not be drawn:
-        verify(canvas, never()).drawRect(
-                anyFloat(),
-                eq(100f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(100, 100, barFormatter, 0);
 
         // s1[1]:
-        verify(canvas, times(2)).drawRect(
-                anyFloat(),
-                eq(50f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(50, 100, barFormatter, 1);
 
         // s1[2] & s2[2]:
-        verify(canvas, times(4)).drawRect(
-                anyFloat(),
-                eq(0f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(0, 100, barFormatter, 2);
 
         // s2[0]:
-        verify(canvas, times(2)).drawRect(
-                anyFloat(),
-                eq(90f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(90, 100, barFormatter, 1);
 
         // s2[1]:
-        verify(canvas, times(2)).drawRect(
-                anyFloat(),
-                eq(25f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(25, 100, barFormatter, 1);
     }
 
     @Test
@@ -184,56 +155,107 @@ public class BarRendererTest extends AndroidplotTest {
         XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 0, 5, 10);
         XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 1, 7.5, 10);
 
-        BarFormatter barFormatter = spy(new BarFormatter(Color.RED, Color.RED));
-        BarRenderer renderer = spy((BarRenderer)barFormatter.getRendererInstance(xyPlot));
+        BarRenderer renderer = setupRendererForTesting(s1, s2);
         renderer.setBarOrientation(BarRenderer.BarOrientation.OVERLAID);
-
-        xyPlot.addSeries(s1, barFormatter);
-        xyPlot.addSeries(s2, barFormatter);
-
-        doReturn(renderer.getClass()).when(barFormatter).getRendererClass();
 
         xyPlot.calculateMinMaxVals();
         renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);
 
+        // make sure the expected number of bars draws were attempted:
+        verify(renderer, times(s1.size() + s2.size())).
+                drawBar(eq(canvas), any(BarRenderer.Bar.class), any(RectF.class));
+
         // s1[0] has zero height so should not be drawn:
-        verify(canvas, never()).drawRect(
-                anyFloat(),
-                eq(100f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(100, 100, barFormatter, 0);
 
         // s1[1]:
-        verify(canvas, times(2)).drawRect(
-                anyFloat(),
-                eq(50f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(50, 100, barFormatter, 1);
 
         // s1[2] & s2[2]:
-        verify(canvas, times(4)).drawRect(
-                anyFloat(),
-                eq(0f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(0, 100, barFormatter, 2);
 
         // s2[0]:
-        verify(canvas, times(2)).drawRect(
-                anyFloat(),
-                eq(90f),
-                anyFloat(),
-                eq(100f),
-                any(Paint.class));
+        verifyBarHeight(90, 100, barFormatter, 1);
 
         // s2[1]:
-        verify(canvas, times(2)).drawRect(
+        verifyBarHeight(25, 100, barFormatter, 1);
+    }
+
+    @Test
+    public void testFixedBarWidth() throws Exception {
+        XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 0, 5, 10);
+        XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 1, 7.5, 10);
+
+        BarRenderer renderer = setupRendererForTesting(s1, s2);
+        final float barWidth = 10;
+        renderer.setBarWidth(BarRenderer.BarWidthMode.FIXED_BAR_WIDTH, barWidth);
+
+        xyPlot.calculateMinMaxVals();
+        renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);
+
+        verify(renderer, times(6))
+                .drawBar(eq(canvas), barCaptor.capture(), rectCaptor.capture());
+
+        List<RectF> barRects = rectCaptor.getAllValues();
+
+        for(RectF rect : barRects) {
+            assertEquals(barWidth, rect.width());
+        }
+    }
+
+    @Test
+    public void testFixedGapWidth() throws Exception {
+        XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 0, 5, 10);
+        XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 1, 7.5, 10);
+
+        BarRenderer renderer = setupRendererForTesting(s1, s2);
+
+        final float gap = 5;
+        renderer.setBarWidth(BarRenderer.BarWidthMode.FIXED_GAP_WIDTH, gap);
+
+        xyPlot.calculateMinMaxVals();
+        renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);
+
+        verify(renderer, times(6))
+                .drawBar(eq(canvas), barCaptor.capture(), rectCaptor.capture());
+
+        List<RectF> barRects = rectCaptor.getAllValues();
+
+        // verify that the spacing between each bar group is exactly what was set:
+        assertEquals(gap, barRects.get(2).left - barRects.get(0).right);
+        assertEquals(gap, barRects.get(3).left - barRects.get(1).right);
+
+        assertEquals(gap, barRects.get(4).left - barRects.get(2).right);
+        assertEquals(gap, barRects.get(5).left - barRects.get(3).right);
+    }
+
+    private void verifyBarHeight(float top, float bottom, BarFormatter formatter, int times) {
+        final Paint borderPaint = formatter.getBorderPaint();
+        verify(canvas, times(times)).drawRect(
                 anyFloat(),
-                eq(25f),
+                eq(top),
                 anyFloat(),
-                eq(100f),
-                any(Paint.class));
+                eq(bottom),
+                eq(borderPaint));
+
+        final Paint fillPaint = formatter.getFillPaint();
+        verify(canvas, times(times)).drawRect(
+                anyFloat(),
+                eq(top),
+                anyFloat(),
+                eq(bottom),
+                eq(fillPaint));
+    }
+
+    protected BarRenderer setupRendererForTesting(XYSeries... series) {
+        BarRenderer renderer = spy((BarRenderer)barFormatter.getRendererInstance(xyPlot));
+        renderer.setBarOrientation(BarRenderer.BarOrientation.OVERLAID);
+
+        for(XYSeries s : series) {
+            xyPlot.addSeries(s, barFormatter);
+        }
+
+        doReturn(renderer.getClass()).when(barFormatter).getRendererClass();
+        return renderer;
     }
 }

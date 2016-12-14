@@ -283,8 +283,8 @@ public class BarPlotExampleActivity extends Activity {
                     }
                 });
 
+        plot.setUserRangeOrigin(5);
         updatePlot();
-
     }
 
     private void updatePlot() {

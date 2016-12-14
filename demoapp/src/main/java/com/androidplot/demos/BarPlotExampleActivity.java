@@ -326,11 +326,13 @@ public class BarPlotExampleActivity extends Activity {
         if (series2CheckBox.isChecked()) plot.addSeries(series2, formatter2);
 
         // Setup the BarRenderer with our selected options
-        MyBarRenderer renderer = ((MyBarRenderer) plot.getRenderer(MyBarRenderer.class));
+        MyBarRenderer renderer = plot.getRenderer(MyBarRenderer.class);
         renderer.setBarOrientation((BarRenderer.BarOrientation) spRenderStyle.getSelectedItem());
-        renderer.setBarWidthMode((BarRenderer.BarWidthMode) spWidthStyle.getSelectedItem());
-        renderer.setBarWidth(sbFixedWidth.getProgress());
-        renderer.setBarGap(sbVariableWidth.getProgress());
+        final BarRenderer.BarWidthMode barWidthMode
+                = (BarRenderer.BarWidthMode) spWidthStyle.getSelectedItem();
+        renderer.setBarWidth(barWidthMode,
+                barWidthMode == BarRenderer.BarWidthMode.FIXED_BAR_WIDTH
+                ? sbFixedWidth.getProgress() : sbVariableWidth.getProgress());
 
         if (BarRenderer.BarOrientation.STACKED.equals(spRenderStyle.getSelectedItem())) {
             plot.getInnerLimits().setMaxY(15);

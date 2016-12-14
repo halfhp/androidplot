@@ -26,6 +26,7 @@ import android.graphics.RectF;
 
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesBundle;
+import com.androidplot.util.PixelUtils;
 import com.androidplot.util.RectFUtils;
 
 /**
@@ -36,9 +37,13 @@ import com.androidplot.util.RectFUtils;
 public class BarRenderer<FormatterType extends BarFormatter> extends GroupRenderer<FormatterType> {
 
     private BarOrientation barOrientation = BarOrientation.OVERLAID;  // default Render Style
-    private BarWidthMode barWidthMode = BarWidthMode.FIXED_BAR_WIDTH;  // default Width Style
-    private float barWidth = 5;
-    private float barGap = 1;
+    private BarWidthMode barWidthMode = BarWidthMode.FIXED_BAR_WIDTH; // default Width Style
+
+    /**
+     * Represents the size in pixels of either bar width or bar gap width, depending on the current
+     * value of barWidthMode.
+     */
+    private float width = PixelUtils.dpToPix(3);
 
     /**
      * How bars should be laid out when in a group of 2 or more series.
@@ -75,22 +80,6 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         super(plot);
     }
 
-    /**
-     * Sets the width of the bars when using the FIXED_WIDTH render style
-     * @param barWidth
-     */
-    public void setBarWidth(float barWidth) {
-        this.barWidth = barWidth;
-    }
-
-    /**
-     * Sets the size of the gap between the bar (or bar groups) when using the VARIABLE_WIDTH render style
-     * @param barGap
-     */
-    public void setBarGap(float barGap) {
-        this.barGap = barGap;
-    }
-
     public void setBarOrientation(BarOrientation renderBarOrientation) {
         this.barOrientation = renderBarOrientation;
     }
@@ -99,30 +88,21 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         return this.barOrientation;
     }
 
-    public void setBarWidthMode(BarWidthMode widthStyle) {
-        this.barWidthMode = widthStyle;
-    }
-
-    public BarWidthMode getBarWidthMode() {
+    public BarWidthMode getWidthMode() {
         return this.barWidthMode;
     }
 
-    public void setBarWidth(BarWidthMode mode, float value) {
-        setBarWidthMode(mode);
-        switch (mode) {
-            case FIXED_BAR_WIDTH:
-                setBarWidth(value);
-                break;
-            case FIXED_GAP_WIDTH:
-                setBarGap(value);
-                break;
-            default:
-                break;
-        }
+    public float getWidthVal() {
+        return this.width;
     }
 
-    protected BarComparator getBarComparator() {
-        return new BarComparator(getBarOrientation(), getPlot().getRangeOrigin().floatValue());
+    public void setBarWidth(BarWidthMode mode, float width) {
+        this.barWidthMode = mode;
+        this.width = width;
+    }
+
+    protected BarComparator getBarComparator(float rangeOriginPx) {
+        return new BarComparator(getBarOrientation(), rangeOriginPx);
     }
 
     @Override
@@ -181,13 +161,13 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
             // Determine the exact left and right X for the Bar Group
             switch (barWidthMode) {
                 case FIXED_BAR_WIDTH:
-                    barGroup.leftPix = barGroup.centerPix - (barWidth / 2);
-                    barGroup.rightPix = barGroup.leftPix + barWidth;
+                    barGroup.leftPix = barGroup.centerPix - (width / 2);
+                    barGroup.rightPix = barGroup.leftPix + width;
                     break;
                 case FIXED_GAP_WIDTH:
                     float barWidth = plotArea.width();
                     if(groupCount > 1) {
-                        barWidth = (barGroups.get(1).centerPix - barGroups.get(0).centerPix) - barGap;
+                        barWidth = (barGroups.get(1).centerPix - barGroups.get(0).centerPix) - width;
                     }
 
                     final float halfWidth = barWidth / 2;
@@ -202,10 +182,10 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
     		 * Draw the bars within the barGroup area.
     		 */
             double rangeOrigin = getPlot().getRangeOrigin().doubleValue();
-            float basePositionY = (float) getPlot().getBounds().yRegion
+            float rangeOriginPx = (float) getPlot().getBounds().yRegion
                     .transform(rangeOrigin, plotArea.top, plotArea.bottom, true);
 
-            final BarComparator comparator = getBarComparator();
+            final BarComparator comparator = getBarComparator(rangeOriginPx);
             switch (barOrientation) {
                 case OVERLAID:
                     Collections.sort(barGroup.bars, comparator);
@@ -214,7 +194,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
                                 bar.barGroup.leftPix,
                                 bar.yPix,
                                 bar.barGroup.rightPix,
-                                basePositionY));
+                                rangeOriginPx));
                     }
                     break;
                 case SIDE_BY_SIDE:
@@ -226,7 +206,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
                                 leftX,
                                 bar.yPix,
                                 leftX + width,
-                                basePositionY));
+                                rangeOriginPx));
                         leftX = leftX + width;
                     }
                     break;
@@ -284,6 +264,10 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         }
     }
 
+    /**
+     *
+     * @param <FormatterType>
+     */
     public static class Bar<FormatterType extends BarFormatter> {
 
         public final XYSeries series;
@@ -319,6 +303,9 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         }
     }
 
+    /**
+     * A collection of one or more {@Bar} instances sharing a common iVal.
+     */
     private static class BarGroup {
 
         public ArrayList<Bar> bars;
@@ -346,14 +333,17 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         }
     }
 
+    /**
+     * Used to determine the order in which bars of the same group will be drawn.
+     */
     @SuppressWarnings("WeakerAccess")
     public static class BarComparator implements Comparator<Bar> {
 
         private final BarOrientation barOrientation;
-        private final float rangeOrigin;
+        private final float rangeOriginPx;
 
-        public BarComparator(BarOrientation barOrientation, float rangeOrigin) {
-            this.rangeOrigin = rangeOrigin;
+        public BarComparator(BarOrientation barOrientation, float rangeOriginPx) {
+            this.rangeOriginPx = rangeOriginPx;
             this.barOrientation = barOrientation;
         }
 
@@ -361,7 +351,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         public int compare(Bar bar1, Bar bar2) {
             switch (barOrientation) {
                 case OVERLAID:
-                    if(bar1.yPix < rangeOrigin && bar2.yPix < rangeOrigin) {
+                    if(bar1.yPix > rangeOriginPx && bar2.yPix > rangeOriginPx) {
                         return Float.valueOf(bar2.yPix).compareTo(bar1.yPix);
                     } else {
                         return Float.valueOf(bar1.yPix).compareTo(bar2.yPix);

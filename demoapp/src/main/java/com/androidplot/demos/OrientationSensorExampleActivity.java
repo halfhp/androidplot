@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import com.androidplot.Plot;
+import com.androidplot.util.PixelUtils;
 import com.androidplot.util.PlotStatistics;
 import com.androidplot.util.Redrawer;
 import com.androidplot.xy.*;
@@ -163,7 +164,8 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         BarRenderer barRenderer = aprLevelsPlot.getRenderer(BarRenderer.class);
         if(barRenderer != null) {
             // make our bars a little thicker than the default so they can be seen better:
-            barRenderer.setBarWidth(25);
+            barRenderer.setBarWidth(
+                    BarRenderer.BarWidthMode.FIXED_BAR_WIDTH, PixelUtils.dpToPix(18));
         }
 
         // register for orientation sensor events:

@@ -169,15 +169,15 @@ public class BarPlotExampleActivity extends Activity {
         });
 
         spWidthStyle = (Spinner) findViewById(R.id.spWidthStyle);
-        ArrayAdapter<BarRenderer.BarWidthMode> adapter1 = new ArrayAdapter<BarRenderer.BarWidthMode>(
-                this, android.R.layout.simple_spinner_item, BarRenderer.BarWidthMode
+        ArrayAdapter<BarRenderer.BarGroupWidthMode> adapter1 = new ArrayAdapter<BarRenderer.BarGroupWidthMode>(
+                this, android.R.layout.simple_spinner_item, BarRenderer.BarGroupWidthMode
                 .values());
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spWidthStyle.setAdapter(adapter1);
-        spWidthStyle.setSelection(BarRenderer.BarWidthMode.FIXED_BAR_WIDTH.ordinal());
+        spWidthStyle.setSelection(BarRenderer.BarGroupWidthMode.FIXED_WIDTH.ordinal());
         spWidthStyle.setOnItemSelectedListener(new OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                if (BarRenderer.BarWidthMode.FIXED_BAR_WIDTH.equals(spWidthStyle.getSelectedItem())) {
+                if (BarRenderer.BarGroupWidthMode.FIXED_WIDTH.equals(spWidthStyle.getSelectedItem())) {
                     sbFixedWidth.setVisibility(View.VISIBLE);
                     sbVariableWidth.setVisibility(View.INVISIBLE);
                 } else {
@@ -328,10 +328,10 @@ public class BarPlotExampleActivity extends Activity {
         // Setup the BarRenderer with our selected options
         MyBarRenderer renderer = plot.getRenderer(MyBarRenderer.class);
         renderer.setBarOrientation((BarRenderer.BarOrientation) spRenderStyle.getSelectedItem());
-        final BarRenderer.BarWidthMode barWidthMode
-                = (BarRenderer.BarWidthMode) spWidthStyle.getSelectedItem();
-        renderer.setBarWidth(barWidthMode,
-                barWidthMode == BarRenderer.BarWidthMode.FIXED_BAR_WIDTH
+        final BarRenderer.BarGroupWidthMode barGroupWidthMode
+                = (BarRenderer.BarGroupWidthMode) spWidthStyle.getSelectedItem();
+        renderer.setBarGroupWidth(barGroupWidthMode,
+                barGroupWidthMode == BarRenderer.BarGroupWidthMode.FIXED_WIDTH
                 ? sbFixedWidth.getProgress() : sbVariableWidth.getProgress());
 
         if (BarRenderer.BarOrientation.STACKED.equals(spRenderStyle.getSelectedItem())) {

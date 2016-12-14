@@ -164,8 +164,8 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         BarRenderer barRenderer = aprLevelsPlot.getRenderer(BarRenderer.class);
         if(barRenderer != null) {
             // make our bars a little thicker than the default so they can be seen better:
-            barRenderer.setBarWidth(
-                    BarRenderer.BarWidthMode.FIXED_BAR_WIDTH, PixelUtils.dpToPix(18));
+            barRenderer.setBarGroupWidth(
+                    BarRenderer.BarGroupWidthMode.FIXED_WIDTH, PixelUtils.dpToPix(18));
         }
 
         // register for orientation sensor events:

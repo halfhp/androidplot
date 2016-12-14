@@ -37,7 +37,7 @@ import com.androidplot.util.RectFUtils;
 public class BarRenderer<FormatterType extends BarFormatter> extends GroupRenderer<FormatterType> {
 
     private BarOrientation barOrientation = BarOrientation.OVERLAID;  // default Render Style
-    private BarWidthMode barWidthMode = BarWidthMode.FIXED_BAR_WIDTH; // default Width Style
+    private BarGroupWidthMode barGroupWidthMode = BarGroupWidthMode.FIXED_WIDTH; // default Width Style
 
     /**
      * Represents the size in pixels of either bar width or bar gap width, depending on the current
@@ -71,9 +71,9 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
     /**
      * Mode with which to calculate the width of each bar.
      */
-    public enum BarWidthMode {
-        FIXED_BAR_WIDTH,  // bar width is always barWidth
-        FIXED_GAP_WIDTH   // bar width is calculated relative to a fixed gap width between each bar
+    public enum BarGroupWidthMode {
+        FIXED_WIDTH,  // bar width is always barWidth
+        FIXED_GAP     // bar width is calculated relative to a fixed gap width between each bar
     }
 
     public BarRenderer(XYPlot plot) {
@@ -88,16 +88,16 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         return this.barOrientation;
     }
 
-    public BarWidthMode getWidthMode() {
-        return this.barWidthMode;
+    public BarGroupWidthMode getBarGroupWidthMode() {
+        return this.barGroupWidthMode;
     }
 
-    public float getWidthVal() {
+    public float getBarGroupWidth() {
         return this.width;
     }
 
-    public void setBarWidth(BarWidthMode mode, float width) {
-        this.barWidthMode = mode;
+    public void setBarGroupWidth(BarGroupWidthMode mode, float width) {
+        this.barGroupWidthMode = mode;
         this.width = width;
     }
 
@@ -159,12 +159,12 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         for(BarGroup barGroup : barGroups) {
 
             // Determine the exact left and right X for the Bar Group
-            switch (barWidthMode) {
-                case FIXED_BAR_WIDTH:
+            switch (barGroupWidthMode) {
+                case FIXED_WIDTH:
                     barGroup.leftPix = barGroup.centerPix - (width / 2);
                     barGroup.rightPix = barGroup.leftPix + width;
                     break;
-                case FIXED_GAP_WIDTH:
+                case FIXED_GAP:
                     float barWidth = plotArea.width();
                     if(groupCount > 1) {
                         barWidth = (barGroups.get(1).centerPix - barGroups.get(0).centerPix) - width;

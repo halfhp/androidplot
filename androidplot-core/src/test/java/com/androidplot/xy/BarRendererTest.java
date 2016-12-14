@@ -37,7 +37,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -218,7 +217,7 @@ public class BarRendererTest extends AndroidplotTest {
 
         BarRenderer renderer = setupRendererForTesting(s1, s2);
         final float barWidth = 10;
-        renderer.setBarWidth(BarRenderer.BarWidthMode.FIXED_BAR_WIDTH, barWidth);
+        renderer.setBarGroupWidth(BarRenderer.BarGroupWidthMode.FIXED_WIDTH, barWidth);
 
         xyPlot.calculateMinMaxVals();
         renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);
@@ -241,7 +240,7 @@ public class BarRendererTest extends AndroidplotTest {
         BarRenderer renderer = setupRendererForTesting(s1, s2);
 
         final float gap = 5;
-        renderer.setBarWidth(BarRenderer.BarWidthMode.FIXED_GAP_WIDTH, gap);
+        renderer.setBarGroupWidth(BarRenderer.BarGroupWidthMode.FIXED_GAP, gap);
 
         xyPlot.calculateMinMaxVals();
         renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);

@@ -20,6 +20,16 @@ Unlike most other renderers, much of the visual configuration of a bar chart is 
 `BarRenderer` provides methods for setting how the width of each bar should be calculated, the space between each `Bar`
 and what style of visual grouping to use.
 
+
+##### Getting the BarRenderer Instance
+Many of the topics below require access to the `BarRenderer` instance to be set.  Each instance of 
+`XYPlot` contains it's own unique `Renderer` instances.  To retrieve the `BarRenderer` 
+instance from an `XYPlot`:
+
+```java
+BarRenderer renderer = plot.getRenderer(BarRenderer.class);
+```
+
 # BarGroup
 A `BarGroup` is automatically generated to group values from one or more series by their index values.
 All `Bar` instances belong to a `BarGroup`, even if there is only a single `XYSeries` that exists.
@@ -28,7 +38,7 @@ A common use case of bar charts is to represent a group of two or more values fo
 individual bars, for example the number of wins and losses for a baseball team for every month over the course
 of a year.
 
-To model this in Androidplot, create two instances of XYSeries; one for wins and one for losses, each
+To model this in Androidplot, create two instances of `XYSeries`; one for wins and one for losses, each
 with exactly 12 elements (one for each day of the month):
 
 ```java
@@ -52,13 +62,42 @@ The pairs of wins/losses bars are then drawn side-by-side for each of the 12 ind
 knows to do this because `BarRenderer` (the renderer used to draw series associated with a `BarFormatter`) 
 extends [GroupRenderer](grouprenderer.md).
 
-# BarGroup Styles
-BarRenderer provides three grouping styles:
+# BarRenderer Styles
+`BarRenderer` provides three grouping styles that may be used when rendering two or more XYSeries:
+`OVERLAID`, `STACKED`, `SIDE_BY_SIDE`
 
-* **BarRenderer.Style.OVERLAID** (default) - bars in the same grouping are overlaid on each-other, the bars being
-drawn in descending order of y-val.
-* **BarRenderer.Style.STACKED** - bars in the same group are stacked on top of each-other.
-* **BarRenderer.Style.SIDE_BY_SIDE** - bars in the same group are drawn next to one another.
+##### OVERLAID (default) 
+Bars in the same grouping are overlaid on each-other, the bars being drawn by yVal in descending order.
+
+![image](images/bargroup_overlaid.png)
+
+
+To use:
+```java
+barRenderer.setBarOrientation(BarRenderer.BarOrientation.OVERLAID);
+```
+
+##### STACKED
+Bars in the same group are stacked on top of each-other.  Limitations:
+* Range Origin must be set to 0.
+* All `XYSeries` must contain no negative values.
+
+![image](images/bargroup_stacked.png)
+
+To use:
+```java
+barRenderer.setBarOrientation(BarRenderer.BarOrientation.STACKED);
+```
+
+##### SIDE_BY_SIDE
+Bars in the same group are drawn next to one another.
+
+![image](images/bargroup_side_by_side.png)
+
+To use:
+```java
+barRenderer.setBarOrientation(BarRenderer.BarOrientation.SIDE_BY_SIDE);
+```
 
 # BarGroup Widths & Spacing
 When configuring BarGroup widths and spacing, there are two mutually exclusive methods that can be used;
@@ -67,14 +106,14 @@ When configuring BarGroup widths and spacing, there are two mutually exclusive m
 ![image](images/bargroup_spacing.png)
 
 ##### FIXED_WIDTH
-The exact size of the BarGroup is specified in pixels and the space between each BarGroup
+The exact size of the `BarGroup` is specified in pixels and the space between each `BarGroup`
 is dynamically calculated based on that size.
 
 ```java
 barRenderer.setBarWidth(BarRenderer.BarGroupWidthMode.FIXED_WIDTH, PixelUtils.dpToPix(25));
 ```
 ##### FIXED_GAP
-The exact size of the "gap" between each BarGroup is specified in pixels and the size of each BarGroup
+The exact size of the "gap" between each `BarGroup` is specified in pixels and the size of each `BarGroup`
 is dynamically calculated based on that spacing.
 
 ```java

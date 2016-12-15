@@ -190,11 +190,11 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
                 case OVERLAID:
                     Collections.sort(barGroup.bars, comparator);
                     for (Bar bar : barGroup.bars) {
-                        drawBar(canvas, bar, RectFUtils.createFromEdges(
+                        drawBar(canvas, bar, createBarRect(
                                 bar.barGroup.leftPix,
                                 bar.yPix,
                                 bar.barGroup.rightPix,
-                                rangeOriginPx));
+                                rangeOriginPx, bar.formatter));
                     }
                     break;
                 case SIDE_BY_SIDE:
@@ -202,11 +202,10 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
                     float leftX = barGroup.leftPix;
                     Collections.sort(barGroup.bars, comparator);
                     for (Bar bar : barGroup.bars) {
-                        drawBar(canvas, bar, RectFUtils.createFromEdges(
-                                leftX,
-                                bar.yPix,
-                                leftX + width,
-                                rangeOriginPx));
+                        drawBar(canvas, bar, createBarRect(
+                                leftX, bar.yPix,
+                                leftX + width, rangeOriginPx,
+                                bar.formatter));
                         leftX = leftX + width;
                     }
                     break;
@@ -217,15 +216,26 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
                         // TODO: handling sub range-origin values for the purpose of labeling
                         final float height = (int) bar.barGroup.plotArea.bottom - bar.yPix;
                         final float top = bottom - height;
-                        drawBar(canvas, bar, RectFUtils.createFromEdges(
-                                bar.barGroup.leftPix, top, bar.barGroup.rightPix, bottom));
+                        drawBar(canvas, bar, createBarRect(
+                                bar.barGroup.leftPix, top,
+                                bar.barGroup.rightPix, bottom,
+                                bar.formatter));
                         bottom = top;
                     }
                     break;
                 default:
-                    break;
+                    throw new UnsupportedOperationException("Unexpected BarOrientation: " + barOrientation);
             }
         }
+    }
+
+    protected RectF createBarRect(float w1, float h1, float w2, float h2, BarFormatter formatter) {
+        final RectF result = RectFUtils.createFromEdges(w1, h1,w2, h2);
+        result.left += formatter.getMarginLeft();
+        result.right -= formatter.getMarginRight();
+        result.top += formatter.getMarginTop();
+        result.bottom -= formatter.getMarginBottom();
+        return result;
     }
 
     protected void drawBar(Canvas canvas, Bar bar, RectF rect) {

@@ -99,6 +99,14 @@ To use:
 barRenderer.setBarOrientation(BarRenderer.BarOrientation.SIDE_BY_SIDE);
 ```
 
+By default there is no spacing between bars in the same `BarGroup` in this mode.  You can add spacing
+by setting a left and right margin on your BarFormatter instances:
+
+```java
+barFormatter.setMarginLeft(PixelUtils.dpToPix(1));
+barFormatter.setMarginRight(PixelUtils.dpToPix(1));
+```
+
 # BarGroup Widths & Spacing
 When configuring BarGroup widths and spacing, there are two mutually exclusive methods that can be used;
 `FIXED_WIDTH` and `FIXED_GAP`.

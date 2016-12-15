@@ -96,7 +96,11 @@ public class BarPlotExampleActivity extends Activity {
         plot = (XYPlot) findViewById(R.id.plot);
 
         formatter1 = new MyBarFormatter(Color.rgb(100, 150, 100), Color.LTGRAY);
+        formatter1.setMarginLeft(PixelUtils.dpToPix(1));
+        formatter1.setMarginRight(PixelUtils.dpToPix(1));
         formatter2 = new MyBarFormatter(Color.rgb(100, 100, 150), Color.LTGRAY);
+        formatter2.setMarginLeft(PixelUtils.dpToPix(1));
+        formatter2.setMarginRight(PixelUtils.dpToPix(1));
         selectionFormatter = new MyBarFormatter(Color.YELLOW, Color.WHITE);
 
         selectionWidget = new TextLabelWidget(plot.getLayoutManager(), NO_SELECTION_TXT,

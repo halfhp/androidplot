@@ -33,6 +33,8 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     // starting angle to use when drawing the first radial line of the first segment.
     @SuppressWarnings("FieldCanBeLocal")
     private float startDeg = 0;
+
+    // ending angle used to calculate the "shape" of the pie chart.
     private float endDeg = 360;
 
     // TODO: express donut in units other than px.

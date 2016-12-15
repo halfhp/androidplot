@@ -149,6 +149,10 @@ public class SimplePieChartActivity extends Activity
 
         pie.getBorderPaint().setColor(Color.TRANSPARENT);
         pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
+
+        // start the first segment at 5 degrees;
+        pie.getRenderer(PieRenderer.class).setStartDeg(15);
+        pie.getRenderer(PieRenderer.class).setEndDeg(165);
     }
 
     protected void updateDonutText() {

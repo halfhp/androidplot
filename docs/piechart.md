@@ -1,6 +1,6 @@
 # Pie Charts
-Like all other primary chart and graph classes in Androidplot, PieChart is simply a composition
-of widgets along with convenience methods.  The real work is actually done by PieWidget.
+Like all other primary chart and graph classes in Androidplot, `PieChart` is simply a composition
+of widgets along with convenience methods.  The real work is actually done by `PieWidget`.
 
 ![image](images/screens/pie_horiz.png)
 
@@ -11,29 +11,42 @@ Pie charts are composed of one or more values called Segments which combines a v
 Segment segment = new Segment("my segment", 10);
 ```
 
-Displaying a Segment to a pie chart also requires a SegmentFormatter.  SegmentFormatter is what defines
-the visual characteristics of the associated segment; color, border thickness, 
-segment offset, label text style (if any) etc.  The below code instantiates a new SegmentFormatter
+Displaying a `Segment` to a pie chart also requires a `SegmentFormatter`.  `SegmentFormatter` is what defines
+the visual characteristics of the associated `Segment`; color, border thickness, 
+segment offset, label text style (if any) etc.  The below code instantiates a new `SegmentFormatter`
 with a segment color of red:
 
 ```java
 SegmentFormatter formatter = new SegmentFormatter(Color.RED);
 ```
 
-Finally, the Segment must be added to the pie chart along with it's SegmentFormatter:
+Finally, the `Segment` must be added to the pie chart along with it's `SegmentFormatter`:
 
 ```java
 pie.addSegment(segment, formatter);
 ```
 
+# Segment Orientation
+Each `Segment` is drawn in order beginning from `startDeg` which is set by default set to 0.
+
+![image](images/pie_orientation.png)
+
+To adjust `startDeg`:
+
+```java
+// start the first segment at 5 degrees;
+pie.getRenderer(PieRenderer.class).setStartDeg(15);
+```
+
+
 # SegmentFormatter
-As mentioned above, SegmentFormatter defines how a Segment is visually represented in a PieChart.
+As mentioned above, `SegmentFormatter` defines how a Segment is visually represented in a `PieChart`.
 In addition to basic color / border line styling params, there are several parameters available
 to visually distinguish a segment:
 
 ## Offset
-Value in pixels used to "shift" the position of the segment relative to the center of the PieChart.
-The visual effect is equivalent to cutting up a pie and dragging one piece outward, away from the rest of the pie.
+Value in pixels used to "shift" the position of the segment outward relative to the center of the `PieChart`.
+The visual effect is equivalent to cutting up a pie and dragging one piece out and away from the rest of the pie.
 
 ## RadialInset
 Value in degrees used to shrink the radial edges of the segment inward.  The visual effect is equivalent

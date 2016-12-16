@@ -27,6 +27,8 @@ import com.androidplot.ui.*;
 import org.junit.*;
 import org.mockito.*;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.*;
 
 public class PieRendererTest extends AndroidplotTest {
@@ -105,5 +107,64 @@ public class PieRendererTest extends AndroidplotTest {
         doReturn(renderer).when(formatter).getRendererInstance(any(PieChart.class));
         pieChart.addSegment(segment, formatter);
         renderer.onRender(canvas, plotArea, segment, formatter, renderStack);
+    }
+
+    @Test
+    public void testGetContainingSegment() throws Exception {
+        Segment segment1 = spy(new Segment("s1", 25));
+        Segment segment2 = spy(new Segment("s2", 25));
+        Segment segment3 = spy(new Segment("s3", 25));
+        Segment segment4 = spy(new Segment("s4", 25));
+        SegmentFormatter formatter = spy(
+                new SegmentFormatter(Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN));
+        PieRenderer renderer = formatter.getRendererInstance(pieChart);
+
+        pieChart.addSegment(segment1, formatter);
+        pieChart.addSegment(segment2, formatter);
+        pieChart.addSegment(segment3, formatter);
+        pieChart.addSegment(segment4, formatter);
+
+        // southeast
+        assertEquals(segment1, renderer.getContainingSegment(new PointF(100, 100)));
+
+        // southwest
+        assertEquals(segment2, renderer.getContainingSegment(new PointF(0, 100)));
+
+        // northwest
+        assertEquals(segment3, renderer.getContainingSegment(new PointF(0, 0)));
+
+        // northeast
+        assertEquals(segment4, renderer.getContainingSegment(new PointF(100, 0)));
+
+        renderer.setStartDegs(90);
+        // southeast
+        assertEquals(segment2, renderer.getContainingSegment(new PointF(100, 100)));
+
+        // southwest
+        assertEquals(segment3, renderer.getContainingSegment(new PointF(0, 100)));
+
+        // northwest
+        assertEquals(segment4, renderer.getContainingSegment(new PointF(0, 0)));
+
+        // northeast
+        assertEquals(segment1, renderer.getContainingSegment(new PointF(100, 0)));
+    }
+
+    @Test
+    public void testDegsToScreenDegs() throws Exception {
+        assertEquals(0f, PieRenderer.degsToScreenDegs(0));
+        assertEquals(359f, PieRenderer.degsToScreenDegs(1));
+        assertEquals(271f, PieRenderer.degsToScreenDegs(89));
+        assertEquals(270f, PieRenderer.degsToScreenDegs(90));
+        assertEquals(269f, PieRenderer.degsToScreenDegs(91));
+        assertEquals(181f, PieRenderer.degsToScreenDegs(179));
+        assertEquals(180f, PieRenderer.degsToScreenDegs(180));
+        assertEquals(179f, PieRenderer.degsToScreenDegs(181));
+        assertEquals(91f, PieRenderer.degsToScreenDegs(269));
+        assertEquals(90f, PieRenderer.degsToScreenDegs(270));
+        assertEquals(89f, PieRenderer.degsToScreenDegs(271));
+        assertEquals(1f, PieRenderer.degsToScreenDegs(359));
+        assertEquals(0f, PieRenderer.degsToScreenDegs(360));
+
     }
 }

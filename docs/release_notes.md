@@ -1,10 +1,26 @@
+# 1.3.2
+
+* Moderate refactor of `PieRenderer`.  [Documentation](piechart.md) has been updated to reflect these changes.  
+* Major refactor of `BarRenderer`.  [Documentation](barchart.md) has been updated to reflect these changes.
+* Added `ScalingXYSeries` which wraps other instances of `XYSeries` to be dynamically scaled.  This is
+particularly useful for creating animated intros using `XYSeries` data.
+* Added [AnimatedXYPlotActivity](../demoapp/src/main/java/com/androidplot/demos/AnimatedXYPlotActivity.java) 
+demonstrating the use of `ScalingXYSeries` to create an animated intro.
+* `XYPlot.getXVal(..)` and `XYPlot.getYVal(...)` methods have been deprecated and will be removed in 1.4.0.
+`XYPlot.screenToSeries(...)` and `XYPlot.seriesToScreen(...)` should be used instead.
+* Domain and range cursors are now disabled by default.  To enable, set a valid cursor position using
+`XYGraphWidget.setCursorPosition(float, float)`.  Cursor position values are expressed in screen coordinates;
+you can convert between screen and series values using `XYPlot.screenToSeries(...)` and `XYPlot.seriesToScreen(...)`.
+
 # 1.3.1
+
 * Added [NormedXYSeries](advanced_xy_plot.md#normedxyseries) wrapper to simplify the process of normalizing xy series data.
-* Added [DualScaleActivity](../demoapp/src/main/java/com/androidplot/demos/DualScaleActivity.java) demonstrating NormedXYSeries usage to present dual range scales.
+* Added [DualScaleActivity](../demoapp/src/main/java/com/androidplot/demos/DualScaleActivity.java) 
+demonstrating `NormedXYSeries` usage to present dual range scales.
 * LineAndPointRenderer options for cases where two or mode series' of different size have been added.
 * Fixed a bug causing points scrolled off-screen to occasionally accumulate and render along the left edge of the graph.
 * Fixed a bug that could cause render jitter when extreme zoom levels were applied.
-* Fixed a bug that prevented PanZoom from working properly on plots with an undefined outer limit.
+* Fixed a bug that prevented `PanZoom` from working properly on plots with an undefined outer limit.
 
 # 1.3.0
 

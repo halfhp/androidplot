@@ -69,10 +69,13 @@ public class SimplePieChartActivity extends Activity
                 PointF click = new PointF(motionEvent.getX(), motionEvent.getY());
                 if(pie.getPie().containsPoint(click)) {
                     Segment segment = pie.getRenderer(PieRenderer.class).getContainingSegment(click);
-                    final boolean isSelected = getFormatter(segment).getOffset() != 0;
+
                     deselectAll();
-                    setSelected(segment, !isSelected);
-                    pie.redraw();
+                    if(segment != null) {
+                        final boolean isSelected = getFormatter(segment).getOffset() != 0;
+                        setSelected(segment, !isSelected);
+                        pie.redraw();
+                    }
                 }
                 return false;
             }
@@ -149,6 +152,10 @@ public class SimplePieChartActivity extends Activity
 
         pie.getBorderPaint().setColor(Color.TRANSPARENT);
         pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
+
+        // start the first segment at 5 degrees;
+        pie.getRenderer(PieRenderer.class).setStartDegs(180);
+        pie.getRenderer(PieRenderer.class).setExtentDegs(360);
     }
 
     protected void updateDonutText() {

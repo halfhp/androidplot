@@ -51,11 +51,6 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
             points = new  float[series.size()*2];
         }
 
-//        final Number minX = getPlot().getCalculatedMinX();
-//        final Number maxX = getPlot().getCalculatedMaxX();
-//        final Number minY = getPlot().getCalculatedMinY();
-//        final Number maxY = getPlot().getCalculatedMaxY();
-
         int segmentLen = 0;
         boolean isLastPointNull = true;
         for (int i = 0, j = 0;  i < series.size(); i++, j+=2) {

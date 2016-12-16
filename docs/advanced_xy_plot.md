@@ -30,6 +30,13 @@ the series renderer that allows it to avoid iterating over points that are outsi
 visible domain.  For larger data sets, implementing this interface can mean the difference between
 smooth animations and freezing.
 
+## ScalingXYSeries
+Wraps any other instance of XYSeries and provides a simple interface for dynamically 
+scaling x and/or y values.  A popular use case for dynamic scaling is to create an animated intro
+for your XYSeries where yVals increase (or decrease in the case of negative values) from 0 towards
+their original value. The [AnimatedXYPlotActivity](../demoapp/src/main/java/com/androidplot/demos/AnimatedXYPlotActivity.java)
+in the DemoApp is one example on how this can be accomplished.
+
 ## SampledXYSeries
 SampledXYSeries is meant for use with extremely large datasets.  Given a series, multiple sampled 
 series instances at stepped resolutions are generated for faster rendering.

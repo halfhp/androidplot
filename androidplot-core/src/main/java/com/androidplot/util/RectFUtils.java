@@ -59,4 +59,24 @@ public abstract class RectFUtils {
             return rect;
         }
     }
+
+    /**
+     * Generates a RectF from two height and two width values; the h and w values will
+     * be passed into the RectF constructor such that RectF.left  <= RectF.right and
+     * RectF.top <= RectF.bottom.
+     * @param w1 width1
+     * @param h1 height1
+     * @param w2 width2
+     * @param h2 height2
+     * @return
+     */
+    public static RectF createFromEdges(float w1, float h1, float w2, float h2) {
+        final boolean w1IsLeft = w1 <= w2;
+        final boolean h1IsTop = h1 <= h2;
+        return new RectF(
+                w1IsLeft ? w1 : w2,
+                h1IsTop ? h1 : h2,
+                w1IsLeft ? w2 : w1,
+                h1IsTop ? h2 : h1);
+    }
 }

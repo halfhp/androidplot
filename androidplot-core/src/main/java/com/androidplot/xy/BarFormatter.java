@@ -40,6 +40,11 @@ public class BarFormatter extends LineAndPointFormatter {
     private Paint fillPaint;
     private Paint borderPaint;
 
+    private float marginTop;
+    private float marginBottom;
+    private float marginLeft;
+    private float marginRight;
+
     /**
      * Should only be used in conjunction with calls to configure()...
      */
@@ -71,5 +76,37 @@ public class BarFormatter extends LineAndPointFormatter {
     @Override
     public SeriesRenderer doGetRendererInstance(XYPlot plot) {
         return new BarRenderer(plot);
+    }
+
+    public float getMarginTop() {
+        return marginTop;
+    }
+
+    public void setMarginTop(float marginTop) {
+        this.marginTop = marginTop;
+    }
+
+    public float getMarginBottom() {
+        return marginBottom;
+    }
+
+    public void setMarginBottom(float marginBottom) {
+        this.marginBottom = marginBottom;
+    }
+
+    public float getMarginLeft() {
+        return marginLeft;
+    }
+
+    public void setMarginLeft(float marginLeft) {
+        this.marginLeft = marginLeft;
+    }
+
+    public float getMarginRight() {
+        return marginRight;
+    }
+
+    public void setMarginRight(float marginRight) {
+        this.marginRight = marginRight;
     }
 }

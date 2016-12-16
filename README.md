@@ -37,7 +37,7 @@ compatible with all versions of Android from 1.6 onward and is **used by over
 * [Demo App (Google Play Store)](https://play.google.com/store/apps/details?id=com.androidplot.demos&hl=en)
 * [Demo App Soure Code](https://bitbucket.org/androidplot/androidplot/src/1538c5dfa56aed0d2cfdcbc7cdc6173e605543cd/demoapp/?at=master)
 * [Bugs](https://github.com/halfhp/androidplot/issues) :ant: 
-* [Contributing Source Code](http://androidplot.com/docs/working-with-androidplot-source/)
+* [Contributing Source Code](docs/contributing.md)
 
 # Help
 Technical questions should be posted using the [androidplot tag](http://stackoverflow.com/questions/tagged/androidplot) on Stack Overflow.  For everything else use the [Google Groups forum](https://groups.google.com/d/forum/androidplot).

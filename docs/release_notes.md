@@ -2,7 +2,7 @@
 For details on what to expect in general when updating to a new version of Androiplot, check out the
 [versioning doc](versioning.md).
 
-# 1.3.2
+# 1.4.0
 
 * Moderate refactor of `PieRenderer`.  [Documentation](piechart.md) has been updated to reflect these changes.  
 * Major refactor of `BarRenderer`.  [Documentation](barchart.md) has been updated to reflect these changes.
@@ -10,7 +10,7 @@ For details on what to expect in general when updating to a new version of Andro
 particularly useful for creating animated intros using `XYSeries` data.
 * Added [AnimatedXYPlotActivity](../demoapp/src/main/java/com/androidplot/demos/AnimatedXYPlotActivity.java) 
 demonstrating the use of `ScalingXYSeries` to create an animated intro.
-* `XYPlot.getXVal(..)` and `XYPlot.getYVal(...)` methods have been deprecated and will be removed in 1.4.0.
+* `XYPlot.getXVal(..)` and `XYPlot.getYVal(...)` methods have been deprecated and will be removed in 1.5.0.
 `XYPlot.screenToSeries(...)` and `XYPlot.seriesToScreen(...)` should be used instead.
 * Domain and range cursors are now disabled by default.  To enable, set a valid cursor position using
 `XYGraphWidget.setCursorPosition(float, float)`.  Cursor position values are expressed in screen coordinates;

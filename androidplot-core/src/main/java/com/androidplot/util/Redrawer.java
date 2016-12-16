@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * Utility class for invoking Plot.redraw() on a background thread
- * at a set frequency.  Callers should be sure to create a separate thread from which to use this class.
+ * at a set frequency.
  */
 public class Redrawer implements Runnable {
 

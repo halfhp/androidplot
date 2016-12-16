@@ -362,20 +362,91 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         getGraph().setCursorPosition(x, y);
     }
 
+    /**
+     * Convert a screen xVal into a series xVal.
+     * @param xPix
+     * @return
+     * @deprecated Use {@link #screenToSeriesY(float)}.
+     */
+    @Deprecated
     public Number getXVal(float xPix) {
-        return getGraph().getXVal(xPix);
+        return getGraph().screenToSeriesX(xPix);
     }
 
+    /**
+     * Convert a screen yVal into a series yVal.
+     * @param yPix
+     * @return
+     * @deprecated Use {@link #screenToSeriesY(float)}.
+     */
     public Number getYVal(float yPix) {
-        return getGraph().getYVal(yPix);
+        return getGraph().screenToSeriesY(yPix);
     }
 
+    /**
+     * Convert the y coord of a PointF into a series yVal.
+     * @param point
+     * @return
+     * @deprecated Use {@link #screenToSeriesY(float)}.
+     */
+    @Deprecated
     public Number getYVal(PointF point) {
-        return getGraph().getYVal(point);
+        return getGraph().screenToSeriesY(point);
     }
 
+    /**
+     * Convert the x coord of a PointF into a series xVal.
+     * @param point
+     * @return
+     * @deprecated Use {@link #screenToSeriesY(float)}.
+     */
+    @Deprecated
     public Number getXVal(PointF point) {
-        return getGraph().getXVal(point);
+        return getGraph().screenToSeriesX(point);
+    }
+
+    public Number screenToSeriesX(float x) {
+        return getGraph().screenToSeriesX(x);
+    }
+
+    public Number screenToSeriesY(float y) {
+        return getGraph().screenToSeriesY(y);
+    }
+
+    /**
+     * Convert a series xVal into a screen x coord
+     * @param x
+     * @return
+     */
+    public float seriesToScreenX(Number x) {
+        return getGraph().seriesToScreenX(x);
+    }
+
+    /**
+     * Convert a series yVal into a screen y coord
+     * @param y
+     * @return
+     */
+    public float seriesToScreenY(Number y) {
+        return getGraph().seriesToScreenY(y);
+    }
+
+    /**
+     * Convert a series xy value into a screen point.
+     * @param xy
+     * @return
+     */
+    public PointF seriesToScreen(XYCoords xy) {
+        return getGraph().seriesToScreen(xy);
+    }
+
+    /**
+     * Convert a screen point into a series xy value.
+     * @param point
+     * @return
+     */
+    public XYCoords screentoSeries(PointF point) {
+        return getGraph().screenToSeries(point);
     }
 
     public void calculateMinMaxVals() {

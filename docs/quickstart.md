@@ -14,7 +14,7 @@ To use the library in your gradle project add the following to your build.gradle
 
 ```groovy
 dependencies {
-    compile "com.androidplot:androidplot-core:1.3.1"
+    compile "com.androidplot:androidplot-core:1.4.0"
 }
 ```
 
@@ -200,4 +200,4 @@ Continuing with the original example above, add these files to your **/res/xml**
 ```
 
 # Whats Next?
-Learn about [Plot Composition](plot_composition.md)
+Learn about [Plot Composition](plot_composition.md) or continue with [XYPlots](xyplot.md).

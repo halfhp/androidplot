@@ -31,9 +31,10 @@ import java.util.List;
 public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormatter> {
 
     // starting angle to use when drawing the first radial line of the first segment.
-    @SuppressWarnings("FieldCanBeLocal")
-    private float startDeg = 0;
-    private float endDeg = 360;
+    private float startDegs = 0;
+
+    // number of degrees to extend from startDegs; can be used to "shape" the pie chart.
+    private float extentDegs = 360;
 
     // TODO: express donut in units other than px.
     private float donutSize = 0.5f;
@@ -41,7 +42,6 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 
     public enum DonutMode {
         PERCENT,
-        DP,
         PIXELS
     }
 
@@ -50,11 +50,12 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     }
 
     public float getRadius(RectF rect) {
-    	return  rect.width() < rect.height() ? rect.width() / 2 : rect.height() / 2;
+        return rect.width() < rect.height() ? rect.width() / 2 : rect.height() / 2;
     }
 
     @Override
-    public void onRender(Canvas canvas, RectF plotArea, Segment series, SegmentFormatter formatter, RenderStack stack) throws PlotRenderException {
+    public void onRender(Canvas canvas, RectF plotArea, Segment series, SegmentFormatter formatter,
+            RenderStack stack) throws PlotRenderException {
 
         // This renderer renders all series in one shot, so exclude any remaining series
         // from causing subsequent invocations of onRender:
@@ -62,31 +63,33 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 
         float radius = getRadius(plotArea);
         PointF origin = new PointF(plotArea.centerX(), plotArea.centerY());
-        
+
         double[] values = getValues();
         double scale = calculateScale(values);
-        float offset = startDeg;
+        float offset = degsToScreenDegs(startDegs);
 
-        RectF rec = new RectF(origin.x - radius, origin.y - radius, origin.x + radius, origin.y + radius);
-        
+        RectF rec = new RectF(origin.x - radius, origin.y - radius, origin.x + radius,
+                origin.y + radius);
+
         int i = 0;
         for (SeriesBundle<Segment, ? extends SegmentFormatter> sfPair : getSeriesAndFormatterList()) {
             float lastOffset = offset;
-            float sweep = (float) (scale * (values[i]) * 360);
+            float sweep = (float) (scale * (values[i]) * extentDegs);
             offset += sweep;
-            drawSegment(canvas, rec, sfPair.getSeries(), sfPair.getFormatter(), radius, lastOffset, sweep);
+            drawSegment(canvas, rec, sfPair.getSeries(), sfPair.getFormatter(), radius, lastOffset,
+                    sweep);
             i++;
         }
     }
 
     protected void drawSegment(Canvas canvas, RectF bounds, Segment seg, SegmentFormatter f,
-                               float rad, float startAngle, float sweep) {
+            float rad, float startAngle, float sweep) {
         canvas.save();
         startAngle = startAngle + f.getRadialInset();
         sweep = sweep - (f.getRadialInset() * 2);
 
         // midpoint angle between startAngle and endAngle
-        final float halfSweepEndAngle = startAngle + (sweep/2);
+        final float halfSweepEndAngle = startAngle + (sweep / 2);
 
         PointF translated = calculateLineEnd(
                 bounds.centerX(), bounds.centerY(), f.getOffset(), halfSweepEndAngle);
@@ -95,24 +98,22 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         final float cy = translated.y;
 
         float donutSizePx;
-        switch(donutMode) {
+        switch (donutMode) {
             case PERCENT:
                 donutSizePx = donutSize * rad;
                 break;
             case PIXELS:
-                donutSizePx = (donutSize > 0)?donutSize:(rad + donutSize);
+                donutSizePx = (donutSize > 0) ? donutSize : (rad + donutSize);
                 break;
             default:
-                throw new UnsupportedOperationException("Not yet implemented.");
+                throw new UnsupportedOperationException("Unsupported DonutMde: " + donutMode);
         }
 
         final float outerRad = rad - f.getOuterInset();
-        final float innerRad = donutSizePx == 0 ? 0 :  donutSizePx + f.getInnerInset();
-        //final float outerRad = rad;
-        //final float innerRad = donutSizePx;
+        final float innerRad = donutSizePx == 0 ? 0 : donutSizePx + f.getInnerInset();
 
-        // do we have a pie chart of less than 100%
-        if(Math.abs(sweep - 360f) > Float.MIN_VALUE) {
+        // do we have a segment of less than 100%
+        if (Math.abs(sweep - extentDegs) > Float.MIN_VALUE) {
             // vertices of the first radial:
             PointF r1Outer = calculateLineEnd(cx, cy, outerRad, startAngle);
             PointF r1Inner = calculateLineEnd(cx, cy, innerRad, startAngle);
@@ -129,9 +130,9 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
             // and cannot be easily anti aliased.  Really we only care about masking off the
             // radial edges.
             clip.arcTo(new RectF(bounds.left - outerRad,
-                    bounds.top - outerRad,
-                    bounds.right + outerRad,
-                    bounds.bottom + outerRad),
+                            bounds.top - outerRad,
+                            bounds.right + outerRad,
+                            bounds.bottom + outerRad),
                     startAngle, sweep);
             clip.lineTo(cx, cy);
             clip.close();
@@ -141,20 +142,20 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 
             // outer arc:
             p.arcTo(new RectF(
-                    cx - outerRad,
-                    cy - outerRad,
-                    cx + outerRad,
-                    cy + outerRad)
+                            cx - outerRad,
+                            cy - outerRad,
+                            cx + outerRad,
+                            cy + outerRad)
                     , startAngle, sweep);
             p.lineTo(r2Inner.x, r2Inner.y);
 
             // inner arc:
             // sweep back to original angle:
             p.arcTo(new RectF(
-                    cx - innerRad,
-                    cy - innerRad,
-                    cx + innerRad,
-                    cy + innerRad),
+                            cx - innerRad,
+                            cy - innerRad,
+                            cx + innerRad,
+                            cy + innerRad),
                     startAngle + sweep, -sweep);
 
             p.close();
@@ -165,8 +166,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
             // draw radial lines
             canvas.drawLine(r1Inner.x, r1Inner.y, r1Outer.x, r1Outer.y, f.getRadialEdgePaint());
             canvas.drawLine(r2Inner.x, r2Inner.y, r2Outer.x, r2Outer.y, f.getRadialEdgePaint());
-        }
-        else {
+        } else {
             canvas.save(Canvas.CLIP_SAVE_FLAG);
             Path chart = new Path();
             chart.addCircle(cx, cy, outerRad, Path.Direction.CW);
@@ -185,18 +185,18 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         canvas.restore();
 
         PointF labelOrigin = calculateLineEnd(cx, cy,
-                (outerRad-((outerRad- innerRad)/2)), halfSweepEndAngle);
+                (outerRad - ((outerRad - innerRad) / 2)), halfSweepEndAngle);
 
         // TODO: move segment labelling outside the segment drawing loop
         // TODO: so that the labels will not be clipped by the edge of the next
         // TODO: segment being drawn.
-        if(f.getLabelPaint() != null) {
+        if (f.getLabelPaint() != null) {
             drawSegmentLabel(canvas, labelOrigin, seg, f);
         }
     }
 
     protected void drawSegmentLabel(Canvas canvas, PointF origin,
-                                    Segment seg, SegmentFormatter f) {
+            Segment seg, SegmentFormatter f) {
         canvas.drawText(seg.getTitle(), origin.x, origin.y, f.getLabelPaint());
 
     }
@@ -213,22 +213,26 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     protected double calculateScale(double[] values) {
         double total = 0;
         for (int i = 0; i < values.length; i++) {
-			total += values[i];
-		}
+            total += values[i];
+        }
 
         return (1d / total);
     }
-    
-	protected double[] getValues() {
+
+    /**
+     * Retreive the raw values being rendered from each {@link Segment}.
+     * @return
+     */
+    protected double[] getValues() {
         List<SeriesBundle<Segment, ? extends SegmentFormatter>> seriesList = getSeriesAndFormatterList();
-		double[] result = new double[seriesList.size()];
-		int i = 0;
-		for (SeriesBundle<Segment, ? extends SegmentFormatter> sfPair : seriesList) {
-			result[i] = sfPair.getSeries().getValue().doubleValue();
-			i++;
-		}
-		return result;
-	}
+        double[] result = new double[seriesList.size()];
+        int i = 0;
+        for (SeriesBundle<Segment, ? extends SegmentFormatter> sfPair : seriesList) {
+            result[i] = sfPair.getSeries().getValue().doubleValue();
+            i++;
+        }
+        return result;
+    }
 
     protected PointF calculateLineEnd(float x, float y, float rad, float deg) {
         return calculateLineEnd(new PointF(x, y), rad, deg);
@@ -244,16 +248,26 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         return new PointF(origin.x + (float) x, origin.y + (float) y);
     }
 
+    /**
+     * Set the size of the pie's empty inner space.  May be specified as either pixels or as a percentage.
+     * If using {@link DonutMode#PIXELS}, the best practice is to specify values in dp using
+     * {@link com.androidplot.util.PixelUtils#dpToPix(float)}.
+     *
+     * If using {@link DonutMode#PERCENT} the value must be within the range 0 - 1.  The value being
+     * set corresponds to the size of the donut radius relative to the pie's total radius.
+     * @param size
+     * @param mode
+     */
     public void setDonutSize(float size, DonutMode mode) {
-        switch(mode) {
+        switch (mode) {
             case PERCENT:
-                if(size < 0 || size > 1) {
+                if (size < 0 || size > 1) {
                     throw new IllegalArgumentException(
                             "Size parameter must be between 0 and 1 when operating in PERCENT mode.");
                 }
                 break;
             case PIXELS:
-            	break;
+                break;
             default:
                 throw new UnsupportedOperationException("Not yet implemented.");
         }
@@ -264,7 +278,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     /**
      * Retrieve the segment containing the specified point.  This current implementation
      * only matches against angle; clicks outside of the pie/donut inner/outer boundaries
-     * will still trigger a match on the segment whose begining and ending angle contains
+     * will still trigger a match on the segment whose beginning and ending angle contains
      * the angle of the line drawn between the pie chart's center point and the clicked point.
      * @param point The clicked point
      * @return Segment containing the clicked point.
@@ -278,11 +292,11 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         float dx = point.x - origin.x;
         float dy = point.y - origin.y;
         double theta = Math.atan2(dy, dx);
-        double angle = (theta * (180f/Math.PI));
-        if(angle < 0) {
+        double angle = (theta * (180f / Math.PI));
+        if (angle < 0) {
             // convert angle to 0-360 range with 0 being in the
-            // traditional "westerly" orientation:
-            angle += 360;
+            // traditional "east" orientation:
+            angle += 360f;
         }
 
         // find the segment whose starting and ending angle (degs) contains
@@ -291,33 +305,91 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         int i = 0;
         double[] values = getValues();
         double scale = calculateScale(values);
-        float offset = startDeg;
+        float offset = degsToScreenDegs(startDegs);
         for (SeriesBundle<Segment, ? extends SegmentFormatter> sfPair : seriesList) {
             float lastOffset = offset;
-            float sweep = (float) (scale * (values[i]) * 360);
+            float sweep = (float) (scale * (values[i]) * extentDegs);
             offset += sweep;
+            offset = offset % 360;
 
-            if(angle >= lastOffset && angle <= offset) {
+            final double dist = signedDistance(offset, angle);
+            if(dist > 0 && dist <= signedDistance(offset, lastOffset)) {
                 return sfPair.getSeries();
             }
             i++;
         }
         return null;
     }
-    
-    public void setStartDeg(float deg) {
-        startDeg = deg;
+
+    /**
+     * convert conventional degrees (90 degrees is north) to screen degrees (90 degrees is south)
+     * Values >= 369 will be converted back into the range of 0 - 359.999...
+     * @param degs
+     * @return
+     */
+    protected static float degsToScreenDegs(float degs) {
+        degs = degs % 360;
+
+        if (degs  > 0) {
+            return 360 - degs;
+        } else {
+            return degs;
+        }
     }
 
-    public float getStartDeg() {
-        return startDeg;
-    }
-    
-    public void setEndDeg(float deg) {
-        endDeg = deg;
+    /**
+     * Compute the signed shortest angular distance between two angles
+     * @param angle1
+     * @param angle2
+     * @return
+     */
+    protected static double signedDistance(double angle1, double angle2) {
+        double d = Math.abs(angle1 - angle2) % 360;
+        double r = d > 180 ? 360 - d : d;
+
+        //calculate sign
+        int sign = (angle1 - angle2 >= 0 && angle1 - angle2 <= 180)
+                           || (angle1 - angle2 <= -180 && angle1 - angle2 >= -360) ? 1 : -1;
+        r *= sign;
+        return r;
     }
 
-    public float getEndDeg() {
-        return endDeg;
+    /**
+     * Throws an IllegalArgumentException if the input value is outside of the range of 0.0 to 360.0
+     * @param degs
+     */
+    protected static void validateInputDegs(float degs) {
+        if(degs < 0 || degs > 360) {
+            throw new IllegalArgumentException("Degrees values must be between 0.0 and 360.");
+        }
+    }
+
+    /**
+     * Set the starting point in degrees from which series will be drawn in order.
+     * The input value must be within the range 0 - 360.
+     * @param degs
+     */
+    public void setStartDegs(float degs) {
+        validateInputDegs(degs);
+        startDegs = degs;
+    }
+
+    public float getStartDegs() {
+        return startDegs;
+    }
+
+    /**
+     * Set the size in degrees of the pie chart, extending from the startDegs.  The input value
+     * must be within the range 0 - 360.  An input value would represent 100% of the pie as a half
+     * circle while an input value of 360 would be a full circle.
+     * @param degs
+     */
+    public void setExtentDegs(float degs) {
+        validateInputDegs(degs);
+        extentDegs = degs;
+    }
+
+    public float getExtentDegs() {
+        return extentDegs;
     }
 }

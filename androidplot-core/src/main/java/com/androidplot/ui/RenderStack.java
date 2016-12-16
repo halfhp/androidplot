@@ -80,9 +80,6 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
      * rendering series data to an XYGraphWidget.
      */
     public void sync() {
-        /**
-         * TODO: rendering performance *might* be improved by reusing StackElement instances but I'm skeptical...
-         */
         getElements().clear();
         List<SeriesBundle<SeriesType, FormatterType>> pairList
                 = plot.getRegistry().getSeriesAndFormatterList();

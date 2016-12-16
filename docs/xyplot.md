@@ -1,18 +1,18 @@
 # XYPlot
-An XYPlot renders one or more XYSeries onto an instance of XYGraphWidget.  It also includes two instances
-of TextLabelWidget used to display an optional title for the domain and range axis, and an instance
-of [XYLegendWidget](#legend) which by default will automatically display legend items for each XYSeries added to the plot.
+An `XYPlot` renders one or more XYSeries onto an instance of XYGraphWidget.  It also includes two instances
+of `TextLabelWidget` used to display an optional title for the domain and range axis, and an instance
+of [XYLegendWidget](#legend) which by default will automatically display legend items for each `XYSeries` added to the plot.
 
 ![image](images/plot_anatomy.png)
 
 # XYSeries
-XYSeries is the interface Androidplot uses to retrieve your numeric data.  You may either create your own
-implementation of XYSeries or use SimpleXYSeries if you don't have tight performance requirements or
+`XYSeries` is the interface Androidplot uses to retrieve your numeric data.  You may either create your own
+implementation of `XYSeries` or use `SimpleXYSeries` if you don't have tight performance requirements or
 if your numeric data is easily accessed as an array or list of values.
 
 ## SimpleXYSeries
-As a convenience, Androidplot provides an all-purpose implementation of the XYSeries interface called 
-SimpleXYSeries.  SimpleXYSeries is used to wrap your raw data with an implementation of the XYSeries interface.  
+As a convenience, Androidplot provides an all-purpose implementation of the `XYSeries` interface called 
+`SimpleXYSeries`.  `SimpleXYSeries` is used to wrap your raw data with an implementation of the `XYSeries` interface.  
 
 You can supply your data in several ways:
 
@@ -37,21 +37,21 @@ Number[] yVals = {5, 2, 10, 5, 20, 10, 40, 20, 80, 40};
 XYSeries series = new SimpleXYSeries(xVals, yVals, "my series");
 ```             
 
-Keep in mind that SimpleXYSeries is designed to be easy to use for a broad number of applications; it's not 
+Keep in mind that `SimpleXYSeries` is designed to be easy to use for a broad number of applications; it's not 
 optimized for any specific scenario; if you are dynamically displaying data that needs to be refreshed more than several
-times a second, consider building your own implementation of XYSeries designed for your app's
+times a second, consider building your own implementation of `XYSeries` designed for your app's
 specific needs.
 
 # The Graph
-XYGraphWidget encapsulates XYPlot's graphing functionality.  Given an instance of XYPlot, a reference
-to XYGraphWidget can be retrieve via `XYPlot.getGraph()`.
+`XYGraphWidget` encapsulates XYPlot's graphing functionality.  Given an instance of `XYPlot`, a reference
+to `XYGraphWidget` can be retrieve via `XYPlot.getGraph()`.
 
 ## Domain & Range Boundaries
-By default, Androidplot will analyze all XYSeries instances registered with the Plot, determine the
-min/max values for domain and range and adjust the Plot's boundaries to match those values.  If your
+By default, Androidplot will analyze all `XYSeries` instances registered with the `XYPlot`, determine the
+min/max values for domain and range and adjust the `XYPlot` boundaries to match those values.  If your
 plot contains dynamic data, especially if your plot can periodically contain either no series data
 or data with no resolution on one or both axis (all identical values for either x or y) then you may
-want to manually set your XYPlot's domain and range boundaries.
+want to manually set your `XYPlot`'s domain and range boundaries.
 
 To set your plot's boundaries use:
 
@@ -64,19 +64,19 @@ modes, pass in null.
 ### BoundaryMode
 Androidplot provides four boundary modes:
 
-#### Fixed
+#### FIXED
 The plot's boundaries on the specified axis are fixed to user defined values.
 
-#### Auto (default)
+#### AUTO (default)
 The plot's boundaries auto adjust to the min/max values for the defined axis.
 
-#### Grow
+#### GROW
 The plot's boundaries automatically increase to the max value encountered by the plot.  The initial
-determines the starting boundaries from which the Grow behavior will be based.
+determines the starting boundaries from which the `BoundaryMode.GROW` behavior will be based.
 
-#### Shrink
+#### SHRINK
 The plot's boundaries automatically shrink to the min value encountered by the plot.  The initial
-determines the starting boundaries from which the Shrink behavior will be based.
+determines the starting boundaries from which the shrink behavior will be based.
 
 ## Domain & Range Lines
 These are the horizontal lines drawn on a graph.  These lines are configured via:
@@ -155,13 +155,12 @@ plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.RIGHT).setFormat(new Format
 });
 ```
  
-If you are working on a dual scale implementation, you're likely also going to need to normalize
-your series data in order to get it to display properly.  To help simplify this step, Androidplot provides 
-[NormedXYSeries](advanced_xy_plot.md#normedxyseries) which can be used to wrap any XYSeries to provide the 
-normalized representation of it's data.
+You're likely also going to need to normalize your series data in order to get it to display properly.   To help simplify 
+this step, Androidplot provides [NormedXYSeries](advanced_xy_plot.md#normedxyseries) 
+which can be used to wrap any `XYSeries` to provide the normalized representation of it's data.
 
 There's a full [reference implementation](../demoapp/src/main/java/com/androidplot/demos/DualScaleActivity.java) 
-of a dual scale plot using a custom Formatter and NormedXYSeries in the DemoApp.
+of a dual scale plot using a custom `Formatter` and `NormedXYSeries` in the DemoApp.
 
 
 ### Line Label Interval
@@ -228,8 +227,8 @@ There are several renderers available for XYPlots:
 * CandlestickRenderer
 
 When you add a new series to your plot, you tell Androidplot how to render it by passing
-in a subclass of XYSeriesFormatter that corresponds to the desired renderer.  For example, to use
-LineAndPointRenderer, you'd register your series with an instance of LineAndPointFormatter:
+in a subclass of `XYSeriesFormatter` that corresponds to the desired renderer.  For example, to use
+`LineAndPointRenderer`, you'd register your series with an instance of `LineAndPointFormatter`:
 
 ```java
 LineAndPointFormatter format = new LineAndPointFormatter();
@@ -237,23 +236,51 @@ plot.addSeries(series, format);
 ```
 
 If you need special behavior not provided by an existing renderer you can create
-your own by either extending XYSeriesRenderer or one of the above implementations.  You'll also need
-to create a matching implementation of XYSeriesFormatter that returns your XYSeriesRenderer's class 
+your own by either extending `XYSeriesRenderer` or one of the above implementations.  You'll also need
+to create a matching implementation of `XYSeriesFormatter` that returns your renderer's class 
 from it's `getRendererClass()` method.
 
 ## LineAndPointRenderer
-TODO
-
-Androidplot includes two additional variations of LineAndPointRenderer: 
+`LineAndPointRenderer` is the go-to renderer when it comes to `XYSeries`.  It provides the most robust
+feature set of any `XYSeriesRenderer` and has been the most carefully optimized for performance.  Having
+said that, `LineAndPointRenderer` isn't always the best tool for the job.  Androidplot includes two 
+additional variations of `LineAndPointRenderer`: 
 
 * **FastLineAndPointRenderer** - intended for use in apps displaying large amounts of dynamic data where
 fast refresh rates are important.
 * **AdvancedLineAndPointRenderer** - provides capabilities for dynamically coloring individual line
-segments, etc. See the ECG  source in the demo app for a full source example.
-within a
+segments, etc. See the [ECGExample source](../demoapp/src/main/java/com/androidplot/demos/ECGExample.java)
+in the demo app for a complete example.
 
 ### Labeling Points
-TODO
+Most implementations of `XYSeriesRenderer` support labeling rendered points with text.  This functionality
+is activated by setting the `PointLabelFormatter` property in the associated `XYSeriesFormatter`.  For
+example, to enable point labels for a `LineAndPointFormatter`:
+
+// create a new `PointLabelFormatter` with a text size of 12sp and a color of red:
+
+```java
+PointLabelFormatter plf = new PointLabelFormatter();
+plf.getTextPaint().setTextSize(PixelUtils.spToPix(12));
+plf.getTextPaint().setColor(Color.RED);
+lineAndPointFormatter.setPointLabelFormatter(plf);
+```
+
+By default this will enable labels for all points using a string representation of the yVal of each
+point.  This behavior can be customized by setting a custom instance of `PointLabeler` on the `XYSeriesFormatter`:
+
+```java
+formatter.setPointLabeler(new PointLabeler() {
+    @Override
+    public String getLabel(XYSeries series, int index) {
+        // draw labels on even indexes only:
+        if(index % 2 == 0) {
+            return "Y=" + series.getY(index).doubleValue();
+        }
+        return null;
+    }
+});
+```
 
 ## BarRenderer
 See the [barcharts documentation](barchart.md).
@@ -278,25 +305,26 @@ formatter.setLegendIconEnabled(false);
 ```
 
 ## The TableModel
-The TableModel controls how and where each item in the legend is drawn.  Androidplot provides two
-default implementations; DynamicTableModel and FixedTableModel (detailed below).  All TableModel implementations
+The `TableModel` controls how and where each item in the legend is drawn.  Androidplot provides two
+default implementations; `DynamicTableModel` and `FixedTableModel` (detailed below).  All `TableModel` implementations
 organize elements into a grid.  This grid is populated with items based on the order which it's corresponding
-series was added to the plot.  This ordering can be further controlled by setting the TableModel's
-TableOrder param to either [ROW_MAJOR](https://en.wikipedia.org/wiki/Row-major_order) (items are added left-to-right, top-down) or COLUMN_MAJOR (items are added top-down, left-to-right).
+series was added to the plot.  This ordering can be further controlled by setting the `TableModel`'s
+`TableOrder` param to either [ROW_MAJOR](https://en.wikipedia.org/wiki/Row-major_order) (items are added left-to-right, top-down) 
+or `COLUMN_MAJOR` (items are added top-down, left-to-right).
 
 ### DynamicTableModel
-The DynamicTableModel takes a desired of numbered rows and columns and evenly subdivides the LegendWidget's
-visible space into cells.  For example, A 2x2 legend using ROW_MAJOR ordering:
+The `DynamicTableModel` takes a desired of numbered rows and columns and evenly subdivides the `LegendWidget`'s
+visible space into cells.  For example, A 2x2 legend using `ROW_MAJOR` ordering:
 
 ```java
 plot.getLegend().setTableModel(new DynamicTableModel(2, 2, TableOrder.ROW_MAJOR));
 ```
 
 ### FixedTableModel
-The FixedTableModel takes a desired size of each cell in pixels and adds cells using the specified TableOrder.
-It automatically wraps to the next row or column (based on TableOrder) when the cell being added
-exceeds the legend's available space on a given axis.  For example, A FixedTableModel using 300w*100h cells and
-a TableOrder of COLUMN_MAJOR:
+The `FixedTableModel` takes a desired size of each cell in pixels and adds cells using the specified `TableOrder`.
+It automatically wraps to the next row or column (based on `TableOrder`) when the cell being added
+exceeds the legend's available space on a given axis.  For example, A `FixedTableModel` using 300w*100h cells and
+a TableOrder of `COLUMN_MAJOR`:
 
 ```java
 plot.getLegend().setTableModel(new FixedTableModel(PixelUtils.dpToPix(300), 
@@ -304,7 +332,7 @@ plot.getLegend().setTableModel(new FixedTableModel(PixelUtils.dpToPix(300),
 ```
 
 # Graph Rotation
-Androidplot provides the Widget.setRotation(Widget.Rotation) method for controlling the orientation
+Androidplot provides the `Widget.setRotation(Widget.Rotation)` method for controlling the orientation
 of Widgets.  For example, if you wanted to create a bar graph where the bars extended across the screen 
 from left to right:
 
@@ -321,8 +349,8 @@ plot.getGraph().setRotation(Widget.Rotation.NINETY_DEGREES);
 # Optimization Tips
 Here are a few suggestions to improve performance when plotting dynamic data:
 
-* Create your own implementation of XYSeries to work with your data in it's rawest form.
-* Use FastLineAndPointRenderer instead of LineAndPointRenderer:
+* Create your own implementation of `XYSeries` to work with your data in it's rawest form.
+* Use `FastLineAndPointRenderer` instead of `LineAndPointRenderer`:
 
 ```java
 plot.addSeries(azimuthHistorySeries,
@@ -331,11 +359,49 @@ plot.addSeries(azimuthHistorySeries,
 ``` 
                        
 * Consider averaging or subsampling very large datasets before rendering.  If you have the time and
-inclination, [the LTTB algorithm](http://skemman.is/stream/get/1946/15343/37285/3/SS_MSthesis.pdf) is particularly well suited for downsampling XY Series data.
+inclination, [the LTTB algorithm](http://skemman.is/stream/get/1946/15343/37285/3/SS_MSthesis.pdf) is 
+particularly well suited for downsampling `XYSeries` data.
 * If possible, avoid rendering vertices (points).
-* Disable anti-aliasing on your Formatter's paint values:
+* Disable anti-aliasing on your `XYSeriesFormatter`'s paint values:
 
 ```java
 LineAndPointFormatter format = new LineAndPointFormatter(...);
 format.getLinePaint().setAntiAlias(false);
 ```
+# Screen<->Series Conversion
+Because the coordinate system used by your `XYSeries` data is almost always different than the screen
+coordinate system upon which the data is rendered, you'll often need to convert from one system to
+the other.  `XYPlot` provides convenience methods for this purpose:
+
+To convert screen vals to series vals:
+```java
+// x
+float screenX = ...
+Number x = plot.screenToSeriesX(screenX);
+
+// y
+float screenY = ...
+Number y = plot.screenToSeriesY(screenY);
+
+// x and y
+PointF screenCoords = ...
+XYCoords xy = plot.screenToSeries(screenCoords)
+```
+
+To convert series vals to screen vals:
+```java
+// x
+Number x = ...
+float screenX = plot.seriesToScreenX(x);
+
+// y
+Number y = ...
+float screenY = plot.seriesToScreenY(y);
+
+// x and y
+XYCoords xy = ...
+PointF screenCoords = plot.series.Screen(xy);
+```
+
+# Whats Next?
+Explore [Advanced XYPlot Topics](advanced_xy_plot.md)

@@ -43,9 +43,6 @@ The latest Javadocs are [available here](https://circleci.com/api/v1/project/hal
 # Release Notes
 Full release notes are [available here](release_notes.md)
 
-# Old Versions
-Documentation for Androidplot 0.9.8 and earlier [can be found here](http://androidplot.com/docs/).
-
 # Contributing
 _If you see something that isn't right or want to contribute, please [make a pull-request](https://help.github.com/articles/creating-a-pull-request/) - these docs 
-live the main repo in the top-level `/docs` directory._
+live the main repo in the top-level `/docs` directory.  For more info, see the [Contributing Source Code](docs/contributing.md) doc.

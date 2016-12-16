@@ -97,7 +97,6 @@ public abstract class SeriesRenderer
     public List<SeriesBundle<SeriesType, ? extends SeriesFormatterType>> getSeriesAndFormatterList() {
         List<SeriesBundle<SeriesType, ? extends SeriesFormatterType>> results = new ArrayList<>();
         List<SeriesBundle> sfList = getPlot().getRegistry().getSeriesAndFormatterList();
-        getPlot().getRegistry().getSeriesAndFormatterList();
         for(SeriesBundle<SeriesType, ? extends SeriesFormatterType> thisPair : sfList) {
             if(thisPair.rendersWith(this)) {
                 results.add(thisPair);

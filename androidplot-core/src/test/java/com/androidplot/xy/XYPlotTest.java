@@ -302,7 +302,6 @@ public class XYPlotTest extends AndroidplotTest {
         assertEquals(9, plot.getBounds().getMaxX().doubleValue(), 0);
 
         plot.getOuterLimits().setMaxX(10);
-        //plot.setDomainRightMax(10);
         plot.calculateMinMaxVals();
 
         // same values.
@@ -316,7 +315,6 @@ public class XYPlotTest extends AndroidplotTest {
         assertEquals(0, plot.getBounds().getMinX().doubleValue(), 0);
         assertEquals(10, plot.getBounds().getMaxX().doubleValue(), 0);
 
-        //plot.setDomainRightMax(null);
         plot.getOuterLimits().setMaxX(null);
         plot.calculateMinMaxVals();
 
@@ -325,7 +323,6 @@ public class XYPlotTest extends AndroidplotTest {
         assertEquals(11, plot.getBounds().getMaxX().doubleValue(), 0);
         
         // now the RightMin
-        //plot.setDomainRightMin(10);
         plot.getInnerLimits().setMaxX(10);
         plot.calculateMinMaxVals();
 
@@ -342,7 +339,6 @@ public class XYPlotTest extends AndroidplotTest {
         assertEquals(10, plot.getBounds().getMaxX().doubleValue(), 0);
 
         // now off again
-        //plot.setDomainRightMin(null);
         plot.getInnerLimits().setMaxX(null);
         plot.calculateMinMaxVals();
 
@@ -362,8 +358,6 @@ public class XYPlotTest extends AndroidplotTest {
 
         plot.getOuterLimits().setMaxY(110);
         plot.getOuterLimits().setMinY(-50);
-        //plot.setRangeTopMax(110);
-        //plot.setRangeBottomMin(-50);
         plot.calculateMinMaxVals();
 
         // same values.
@@ -379,8 +373,6 @@ public class XYPlotTest extends AndroidplotTest {
 
         plot.getOuterLimits().setMaxY(null);
         plot.getOuterLimits().setMinY(null);
-        //plot.setRangeTopMax(null);
-        //plot.setRangeBottomMin(null);
         plot.calculateMinMaxVals();
 
         // back to full
@@ -390,8 +382,6 @@ public class XYPlotTest extends AndroidplotTest {
         // now the Min
         plot.getInnerLimits().setMaxY(150);
         plot.getInnerLimits().setMinY(-60);
-        //plot.setRangeTopMin(150);
-        //plot.setRangeBottomMax(-60);
         plot.calculateMinMaxVals();
 
         // still to full
@@ -409,8 +399,6 @@ public class XYPlotTest extends AndroidplotTest {
         // now off again
         plot.getInnerLimits().setMaxY(null);
         plot.getInnerLimits().setMinY(null);
-        //plot.setRangeTopMin(null);
-        //plot.setRangeBottomMax(null);
         plot.calculateMinMaxVals();
 
         // small values.

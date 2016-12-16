@@ -78,13 +78,6 @@ public class AnimatedXYPlotActivity extends Activity {
                 new LineAndPointFormatter(this, R.xml.line_point_formatter);
         series2Format.getLinePaint().setColor(Color.RED);
 
-//        // add an "dash" effect to the series2 line:
-//        series2Format.getLinePaint().setPathEffect(new DashPathEffect(new float[] {
-//
-//                // always use DP when specifying pixel sizes, to keep things consistent across devices:
-//                PixelUtils.dpToPix(20),
-//                PixelUtils.dpToPix(15)}, 0));
-
         // just for fun, add some smoothing to the lines:
         // see: http://androidplot.com/smooth-curves-and-androidplot/
         series1Format.setInterpolationParams(

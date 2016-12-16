@@ -49,17 +49,18 @@ public class PieRendererTest extends AndroidplotTest {
     @Mock
     RenderStack renderStack;
 
+    Canvas canvas;
+
     @Before
     public void setUp() throws Exception {
         pieChart = spy(new PieChart(getContext(), "My Pie"));
+        canvas = spy(new Canvas());
     }
 
     @Test
     public void testDrawSegment_withoutTextPaintDoesntDrawLabel() throws Exception {
         PieRenderer pieRenderer = spy(new PieRenderer(pieChart));
         Segment segment = spy(new Segment("My Segment", 100));
-        Canvas canvas = new Canvas();
-
 
         SegmentFormatter formatterWithoutTextPaint = new SegmentFormatter(Color.GREEN);
         formatterWithoutTextPaint.setLabelPaint(null);
@@ -98,7 +99,6 @@ public class PieRendererTest extends AndroidplotTest {
     @Test
     public void testOnRender() throws Exception {
         Segment segment = spy(new Segment("My Segment", 100));
-        Canvas canvas = new Canvas();
         SegmentFormatter formatter = spy(
                 new SegmentFormatter(Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN));
         PieRenderer pr = formatter.getRendererInstance(pieChart);
@@ -166,5 +166,30 @@ public class PieRendererTest extends AndroidplotTest {
         assertEquals(1f, PieRenderer.degsToScreenDegs(359));
         assertEquals(0f, PieRenderer.degsToScreenDegs(360));
 
+    }
+
+    @Test
+    public void testSetDonutSize() throws Exception {
+
+        Segment segment1 = spy(new Segment("s1", 25));
+        Segment segment2 = spy(new Segment("s2", 25));
+        Segment segment3 = spy(new Segment("s3", 25));
+        Segment segment4 = spy(new Segment("s4", 25));
+
+        SegmentFormatter formatter = spy(
+                new SegmentFormatter(Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN));
+        PieRenderer renderer = formatter.getRendererInstance(pieChart);
+
+        pieChart.addSegment(segment1, formatter);
+        pieChart.addSegment(segment2, formatter);
+        pieChart.addSegment(segment3, formatter);
+        pieChart.addSegment(segment4, formatter);
+
+        renderer.setDonutSize(0.25f, PieRenderer.DonutMode.PERCENT);
+
+        renderer.onRender(canvas, plotArea, segment1, formatter, renderStack);
+
+        // TODO: verify radials are drown at the correct offsets from center
+        //verify(canvas).drawLine(anyFloat(), anyFloat(), anyFloat(), anyFloat(), any(Paint.class));
     }
 }

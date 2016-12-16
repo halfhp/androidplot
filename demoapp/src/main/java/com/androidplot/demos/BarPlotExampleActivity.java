@@ -286,8 +286,6 @@ public class BarPlotExampleActivity extends Activity {
                         throw new UnsupportedOperationException("Not yet implemented.");
                     }
                 });
-
-        plot.setUserRangeOrigin(5);
         updatePlot();
     }
 

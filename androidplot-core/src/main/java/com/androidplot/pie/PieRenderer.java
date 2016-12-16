@@ -329,11 +329,8 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
      */
     protected static float degsToScreenDegs(float degs) {
         degs = degs % 360;
-        if (degs < 0 || degs > 360) {
-            throw new IllegalArgumentException("Values in degrees must be between 0.0 and 360.0");
-        }
 
-        if (degs % 360 > 0) {
+        if (degs  > 0) {
             return 360 - degs;
         } else {
             return degs;

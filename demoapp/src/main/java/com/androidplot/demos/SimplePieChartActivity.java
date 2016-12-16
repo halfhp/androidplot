@@ -16,11 +16,14 @@
 
 package com.androidplot.demos;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.*;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import com.androidplot.pie.PieChart;
@@ -152,13 +155,67 @@ public class SimplePieChartActivity extends Activity
 
         pie.getBorderPaint().setColor(Color.TRANSPARENT);
         pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
+    }
 
-        // start the first segment at 5 degrees;
-        pie.getRenderer(PieRenderer.class).setStartDegs(180);
-        pie.getRenderer(PieRenderer.class).setExtentDegs(360);
+    @Override
+    public void onStart() {
+        super.onStart();
+        setupIntroAnimation();
     }
 
     protected void updateDonutText() {
         donutSizeTextView.setText(donutSizeSeekBar.getProgress() + "%");
+    }
+
+    protected void setupIntroAnimation() {
+
+        final PieRenderer renderer = pie.getRenderer(PieRenderer.class);
+        // start with a zero degrees pie:
+
+        renderer.setExtentDegs(0);
+        // animate a scale value from a starting val of 0 to a final value of 1:
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+
+        // use an animation pattern that begins and ends slowly:
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float scale = valueAnimator.getAnimatedFraction();
+//                scalingSeries1.setScale(scale);
+//                scalingSeries2.setScale(scale);
+                renderer.setExtentDegs(360 * scale);
+                pie.redraw();
+            }
+        });
+//        animator.addListener(new Animator.AnimatorListener() {
+//            @Override
+//            public void onAnimationStart(Animator animator) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animator animator) {
+//                // the animation is over, so show point labels:
+//                series1Format.getPointLabelFormatter().getTextPaint().setColor(Color.WHITE);
+//                series2Format.getPointLabelFormatter().getTextPaint().setColor(Color.WHITE);
+//                plot.redraw();
+//            }
+//
+//            @Override
+//            public void onAnimationCancel(Animator animator) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animator animator) {
+//
+//            }
+//        });
+
+        // the animation will run for 1.5 seconds:
+        animator.setDuration(1500);
+        animator.start();
     }
 }

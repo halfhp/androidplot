@@ -1,3 +1,7 @@
+# Androidplot Versioning
+For details on what to expect in general when updating to a new version of Androiplot, check out the
+[versioning doc](versioning.md).
+
 # 1.3.2
 
 * Moderate refactor of `PieRenderer`.  [Documentation](piechart.md) has been updated to reflect these changes.  

@@ -44,12 +44,12 @@ pieRenderer.setDonutSize(PixelUtils.dpToPix(30), PieRenderer.DonutMode.PIXELS);
 ```
 
 # Segment Orientation
-Each `Segment` is drawn clockwise in order it was added to the `PieChart` beginning from `startDegs` 
-which is set by default set to 0.
+Each `Segment` is drawn in the order it was added to the `PieChart` clockwise from `startDegs` 
+which by default is 0.
 
 ![image](images/pie_orientation.png)
 
-Using the image above, to make the first `Segment` (Segment0 above) to occupy the Northeast quadrant 
+Using the image above, to move Segment0 to the Northeast quadrant
 of the pie (currently occupied by Segment3) `startDeg` should be set to 90:
 
 ```java

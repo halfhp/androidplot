@@ -6,7 +6,7 @@ compatible with all versions of Android from 1.6 onward and is **used by over
 
 [![Codix](http://codix.io/badge/halfhp/androidplot)](http://codix.io/repo/halfhp/androidplot)
 
-If you enjoy the lib, please vote for us on [codix.io](http://codix.io/repo/halfhp/androidplot)!
+If you enjoy the lib, please [rate us on codix.io](http://codix.io/repo/halfhp/androidplot)!
 
 <img src="docs/images/screens/fx_vert.png" width="115">
 <img src="docs/images/screens/candlestick_vert.png" width="115">

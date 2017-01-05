@@ -246,16 +246,18 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
             final PointLabeler pointLabeler = hasPointLabelFormatter ? formatter.getPointLabeler() : null;
             for(int i = iStart; i < iEnd; i++) {
                 PointF p = points.get(i);
+                if(p != null) {
 
-                // if vertexPaint is available, draw vertex:
-                if (vertexPaint != null) {
-                    canvas.drawPoint(p.x, p.y, vertexPaint);
-                }
+                    // if vertexPaint is available, draw vertex:
+                    if (vertexPaint != null) {
+                        canvas.drawPoint(p.x, p.y, vertexPaint);
+                    }
 
-                // if textPaint and pointLabeler are available, draw point's text label:
-                if (pointLabeler != null) {
-                    canvas.drawText(pointLabeler.getLabel(series, i),
-                            p.x + plf.hOffset, p.y + plf.vOffset, plf.getTextPaint());
+                    // if textPaint and pointLabeler are available, draw point's text label:
+                    if (pointLabeler != null) {
+                        canvas.drawText(pointLabeler.getLabel(series, i),
+                                p.x + plf.hOffset, p.y + plf.vOffset, plf.getTextPaint());
+                    }
                 }
             }
         }

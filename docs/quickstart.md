@@ -45,7 +45,7 @@ and add an XYPlot view:
 </LinearLayout>
 ```
 This example uses a default style to decorate the plot.  The full list of styleable attributes is 
-[available here](../androidplot-core/src/main/res/attrs.xml).  While new attributes are added regularly, 
+[available here](../androidplot-core/src/main/res/values/attrs.xml).  While new attributes are added regularly,
 not all configurable properties are yet available.  
 
 If something you need is missing, use [Fig Syntax](https://github.com/halfhp/fig)

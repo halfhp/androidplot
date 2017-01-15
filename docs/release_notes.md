@@ -2,6 +2,10 @@
 For details on what to expect in general when updating to a new version of Androiplot, check out the
 [versioning doc](versioning.md).
 
+# 1.4.1
+* (#26) Fixed an NPE issue when drawing null values with a PointLabeler.
+* Fixed a broken link in Quickstart doc.
+
 # 1.4.0
 
 * Moderate refactor of `PieRenderer`.  [Documentation](piechart.md) has been updated to reflect these changes.  

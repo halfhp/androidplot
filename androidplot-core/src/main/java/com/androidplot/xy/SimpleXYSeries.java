@@ -341,7 +341,9 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
     public void clear() {
         lock.writeLock().lock();
         try {
-            xVals.clear();
+            if (xVals != null) {
+              xVals.clear();
+            }
             yVals.clear();
         } finally {
             lock.writeLock().unlock();

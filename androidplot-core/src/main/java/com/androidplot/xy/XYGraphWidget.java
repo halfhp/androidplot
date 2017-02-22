@@ -546,7 +546,7 @@ public class XYGraphWidget extends Widget {
     }
 
     /**
-     * Draws the drid and domain/range labels for the plot.
+     * Draws the grid and domain/range labels for the plot.
      *
      * @param canvas
      */

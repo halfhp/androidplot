@@ -13,8 +13,8 @@ import com.androidplot.Region;
 
 public class StepModelFit extends StepModel {
 
-    private double[] steps;
-    private Region scale;
+    private double[] steps; // list of steps to choose from
+    private Region scale;   // axis region on display
 
     public StepModelFit(Region axisRegion, double[] increments, double numLines) {
         super(StepMode.INCREMENT_BY_FIT, numLines);
@@ -38,13 +38,12 @@ public class StepModelFit extends StepModel {
     public void setScale(Region scale) {
         this.scale = scale;
     }
-    
+
     // does not return StepModel.value instead calculates best fit
     @Override
     public double getValue() {
 
         // no possible increments where supplied (e.g. switched into this mode without calling setSteps(...)
-        // TODO: throw exception this should not be done
         if (steps == null)
             return super.getValue();
 
@@ -57,7 +56,7 @@ public class StepModelFit extends StepModel {
 
             double newDistance = Math.abs((scale.length().doubleValue() / step)-super.getValue() );
 
-            // closer than previos stepping?
+            // closer than previous stepping?
             if (newDistance < oldDistance){
                 curStep = step;
                 oldDistance = newDistance;

@@ -806,12 +806,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
     }
 
     public double getDomainStepValue() {
-
-        // increment by fit needs to know the current range
-        if (domainStepModel.getMode() == StepMode.INCREMENT_BY_FIT) {
-            return domainStepModel.getFitValue(getBounds().getxRegion().length().doubleValue());
-        }
-
         return domainStepModel.getValue();
     }
 
@@ -833,12 +827,6 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
     }
 
     public double getRangeStepValue() {
-
-        // increment by fit needs to know the current range
-        if (rangeStepModel.getMode() == StepMode.INCREMENT_BY_FIT) {
-            return rangeStepModel.getFitValue(getBounds().getyRegion().length().doubleValue());
-        }
-
         return rangeStepModel.getValue();
     }
 

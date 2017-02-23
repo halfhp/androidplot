@@ -58,8 +58,8 @@ public class TouchZoomExampleActivity extends Activity {
         // increment will be chosen from list to best fit 5 grid lines
         double[] inc_domain = new double[]{10,50,100,500};
         double[] inc_range = new double[]{1,5,10,20,50,100};
-        plot.setDomainStepModel(new StepModel(inc_domain,5));
-        plot.setRangeStepModel( new StepModel(inc_range,5));
+        plot.setDomainStepModel(new StepModelFit(plot.getBounds().getxRegion(),inc_domain,5));
+        plot.setRangeStepModel( new StepModelFit(plot.getBounds().getyRegion(),inc_range,5));
 
 
         panSpinner = (Spinner) findViewById(R.id.pan_spinner);

@@ -77,7 +77,7 @@ public class TouchZoomExampleActivity extends Activity {
 
         plot.setBorderStyle(Plot.BorderStyle.NONE, null, null);
 
-        panZoom = PanZoom.attach(plot);
+        panZoom = PanZoom.attach(plot, PanZoom.Pan.BOTH, PanZoom.Zoom.STRETCH_BOTH, PanZoom.ZoomLimit.BOTH);
         plot.getOuterLimits().set(0, 3000, 0, 1000);
         initSpinners();
 

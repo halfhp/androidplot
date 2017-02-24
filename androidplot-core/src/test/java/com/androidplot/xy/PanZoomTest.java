@@ -62,7 +62,7 @@ public class PanZoomTest extends AndroidplotTest {
 
     @Test
     public void testOnTouch_notifiesOnTouchListener() throws Exception {
-        PanZoom panZoom = new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE);
+        PanZoom panZoom = new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE, PanZoom.ZoomLimit.OUTER);
 
         View.OnTouchListener listener = mock(View.OnTouchListener.class);
         panZoom.setDelegate(listener);
@@ -75,7 +75,7 @@ public class PanZoomTest extends AndroidplotTest {
 
     @Test
     public void testOnTouch_oneFingerMovePansButDoesNotZoom() throws Exception {
-        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE));
+        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE, PanZoom.ZoomLimit.OUTER));
 
         View.OnTouchListener listener = mock(View.OnTouchListener.class);
         panZoom.setDelegate(listener);
@@ -101,7 +101,7 @@ public class PanZoomTest extends AndroidplotTest {
 
     @Test
     public void testOnTouch_twoFingersZoom() throws Exception {
-        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE));
+        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE, PanZoom.ZoomLimit.OUTER));
         MotionEvent moveEvent = mock(MotionEvent.class);
 
         // simulate a zoom gesture sequence:
@@ -135,7 +135,7 @@ public class PanZoomTest extends AndroidplotTest {
         xyPlot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
         xyPlot.redraw();
 
-        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE));
+        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE, PanZoom.ZoomLimit.OUTER));
 
         // cap our pan/zoom boundaries:
         xyPlot.getOuterLimits().set(0, 100, 0, 100);
@@ -180,7 +180,7 @@ public class PanZoomTest extends AndroidplotTest {
 
     @Test
     public void testFingerDistance() {
-        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE));
+        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE, PanZoom.ZoomLimit.OUTER));
         RectF distance = panZoom.fingerDistance(TestUtils.newPointerDownEvent(0, 0, 10, 10));
         assertEquals(0f, distance.left);
         assertEquals(0f, distance.top);

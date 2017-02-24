@@ -25,6 +25,8 @@ public class PanZoom implements View.OnTouchListener {
     private XYPlot plot;
     private Pan pan;
     private Zoom zoom;
+
+    private ZoomLimit zoomLimit;
     private boolean isEnabled = true;
 
     private DragState dragState = DragState.NONE;
@@ -77,10 +79,17 @@ public class PanZoom implements View.OnTouchListener {
         SCALE
     }
 
-    protected PanZoom(XYPlot plot, Pan pan, Zoom zoom) {
+    public enum ZoomLimit {
+        NONE,       // No limit on zooming
+        OUTER,      // do not leave the outer bounds (if defined) -> default
+        MIN_TICKS,  // if plot.StepModel defines a value based increment make sure at least one is visible
+        BOTH
+    }
+    protected PanZoom(XYPlot plot, Pan pan, Zoom zoom, ZoomLimit limit) {
         this.plot = plot;
         this.pan = pan;
         this.zoom = zoom;
+        this.zoomLimit = limit;
     }
 
     /**
@@ -95,7 +104,14 @@ public class PanZoom implements View.OnTouchListener {
     }
 
     public static PanZoom attach(XYPlot plot, Pan pan, Zoom zoom) {
-        PanZoom pz = new PanZoom(plot, pan, zoom);
+        PanZoom pz = new PanZoom(plot, pan, zoom,ZoomLimit.OUTER);
+        plot.setOnTouchListener(pz);
+        return pz;
+    }
+
+    // additional attach function not to break api
+    public static PanZoom attach(XYPlot plot, Pan pan, Zoom zoom, ZoomLimit limit) {
+        PanZoom pz = new PanZoom(plot, pan, zoom, limit);
         plot.setOnTouchListener(pz);
         return pz;
     }
@@ -333,12 +349,26 @@ public class PanZoom implements View.OnTouchListener {
 
         final float midPoint = calcMax - (span / 2.0f);
         final float offset = span * scale / 2.0f;
+        final RectRegion limits = plot.getOuterLimits();
 
         if (isHorizontal ) {
-            final RectRegion limits = plot.getOuterLimits();
+            // make sure we do not zoom in too far (there should be at least one grid line visible)
+            if ((zoomLimit == ZoomLimit.BOTH || zoomLimit == ZoomLimit.MIN_TICKS) &&
+                    (plot.getDomainStepMode() == StepMode.INCREMENT_BY_FIT || plot.getDomainStepMode() == StepMode.INCREMENT_BY_VAL)) {
+
+                if (plot.getDomainStepModel().getValue() >= (scale*span)) {
+                    // zoom reached minimum distance between grid lines -> keep old bounds
+                    newRect.left = bounds.getMinX().floatValue();
+                    newRect.right = bounds.getMaxX().floatValue();
+                    return;
+                }
+            }
+
             newRect.left = midPoint - offset;
             newRect.right = midPoint + offset;
-            if(limits.isFullyDefined()) {
+            if(limits.isFullyDefined() && (zoomLimit == ZoomLimit.OUTER || zoomLimit == ZoomLimit.BOTH)) {
+
+                // make sure we do not leave the outer bounds
                 if (newRect.left < limits.getMinX().floatValue()) {
                     newRect.left =  limits.getMinX().floatValue();
                 }
@@ -347,10 +377,21 @@ public class PanZoom implements View.OnTouchListener {
                 }
             }
         } else {
-            final RectRegion limits = plot.getOuterLimits();
+            // make sure we do not zoom in too far (there should be at least one grid line visible)
+            if ((zoomLimit == ZoomLimit.BOTH || zoomLimit == ZoomLimit.MIN_TICKS) &&
+                    (plot.getRangeStepMode() == StepMode.INCREMENT_BY_FIT || plot.getRangeStepMode() == StepMode.INCREMENT_BY_VAL)) {
+
+                if (plot.getRangeStepModel().getValue() >= (scale*span)) {
+                    // zoom reached minimum distance between grid lines -> keep old bounds
+                    newRect.top = bounds.getMinY().floatValue();
+                    newRect.bottom = bounds.getMaxY().floatValue();
+                    return;
+                }
+            }
+
             newRect.top = midPoint - offset;
             newRect.bottom = midPoint + offset;
-            if(limits.isFullyDefined()) {
+            if(limits.isFullyDefined() && (zoomLimit == ZoomLimit.OUTER || zoomLimit == ZoomLimit.BOTH)) {
                 if (newRect.top < limits.getMinY().floatValue()) {
                     newRect.top = limits.getMinY().floatValue();
                 }
@@ -375,6 +416,14 @@ public class PanZoom implements View.OnTouchListener {
 
     public void setZoom(Zoom zoom) {
         this.zoom = zoom;
+    }
+
+    public ZoomLimit getZoomLimit() {
+        return zoomLimit;
+    }
+
+    public void setZoomLimit(ZoomLimit zoomLimit) {
+        this.zoomLimit = zoomLimit;
     }
 
     public View.OnTouchListener getDelegate() {

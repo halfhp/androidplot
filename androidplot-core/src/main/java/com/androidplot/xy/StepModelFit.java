@@ -2,15 +2,13 @@ package com.androidplot.xy;
 
 import com.androidplot.Region;
 
-/**
- * Created by psi on 23.02.2017.
- *
- * Subclass of StepModel that chooses from predefined step values
- *
- * Depending on the currently displayed range (by value) choose increment so that
- * the number of lines is closest to StepModel.value
- */
+import java.util.Arrays;
 
+/**
+ * Subclass of StepModel that chooses from predefined step values. Depending on the currently
+ * displayed range (by value) choose increment so that the number of lines
+ * is closest to StepModel.value
+ */
 public class StepModelFit extends StepModel {
 
     private double[] steps; // list of steps to choose from
@@ -28,6 +26,16 @@ public class StepModelFit extends StepModel {
     }
 
     public void setSteps(double[] steps) {
+
+        // sanity checks: no null, 0 or negative
+        if (steps == null || steps.length == 0)
+            return;
+
+        for (double step : steps) {
+            if (step <= 0.0d)
+                return;
+        }
+
         this.steps = steps;
     }
 
@@ -43,15 +51,16 @@ public class StepModelFit extends StepModel {
     @Override
     public double getValue() {
 
-        // no possible increments where supplied (e.g. switched into this mode without calling setSteps(...)
-        if (steps == null)
+        // no possible increments where supplied
+        // or no region defined
+        if (steps == null || scale == null || !scale.isDefined())
             return super.getValue();
 
         double curStep = steps[0];
-
         double oldDistance = Math.abs((scale.length().doubleValue() / curStep)-super.getValue() );
 
         // determine which step size comes closest to the desired number of steps
+        // since steps[] is a small array brute force search is ok
         for (double step : steps) {
 
             double newDistance = Math.abs((scale.length().doubleValue() / step)-super.getValue() );
@@ -63,5 +72,14 @@ public class StepModelFit extends StepModel {
             }
         }
         return curStep;
+    }
+
+    @Override
+    public String toString() {
+        return "StepModelFit{" +
+                "steps=" + Arrays.toString(steps) +
+                ", scale=" + scale +
+                ", current stepping=" + getValue() +
+                '}';
     }
 }

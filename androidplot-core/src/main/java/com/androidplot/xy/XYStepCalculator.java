@@ -59,6 +59,7 @@ public class XYStepCalculator {
         double stepCount = 0;
         switch(typeXY) {
             case INCREMENT_BY_VAL:
+            case INCREMENT_BY_FIT:
                 stepVal = stepValue;
                 stepPix = stepValue / realBounds.ratio(pixelBounds).doubleValue();
                 stepCount = pixelBounds.length().doubleValue() / stepPix;

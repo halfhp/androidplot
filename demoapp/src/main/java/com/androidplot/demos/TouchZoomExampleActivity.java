@@ -31,6 +31,7 @@ import com.androidplot.xy.*;
 public class TouchZoomExampleActivity extends Activity {
     private static final int SERIES_SIZE = 3000;
     private static final int SERIES_ALPHA = 255;
+    private static final int NUM_GRIDLINES = 5;
     private XYPlot plot;
     private PanZoom panZoom;
     private Button resetButton;
@@ -55,11 +56,11 @@ public class TouchZoomExampleActivity extends Activity {
         plot.setUserRangeOrigin(0);
 
         // predefine the stepping of both axis
-        // increment will be chosen from list to best fit 5 grid lines
+        // increment will be chosen from list to best fit NUM_GRIDLINES grid lines
         double[] inc_domain = new double[]{10,50,100,500};
         double[] inc_range = new double[]{1,5,10,20,50,100};
-        plot.setDomainStepModel(new StepModelFit(plot.getBounds().getxRegion(),inc_domain,5));
-        plot.setRangeStepModel( new StepModelFit(plot.getBounds().getyRegion(),inc_range,5));
+        plot.setDomainStepModel(new StepModelFit(plot.getBounds().getxRegion(),inc_domain,NUM_GRIDLINES));
+        plot.setRangeStepModel( new StepModelFit(plot.getBounds().getyRegion(),inc_range,NUM_GRIDLINES));
 
 
         panSpinner = (Spinner) findViewById(R.id.pan_spinner);

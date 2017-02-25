@@ -3,14 +3,10 @@ package com.androidplot.xy;
 import com.androidplot.Region;
 
 /**
- * Created by psi on 23.02.2017.
- *
- * Subclass of StepModel that chooses from predefined step values
- *
- * Depending on the currently displayed range (by value) choose increment so that
- * the number of lines is closest to StepModel.value
+ * Subclass of StepModel that chooses from predefined step values. Depending on the currently
+ * displayed range (by value) choose increment so that the number of lines
+ * is closest to StepModel.value
  */
-
 public class StepModelFit extends StepModel {
 
     private double[] steps; // list of steps to choose from
@@ -48,10 +44,10 @@ public class StepModelFit extends StepModel {
             return super.getValue();
 
         double curStep = steps[0];
-
         double oldDistance = Math.abs((scale.length().doubleValue() / curStep)-super.getValue() );
 
         // determine which step size comes closest to the desired number of steps
+        // since steps[] is a small array brute force search is ok
         for (double step : steps) {
 
             double newDistance = Math.abs((scale.length().doubleValue() / step)-super.getValue() );

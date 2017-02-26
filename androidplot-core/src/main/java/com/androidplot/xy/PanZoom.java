@@ -80,11 +80,18 @@ public class PanZoom implements View.OnTouchListener {
     }
 
     public enum ZoomLimit {
-        NONE,       // No limit on zooming
-        OUTER,      // do not leave the outer bounds (if defined) -> default
-        MIN_TICKS,  // if plot.StepModel defines a value based increment make sure at least one is visible
-        BOTH
+        OUTER,     // do not leave the outer bounds (if defined) -> default
+        MIN_TICKS  // additionally, if plot.StepModel defines a value based increment make sure at least one tick is visible
     }
+
+    protected PanZoom(XYPlot plot, Pan pan, Zoom zoom) {
+        this.plot = plot;
+        this.pan = pan;
+        this.zoom = zoom;
+        this.zoomLimit = ZoomLimit.OUTER;
+    }
+
+    // additional constructor not to break api
     protected PanZoom(XYPlot plot, Pan pan, Zoom zoom, ZoomLimit limit) {
         this.plot = plot;
         this.pan = pan;
@@ -348,27 +355,21 @@ public class PanZoom implements View.OnTouchListener {
         }
 
         final float midPoint = calcMax - (span / 2.0f);
-        final float offset = span * scale / 2.0f;
+        float offset = span * scale / 2.0f;
         final RectRegion limits = plot.getOuterLimits();
 
         if (isHorizontal ) {
-            // make sure we do not zoom in too far (there should be at least one grid line visible)
-            if ((zoomLimit == ZoomLimit.BOTH || zoomLimit == ZoomLimit.MIN_TICKS) &&
-                    (plot.getDomainStepMode() == StepMode.INCREMENT_BY_FIT || plot.getDomainStepMode() == StepMode.INCREMENT_BY_VAL)) {
-
-                if (plot.getDomainStepModel().getValue() >= (scale*span)) {
-                    // zoom reached minimum distance between grid lines -> keep old bounds
-                    newRect.left = bounds.getMinX().floatValue();
-                    newRect.right = bounds.getMaxX().floatValue();
-                    return;
+            // zoom limited and increment by value StepMode?
+            if (zoomLimit == ZoomLimit.MIN_TICKS && (plot.getDomainStepMode() == StepMode.INCREMENT_BY_FIT || plot.getDomainStepMode() == StepMode.INCREMENT_BY_VAL)) {
+                // make sure we do not zoom in too far (there should be at least one grid line visible)
+                if (plot.getDomainStepValue() > (scale*span)) {
+                    offset = (float)(plot.getDomainStepValue() / 2.0f);
                 }
             }
 
             newRect.left = midPoint - offset;
             newRect.right = midPoint + offset;
-            if(limits.isFullyDefined() && (zoomLimit == ZoomLimit.OUTER || zoomLimit == ZoomLimit.BOTH)) {
-
-                // make sure we do not leave the outer bounds
+            if(limits.isFullyDefined()) {
                 if (newRect.left < limits.getMinX().floatValue()) {
                     newRect.left =  limits.getMinX().floatValue();
                 }
@@ -377,21 +378,17 @@ public class PanZoom implements View.OnTouchListener {
                 }
             }
         } else {
-            // make sure we do not zoom in too far (there should be at least one grid line visible)
-            if ((zoomLimit == ZoomLimit.BOTH || zoomLimit == ZoomLimit.MIN_TICKS) &&
-                    (plot.getRangeStepMode() == StepMode.INCREMENT_BY_FIT || plot.getRangeStepMode() == StepMode.INCREMENT_BY_VAL)) {
-
-                if (plot.getRangeStepModel().getValue() >= (scale*span)) {
-                    // zoom reached minimum distance between grid lines -> keep old bounds
-                    newRect.top = bounds.getMinY().floatValue();
-                    newRect.bottom = bounds.getMaxY().floatValue();
-                    return;
+            // zoom limited and increment by value StepMode?
+            if (zoomLimit == ZoomLimit.MIN_TICKS && (plot.getRangeStepMode() == StepMode.INCREMENT_BY_FIT || plot.getRangeStepMode() == StepMode.INCREMENT_BY_VAL)) {
+                // make sure we do not zoom in too far (there should be at least one grid line visible)
+                if (plot.getRangeStepValue() > (scale*span)) {
+                    offset = (float)(plot.getRangeStepValue() / 2.0f);
                 }
             }
 
             newRect.top = midPoint - offset;
             newRect.bottom = midPoint + offset;
-            if(limits.isFullyDefined() && (zoomLimit == ZoomLimit.OUTER || zoomLimit == ZoomLimit.BOTH)) {
+            if(limits.isFullyDefined()) {
                 if (newRect.top < limits.getMinY().floatValue()) {
                     newRect.top = limits.getMinY().floatValue();
                 }

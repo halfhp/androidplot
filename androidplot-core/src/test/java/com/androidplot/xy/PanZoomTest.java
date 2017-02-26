@@ -62,7 +62,7 @@ public class PanZoomTest extends AndroidplotTest {
 
     @Test
     public void testOnTouch_notifiesOnTouchListener() throws Exception {
-        PanZoom panZoom = new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE, PanZoom.ZoomLimit.OUTER);
+        PanZoom panZoom = new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE);
 
         View.OnTouchListener listener = mock(View.OnTouchListener.class);
         panZoom.setDelegate(listener);
@@ -75,7 +75,7 @@ public class PanZoomTest extends AndroidplotTest {
 
     @Test
     public void testOnTouch_oneFingerMovePansButDoesNotZoom() throws Exception {
-        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE, PanZoom.ZoomLimit.OUTER));
+        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE));
 
         View.OnTouchListener listener = mock(View.OnTouchListener.class);
         panZoom.setDelegate(listener);
@@ -101,7 +101,7 @@ public class PanZoomTest extends AndroidplotTest {
 
     @Test
     public void testOnTouch_twoFingersZoom() throws Exception {
-        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE, PanZoom.ZoomLimit.OUTER));
+        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE));
         MotionEvent moveEvent = mock(MotionEvent.class);
 
         // simulate a zoom gesture sequence:
@@ -135,7 +135,7 @@ public class PanZoomTest extends AndroidplotTest {
         xyPlot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
         xyPlot.redraw();
 
-        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE, PanZoom.ZoomLimit.OUTER));
+        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE));
 
         // cap our pan/zoom boundaries:
         xyPlot.getOuterLimits().set(0, 100, 0, 100);
@@ -179,8 +179,63 @@ public class PanZoomTest extends AndroidplotTest {
     }
 
     @Test
+    public void testLimitZoom() {
+        double[] inc_domain = new double[]{10,50,100};
+        double[] inc_range = new double[]{20,50};
+
+        xyPlot = spy(new InstrumentedXYPlot(getContext()));
+        xyPlot.setDomainBoundaries(0, 20, BoundaryMode.FIXED);
+        xyPlot.setRangeBoundaries(0, 30, BoundaryMode.FIXED);
+        xyPlot.setDomainStepModel(new StepModelFit(xyPlot.getBounds().getxRegion(), inc_domain, 5));
+        xyPlot.setRangeStepModel(new StepModelFit(xyPlot.getBounds().getyRegion(), inc_range, 5));
+        xyPlot.redraw();
+
+        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE, PanZoom.ZoomLimit.MIN_TICKS));
+
+        // cap our pan/zoom boundaries:
+        xyPlot.getOuterLimits().set(0, 20, 0, 30);
+
+        panZoom.setFingersRect(new RectF(0, 0, 20, 20));
+
+        InOrder inOrder = inOrder(xyPlot);
+        inOrder.verify(xyPlot).setDomainBoundaries(0, 20, BoundaryMode.FIXED);
+
+        // should NOT result in a 2x zoom on domain centerpoint, but in a zoom to
+        // the minimum spacing 10 and 20 respectively
+        panZoom.zoom(TestUtils.newPointerDownEvent(0, 0, 40, 40));
+        inOrder.verify(xyPlot).setDomainBoundaries(5f, 15f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setRangeBoundaries(5f, 25f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).redraw();
+
+        // to zoom in beyond min limits
+        panZoom.setZoomLimit(PanZoom.ZoomLimit.OUTER);
+
+        // should result in another 2x zoom on domain centerpoint:
+        panZoom.zoom(TestUtils.newPointerDownEvent(0, 0, 80, 80));
+        inOrder.verify(xyPlot).setDomainBoundaries(7.5f, 12.5f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setRangeBoundaries(10f, 20f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).redraw();
+
+        // back to limited zoom
+        panZoom.setZoomLimit(PanZoom.ZoomLimit.MIN_TICKS);
+
+        // try to zoom in further, should snap back to min limit:
+        panZoom.zoom(TestUtils.newPointerDownEvent(0, 0, 90, 90));
+        inOrder.verify(xyPlot).setDomainBoundaries(5f, 15f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setRangeBoundaries(5f, 25f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).redraw();
+
+        // redraw should not be called again
+        inOrder.verify(xyPlot, never()).redraw();
+
+        // make sure no panning took place during these zoom ops:
+        verify(panZoom, never()).pan(any(MotionEvent.class));
+
+    }
+
+    @Test
     public void testFingerDistance() {
-        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE, PanZoom.ZoomLimit.OUTER));
+        PanZoom panZoom = spy(new PanZoom(xyPlot, PanZoom.Pan.BOTH, PanZoom.Zoom.SCALE));
         RectF distance = panZoom.fingerDistance(TestUtils.newPointerDownEvent(0, 0, 10, 10));
         assertEquals(0f, distance.left);
         assertEquals(0f, distance.top);

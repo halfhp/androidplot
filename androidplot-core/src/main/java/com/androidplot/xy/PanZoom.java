@@ -111,9 +111,7 @@ public class PanZoom implements View.OnTouchListener {
     }
 
     public static PanZoom attach(XYPlot plot, Pan pan, Zoom zoom) {
-        PanZoom pz = new PanZoom(plot, pan, zoom,ZoomLimit.OUTER);
-        plot.setOnTouchListener(pz);
-        return pz;
+        return attach(plot,pan,zoom, ZoomLimit.OUTER);
     }
 
     // additional attach function not to break api
@@ -360,7 +358,7 @@ public class PanZoom implements View.OnTouchListener {
 
         if (isHorizontal ) {
             // zoom limited and increment by value StepMode?
-            if (zoomLimit == ZoomLimit.MIN_TICKS && (plot.getDomainStepMode() == StepMode.INCREMENT_BY_FIT || plot.getDomainStepMode() == StepMode.INCREMENT_BY_VAL)) {
+            if (zoomLimit == ZoomLimit.MIN_TICKS) {
                 // make sure we do not zoom in too far (there should be at least one grid line visible)
                 if (plot.getDomainStepValue() > (scale*span)) {
                     offset = (float)(plot.getDomainStepValue() / 2.0f);
@@ -379,7 +377,7 @@ public class PanZoom implements View.OnTouchListener {
             }
         } else {
             // zoom limited and increment by value StepMode?
-            if (zoomLimit == ZoomLimit.MIN_TICKS && (plot.getRangeStepMode() == StepMode.INCREMENT_BY_FIT || plot.getRangeStepMode() == StepMode.INCREMENT_BY_VAL)) {
+            if (zoomLimit == ZoomLimit.MIN_TICKS) {
                 // make sure we do not zoom in too far (there should be at least one grid line visible)
                 if (plot.getRangeStepValue() > (scale*span)) {
                     offset = (float)(plot.getRangeStepValue() / 2.0f);

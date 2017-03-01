@@ -25,6 +25,8 @@ public class PanZoom implements View.OnTouchListener {
     private XYPlot plot;
     private Pan pan;
     private Zoom zoom;
+
+    private ZoomLimit zoomLimit;
     private boolean isEnabled = true;
 
     private DragState dragState = DragState.NONE;
@@ -77,16 +79,41 @@ public class PanZoom implements View.OnTouchListener {
         SCALE
     }
 
+    /**
+     * Limits imposed on the zoom.
+     */
+    public enum ZoomLimit {
+        /**
+         * Do not zoom outside the plots outer bounds, if they are defined.
+         */
+        OUTER,
+
+        /**
+         * Additionally to the outer bounds if plot.StepModel defines a value based increment
+         * make sure at least one tick is visible by not zooming in further.
+         */
+        MIN_TICKS
+    }
+
     protected PanZoom(XYPlot plot, Pan pan, Zoom zoom) {
         this.plot = plot;
         this.pan = pan;
         this.zoom = zoom;
+        this.zoomLimit = ZoomLimit.OUTER;
+    }
+
+    // additional constructor not to break api
+    protected PanZoom(XYPlot plot, Pan pan, Zoom zoom, ZoomLimit limit) {
+        this.plot = plot;
+        this.pan = pan;
+        this.zoom = zoom;
+        this.zoomLimit = limit;
     }
 
     /**
      * Convenience method for enabling pan/zoom behavior on an instance of {@link XYPlot}, using
      * a default behavior of {@link Pan#BOTH} and {@link Zoom#SCALE}.
-     * Use {@link PanZoom#attach(XYPlot, Pan, Zoom)} for finer grain control of this behavior.
+     * Use {@link PanZoom#attach(XYPlot, Pan, Zoom, ZoomLimit)} for finer grain control of this behavior.
      * @param plot
      * @return
      */
@@ -94,8 +121,29 @@ public class PanZoom implements View.OnTouchListener {
         return attach(plot, Pan.BOTH, Zoom.SCALE);
     }
 
+    /**
+     * Old method for enabling pan/zoom behavior on an instance of {@link XYPlot}, using
+     * the default behavior of {@link ZoomLimit#OUTER}.
+     * Use {@link PanZoom#attach(XYPlot, Pan, Zoom, ZoomLimit)} for finer grain control of this behavior.
+     * @param plot
+     * @param pan
+     * @param zoom
+     * @return
+     */
     public static PanZoom attach(XYPlot plot, Pan pan, Zoom zoom) {
-        PanZoom pz = new PanZoom(plot, pan, zoom);
+        return attach(plot,pan,zoom, ZoomLimit.OUTER);
+    }
+
+    /**
+     * New method for enabling pan/zoom behavior on an instance of {@link XYPlot}.
+     * @param plot
+     * @param pan
+     * @param zoom
+     * @param limit
+     * @return
+     */
+    public static PanZoom attach(XYPlot plot, Pan pan, Zoom zoom, ZoomLimit limit) {
+        PanZoom pz = new PanZoom(plot, pan, zoom, limit);
         plot.setOnTouchListener(pz);
         return pz;
     }
@@ -332,10 +380,18 @@ public class PanZoom implements View.OnTouchListener {
         }
 
         final float midPoint = calcMax - (span / 2.0f);
-        final float offset = span * scale / 2.0f;
+        float offset = span * scale / 2.0f;
+        final RectRegion limits = plot.getOuterLimits();
 
         if (isHorizontal ) {
-            final RectRegion limits = plot.getOuterLimits();
+            // zoom limited and increment by value StepMode?
+            if (zoomLimit == ZoomLimit.MIN_TICKS) {
+                // make sure we do not zoom in too far (there should be at least one grid line visible)
+                if (plot.getDomainStepValue() > (scale*span)) {
+                    offset = (float)(plot.getDomainStepValue() / 2.0f);
+                }
+            }
+
             newRect.left = midPoint - offset;
             newRect.right = midPoint + offset;
             if(limits.isFullyDefined()) {
@@ -347,7 +403,14 @@ public class PanZoom implements View.OnTouchListener {
                 }
             }
         } else {
-            final RectRegion limits = plot.getOuterLimits();
+            // zoom limited and increment by value StepMode?
+            if (zoomLimit == ZoomLimit.MIN_TICKS) {
+                // make sure we do not zoom in too far (there should be at least one grid line visible)
+                if (plot.getRangeStepValue() > (scale*span)) {
+                    offset = (float)(plot.getRangeStepValue() / 2.0f);
+                }
+            }
+
             newRect.top = midPoint - offset;
             newRect.bottom = midPoint + offset;
             if(limits.isFullyDefined()) {
@@ -375,6 +438,14 @@ public class PanZoom implements View.OnTouchListener {
 
     public void setZoom(Zoom zoom) {
         this.zoom = zoom;
+    }
+
+    public ZoomLimit getZoomLimit() {
+        return zoomLimit;
+    }
+
+    public void setZoomLimit(ZoomLimit zoomLimit) {
+        this.zoomLimit = zoomLimit;
     }
 
     public View.OnTouchListener getDelegate() {

@@ -79,9 +79,20 @@ public class PanZoom implements View.OnTouchListener {
         SCALE
     }
 
+    /**
+     * Limits imposed on the zoom.
+     */
     public enum ZoomLimit {
-        OUTER,     // do not leave the outer bounds (if defined) -> default
-        MIN_TICKS  // additionally, if plot.StepModel defines a value based increment make sure at least one tick is visible
+        /**
+         * Do not zoom outside the plots outer bounds, if they are defined.
+         */
+        OUTER,
+
+        /**
+         * Additionally to the outer bounds if plot.StepModel defines a value based increment
+         * make sure at least one tick is visible by not zooming in further.
+         */
+        MIN_TICKS
     }
 
     protected PanZoom(XYPlot plot, Pan pan, Zoom zoom) {
@@ -102,7 +113,7 @@ public class PanZoom implements View.OnTouchListener {
     /**
      * Convenience method for enabling pan/zoom behavior on an instance of {@link XYPlot}, using
      * a default behavior of {@link Pan#BOTH} and {@link Zoom#SCALE}.
-     * Use {@link PanZoom#attach(XYPlot, Pan, Zoom)} for finer grain control of this behavior.
+     * Use {@link PanZoom#attach(XYPlot, Pan, Zoom, ZoomLimit)} for finer grain control of this behavior.
      * @param plot
      * @return
      */
@@ -110,11 +121,27 @@ public class PanZoom implements View.OnTouchListener {
         return attach(plot, Pan.BOTH, Zoom.SCALE);
     }
 
+    /**
+     * Old method for enabling pan/zoom behavior on an instance of {@link XYPlot}, using
+     * the default behavior of {@link ZoomLimit#OUTER}.
+     * Use {@link PanZoom#attach(XYPlot, Pan, Zoom, ZoomLimit)} for finer grain control of this behavior.
+     * @param plot
+     * @param pan
+     * @param zoom
+     * @return
+     */
     public static PanZoom attach(XYPlot plot, Pan pan, Zoom zoom) {
         return attach(plot,pan,zoom, ZoomLimit.OUTER);
     }
 
-    // additional attach function not to break api
+    /**
+     * New method for enabling pan/zoom behavior on an instance of {@link XYPlot}.
+     * @param plot
+     * @param pan
+     * @param zoom
+     * @param limit
+     * @return
+     */
     public static PanZoom attach(XYPlot plot, Pan pan, Zoom zoom, ZoomLimit limit) {
         PanZoom pz = new PanZoom(plot, pan, zoom, limit);
         plot.setOnTouchListener(pz);

@@ -20,17 +20,23 @@ import android.app.Activity;
 import android.graphics.*;
 import android.os.Bundle;
 
+import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.*;
 
 import java.text.*;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class TimeSeriesActivity extends Activity {
 
+    private static final String SERIES_TITLE = "Signthings in USA";
+
     private XYPlot plot1;
+    private SimpleXYSeries series;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,43 +44,36 @@ public class TimeSeriesActivity extends Activity {
         setContentView(R.layout.time_series_example);
 
         plot1 = (XYPlot) findViewById(R.id.plot1);
-        Number[] numSightings = {5, 8, 6, 9, 3, 8, 5};
 
-        // an array of years in milliseconds:
-        Number[] years = {
-                978307200,  // 2001
-                998309300,
-                1009843200, // 2002
-                1041379200, // 2003
-                1052012100,
-                1072915200, // 2004
-                1104537600  // 2005
+        // these will be our domain index labels:
+        final Date[] years = {
+                new GregorianCalendar(2001, Calendar.JANUARY, 1).getTime(),
+                new GregorianCalendar(2001, Calendar.JULY, 1).getTime(),
+                new GregorianCalendar(2002, Calendar.JANUARY, 1).getTime(),
+                new GregorianCalendar(2002, Calendar.JULY, 1).getTime(),
+                new GregorianCalendar(2003, Calendar.JANUARY, 1).getTime(),
+                new GregorianCalendar(2003, Calendar.JULY, 1).getTime(),
+                new GregorianCalendar(2004, Calendar.JANUARY, 1).getTime(),
+                new GregorianCalendar(2004, Calendar.JULY, 1).getTime(),
+                new GregorianCalendar(2005, Calendar.JANUARY, 1).getTime(),
+                new GregorianCalendar(2005, Calendar.JULY, 1).getTime()
         };
-        // create our series from our array of nums:
-        XYSeries series2 = new SimpleXYSeries(
-                Arrays.asList(years),
-                Arrays.asList(numSightings),
-                "Sightings in USA");
+
+        addSeries(savedInstanceState);
+
+        plot1.setRangeBoundaries(0, 10, BoundaryMode.FIXED);
 
         plot1.getGraph().getGridBackgroundPaint().setColor(Color.WHITE);
         plot1.getGraph().getDomainGridLinePaint().setColor(Color.BLACK);
         plot1.getGraph().getDomainGridLinePaint().
-                setPathEffect(new DashPathEffect(new float[] {1, 1}, 1));
+                setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
         plot1.getGraph().getRangeGridLinePaint().setColor(Color.BLACK);
         plot1.getGraph().getRangeGridLinePaint().
-                setPathEffect(new DashPathEffect(new float[] {1, 1}, 1));
+                setPathEffect(new DashPathEffect(new float[]{1, 1}, 1));
         plot1.getGraph().getDomainOriginLinePaint().setColor(Color.BLACK);
         plot1.getGraph().getRangeOriginLinePaint().setColor(Color.BLACK);
 
-        // setup our line fill paint to be a slightly transparent gradient:
-        Paint lineFill = new Paint();
-        lineFill.setAlpha(200);
-
-        LineAndPointFormatter formatter =
-                new LineAndPointFormatter(Color.rgb(0, 0, 0), Color.BLUE, Color.RED, null);
-        formatter.setFillPaint(lineFill);
         plot1.getGraph().setPaddingRight(2);
-        plot1.addSeries(series2, formatter);
 
         // draw a domain tick for each year:
         plot1.setDomainStep(StepMode.SUBDIVIDE, years.length);
@@ -93,17 +92,15 @@ public class TimeSeriesActivity extends Activity {
                     // create a simple date format that draws on the year portion of our timestamp.
                     // see http://download.oracle.com/javase/1.4.2/docs/api/java/text/SimpleDateFormat.html
                     // for a full description of SimpleDateFormat.
-                    private SimpleDateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
+                    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy");
 
                     @Override
-                    public StringBuffer format(Object obj, StringBuffer toAppendTo,
-                            FieldPosition pos) {
+                    public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
 
-                        // because our timestamps are in seconds and SimpleDateFormat expects milliseconds
-                        // we multiply our timestamp by 1000:
-                        long timestamp = ((Number) obj).longValue() * 1000;
-                        Date date = new Date(timestamp);
-                        return dateFormat.format(date, toAppendTo, pos);
+                        // this rounding is necessary to avoid precision loss when converting from
+                        // double back to int:
+                        int yearIndex = (int) Math.round(((Number) obj).doubleValue());
+                        return dateFormat.format(years[yearIndex], toAppendTo, pos);
                     }
 
                     @Override
@@ -112,5 +109,45 @@ public class TimeSeriesActivity extends Activity {
 
                     }
                 });
+    }
+
+    /**
+     * Instantiates our XYSeries, checking the current savedInstanceState for existing series data
+     * to avoid having to regenerate on each resume.  If your series data is small and easy to
+     * regenerate (as it is here) then you can skip saving/restoring your series data to
+     * savedInstanceState.
+     * @param savedInstanceState Current saved instance state, if any; may be null.
+     */
+    private void addSeries(Bundle savedInstanceState) {
+        Number[] yVals;
+
+        if(savedInstanceState != null) {
+            yVals = (Number[]) savedInstanceState.getSerializable(SERIES_TITLE);
+        } else {
+            yVals = new Number[]{5, 8, 6, 9, 3, 8, 5, 4, 7, 4};
+        }
+
+        // create our series from our array of nums:
+        series = new SimpleXYSeries(Arrays.asList(yVals),
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, SERIES_TITLE);
+
+        LineAndPointFormatter formatter =
+                new LineAndPointFormatter(Color.rgb(0, 0, 0), Color.RED, Color.RED, null);
+        formatter.getVertexPaint().setStrokeWidth(PixelUtils.dpToPix(10));
+        formatter.getLinePaint().setStrokeWidth(PixelUtils.dpToPix(5));
+
+        // setup our line fill paint to be a slightly transparent gradient:
+        Paint lineFill = new Paint();
+        lineFill.setAlpha(200);
+
+        formatter.setFillPaint(lineFill);
+
+        plot1.addSeries(series, formatter);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        // persist our series data so we don't have to regenerate each time:
+        bundle.putSerializable(SERIES_TITLE, series.getyVals().toArray(new Number[]{}));
     }
 }

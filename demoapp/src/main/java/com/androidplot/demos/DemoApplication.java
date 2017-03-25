@@ -4,9 +4,6 @@ import android.app.*;
 
 import com.squareup.leakcanary.*;
 
-/**
- * Created by halfhp on 10/1/16.
- */
 public class DemoApplication extends Application {
 
     @Override public void onCreate() {

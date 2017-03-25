@@ -135,7 +135,7 @@ public class XYGraphWidget extends Widget {
         public void drawLabel(Canvas canvas, LineLabelStyle style, Number val, float x, float y, boolean isOrigin) {
             final int canvasState = canvas.save();
             try {
-                final String txt = style.format.format(val.doubleValue());
+                final String txt = style.format.format(val);
                 canvas.rotate(style.getRotation(), x, y);
                 drawLabel(canvas, txt, style.getPaint(), x, y, isOrigin);
             } finally {

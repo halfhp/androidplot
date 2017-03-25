@@ -368,12 +368,12 @@ particularly well suited for downsampling `XYSeries` data.
 LineAndPointFormatter format = new LineAndPointFormatter(...);
 format.getLinePaint().setAntiAlias(false);
 ```
-# Screen<->Series Conversion
+# Converting Values
 Because the coordinate system used by your `XYSeries` data is almost always different than the screen
 coordinate system upon which the data is rendered, you'll often need to convert from one system to
 the other.  `XYPlot` provides convenience methods for this purpose:
 
-To convert screen vals to series vals:
+## Screen to Series Conversion
 ```java
 // x
 float screenX = ...
@@ -388,7 +388,7 @@ PointF screenCoords = ...
 XYCoords xy = plot.screenToSeries(screenCoords)
 ```
 
-To convert series vals to screen vals:
+## Series to Screen Conversion
 ```java
 // x
 Number x = ...

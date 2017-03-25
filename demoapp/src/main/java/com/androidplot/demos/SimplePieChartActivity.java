@@ -73,9 +73,9 @@ public class SimplePieChartActivity extends Activity
                 if(pie.getPie().containsPoint(click)) {
                     Segment segment = pie.getRenderer(PieRenderer.class).getContainingSegment(click);
 
-                    deselectAll();
                     if(segment != null) {
                         final boolean isSelected = getFormatter(segment).getOffset() != 0;
+                        deselectAll();
                         setSelected(segment, !isSelected);
                         pie.redraw();
                     }

@@ -19,5 +19,5 @@
     <string name="app_name">Androidplot Demos</string>
     <string name="sxy_title">A Simple XY Plot</string>
     <string name="ts_title">Time Series</string>
-    <string name="ts_plot1_title">Yearly UFO Sightings</string>
+    <string name="ts_plot1_title">UFO Sightings</string>
 </resources>

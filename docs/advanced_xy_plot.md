@@ -139,32 +139,16 @@ new LTTBSampler().run(originalSeries, sampledSeries);
 Currently LTTBSampler is the only available implementation.
 
 # Storing series data in onSaveInstanceState
-If your series data requires a non trivial amount of preprocessing (subsampling etc.) or your data samples
-stream in periodically, you'll likely want to persist your series data.
+If your series data requires a non trivial amount of preprocessing (subsampling etc.) or your data comes
+from a dynamic source, you'll likely want to persist your series data when your Activity saves its
+instance state.  There are a few caveats to be aware of:
 
-Androidplot provides a simplified mechanism for preserving any registered series and formatter data
-provided they are serializable implementations. (All implementations of XYSeries that ship 
-with Androidplot are serializable)  
+* You can only persist about 1mb worth of data at a time so if your series data is much larger than that
+you'll need to find a creative solution to the problem
+* Due to [quirks in the way Android persists data](http://stackoverflow.com/questions/12300886/linkedlist-put-into-intent-extra-gets-recast-to-arraylist-when-retrieving-in-nex)
+`XYSeries` implementations such as `SimpleXYSeries` that use `LinkedList` instances to store data cannot be serialized directly.
+* Formatters generally cannot be persisted as they typically contain instances of `Paint` that cannot be serialized directly..
 
-To persist series / formatter data:
-```java
-// persist plot series / formatter configuration:
-@Override
-public void onSaveInstanceState(Bundle bundle) {
-    bundle.putSerializable("seriesRegistry", plot.getRegistry());
-}
-```
-
-To restore series / formatter data:
-```java
-public void onCreate(Bundle savedInstanceState) {
-    ...
-    if(savedInstanceState != null && savedInstanceState.containsKey("seriesRegistry")) {
-        XYSeriesRegistry registry = (XYSeriesRegistry) savedInstanceState.getSerializable("seriesRegistry");
-        plot.setRegistry(registry);
-    } else {
-        // first-time setup as usual
-        ...
-    }
-}
-```
+Due to these limitations we suggest storing `XYSeries` data into an array or `ArrayList` and using that to 
+instantiate your `XYSeries`.  The DemoApp's [Time Series Example](../demoapp/src/main/java/com/androidplot/demos/TimeSeriesActivity.java) 
+contains a full source example.

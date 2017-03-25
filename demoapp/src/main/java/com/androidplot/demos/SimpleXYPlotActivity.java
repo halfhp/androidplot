@@ -72,7 +72,7 @@ public class SimpleXYPlotActivity extends Activity {
                 PixelUtils.dpToPix(20),
                 PixelUtils.dpToPix(15)}, 0));
 
-        // just for fun, add some smoothing to the lines:
+        // (optional) add some smoothing to the lines:
         // see: http://androidplot.com/smooth-curves-and-androidplot/
         series1Format.setInterpolationParams(
                 new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));

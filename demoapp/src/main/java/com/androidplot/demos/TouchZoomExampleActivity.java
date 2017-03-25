@@ -85,18 +85,8 @@ public class TouchZoomExampleActivity extends Activity {
         // enable autoselect of sampling level based on visible boundaries:
         plot.getRegistry().setEstimator(new ZoomEstimator());
 
-        if(savedInstanceState != null && savedInstanceState.containsKey("seriesRegistry")) {
-            XYSeriesRegistry registry = (XYSeriesRegistry) savedInstanceState.getSerializable("seriesRegistry");
-            plot.setRegistry(registry);
-        } else {
-            generateSeriesData();
-        }
+        generateSeriesData();
         reset();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle bundle) {
-        bundle.putSerializable("seriesRegistry", plot.getRegistry());
     }
 
     private void reset() {

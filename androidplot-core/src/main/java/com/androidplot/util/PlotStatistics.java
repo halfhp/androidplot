@@ -39,6 +39,7 @@ public class PlotStatistics implements PlotListener {
     long latencySamples = 0;
     long latencySum = 0;
     String annotationString = "";
+    private boolean annotatePlotEnabled;
 
     private Paint paint;
     {
@@ -48,11 +49,6 @@ public class PlotStatistics implements PlotListener {
         paint.setTextSize(30);
         resetCounters();
     }
-
-
-    private boolean annotatePlotEnabled;
-
-
 
     public PlotStatistics(long updateDelayMs, boolean annotatePlotEnabled) {
         this.updateDelayMs = updateDelayMs;
@@ -108,5 +104,9 @@ public class PlotStatistics implements PlotListener {
         latencySum += lastLatency;
         latencySamples++;
         annotatePlot(source, canvas);
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        this.annotatePlotEnabled = isEnabled;
     }
 }

@@ -27,6 +27,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class SeriesUtilsTest {
@@ -99,6 +100,13 @@ public class SeriesUtilsTest {
         assertEquals(null, minMax.getMaxX());
         assertEquals(null, minMax.getMinY());
         assertEquals(null, minMax.getMaxY());
+    }
+
+    @Test
+    public void minMax_usesSeriesMinMax_onFastXYSeries() {
+        FastXYSeries series = mock(FastXYSeries.class);
+        SeriesUtils.minMax(series);
+        verify(series).minMax();
     }
 
     @Test

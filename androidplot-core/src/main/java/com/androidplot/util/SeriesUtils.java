@@ -84,6 +84,9 @@ public class SeriesUtils {
                 // if this is an advanced xy series then minMax have already been calculated for us:
                 if(series instanceof FastXYSeries) {
                     final RectRegion b = ((FastXYSeries) series).minMax();
+                    if(b == null) {
+                        continue;
+                    }
                     if(constraints == null) {
                         bounds.union(b);
                     } else {
@@ -257,36 +260,5 @@ public class SeriesUtils {
      */
     public static Region minMax(List<Number>... lists) {
         return minMax(new Region(), lists);
-    }
-
-    public static void main(String[] args) {
-
-        // seed the list:
-        ArrayList<Number> values = new ArrayList<>();
-        for (int i = 0; i < 1000000; i++) {
-            values.add(Math.random() * 100);
-        }
-        final int numIterations = 20;
-        long sumTime = 0;
-        for(int j = 0; j < numIterations; j++) {
-            final long startTime = System.currentTimeMillis();
-            Region bounds = minMax(values);
-            final long thisIteration = System.currentTimeMillis() - startTime;
-            System.out.println("thisIteration took: " + thisIteration + "ms");
-            sumTime += thisIteration;
-        }
-
-        System.out.println("Benchmark avg:" + (sumTime / numIterations) + "ms.");
-    }
-
-    /**
-     * Determine the XVal order of an XYSeries.  If series does not implement {@link OrderedXYSeries}
-     * then {@link com.androidplot.xy.OrderedXYSeries.XOrder#NONE} is assumed.
-     * @param series
-     * @return The {@link com.androidplot.xy.OrderedXYSeries.XOrder} of the series.
-     */
-    public static OrderedXYSeries.XOrder getXYOrder(XYSeries series) {
-        return series instanceof OrderedXYSeries ?
-               ((OrderedXYSeries) series).getXOrder() : OrderedXYSeries.XOrder.NONE;
     }
 }

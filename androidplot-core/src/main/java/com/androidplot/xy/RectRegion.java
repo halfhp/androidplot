@@ -344,39 +344,4 @@ public class RectRegion {
     public boolean contains(Number x, Number y) {
         return getxRegion().contains(x) && getyRegion().contains(y);
     }
-
-    /**
-     * Checks to see whether the specified line.  Note that this implementation will return
-     * true even if the line is completely enclosed by this RectRegion.
-     * WARNING: this implementation has problems.  See associated unit test for details.
-     * @param x1 x-coord of the line beginning
-     * @param y1 y-coord of the line beginning
-     * @param x2 x-coord of the line end
-     * @param y2 y-coord of the line end
-     * @return True if this RectRegion overlaps any part of the specified line.
-     */
-    public boolean intersectsWithLine(Number x1, Number y1, Number x2, Number y2) {
-        if(contains(x1, y1) || contains(x2, y2)) {
-            return true;
-        }
-
-        // if true, it means that these points exist on different sides of the rect's edges
-        final boolean x1MinRelation = x1.doubleValue() < getMinX().doubleValue();
-        final boolean x2MinRelation = x2.doubleValue() < getMinX().doubleValue();
-        final boolean xMinRelation = x1MinRelation &! x2MinRelation;
-
-        final boolean x1MaxRelation = x1.doubleValue() < getMaxX().doubleValue();
-        final boolean x2MaxRelation = x2.doubleValue() < getMaxX().doubleValue();
-        final boolean xMaxRelation = x1MaxRelation &! x2MaxRelation;
-
-        final boolean y1MinRelation = y1.doubleValue() < getMinY().doubleValue();
-        final boolean y2MinRelation = y2.doubleValue() < getMinY().doubleValue();
-        final boolean yMinRelation = y1MinRelation &! y2MinRelation;
-
-        final boolean y1MaxRelation = y1.doubleValue() < getMaxY().doubleValue();
-        final boolean y2MaxRelation = y2.doubleValue() < getMaxY().doubleValue();
-        final boolean yMaxRelation = y1MaxRelation &!  y2MaxRelation;
-
-        return ((xMinRelation | xMaxRelation) || getxRegion().contains(x1) & (yMinRelation | yMaxRelation) || getyRegion().contains(y1));
-    }
 }

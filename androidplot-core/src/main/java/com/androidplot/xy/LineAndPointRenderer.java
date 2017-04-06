@@ -124,7 +124,6 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     protected void cullPointsCache() {
         for(XYSeries series : pointsCaches.keySet()) {
             if(!getPlot().getRegistry().contains(series, LineAndPointFormatter.class)) {
-                //pointsCaches.put(series, null);
                 pointsCaches.remove(series);
             }
         }

@@ -23,7 +23,6 @@ import android.graphics.PointF;
  * Renders a point as a line with the vertices marked.  Requires 2 or more points to
  * be rendered.
  */
-
 public class StepRenderer extends LineAndPointRenderer<StepFormatter> {
 
     public StepRenderer(XYPlot plot) {

@@ -21,13 +21,9 @@ import com.androidplot.ui.*;
 import com.androidplot.util.FontUtils;
 
 public class TextLabelWidget extends Widget {
-    private static final String TAG = TextLabelWidget.class.getName();
-
     private String text;
     private Paint labelPaint;
-
     private TextOrientation orientation;
-
     private boolean autoPackEnabled = true;
 
     {
@@ -67,16 +63,12 @@ public class TextLabelWidget extends Widget {
        }
     }
 
-    //protected abstract String getText();
-
     /**
      * Sets the dimensions of the widget to exactly contain the text contents
      */
     public void pack() {
-        //Log.d(TAG, "Packing...");
         Rect size = FontUtils.getStringDimensions(text, getLabelPaint());
         if(size == null) {
-            //Log.w(TAG, "Attempt to pack empty text.");
             return;
         }
         switch(orientation) {
@@ -103,13 +95,10 @@ public class TextLabelWidget extends Widget {
         if(text == null || text.length() == 0) {
             return;
         }
-        //FontUtils.getStringDimensions(text, labelPaint);
+
         float vOffset = labelPaint.getFontMetrics().descent;
         PointF start = getAnchorCoordinates(widgetRect,
                 Anchor.CENTER);
-
-        // BEGIN ROTATION CALCULATION
-        //int canvasState = canvas.save(Canvas.ALL_SAVE_FLAG);
 
         try {
             canvas.save(Canvas.ALL_SAVE_FLAG);
@@ -129,11 +118,8 @@ public class TextLabelWidget extends Widget {
             }
             canvas.drawText(text, 0, vOffset, labelPaint);
         } finally {
-            //canvas.restoreToCount(canvasState);
             canvas.restore();
         }
-
-        // END ROTATION CALCULATION
     }
 
     public Paint getLabelPaint() {
@@ -173,7 +159,6 @@ public class TextLabelWidget extends Widget {
     }
 
     public void setText(String text) {
-        //Log.d(TAG, "Setting textLabel to: " + text);
         this.text = text;
         if(autoPackEnabled) {
             pack();

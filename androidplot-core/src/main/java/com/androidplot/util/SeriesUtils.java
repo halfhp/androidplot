@@ -261,4 +261,15 @@ public class SeriesUtils {
     public static Region minMax(List<Number>... lists) {
         return minMax(new Region(), lists);
     }
+
+    /**
+     * Determine the XVal order of an XYSeries.  If series does not implement {@link OrderedXYSeries}
+     * then {@link com.androidplot.xy.OrderedXYSeries.XOrder#NONE} is assumed.
+     * @param series
+     * @return The {@link com.androidplot.xy.OrderedXYSeries.XOrder} of the series.
+     */
+    public static OrderedXYSeries.XOrder getXYOrder(XYSeries series) {
+        return series instanceof OrderedXYSeries ?
+                ((OrderedXYSeries) series).getXOrder() : OrderedXYSeries.XOrder.NONE;
+    }
 }

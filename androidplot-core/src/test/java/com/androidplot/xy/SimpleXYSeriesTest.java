@@ -19,6 +19,7 @@ package com.androidplot.xy;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -146,4 +147,43 @@ public class SimpleXYSeriesTest {
         assertEquals(0, series.size());
     }
 
+    @Test
+    public void setXY_setsXAndY() {
+        SimpleXYSeries series = new SimpleXYSeries("series");
+        series.resize(5);
+        series.setXY(100, 200, 0);
+
+        assertEquals(100, series.getX(0));
+        assertEquals(200, series.getY(0));
+
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void removeFirst_throwsNoSuchElementException_ifEmpty() {
+        new SimpleXYSeries("series").removeFirst();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void removeLast_throwsNoSuchElementException_ifEmpty() {
+        new SimpleXYSeries("series").removeLast();
+    }
+
+    @Test
+    public void setTitle_changesTitle() {
+        SimpleXYSeries series = new SimpleXYSeries("series");
+
+        final String newTitle = "newTitle";
+        series.setTitle(newTitle);
+        assertEquals(newTitle, series.getTitle());
+    }
+
+    @Test
+    public void clear_removesEverything() {
+        SimpleXYSeries series = new SimpleXYSeries(
+                Arrays.asList(1, 2, 3, 4, 5),
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "series");
+
+        series.clear();
+        assertEquals(0, series.size());
+    }
 }

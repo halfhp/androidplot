@@ -164,7 +164,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private final BufferedCanvas pingPong = new BufferedCanvas();
 
     // used to get rid of flickering when drawing offScreenBitmap to the visible Canvas.
-    private final Object renderSynch = new Object();
+    private final Object renderSync = new Object();
 
     private HashMap<Class<? extends RendererType>, RendererType> renderers;
 
@@ -390,13 +390,13 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                             renderOnCanvas(c);
                             pingPong.swap();
                         }
-                        synchronized (renderSynch) {
+                        synchronized (renderSync) {
                             postInvalidate();
                             // prevent this thread from becoming an orphan
                             // after the view is destroyed
                             if (keepRunning) {
                                 try {
-                                    renderSynch.wait();
+                                    renderSync.wait();
                                 } catch (InterruptedException e) {
                                     keepRunning = false;
                                 }
@@ -712,8 +712,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             // if the render thread is idle, so we know that we won't have to wait to
             // obtain a lock.
             if (isIdle) {
-                synchronized (renderSynch) {
-                    renderSynch.notify();
+                synchronized (renderSync) {
+                    renderSync.notify();
                 }
             }
         } else if(renderMode == RenderMode.USE_MAIN_THREAD) {
@@ -738,9 +738,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        synchronized(renderSynch) {
+        synchronized(renderSync) {
             keepRunning = false;
-            renderSynch.notify();
+            renderSync.notify();
         }
     }
 

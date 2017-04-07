@@ -153,4 +153,28 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
             return false;
         }
     }
+
+    public ValueType getTop() {
+        return hash.get(zlist.getLast());
+    }
+
+    public ValueType getBottom() {
+        return hash.get(zlist.getFirst());
+    }
+
+    public ValueType getAbove(KeyType key) {
+        final int index = zlist.indexOf(key);
+        if(index >= 0 && index < size() - 1) {
+            return hash.get(zlist.get(index + 1));
+        }
+        return null;
+    }
+
+    public ValueType getBeneath(KeyType key) {
+        final int index = zlist.indexOf(key);
+        if(index > 0) {
+            return hash.get(zlist.get(index - 1));
+        }
+        return null;
+    }
 }

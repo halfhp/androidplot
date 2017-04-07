@@ -23,8 +23,11 @@ import android.util.*;
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.test.*;
 import com.androidplot.ui.*;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.SimpleXYSeries;
 import com.halfhp.fig.*;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.robolectric.RuntimeEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,127 +43,8 @@ import static org.mockito.Mockito.verify;
 
 public class PlotTest extends AndroidplotTest {
 
-    static class MockPlotListener implements PlotListener {
-
-        public void onBeforeDraw(Plot source, Canvas canvas) {}
-
-        public void onAfterDraw(Plot source, Canvas canvas) {}
-    }
-
-    static class MockSeries implements Series {
-
-        public String getTitle() {
-            return null;
-        }
-
-    }
-
-    static class MockSeries2 implements Series {
-
-        public String getTitle() {
-            return null;
-        }
-    }
-
-    static class MockSeries3 implements Series {
-
-        public String getTitle() {
-            return null;
-        }
-    }
-
-    static class MockRenderer1 extends SeriesRenderer {
-
-        public MockRenderer1(Plot plot) {
-            super(plot);
-        }
-
-        @Override
-        public void onRender(Canvas canvas, RectF plotArea, Series series, Formatter formatter, RenderStack stack) throws PlotRenderException {
-
-        }
-
-        @Override
-        public void doDrawLegendIcon(Canvas canvas, RectF rect, Formatter formatter) {
-
-        }
-    }
-    static class MockRenderer2 extends SeriesRenderer {
-
-        public MockRenderer2(Plot plot) {
-            super(plot);
-        }
-
-        @Override
-        public void onRender(Canvas canvas, RectF plotArea, Series series, Formatter formatter, RenderStack stack) throws PlotRenderException {
-
-        }
-
-        @Override
-        public void doDrawLegendIcon(Canvas canvas, RectF rect, Formatter formatter) {
-
-        }
-    }
-
-    static class MockFormatter1 extends Formatter<MockPlot> {
-
-        @Override
-        public Class<? extends SeriesRenderer> getRendererClass() {
-            return MockRenderer1.class;
-        }
-
-        @Override
-        public SeriesRenderer doGetRendererInstance(MockPlot plot) {
-            return new MockRenderer1(plot);
-        }
-    }
-
-    static class MockFormatter2 extends Formatter<MockPlot> {
-
-        @Override
-        public Class<? extends SeriesRenderer> getRendererClass() {
-            return MockRenderer2.class;
-        }
-
-        @Override
-        public SeriesRenderer doGetRendererInstance(MockPlot plot) {
-            return new MockRenderer2(plot);
-        }
-    }
-
-    public static class MockSeriesBundle extends SeriesBundle<MockSeries, Formatter> {
-
-        public MockSeriesBundle(MockSeries series, Formatter formatter) {
-            super(series, formatter);
-        }
-    }
-
-    public static class MockPlot extends Plot<MockSeries, Formatter, SeriesRenderer, MockSeriesBundle, SeriesRegistry<MockSeriesBundle, MockSeries, Formatter>> {
-        public MockPlot(String title) {
-            super(RuntimeEnvironment.application, title);
-        }
-
-        @Override
-        protected SeriesRegistry<MockSeriesBundle, MockSeries, Formatter> getRegistryInstance() {
-            return new SeriesRegistry<MockSeriesBundle, MockSeries, Formatter>() {
-                @Override
-                protected MockSeriesBundle newSeriesBundle(
-                        MockSeries series, Formatter formatter) {
-                    return new MockSeriesBundle(series, formatter);
-                }
-            };
-        }
-
-        @Override
-        protected void onPreInit() {
-
-        }
-
-        @Override
-        protected void processAttrs(TypedArray attrs) {
-
-        }
-    }
+    @Mock
+    SeriesRegistry<MockSeriesBundle, MockSeries, Formatter> mockSeriesRegistry;
 
     @Test
     public void testInit_withoutAttrs() throws Exception {
@@ -344,7 +228,7 @@ public class PlotTest extends AndroidplotTest {
         plot.addListener(pl2);
 
         assertEquals(2, listeners.size());
-                
+
     }
 
     @Test
@@ -396,5 +280,189 @@ public class PlotTest extends AndroidplotTest {
         assertEquals(param1, plot.getTitle().getText());
         assertEquals(Plot.RenderMode.USE_BACKGROUND_THREAD, plot.getRenderMode());
         assertEquals(Color.parseColor(param3), plot.getBackgroundPaint().getColor());
+    }
+
+    @Test
+    public void setTitle_setsTitle() {
+        Plot plot = new MockPlot("foo");
+        plot.setTitle("bar");
+        assertEquals("bar", plot.getTitle().getText());
+    }
+
+    @Test
+    public void clear_unregistersAllPlotListeners() {
+        Plot plot = new MockPlot("MockPlot");
+        plot.addSeries(new MockSeries(), new MockFormatter1());
+        plot.addSeries(new MockSeries(), new MockFormatter1());
+        plot.addSeries(new MockSeries(), new MockFormatter1());
+        assertEquals(3, plot.getListeners().size());
+
+        plot.clear();
+        assertEquals(0, plot.getListeners().size());
+    }
+
+    @Test
+    public void clear_clearsRegistry() {
+        Plot plot = new MockPlot("MockPlot");
+        plot.setRegistry(mockSeriesRegistry);
+
+        plot.clear();
+        verify(mockSeriesRegistry).clear();
+    }
+
+    @Test
+    public void setPlotMargins_updatesMargins() {
+        Plot plot = new MockPlot("MockPlot");
+        plot.setPlotMargins(11, 22, 33, 44);
+
+        assertEquals(11f, plot.getPlotMarginLeft());
+        assertEquals(22f, plot.getPlotMarginTop());
+        assertEquals(33f, plot.getPlotMarginRight());
+        assertEquals(44f, plot.getPlotMarginBottom());
+    }
+
+    @Test
+    public void setPlotPadding_updatesPadding() {
+        Plot plot = new MockPlot("MockPlot");
+        plot.setPlotPadding(11, 22, 33, 44);
+
+        assertEquals(11f, plot.getPlotPaddingLeft());
+        assertEquals(22f, plot.getPlotPaddingTop());
+        assertEquals(33f, plot.getPlotPaddingRight());
+        assertEquals(44f, plot.getPlotPaddingBottom());
+    }
+
+    static class MockPlotListener implements PlotListener {
+
+        public void onBeforeDraw(Plot source, Canvas canvas) {
+        }
+
+        public void onAfterDraw(Plot source, Canvas canvas) {
+        }
+    }
+
+    static class MockSeries implements Series, PlotListener {
+
+        public String getTitle() {
+            return null;
+        }
+
+        @Override
+        public void onBeforeDraw(Plot source, Canvas canvas) {
+
+        }
+
+        @Override
+        public void onAfterDraw(Plot source, Canvas canvas) {
+
+        }
+    }
+
+    static class MockSeries2 implements Series {
+
+        public String getTitle() {
+            return null;
+        }
+    }
+
+    static class MockSeries3 implements Series {
+
+        public String getTitle() {
+            return null;
+        }
+    }
+
+    static class MockRenderer1 extends SeriesRenderer {
+
+        public MockRenderer1(Plot plot) {
+            super(plot);
+        }
+
+        @Override
+        public void onRender(Canvas canvas, RectF plotArea, Series series, Formatter formatter, RenderStack stack) throws PlotRenderException {
+
+        }
+
+        @Override
+        public void doDrawLegendIcon(Canvas canvas, RectF rect, Formatter formatter) {
+
+        }
+    }
+
+    static class MockRenderer2 extends SeriesRenderer {
+
+        public MockRenderer2(Plot plot) {
+            super(plot);
+        }
+
+        @Override
+        public void onRender(Canvas canvas, RectF plotArea, Series series, Formatter formatter, RenderStack stack) throws PlotRenderException {
+
+        }
+
+        @Override
+        public void doDrawLegendIcon(Canvas canvas, RectF rect, Formatter formatter) {
+
+        }
+    }
+
+    static class MockFormatter1 extends Formatter<MockPlot> {
+
+        @Override
+        public Class<? extends SeriesRenderer> getRendererClass() {
+            return MockRenderer1.class;
+        }
+
+        @Override
+        public SeriesRenderer doGetRendererInstance(MockPlot plot) {
+            return new MockRenderer1(plot);
+        }
+    }
+
+    static class MockFormatter2 extends Formatter<MockPlot> {
+
+        @Override
+        public Class<? extends SeriesRenderer> getRendererClass() {
+            return MockRenderer2.class;
+        }
+
+        @Override
+        public SeriesRenderer doGetRendererInstance(MockPlot plot) {
+            return new MockRenderer2(plot);
+        }
+    }
+
+    public static class MockSeriesBundle extends SeriesBundle<MockSeries, Formatter> {
+
+        public MockSeriesBundle(MockSeries series, Formatter formatter) {
+            super(series, formatter);
+        }
+    }
+
+    public static class MockPlot extends Plot<MockSeries, Formatter, SeriesRenderer, MockSeriesBundle, SeriesRegistry<MockSeriesBundle, MockSeries, Formatter>> {
+        public MockPlot(String title) {
+            super(RuntimeEnvironment.application, title);
+        }
+
+        @Override
+        protected SeriesRegistry<MockSeriesBundle, MockSeries, Formatter> getRegistryInstance() {
+            return new SeriesRegistry<MockSeriesBundle, MockSeries, Formatter>() {
+                @Override
+                protected MockSeriesBundle newSeriesBundle(
+                        MockSeries series, Formatter formatter) {
+                    return new MockSeriesBundle(series, formatter);
+                }
+            };
+        }
+
+        @Override
+        protected void onPreInit() {
+
+        }
+
+        @Override
+        protected void processAttrs(TypedArray attrs) {
+
+        }
     }
 }

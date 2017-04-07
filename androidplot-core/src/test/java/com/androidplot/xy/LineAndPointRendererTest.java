@@ -217,4 +217,46 @@ public class LineAndPointRendererTest extends AndroidplotTest {
         renderer.cullPointsCache();
         assertEquals(0, renderer.pointsCaches.size());
     }
+
+    @Test
+    public void renderPath_rendersRegions() {
+        LineAndPointFormatter formatter =
+                new LineAndPointFormatter(0, 0, 0, null);
+
+        XYRegionFormatter r1 = new XYRegionFormatter(Color.RED);
+        formatter.addRegion(new RectRegion(0, 2, 0, 2, "region1"), r1);
+
+        XYRegionFormatter r2 = new XYRegionFormatter(Color.GREEN);
+        formatter.addRegion(new RectRegion(0, 2, 0, 2, "region2"), r2);
+
+        SimpleXYSeries series = new SimpleXYSeries(
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "some data", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        xyPlot.addSeries(series, formatter);
+        LineAndPointRenderer renderer = xyPlot.getRenderer(LineAndPointRenderer.class);
+
+        //xyPlot.draw(canvas);
+        renderer.renderPath(canvas, plotArea, new Path(), mock(PointF.class), mock(PointF.class), formatter);
+        verify(canvas).drawRect(any(RectF.class), eq(r1.getPaint()));
+        verify(canvas).drawRect(any(RectF.class), eq(r2.getPaint()));
+    }
+
+    @Test
+    public void drawSeries_withPointLabelFormatter_drawsPointLabels() {
+        LineAndPointFormatter formatter =
+                new LineAndPointFormatter(0, 0, 0, null);
+        formatter.setPointLabelFormatter(new PointLabelFormatter(Color.RED));
+        SimpleXYSeries series = new SimpleXYSeries(
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "some data", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        xyPlot.addSeries(series, formatter);
+        LineAndPointRenderer renderer = xyPlot.getRenderer(LineAndPointRenderer.class);
+        renderer.drawSeries(canvas, plotArea, series, formatter);
+
+        verify(canvas, times(series.size())).drawText(
+                anyString(),
+                anyFloat(),
+                anyFloat(),
+                eq(formatter.getPointLabelFormatter().getTextPaint()));
+
+    }
 }

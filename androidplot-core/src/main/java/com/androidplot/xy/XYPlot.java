@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
 import com.androidplot.*;
@@ -595,7 +596,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      *
      * @param origin
      */
-    public void centerOnDomainOrigin(Number origin) {
+    public void centerOnDomainOrigin(@NonNull Number origin) {
         centerOnDomainOrigin(origin, null, BoundaryMode.AUTO);
     }
 
@@ -607,9 +608,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param extent
      * @param mode
      */
-    public void centerOnDomainOrigin(Number origin, Number extent, BoundaryMode mode) {
+    public void centerOnDomainOrigin(@NonNull Number origin, Number extent, BoundaryMode mode) {
         if (origin == null) {
-            throw new NullPointerException("Origin param cannot be null.");
+            throw new IllegalArgumentException("Origin param cannot be null.");
         }
         constraints.setDomainFramingModel(XYFramingModel.ORIGIN);
         setUserDomainOrigin(origin);
@@ -626,7 +627,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      *
      * @param origin
      */
-    public void centerOnRangeOrigin(Number origin) {
+    public void centerOnRangeOrigin(@NonNull Number origin) {
         centerOnRangeOrigin(origin, null, BoundaryMode.AUTO);
     }
 
@@ -639,9 +640,9 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param mode
      */
     @SuppressWarnings("SameParameterValue")
-    public void centerOnRangeOrigin(Number origin, Number extent, BoundaryMode mode) {
+    public void centerOnRangeOrigin(@NonNull Number origin, Number extent, BoundaryMode mode) {
         if (origin == null) {
-            throw new NullPointerException("Origin param cannot be null.");
+            throw new IllegalArgumentException("Origin param cannot be null.");
         }
         constraints.setRangeFramingModel(XYFramingModel.ORIGIN);
         setUserRangeOrigin(origin);
@@ -1036,12 +1037,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
     }
 
     @SuppressWarnings("SameParameterValue")
-    protected void setDomainFramingModel(XYFramingModel model) {
+    protected void setDomainFramingModel(@NonNull XYFramingModel model) {
         constraints.setDomainFramingModel(model);
     }
 
     @SuppressWarnings("SameParameterValue")
-    protected void setRangeFramingModel(XYFramingModel model) {
+    protected void setRangeFramingModel(@NonNull XYFramingModel model) {
         constraints.setRangeFramingModel(model);
     }
 
@@ -1089,9 +1090,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @return
      */
     public int removeMarkers() {
-        int removed = removeXMarkers();
-        removed += removeYMarkers();
-        return removed;
+        return removeXMarkers() + removeYMarkers();
     }
 
     /**

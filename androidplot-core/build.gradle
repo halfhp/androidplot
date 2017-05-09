@@ -20,6 +20,42 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.vanniktech.android.junit.jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 
+class AttrMarkdown extends DefaultTask {
+
+    def inFile
+    def outFile
+
+    @TaskAction
+    def generate() {
+        def input = project.file(inFile)
+
+        def output = project.file(outFile)
+        if(output.exists()) {
+            output.delete()
+        }
+        output.parentFile.mkdirs()
+
+        input.text.findAll(/<!--\n?([\s\S]*?)\n?-->/) { match, g1 -> g1
+            if(!g1.startsWith("NODOC")) {
+                output.append(g1)
+                output.append "\n\n"
+            }
+        }
+    }
+}
+
+/**
+ * Generates xml attrs markdown docs.  To run:
+ * at the command line from the project root dir type:
+ * ./gradlew generateAttrsMarkdown
+ *
+ * The generated doc will appear in / replace androidplot/docs/attrs.md
+ */
+task generateAttrsMarkdown(type: AttrMarkdown) {
+    inFile = { "src/main/res/values/attrs.xml"}
+    outFile = { "../docs/attrs.md" }
+}
+
 android {
     compileSdkVersion theCompileSdkVersion
     buildToolsVersion theBuildToolsVersion

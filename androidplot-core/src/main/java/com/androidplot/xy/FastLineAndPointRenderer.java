@@ -116,6 +116,10 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
         if(formatter.hasLinePaint()) {
             canvas.drawLine(rect.left, rect.bottom, rect.right, rect.top, formatter.getLinePaint());
         }
+
+        if(formatter.hasVertexPaint()) {
+            canvas.drawPoint(rect.centerX(), rect.centerY(), formatter.getVertexPaint());
+        }
     }
 
     /**

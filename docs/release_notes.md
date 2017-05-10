@@ -2,6 +2,9 @@
 For details on what to expect in general when updating to a new version of Androiplot, check out the
 [versioning doc](versioning.md).
 
+# 1.4.3
+* (#39) `FastLineAndPointRenderer` now renders vertices for legend items.
+
 # 1.4.2
 * (#32) New step mode: `INCREMENT_BY_FIT`.
 * (#33) PanZoom support for 'INCREMENT_BY_FIT'.

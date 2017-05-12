@@ -2,10 +2,10 @@
 Attributes are broken down by element followed by either their type or list of accepted values.
 <br/>
 <br/>
-_This documentation is auto generated from `attrs.xml` and should not be edited directly._
+_This documentation is auto generated from [attrs.xml](../androidplot-core/src/main/res/values/attrs.xml) and should not be edited directly._
 
 ## Plot
-TODO
+Plot's attrs are available in all Plot types.
 
 ### markupEnabled
 __boolean__
@@ -68,7 +68,7 @@ TODO
 * increment_by_pixels
 
 ### domainStep
-__dimension__
+__dimension|float|integer__
 
 ### rangeStepMode
 * subdivide
@@ -76,7 +76,7 @@ __dimension__
 * increment_by_pixels
 
 ### rangeStep
-__dimension__
+__dimension|float|integer__
 
 ### domainTitle
 __string__
@@ -98,10 +98,10 @@ __dimension__
 * fill
 
 ### domainTitleHeight
-__dimension__
+__dimension|float|integer__
 
 ### domainTitleWidth
-__dimension__
+__dimension|float|integer__
 
 ### domainTitleHorizontalPositioning
 * absolute_from_left
@@ -120,10 +120,10 @@ __dimension__
 * relative_from_center
 
 ### domainTitleHorizontalPosition
-__dimension__
+__dimension|float|integer__
 
 ### domainTitleVerticalPosition
-__dimension__
+__dimension|float|integer__
 
 ### domainTitleAnchor
 * top_middle
@@ -136,20 +136,55 @@ __dimension__
 * bottom_middle
 * center
 
+### domainTitleVisible
+__boolean__
+
+### rangeTitle
+__string__
+
+### rangeTitleColor
+__color__
+
 ### rangeTitleTextSize
 __dimension__
 
+### rangeTitleHeightMode
+* absolute
+* relative
+* fill
+
+### rangeTitleWidthMode
+* absolute
+* relative
+* fill
+
 ### rangeTitleHeight
-__dimension__
+__dimension|float|integer__
 
 ### rangeTitleWidth
-__dimension__
+__dimension|float|integer__
+
+### rangeTitleHorizontalPositioning
+* absolute_from_left
+* absolute_from_right
+* absolute_from_center
+* relative_from_left
+* relative_from_right
+* relative_from_center
+
+### rangeTitleVerticalPositioning
+* absolute_from_top
+* absolute_from_bottom
+* absolute_from_center
+* relative_from_top
+* relative_from_bottom
+* relative_from_center
 
 ### rangeTitleHorizontalPosition
-__dimension__
+__dimension|float|integer__
 
 ### rangeTitleVerticalPosition
-__dimension__
+__dimension|float|integer__
 
 ### rangeTitleAnchor
 * top_middle
@@ -162,6 +197,15 @@ __dimension__
 * bottom_middle
 * center
 
+### rangeTitleVisible
+__boolean__
+
+### graphHeight
+__boolean__
+<br/>
+(default is false) When set to true, grid lines are drawn on top of rendered series data
+instead of underneath.
+
 ### graphHeightMode
 * absolute
 * relative
@@ -173,16 +217,38 @@ __dimension__
 * fill
 
 ### graphHeight
-__dimension__
+__dimension|float|integer__
 
 ### graphWidth
-__dimension__
+__dimension|float|integer__
+
+### graphRotation
+* none
+* ninety_degrees
+* negative_ninety_degrees
+* one_hundred_eighty_degrees
+
+### graphHorizontalPositioning
+* absolute_from_left
+* absolute_from_right
+* absolute_from_center
+* relative_from_left
+* relative_from_right
+* relative_from_center
+
+### graphVerticalPositioning
+* absolute_from_top
+* absolute_from_bottom
+* absolute_from_center
+* relative_from_top
+* relative_from_bottom
+* relative_from_center
 
 ### graphHorizontalPosition
-__dimension__
+__dimension|float|integer__
 
 ### graphVerticalPosition
-__dimension__
+__dimension|float|integer__
 
 ### graphAnchor
 * top_middle
@@ -311,7 +377,7 @@ __float__
 Angle at which line labels on the plot's top edge are drawn.
 
 ### lineLabelRotationBottom
-__floatn__
+__float__
 <br/>
 Angle at which line labels on the plot's bottom edge are drawn.
 
@@ -325,6 +391,114 @@ __float__
 <br/>
 Angle at which line labels on the plot's right edge are drawn.
 
+### domainLineThickness
+__dimension__
+
+### rangeLineThickness
+__dimension__
+
+### domainLineColor
+__color__
+
+### rangeLineColor
+__color__
+
+### domainOriginLineThickness
+__dimension__
+
+### rangeOriginLineThickness
+__dimension__
+
+### domainOriginLineColor
+__color__
+
+### rangeOriginLineColor
+__color__
+
+### lineLabelTextSizeTop
+__dimension__
+
+### lineLabelTextSizeBottom
+__dimension__
+
+### lineLabelTextSizeLeft
+__dimension__
+
+### lineLabelTextSizeRight
+__dimension__
+
+### lineLabelTextColorTop
+__color__
+
+### lineLabelTextColorBottom
+__color__
+
+### lineLabelTextColorLeft
+__color__
+
+### lineLabelTextColorRight
+__color__
+
+### lineExtensionTop
+__dimension__
+
+### lineExtensionBottom
+__dimension__
+
+### lineExtensionLeft
+__dimension__
+
+### lineExtensionRight
+__dimension__
+
+### gridBackgroundColor
+__color__
+<br/>
+background color of the grid portion of the XYGraphWidget
+
+### graphBackgroundColor
+__color__
+<br/>
+background color of the XYGraphWidget
+
+### legendHeightMode
+* absolute
+* relative
+* fill
+
+### legendWidthMode
+* absolute
+* relative
+* fill
+
+### legendHeight
+__dimension|float|integer__
+
+### legendWidth
+__dimension|float|integer__
+
+### legendHorizontalPositioning
+* absolute_from_left
+* absolute_from_right
+* absolute_from_center
+* relative_from_left
+* relative_from_right
+* relative_from_center
+
+### legendVerticalPositioning
+* absolute_from_top
+* absolute_from_bottom
+* absolute_from_center
+* relative_from_top
+* relative_from_bottom
+* relative_from_center
+
+### legendHorizontalPosition
+__dimension|float|integer__
+
+### legendVerticalPosition
+__dimension|float|integer__
+
 ### legendAnchor
 * top_middle
 * left_top
@@ -336,6 +510,47 @@ Angle at which line labels on the plot's right edge are drawn.
 * bottom_middle
 * center
 
+### legendTextSize
+__dimension__
+
+### legendTextColor
+__color__
+
+### legendIconHeightMode
+* absolute
+* relative
+* fill
+
+### legendIconWidthMode
+* absolute
+* relative
+* fill
+
+### legendIconHeight
+__dimension|float|integer__
+
+### legendIconWidth
+__dimension|float|integer__
+
+### legendVisible
+__boolean__
+
+### pieBorderThickness
+__dimension__
+<br/>
+Determines how far beyond the graph's edge each domain grid line will extend.
+
+### pieBorderThickness
+__dimension__
+<br/>
+Determines how far beyond the graph's edge each range grid line will extend.
+
 ## PieChart
 TODO
+
+### pieBorderColor
+__color__
+
+### pieBorderThickness
+__dimension__
 

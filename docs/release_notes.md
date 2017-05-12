@@ -4,6 +4,7 @@ For details on what to expect in general when updating to a new version of Andro
 
 # 1.4.3
 * (#39) `FastLineAndPointRenderer` now renders vertices for legend items.
+* Added [XML Attrs reference doc](attrs.md). (Incomplete)
 
 # 1.4.2
 * (#32) New step mode: `INCREMENT_BY_FIT`.

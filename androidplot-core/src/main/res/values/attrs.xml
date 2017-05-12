@@ -20,7 +20,7 @@
 Attributes are broken down by element followed by either their type or list of accepted values.
 <br/>
 <br/>
-_This documentation is auto generated from `attrs.xml` and should not be edited directly._
+_This documentation is auto generated from [attrs.xml](../androidplot-core/src/main/res/values/attrs.xml) and should not be edited directly._
 -->
 <resources>
 
@@ -275,7 +275,7 @@ _This documentation is auto generated from `attrs.xml` and should not be edited 
 
 <!--
 ## Plot
-TODO
+Plot's attrs are available in all Plot types.
 -->
     <declare-styleable name="Plot">
 <!--
@@ -380,7 +380,7 @@ TODO
         <attr name="domainStepMode"/>
 <!--
 ### domainStep
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="domainStep" format="dimension|float|integer"/>
 <!--
@@ -392,7 +392,7 @@ __dimension__
         <attr name="rangeStepMode"/>
 <!--
 ### rangeStep
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="rangeStep" format="dimension|float|integer"/>
 <!--
@@ -426,12 +426,12 @@ __dimension__
         <attr name="domainTitleWidthMode"/>
 <!--
 ### domainTitleHeight
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="domainTitleHeight" format="dimension|float|integer"/>
 <!--
 ### domainTitleWidth
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="domainTitleWidth" format="dimension|float|integer"/>
 <!--
@@ -456,12 +456,12 @@ __dimension__
         <attr name="domainTitleVerticalPositioning"/>
 <!--
 ### domainTitleHorizontalPosition
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="domainTitleHorizontalPosition" format="dimension|float|integer"/>
 <!--
 ### domainTitleVerticalPosition
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="domainTitleVerticalPosition" format="dimension|float|integer"/>
 <!--
@@ -477,38 +477,78 @@ __dimension__
 * center
 -->
         <attr name="domainTitleAnchor"/>
+<!--
+### domainTitleVisible
+__boolean__
+-->
         <attr name="domainTitleVisible" format="boolean"/>
-
-        <!--NODOC range label -->
+<!--
+### rangeTitle
+__string__
+-->
         <attr name="rangeTitle" format="string"/>
+<!--
+### rangeTitleColor
+__color__
+-->
         <attr name="rangeTitleTextColor" format="color"/>
 <!--
 ### rangeTitleTextSize
 __dimension__
 -->
         <attr name="rangeTitleTextSize" format="dimension"/>
+<!--
+### rangeTitleHeightMode
+* absolute
+* relative
+* fill
+-->
         <attr name="rangeTitleHeightMode"/>
+<!--
+### rangeTitleWidthMode
+* absolute
+* relative
+* fill
+-->
         <attr name="rangeTitleWidthMode"/>
 <!--
 ### rangeTitleHeight
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="rangeTitleHeight" format="dimension|float|integer"/>
 <!--
 ### rangeTitleWidth
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="rangeTitleWidth" format="dimension|float|integer"/>
+<!--
+### rangeTitleHorizontalPositioning
+* absolute_from_left
+* absolute_from_right
+* absolute_from_center
+* relative_from_left
+* relative_from_right
+* relative_from_center
+-->
         <attr name="rangeTitleHorizontalPositioning"/>
+<!--
+### rangeTitleVerticalPositioning
+* absolute_from_top
+* absolute_from_bottom
+* absolute_from_center
+* relative_from_top
+* relative_from_bottom
+* relative_from_center
+-->
         <attr name="rangeTitleVerticalPositioning"/>
 <!--
 ### rangeTitleHorizontalPosition
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="rangeTitleHorizontalPosition" format="dimension|float|integer"/>
 <!--
 ### rangeTitleVerticalPosition
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="rangeTitleVerticalPosition" format="dimension|float|integer"/>
 <!--
@@ -524,11 +564,18 @@ __dimension__
 * center
 -->
         <attr name="rangeTitleAnchor"/>
+<!--
+### rangeTitleVisible
+__boolean__
+-->
         <attr name="rangeTitleVisible" format="boolean"/>
-
-        <!--NODOC graph widget -->
-        <!--NODOC (default is false) When set to true, grid lines are drawn on top of rendered series data
-        instead of underneath. -->
+<!--
+### graphHeight
+__boolean__
+<br/>
+(default is false) When set to true, grid lines are drawn on top of rendered series data
+instead of underneath.
+-->
         <attr name="drawGridOnTop" format="boolean"/>
 <!--
 ### graphHeightMode
@@ -546,25 +593,50 @@ __dimension__
         <attr name="graphWidthMode"/>
 <!--
 ### graphHeight
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="graphHeight" format="dimension|float|integer"/>
 <!--
 ### graphWidth
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="graphWidth" format="dimension|float|integer"/>
+<!--
+### graphRotation
+* none
+* ninety_degrees
+* negative_ninety_degrees
+* one_hundred_eighty_degrees
+-->
         <attr name="graphRotation"/>
+<!--
+### graphHorizontalPositioning
+* absolute_from_left
+* absolute_from_right
+* absolute_from_center
+* relative_from_left
+* relative_from_right
+* relative_from_center
+-->
         <attr name="graphHorizontalPositioning"/>
+<!--
+### graphVerticalPositioning
+* absolute_from_top
+* absolute_from_bottom
+* absolute_from_center
+* relative_from_top
+* relative_from_bottom
+* relative_from_center
+-->
         <attr name="graphVerticalPositioning"/>
 <!--
 ### graphHorizontalPosition
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="graphHorizontalPosition" format="dimension|float|integer"/>
 <!--
 ### graphVerticalPosition
-__dimension__
+__dimension|float|integer__
 -->
         <attr name="graphVerticalPosition" format="dimension|float|integer"/>
 <!--
@@ -745,7 +817,7 @@ Angle at which line labels on the plot's top edge are drawn.
         <attr name="lineLabelRotationTop" format="float"/>
 <!--
 ### lineLabelRotationBottom
-__floatn__
+__float__
 <br/>
 Angle at which line labels on the plot's bottom edge are drawn.
 -->
@@ -764,44 +836,174 @@ __float__
 Angle at which line labels on the plot's right edge are drawn.
 -->
         <attr name="lineLabelRotationRight" format="float"/>
+<!--
+### domainLineThickness
+__dimension__
+-->
         <attr name="domainLineThickness" format="dimension"/>
+<!--
+### rangeLineThickness
+__dimension__
+-->
         <attr name="rangeLineThickness" format="dimension"/>
+<!--
+### domainLineColor
+__color__
+-->
         <attr name="domainLineColor" format="color"/>
+<!--
+### rangeLineColor
+__color__
+-->
         <attr name="rangeLineColor" format="color"/>
+<!--
+### domainOriginLineThickness
+__dimension__
+-->
         <attr name="domainOriginLineThickness" format="dimension"/>
+<!--
+### rangeOriginLineThickness
+__dimension__
+-->
         <attr name="rangeOriginLineThickness" format="dimension"/>
+<!--
+### domainOriginLineColor
+__color__
+-->
         <attr name="domainOriginLineColor" format="color"/>
+<!--
+### rangeOriginLineColor
+__color__
+-->
         <attr name="rangeOriginLineColor" format="color"/>
 
-        <!--NODOC text color & size params for line labels-->
+<!--
+### lineLabelTextSizeTop
+__dimension__
+-->
         <attr name="lineLabelTextSizeTop" format="dimension"/>
+<!--
+### lineLabelTextSizeBottom
+__dimension__
+-->
         <attr name="lineLabelTextSizeBottom" format="dimension"/>
+<!--
+### lineLabelTextSizeLeft
+__dimension__
+-->
         <attr name="lineLabelTextSizeLeft" format="dimension"/>
+<!--
+### lineLabelTextSizeRight
+__dimension__
+-->
         <attr name="lineLabelTextSizeRight" format="dimension"/>
-        <attr name="lineLabelTextColorTop" format="dimension"/>
-        <attr name="lineLabelTextColorBottom" format="dimension"/>
-        <attr name="lineLabelTextColorLeft" format="dimension"/>
-        <attr name="lineLabelTextColorRight" format="dimension"/>
-
+<!--
+### lineLabelTextColorTop
+__color__
+-->
+        <attr name="lineLabelTextColorTop" format="color"/>
+<!--
+### lineLabelTextColorBottom
+__color__
+-->
+        <attr name="lineLabelTextColorBottom" format="color"/>
+<!--
+### lineLabelTextColorLeft
+__color__
+-->
+        <attr name="lineLabelTextColorLeft" format="color"/>
+<!--
+### lineLabelTextColorRight
+__color__
+-->
+        <attr name="lineLabelTextColorRight" format="color"/>
+<!--
+### lineExtensionTop
+__dimension__
+-->
         <attr name="lineExtensionTop" format="dimension"/>
+<!--
+### lineExtensionBottom
+__dimension__
+-->
         <attr name="lineExtensionBottom" format="dimension"/>
+<!--
+### lineExtensionLeft
+__dimension__
+-->
         <attr name="lineExtensionLeft" format="dimension"/>
+<!--
+### lineExtensionRight
+__dimension__
+-->
         <attr name="lineExtensionRight" format="dimension"/>
-
-        <!--NODOC background color of the grid portion of the XYGraphWidget -->
+<!--
+### gridBackgroundColor
+__color__
+<br/>
+background color of the grid portion of the XYGraphWidget
+-->
         <attr name="gridBackgroundColor" format="color"/>
-
-        <!--NODOC background color of the XYGraphWidget -->
+<!--
+### graphBackgroundColor
+__color__
+<br/>
+background color of the XYGraphWidget
+-->
         <attr name="graphBackgroundColor" format="color"/>
-
-        <!--NODOC legend widget -->
+<!--
+### legendHeightMode
+* absolute
+* relative
+* fill
+-->
         <attr name="legendHeightMode"/>
+<!--
+### legendWidthMode
+* absolute
+* relative
+* fill
+-->
         <attr name="legendWidthMode"/>
+<!--
+### legendHeight
+__dimension|float|integer__
+-->
         <attr name="legendHeight" format="dimension|float|integer"/>
+<!--
+### legendWidth
+__dimension|float|integer__
+-->
         <attr name="legendWidth" format="dimension|float|integer"/>
+<!--
+### legendHorizontalPositioning
+* absolute_from_left
+* absolute_from_right
+* absolute_from_center
+* relative_from_left
+* relative_from_right
+* relative_from_center
+-->
         <attr name="legendHorizontalPositioning"/>
+<!--
+### legendVerticalPositioning
+* absolute_from_top
+* absolute_from_bottom
+* absolute_from_center
+* relative_from_top
+* relative_from_bottom
+* relative_from_center
+-->
         <attr name="legendVerticalPositioning"/>
+<!--
+### legendHorizontalPosition
+__dimension|float|integer__
+-->
         <attr name="legendHorizontalPosition" format="dimension|float|integer"/>
+<!--
+### legendVerticalPosition
+__dimension|float|integer__
+-->
         <attr name="legendVerticalPosition" format="dimension|float|integer"/>
 <!--
 ### legendAnchor
@@ -816,26 +1018,74 @@ Angle at which line labels on the plot's right edge are drawn.
 * center
 -->
         <attr name="legendAnchor"/>
+<!--
+### legendTextSize
+__dimension__
+-->
         <attr name="legendTextSize" format="dimension"/>
+<!--
+### legendTextColor
+__color__
+-->
         <attr name="legendTextColor" format="color"/>
+<!--
+### legendIconHeightMode
+* absolute
+* relative
+* fill
+-->
         <attr name="legendIconHeightMode"/>
+<!--
+### legendIconWidthMode
+* absolute
+* relative
+* fill
+-->
         <attr name="legendIconWidthMode"/>
+<!--
+### legendIconHeight
+__dimension|float|integer__
+-->
         <attr name="legendIconHeight" format="dimension|float|integer"/>
+<!--
+### legendIconWidth
+__dimension|float|integer__
+-->
         <attr name="legendIconWidth" format="dimension|float|integer"/>
+<!--
+### legendVisible
+__boolean__
+-->
         <attr name="legendVisible" format="boolean"/>
-
-        <!--NODOC set how far beyond the grid edge each line should extend
-        TODO: break these out into unique params for each edge. -->
+<!--
+### pieBorderThickness
+__dimension__
+<br/>
+Determines how far beyond the graph's edge each domain grid line will extend.
+-->
         <attr name="domainLineExtension" format="dimension"/>
+<!--
+### pieBorderThickness
+__dimension__
+<br/>
+Determines how far beyond the graph's edge each range grid line will extend.
+-->
         <attr name="rangeLineExtension" format="dimension"/>
     </declare-styleable>
-
 <!--
 ## PieChart
 TODO
 -->
     <declare-styleable name="pie.PieChart" parent="@style/Plot">
+<!--
+### pieBorderColor
+__color__
+-->
         <attr name="pieBorderColor" format="color"/>
+<!--
+### pieBorderThickness
+__dimension__
+-->
         <attr name="pieBorderThickness" format="dimension"/>
     </declare-styleable>
 </resources>

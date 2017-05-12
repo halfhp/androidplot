@@ -237,7 +237,7 @@ public class AttrUtils {
             } else if (valueType == TypedValue.TYPE_FLOAT) {
                 result = attrs.getFloat(valueAttr, defaultValue.floatValue());
             } else {
-                throw new IllegalArgumentException("Invalid value type - must be float or dimension.");
+                throw new IllegalArgumentException("Invalid value type - must be int, float or dimension.");
             }
         }
         return result;

@@ -9,13 +9,13 @@ public interface OrderedXYSeries extends XYSeries {
     enum XOrder {
         /**
          * XVals are in strict ascending order such that:
-         * x(i) > x(i+1) == true
+         * x(i) < x(i+1) == true
          */
         ASCENDING,
 
         /**
          * XVals are in strict descending order such that:
-         * x(i) < x(i+1) == true
+         * x(i) > x(i+1) == true
          */
         DESCENDING,
 

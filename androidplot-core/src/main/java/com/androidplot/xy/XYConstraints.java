@@ -18,6 +18,7 @@ package com.androidplot.xy;
 
 /**
  * Calculates the min/max constraints for an xy plane.
+ *
  * @since 0.9.7
  */
 public class XYConstraints {
@@ -52,26 +53,26 @@ public class XYConstraints {
     }
 
     public boolean contains(Number x, Number y) {
-        if(x == null || y == null) {
+        if (x == null || y == null) {
             // this is essentially an invisible point:
             return false;
-        } else {
-            final double dx = x.doubleValue();
-
-            if(minX != null && dx < minX.doubleValue()) {
-                return false;
-            } else if(maxX != null && dx > maxX.doubleValue()) {
-               return false;
-            } else {
-                final double dy = y.doubleValue();
-                if(minY != null && dy < minY.doubleValue()) {
-                    return false;
-                } else if(maxY != null && dy > maxY.doubleValue()) {
-                    return false;
-                }
-            }
-            return true;
         }
+
+        final double dx = x.doubleValue();
+        if (minX != null && dx < minX.doubleValue()) {
+            return false;
+        } else if (maxX != null && dx > maxX.doubleValue()) {
+            return false;
+        }
+
+        final double dy = y.doubleValue();
+        if (minY != null && dy < minY.doubleValue()) {
+            return false;
+        } else if (maxY != null && dy > maxY.doubleValue()) {
+            return false;
+        }
+
+        return true;
     }
 
     public Number getMinX() {

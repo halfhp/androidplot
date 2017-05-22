@@ -63,4 +63,9 @@ public class FastNumber extends Number {
         }
         return doublePrimitive;
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(doubleValue());
+    }
 }

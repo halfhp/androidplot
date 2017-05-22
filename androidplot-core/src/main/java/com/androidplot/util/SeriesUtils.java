@@ -16,10 +16,14 @@
 
 package com.androidplot.util;
 
-import com.androidplot.*;
-import com.androidplot.xy.*;
+import com.androidplot.Region;
+import com.androidplot.xy.FastXYSeries;
+import com.androidplot.xy.OrderedXYSeries;
+import com.androidplot.xy.RectRegion;
+import com.androidplot.xy.XYConstraints;
+import com.androidplot.xy.XYSeries;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Utilities for dealing with Series data.
@@ -83,18 +87,18 @@ public class SeriesUtils {
 
                 // if this is an advanced xy series then minMax have already been calculated for us:
                 if(series instanceof FastXYSeries) {
-                    final RectRegion b = ((FastXYSeries) series).minMax();
-                    if(b == null) {
+                    final RectRegion seriesBounds = ((FastXYSeries) series).minMax();
+                    if (seriesBounds == null) {
                         continue;
                     }
                     if(constraints == null) {
-                        bounds.union(b);
+                        bounds.union(seriesBounds);
                     } else {
-                        if(constraints.contains(b.getMinX(), b.getMinY())) {
-                            bounds.union(b.getMinX(), b.getMinY());
+                        if (constraints.contains(seriesBounds.getMinX(), seriesBounds.getMinY())) {
+                            bounds.union(seriesBounds.getMinX(), seriesBounds.getMinY());
                         }
-                        if(constraints.contains(b.getMaxX(), b.getMaxY())) {
-                            bounds.union(b.getMaxX(), b.getMaxY());
+                        if (constraints.contains(seriesBounds.getMaxX(), seriesBounds.getMaxY())) {
+                            bounds.union(seriesBounds.getMaxX(), seriesBounds.getMaxY());
                         }
                     }
 

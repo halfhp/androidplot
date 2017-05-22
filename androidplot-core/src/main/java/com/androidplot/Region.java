@@ -17,7 +17,7 @@
 
 package com.androidplot;
 
-import com.androidplot.util.*;
+import com.androidplot.util.FastNumber;
 
 /**
  * A one dimensional region represented by a starting and ending value.
@@ -248,5 +248,21 @@ public class Region {
      */
     public boolean isDefined() {
         return min != null && max != null;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Region{");
+        sb.append("min=").append(min);
+        sb.append(", max=").append(max);
+        sb.append(", cachedLength=").append(cachedLength);
+        sb.append(", defaults=");
+        if (defaults != this) {
+            sb.append(defaults);
+        } else {
+            sb.append("this");
+        }
+        sb.append('}');
+        return sb.toString();
     }
 }

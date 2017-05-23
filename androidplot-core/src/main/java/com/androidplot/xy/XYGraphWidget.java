@@ -16,19 +16,32 @@
 
 package com.androidplot.xy;
 
-import android.content.res.*;
-import android.graphics.*;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PointF;
+import android.graphics.RectF;
 
-import com.androidplot.*;
+import com.androidplot.R;
 import com.androidplot.Region;
 import com.androidplot.exception.PlotRenderException;
-import com.androidplot.ui.*;
+import com.androidplot.ui.Insets;
+import com.androidplot.ui.LayoutManager;
+import com.androidplot.ui.RenderStack;
+import com.androidplot.ui.Size;
 import com.androidplot.ui.widget.Widget;
-import com.androidplot.util.*;
+import com.androidplot.util.AttrUtils;
+import com.androidplot.util.FontUtils;
+import com.androidplot.util.PixelUtils;
+import com.androidplot.util.RectFUtils;
 
 import java.text.DecimalFormat;
 import java.text.Format;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Displays graphical data (lines, points, etc.) annotated with domain and range tick markers.
@@ -1147,9 +1160,7 @@ public class XYGraphWidget extends Widget {
     public void setLineLabelEdges(Edge... positions) {
         Set<Edge> positionSet = new HashSet<>();
         if(positions != null) {
-            for(Edge position : positions) {
-                positionSet.add(position);
-            }
+            Collections.addAll(positionSet, positions);
         }
         setLineLabelEdges(positionSet);
     }

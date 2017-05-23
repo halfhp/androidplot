@@ -39,8 +39,9 @@ import com.androidplot.util.RectFUtils;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -140,8 +141,8 @@ public class XYGraphWidget extends Widget {
 
     private CursorLabelFormatter cursorLabelFormatter;
 
-    private HashMap<Edge, LineLabelStyle> lineLabelStyles = getDefaultLineLabelStyles();
-    private HashMap<Edge, LineLabelRenderer> lineLabelRenderers = getDefaultLineLabelRenderers();
+    private Map<Edge, LineLabelStyle> lineLabelStyles = getDefaultLineLabelStyles();
+    private Map<Edge, LineLabelRenderer> lineLabelRenderers = getDefaultLineLabelRenderers();
 
     public static class LineLabelRenderer {
 
@@ -1064,8 +1065,8 @@ public class XYGraphWidget extends Widget {
         this.lineExtensionRight = lineExtensionRight;
     }
 
-    protected HashMap<Edge, LineLabelStyle> getDefaultLineLabelStyles() {
-        HashMap<Edge, LineLabelStyle> defaults = new HashMap<>();
+    protected Map<Edge, LineLabelStyle> getDefaultLineLabelStyles() {
+        EnumMap<Edge, LineLabelStyle> defaults = new EnumMap<>(Edge.class);
         defaults.put(Edge.TOP, new LineLabelStyle());
         defaults.put(Edge.BOTTOM, new LineLabelStyle());
         defaults.put(Edge.LEFT, new LineLabelStyle());
@@ -1073,8 +1074,8 @@ public class XYGraphWidget extends Widget {
         return defaults;
     }
 
-    protected HashMap<Edge, LineLabelRenderer> getDefaultLineLabelRenderers() {
-        HashMap<Edge, LineLabelRenderer> defaults = new HashMap<>();
+    protected Map<Edge, LineLabelRenderer> getDefaultLineLabelRenderers() {
+        EnumMap<Edge, LineLabelRenderer> defaults = new EnumMap<>(Edge.class);
         defaults.put(Edge.TOP, new LineLabelRenderer());
         defaults.put(Edge.BOTTOM, new LineLabelRenderer());
         defaults.put(Edge.LEFT, new LineLabelRenderer());

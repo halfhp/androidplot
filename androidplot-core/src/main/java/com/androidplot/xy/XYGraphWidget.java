@@ -38,11 +38,11 @@ import com.androidplot.util.RectFUtils;
 
 import java.text.DecimalFormat;
 import java.text.Format;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Displays graphical data (lines, points, etc.) annotated with domain and range tick markers.
@@ -135,7 +135,7 @@ public class XYGraphWidget extends Widget {
     /**
      * Set of edges for which line labels should be displayed
      */
-    private Set<Edge> lineLabelEdges = new HashSet<>();
+    private EnumSet<Edge> lineLabelEdges = EnumSet.noneOf(Edge.class);
 
     private RenderStack<? extends XYSeries, ? extends XYSeriesFormatter> renderStack;
 
@@ -1159,15 +1159,15 @@ public class XYGraphWidget extends Widget {
     }
 
     public void setLineLabelEdges(Edge... positions) {
-        Set<Edge> positionSet = new HashSet<>();
+        EnumSet<Edge> positionSet = EnumSet.noneOf(Edge.class);
         if(positions != null) {
             Collections.addAll(positionSet, positions);
         }
-        setLineLabelEdges(positionSet);
+        this.lineLabelEdges = positionSet;
     }
 
-    public void setLineLabelEdges(Set<Edge> positions) {
-        this.lineLabelEdges = positions;
+    public void setLineLabelEdges(Collection<Edge> positions) {
+        this.lineLabelEdges = EnumSet.copyOf(positions);
     }
 
     protected void setLineLabelEdges(int bitfield) {

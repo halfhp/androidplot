@@ -58,6 +58,11 @@ public class XYConstraints {
             return false;
         }
 
+        if (minX == null && maxX == null && minY == null && maxY == null) {
+            //there are no constraints
+            return true;
+        }
+
         final double dx = x.doubleValue();
         if (minX != null && dx < minX.doubleValue()) {
             return false;

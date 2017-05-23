@@ -5,7 +5,7 @@ package com.androidplot.util;
  */
 public class FastNumber extends Number {
 
-    private Number number;
+    private final Number number;
     private boolean hasDoublePrimitive;
     private boolean hasFloatPrimitive;
     private boolean hasIntPrimitive;
@@ -75,42 +75,13 @@ public class FastNumber extends Number {
 
         FastNumber that = (FastNumber) o;
 
-        if (hasDoublePrimitive != that.hasDoublePrimitive) {
-            return false;
-        }
-        if (hasFloatPrimitive != that.hasFloatPrimitive) {
-            return false;
-        }
-        if (hasIntPrimitive != that.hasIntPrimitive) {
-            return false;
-        }
-        if (Double.compare(that.doublePrimitive, doublePrimitive) != 0) {
-            return false;
-        }
-        if (Float.compare(that.floatPrimitive, floatPrimitive) != 0) {
-            return false;
-        }
-        //noinspection SimplifiableIfStatement
-        if (intPrimitive != that.intPrimitive) {
-            return false;
-        }
         return number != null ? number.equals(that.number) : that.number == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = number != null ? number.hashCode() : 0;
-        result = 31 * result + (hasDoublePrimitive ? 1 : 0);
-        result = 31 * result + (hasFloatPrimitive ? 1 : 0);
-        result = 31 * result + (hasIntPrimitive ? 1 : 0);
-        temp = Double.doubleToLongBits(doublePrimitive);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (floatPrimitive != +0.0f ? Float.floatToIntBits(floatPrimitive) : 0);
-        result = 31 * result + intPrimitive;
-        return result;
+        return number != null ? number.hashCode() : 0;
     }
 
     @Override

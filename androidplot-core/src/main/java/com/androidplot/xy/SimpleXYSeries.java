@@ -87,7 +87,7 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
     }
 
     protected static List<Number> asNumberList(Number... model) {
-        List<Number> numbers = new ArrayList<>();
+        List<Number> numbers = new ArrayList<>(model.length);
         Collections.addAll(numbers, model);
         return numbers;
     }

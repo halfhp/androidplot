@@ -19,7 +19,7 @@ package com.androidplot;
 import com.androidplot.ui.Formatter;
 import com.androidplot.ui.SeriesBundle;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,7 +38,7 @@ public abstract class SeriesRegistry
         return registry;
     }
     public List<SeriesType> getSeriesList() {
-        List<SeriesType> result = new ArrayList<>();
+        List<SeriesType> result = new ArrayList<>(registry.size());
         for(SeriesBundle<SeriesType, FormatterType> sfPair : registry) {
             result.add(sfPair.getSeries());
         }

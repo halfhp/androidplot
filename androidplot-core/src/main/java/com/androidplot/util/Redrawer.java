@@ -53,7 +53,7 @@ public class Redrawer implements Runnable {
      * @param startImmediately If true, invokes run() immediately after construction.
      */
     public Redrawer(List<Plot> plots, float maxRefreshRate, boolean startImmediately) {
-        this.plots = new ArrayList<>();
+        this.plots = new ArrayList<>(plots.size());
         for(Plot plot : plots) {
             this.plots.add(new WeakReference<>(plot));
         }

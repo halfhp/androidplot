@@ -252,7 +252,7 @@ public class Region {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Region{");
+        final StringBuilder sb = new StringBuilder("Region{");
         sb.append("min=").append(min);
         sb.append(", max=").append(max);
         sb.append(", cachedLength=").append(cachedLength);

@@ -162,18 +162,16 @@ public class XYConstraints {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("XYConstraints{");
-        sb.append("domainFramingModel=").append(domainFramingModel);
-        sb.append(", rangeFramingModel=").append(rangeFramingModel);
-        sb.append(", domainUpperBoundaryMode=").append(domainUpperBoundaryMode);
-        sb.append(", domainLowerBoundaryMode=").append(domainLowerBoundaryMode);
-        sb.append(", rangeUpperBoundaryMode=").append(rangeUpperBoundaryMode);
-        sb.append(", rangeLowerBoundaryMode=").append(rangeLowerBoundaryMode);
-        sb.append(", minX=").append(minX);
-        sb.append(", maxX=").append(maxX);
-        sb.append(", minY=").append(minY);
-        sb.append(", maxY=").append(maxY);
-        sb.append('}');
-        return sb.toString();
+        return "XYConstraints{" + "domainFramingModel=" + domainFramingModel +
+                ", rangeFramingModel=" + rangeFramingModel +
+                ", domainUpperBoundaryMode=" + domainUpperBoundaryMode +
+                ", domainLowerBoundaryMode=" + domainLowerBoundaryMode +
+                ", rangeUpperBoundaryMode=" + rangeUpperBoundaryMode +
+                ", rangeLowerBoundaryMode=" + rangeLowerBoundaryMode +
+                ", minX=" + minX +
+                ", maxX=" + maxX +
+                ", minY=" + minY +
+                ", maxY=" + maxY +
+                '}';
     }
 }

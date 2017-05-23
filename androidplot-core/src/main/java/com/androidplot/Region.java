@@ -215,7 +215,7 @@ public class Region {
             } else {
                 this.min = null;
             }
-        } else {
+        } else if (this.min == null || !this.min.equals(min)) {
             this.min = new FastNumber(min);
         }
     }
@@ -237,7 +237,7 @@ public class Region {
             } else {
                 this.max = null;
             }
-        } else {
+        } else if (this.max == null || !this.max.equals(max)) {
             this.max = new FastNumber(max);
         }
     }

@@ -20,6 +20,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.androidplot.Region;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -343,5 +344,14 @@ public class RectRegion {
      */
     public boolean contains(Number x, Number y) {
         return getxRegion().contains(x) && getyRegion().contains(y);
+    }
+
+    @Override
+    public String toString() {
+        return "RectRegion{" +
+                "xRegion=" + xRegion +
+                ", yRegion=" + yRegion +
+                ", label='" + label + '\'' +
+                '}';
     }
 }

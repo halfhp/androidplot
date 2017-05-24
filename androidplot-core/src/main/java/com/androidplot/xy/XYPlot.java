@@ -25,9 +25,15 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
-import com.androidplot.*;
-import com.androidplot.ui.*;
+import com.androidplot.Plot;
+import com.androidplot.R;
+import com.androidplot.ui.Anchor;
+import com.androidplot.ui.DynamicTableModel;
+import com.androidplot.ui.HorizontalPositioning;
+import com.androidplot.ui.Size;
+import com.androidplot.ui.SizeMode;
 import com.androidplot.ui.TextOrientation;
+import com.androidplot.ui.VerticalPositioning;
 import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.util.AttrUtils;
 import com.androidplot.util.PixelUtils;
@@ -581,7 +587,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param min
      * @param max
      */
-    private Number applyUserMinMax(Number value, Number min, Number max) {
+    private static Number applyUserMinMax(Number value, Number min, Number max) {
         value = (((min == null) || (value == null) || (value.doubleValue() > min.doubleValue()))
                 ? value
                 : min);
@@ -678,7 +684,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param y
      * @return
      */
-    private double distance(double x, double y) {
+    private static double distance(double x, double y) {
         if (x > y) {
             return x - y;
         } else {

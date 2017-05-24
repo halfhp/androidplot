@@ -16,9 +16,15 @@
 
 package com.androidplot.ui;
 
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PointF;
+import android.graphics.RectF;
+import android.graphics.Region;
 import android.view.MotionEvent;
 import android.view.View;
+
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.DisplayDimensions;
@@ -132,7 +138,7 @@ public class LayoutManager extends LinkedLayerList<Widget>
         }
     }
 
-    private void drawSpacing(Canvas canvas, RectF outer, RectF inner, Paint paint) {
+    private static void drawSpacing(Canvas canvas, RectF outer, RectF inner, Paint paint) {
         try {
             canvas.save(Canvas.ALL_SAVE_FLAG);
             canvas.clipRect(inner, Region.Op.DIFFERENCE);

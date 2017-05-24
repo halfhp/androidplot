@@ -118,6 +118,12 @@ public class XYGraphWidget extends Widget {
     private boolean drawMarkersEnabled = true;
     private boolean drawGridOnTop;
 
+    public enum GridOriginMethod {
+        ABSOLUTE, VIEWPORT
+    }
+
+    private GridOriginMethod gridOriginMethod;
+
     /**
      * Set of edges for which line labels should be displayed
      */
@@ -246,6 +252,8 @@ public class XYGraphWidget extends Widget {
         setMarginRight(4);
         setMarginBottom(4);
         setClippingEnabled(true);
+
+        gridOriginMethod = GridOriginMethod.VIEWPORT;
     }
 
     public XYGraphWidget(LayoutManager layoutManager, XYPlot plot, Size size) {
@@ -555,12 +563,17 @@ public class XYGraphWidget extends Widget {
             drawGridBackground(canvas);
         }
 
+        Number domainOrigin = null;
+        if (gridOriginMethod == GridOriginMethod.VIEWPORT) {
+            domainOrigin = plot.getDomainOrigin();
+        } else {
+            domainOrigin = plot.getOuterLimits().getMinX();
+        }
 
-        Number domainOrigin = plot.getDomainOrigin();
         double domainOriginPix;
         if (domainOrigin != null) {
             domainOriginPix = plot.getBounds().getxRegion().transform(
-                    plot.getDomainOrigin().doubleValue(), gridRect.left, gridRect.right, false);
+                    domainOrigin.doubleValue(), gridRect.left, gridRect.right, false);
         } else {
             // if no domain origin is set, use the leftmost value visible on the grid:
             domainOriginPix = gridRect.left;
@@ -606,7 +619,14 @@ public class XYGraphWidget extends Widget {
             i++;
         }
 
-        Number rangeOrigin = plot.getRangeOrigin();
+        Number rangeOrigin = null;
+
+        if (gridOriginMethod == GridOriginMethod.VIEWPORT) {
+            rangeOrigin = plot.getRangeOrigin();
+        } else {
+            rangeOrigin = plot.getOuterLimits().getMinY();
+        }
+        
         double rangeOriginPix;
         if (rangeOrigin != null) {
             rangeOriginPix = plot.getBounds().getyRegion().transform(
@@ -925,6 +945,14 @@ public class XYGraphWidget extends Widget {
 
     public void setRangeOriginLinePaint(Paint rangeOriginLinePaint) {
         this.rangeOriginLinePaint = rangeOriginLinePaint;
+    }
+
+    public GridOriginMethod getGridOriginMethod() {
+        return gridOriginMethod;
+    }
+
+    public void setGridOriginMethod(GridOriginMethod method) {
+        this.gridOriginMethod = method;
     }
 
     /**

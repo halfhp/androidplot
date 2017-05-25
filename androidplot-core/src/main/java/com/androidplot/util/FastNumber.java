@@ -64,6 +64,12 @@ public class FastNumber extends Number {
         return doublePrimitive;
     }
 
+    /**
+     * To be equal, two instances must both be instances of {@link FastNumber}. The inner {@link
+     * #number} field must also be a common type. Numbers which are mathematically equal are not
+     * necessarily equal. This keeps with the java implementation of common Number classes where for
+     * instance {@code new Integer(0).equals(new Double(0))} returns {@code false}
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {

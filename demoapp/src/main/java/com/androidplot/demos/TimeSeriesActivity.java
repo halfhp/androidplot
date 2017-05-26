@@ -17,15 +17,25 @@
 package com.androidplot.demos;
 
 import android.app.Activity;
-import android.graphics.*;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.androidplot.util.PixelUtils;
+import com.androidplot.xy.BoundaryMode;
+import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XYSeries;
-import com.androidplot.xy.*;
+import com.androidplot.xy.StepMode;
+import com.androidplot.xy.XYGraphWidget;
+import com.androidplot.xy.XYPlot;
 
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -95,7 +105,9 @@ public class TimeSeriesActivity extends Activity {
                     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy");
 
                     @Override
-                    public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
+                    public StringBuffer format(Object obj,
+                                               @NonNull StringBuffer toAppendTo,
+                                               @NonNull FieldPosition pos) {
 
                         // this rounding is necessary to avoid precision loss when converting from
                         // double back to int:
@@ -104,7 +116,7 @@ public class TimeSeriesActivity extends Activity {
                     }
 
                     @Override
-                    public Object parseObject(String source, ParsePosition pos) {
+                    public Object parseObject(String source, @NonNull ParsePosition pos) {
                         return null;
 
                     }

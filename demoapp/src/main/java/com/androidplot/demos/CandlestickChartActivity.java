@@ -21,15 +21,28 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
-import com.androidplot.*;
-import com.androidplot.util.*;
+import com.androidplot.Region;
+import com.androidplot.util.PixelUtils;
+import com.androidplot.util.SeriesUtils;
+import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.CandlestickFormatter;
 import com.androidplot.xy.CandlestickMaker;
 import com.androidplot.xy.CandlestickSeries;
-import com.androidplot.xy.*;
+import com.androidplot.xy.CatmullRomInterpolator;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.PointLabelFormatter;
+import com.androidplot.xy.PointLabeler;
+import com.androidplot.xy.StepMode;
+import com.androidplot.xy.XYGraphWidget;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
 
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
 
 /**
  * A simple example of a candlestick chart rendered on an {@link XYPlot}.
@@ -98,8 +111,8 @@ public class CandlestickChartActivity extends Activity {
         plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1);
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
             @Override
-            public StringBuffer format(Object object, StringBuffer buffer,
-                    FieldPosition field) {
+            public StringBuffer format(Object object, @NonNull StringBuffer buffer,
+                                       @NonNull FieldPosition field) {
                 int day = ((Number) object).intValue() % 7;
                 switch (day) {
                     case 0:
@@ -130,7 +143,7 @@ public class CandlestickChartActivity extends Activity {
             }
 
             @Override
-            public Object parseObject(String string, ParsePosition position) {
+            public Object parseObject(String string, @NonNull ParsePosition position) {
                 return null;
             }
         });

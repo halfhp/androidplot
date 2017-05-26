@@ -1,10 +1,14 @@
 package com.androidplot.util;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * An extension of {@link Number} optimized for speed at the cost of memory.
  */
 public class FastNumber extends Number {
 
+    @NonNull
     private final Number number;
     private boolean hasDoublePrimitive;
     private boolean hasFloatPrimitive;
@@ -14,7 +18,11 @@ public class FastNumber extends Number {
     private float floatPrimitive;
     private int intPrimitive;
 
-    public FastNumber(Number number) {
+    public FastNumber(@NonNull Number number) {
+        //noinspection ConstantConditions //in case someone ignores the @NonNull annotation
+        if (number == null) {
+            throw new IllegalArgumentException("number parameter cannot be null");
+        }
 
         // avoid nested instances of FastNumber :
         if(number instanceof  FastNumber) {
@@ -64,8 +72,14 @@ public class FastNumber extends Number {
         return doublePrimitive;
     }
 
+    /**
+     * To be equal, two instances must both be instances of {@link FastNumber}. The inner {@link
+     * #number} field must also be a common type. Numbers which are mathematically equal are not
+     * necessarily equal. This keeps with the java implementation of common Number classes where for
+     * instance {@code new Integer(0).equals(new Double(0))} returns {@code false}
+     */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -75,15 +89,16 @@ public class FastNumber extends Number {
 
         FastNumber that = (FastNumber) o;
 
-        return number != null ? number.equals(that.number) : that.number == null;
+        return number.equals(that.number);
 
     }
 
     @Override
     public int hashCode() {
-        return number != null ? number.hashCode() : 0;
+        return number.hashCode();
     }
 
+    @NonNull
     @Override
     public String toString() {
         return String.valueOf(doubleValue());

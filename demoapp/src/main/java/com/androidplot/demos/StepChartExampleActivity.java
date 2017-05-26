@@ -18,12 +18,20 @@ package com.androidplot.demos;
 
 
 import android.app.Activity;
-import android.graphics.*;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.StepFormatter;
+import com.androidplot.xy.StepMode;
+import com.androidplot.xy.XYGraphWidget;
+import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
-import com.androidplot.xy.*;
 
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
@@ -82,8 +90,8 @@ public class StepChartExampleActivity extends Activity
         // create a custom getFormatter to draw our state names as range tick labels:
         mySimpleXYPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).setFormat(new Format() {
                     @Override
-                    public StringBuffer format(Object obj, StringBuffer toAppendTo,
-                            FieldPosition pos) {
+                    public StringBuffer format(Object obj, @NonNull StringBuffer toAppendTo,
+                                               @NonNull FieldPosition pos) {
                         Number num = (Number) obj;
                         switch (num.intValue()) {
                             case 1:
@@ -106,7 +114,7 @@ public class StepChartExampleActivity extends Activity
                     }
 
             @Override
-            public Object parseObject(String source, ParsePosition pos) {
+            public Object parseObject(String source, @NonNull ParsePosition pos) {
                 return null;
             }
         });

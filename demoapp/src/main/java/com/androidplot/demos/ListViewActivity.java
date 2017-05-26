@@ -20,15 +20,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 import com.androidplot.Plot;
 import com.androidplot.ui.SeriesBundle;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.xy.*;
+import com.androidplot.xy.CatmullRomInterpolator;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,8 +106,9 @@ public class ListViewActivity extends Activity {
             return NUM_PLOTS;
         }
 
+        @NonNull
         @Override
-        public View getView(int pos, View convertView, ViewGroup parent) {
+        public View getView(int pos, View convertView, @NonNull ViewGroup parent) {
             LayoutInflater inf = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             View v = convertView;

@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BoundaryMode;
@@ -30,7 +31,6 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.StepMode;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYSeries;
 
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
@@ -105,15 +105,15 @@ public class DualScaleActivity extends Activity {
             final DecimalFormat df = new DecimalFormat("$#,###");
 
             @Override
-            public StringBuffer format(Object o, StringBuffer stringBuffer,
-                    FieldPosition fieldPosition) {
+            public StringBuffer format(Object o, @NonNull StringBuffer stringBuffer,
+                                       @NonNull FieldPosition fieldPosition) {
                 final Number cost = costsSeries.denormalizeYVal((Number) o);
                 stringBuffer.append(df.format(cost.doubleValue()));
                 return stringBuffer;
             }
 
             @Override
-            public Object parseObject(String s, ParsePosition parsePosition) {
+            public Object parseObject(String s, @NonNull ParsePosition parsePosition) {
                 return null;
             }
         });
@@ -124,15 +124,15 @@ public class DualScaleActivity extends Activity {
             final DecimalFormat df = new DecimalFormat("$#.##");
 
             @Override
-            public StringBuffer format(Object o, StringBuffer stringBuffer,
-                    FieldPosition fieldPosition) {
+            public StringBuffer format(Object o, @NonNull StringBuffer stringBuffer,
+                                       @NonNull FieldPosition fieldPosition) {
                 Number minWage = minWageSeries.denormalizeYVal((Number) o);
                 stringBuffer.append(df.format(minWage.doubleValue()));
                 return stringBuffer;
             }
 
             @Override
-            public Object parseObject(String s, ParsePosition parsePosition) {
+            public Object parseObject(String s, @NonNull ParsePosition parsePosition) {
                 return null;
             }
         });
@@ -141,8 +141,8 @@ public class DualScaleActivity extends Activity {
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
 
             @Override
-            public StringBuffer format(Object o, StringBuffer stringBuffer,
-                    FieldPosition fieldPosition) {
+            public StringBuffer format(Object o, @NonNull StringBuffer stringBuffer,
+                                       @NonNull FieldPosition fieldPosition) {
 
                 Number year = ((Number) o).intValue() + 2012;
                 stringBuffer.append(year);
@@ -150,7 +150,7 @@ public class DualScaleActivity extends Activity {
             }
 
             @Override
-            public Object parseObject(String s, ParsePosition parsePosition) {
+            public Object parseObject(String s, @NonNull ParsePosition parsePosition) {
                 return null;
             }
         });

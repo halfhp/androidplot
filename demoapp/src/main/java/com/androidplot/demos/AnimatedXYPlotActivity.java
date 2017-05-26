@@ -21,6 +21,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.androidplot.xy.BoundaryMode;
@@ -96,12 +97,14 @@ public class AnimatedXYPlotActivity extends Activity {
 
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
             @Override
-            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
+            public StringBuffer format(Object obj,
+                                       @NonNull StringBuffer toAppendTo,
+                                       @NonNull FieldPosition pos) {
                 int i = Math.round(((Number) obj).floatValue());
                 return toAppendTo.append(domainLabels[i]);
             }
             @Override
-            public Object parseObject(String source, ParsePosition pos) {
+            public Object parseObject(String source, @NonNull ParsePosition pos) {
                 return null;
             }
         });

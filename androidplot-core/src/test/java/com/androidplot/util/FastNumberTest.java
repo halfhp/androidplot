@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -68,6 +70,18 @@ public class FastNumberTest {
         assertEquals(fixture, fixture);
         assertFalse(fixture.equals(null));
         assertFalse(fixture.equals("Not a Long"));
+    }
+
+    @Test
+    public void testLock() {
+        ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock(true);
+        reentrantReadWriteLock.writeLock().lock();
+        reentrantReadWriteLock.writeLock().lock();
+        reentrantReadWriteLock.readLock().lock();
+        reentrantReadWriteLock.readLock().unlock();
+        reentrantReadWriteLock.writeLock().unlock();
+        reentrantReadWriteLock.writeLock().unlock();
+        assertTrue(true);
     }
 
     @Test
@@ -156,7 +170,7 @@ public class FastNumberTest {
             assertTrue("Invalid hash for equal but not identical doubles ", d.hashCode() == dd
                     .hashCode());
         }
-        assertEquals("Magic assumption hasCode (0.0) = 0 failed", 0, new FastNumber(new Double(0.0)).hashCode());
+        assertEquals("Magic assumption hashCode (0.0) = 0 failed", 0, new FastNumber(new Double(0.0)).hashCode());
     }
 
     @Test

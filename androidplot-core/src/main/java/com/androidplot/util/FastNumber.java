@@ -1,10 +1,13 @@
 package com.androidplot.util;
 
+import android.support.annotation.NonNull;
+
 /**
  * An extension of {@link Number} optimized for speed at the cost of memory.
  */
 public class FastNumber extends Number {
 
+    @NonNull
     private final Number number;
     private boolean hasDoublePrimitive;
     private boolean hasFloatPrimitive;
@@ -14,7 +17,11 @@ public class FastNumber extends Number {
     private float floatPrimitive;
     private int intPrimitive;
 
-    public FastNumber(Number number) {
+    public FastNumber(@NonNull Number number) {
+        //noinspection ConstantConditions //in case someone ignores the @NonNull annotation
+        if (number == null) {
+            throw new IllegalArgumentException("number parameter cannot be null");
+        }
 
         // avoid nested instances of FastNumber :
         if(number instanceof  FastNumber) {
@@ -81,13 +88,13 @@ public class FastNumber extends Number {
 
         FastNumber that = (FastNumber) o;
 
-        return number != null ? number.equals(that.number) : that.number == null;
+        return number.equals(that.number);
 
     }
 
     @Override
     public int hashCode() {
-        return number != null ? number.hashCode() : 0;
+        return number.hashCode();
     }
 
     @Override

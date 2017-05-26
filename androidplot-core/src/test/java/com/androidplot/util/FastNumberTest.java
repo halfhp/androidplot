@@ -24,9 +24,14 @@ public class FastNumberTest {
 
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullConstructor() {
+        //noinspection ConstantConditions
+        new FastNumber(null);
+    }
+
     @Test
     public void testEquals() {
-        assertEquals(new FastNumber(null), new FastNumber(null));
         assertEquals(new FastNumber(new Double(0)), new FastNumber(new Double(0)));
         assertNotEquals(new FastNumber(new Double(0)), new FastNumber(new Long(0)));
     }

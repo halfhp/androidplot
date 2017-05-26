@@ -16,6 +16,8 @@
 
 package com.androidplot.ui;
 
+import android.support.annotation.NonNull;
+
 public class PositionMetrics implements Comparable<PositionMetrics> {
 
     private HorizontalPosition horizontalPosition;
@@ -47,7 +49,7 @@ public class PositionMetrics implements Comparable<PositionMetrics> {
     }
 
     @Override
-    public int compareTo(PositionMetrics o) {
+    public int compareTo(@NonNull PositionMetrics o) {
         if(this.layerDepth < o.layerDepth) {
             return -1;
         } else if(this.layerDepth == o.layerDepth) {

@@ -245,7 +245,7 @@ public class RectRegion {
      * @param y
      * @return
      */
-    private Number distanceBetween(Number x, Number y) {
+    private static Number distanceBetween(Number x, Number y) {
         return Math.abs(x.doubleValue() - y.doubleValue());
     }
 

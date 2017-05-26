@@ -16,12 +16,16 @@
 
 package com.androidplot.xy;
 
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.PointF;
+import android.graphics.RectF;
+
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesRenderer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A faster implementation of of {@link LineAndPointRenderer}.  For performance reasons, has these constraints:
@@ -53,11 +57,11 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
 
         int segmentLen = 0;
         boolean isLastPointNull = true;
+        PointF resultPoint = new PointF();
         for (int i = 0, j = 0;  i < series.size(); i++, j+=2) {
             Number y = series.getY(i);
             Number x = series.getX(i);
 
-            PointF thisPoint;
             if (y != null && x != null) {
                 if(isLastPointNull) {
                     segmentOffsets.add(j);
@@ -65,9 +69,9 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
                     isLastPointNull = false;
                 }
 
-                thisPoint = getPlot().getBounds().transformScreen(x, y, plotArea);
-                points[j] = thisPoint.x;
-                points[j+1] = thisPoint.y;
+                getPlot().getBounds().transformScreen(resultPoint, x, y, plotArea);
+                points[j] = resultPoint.x;
+                points[j + 1] = resultPoint.y;
                 segmentLen+=2;
 
                 // if this is the last point, account for it in segment lengths:

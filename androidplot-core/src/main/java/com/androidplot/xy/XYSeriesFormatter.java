@@ -16,7 +16,7 @@
 
 package com.androidplot.xy;
 
-import android.content.*;
+import android.content.Context;
 
 import com.androidplot.ui.Formatter;
 import com.androidplot.util.LayerHash;
@@ -28,7 +28,7 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
     private PointLabeler pointLabeler = new PointLabeler() {
         @Override
         public String getLabel(XYSeries series, int index) {
-            return series.getY(index) + "";
+            return String.valueOf(series.getY(index));
         }
     };
 

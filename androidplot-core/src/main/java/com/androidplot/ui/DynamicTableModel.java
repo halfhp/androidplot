@@ -149,10 +149,10 @@ public class DynamicTableModel extends TableModel {
                 calculatedRows = dynamicTableModel.getNumRows();
 
                 // round up:
-                calculatedColumns = new Float((totalElements / (float) calculatedRows) + 0.5).intValue();
+                calculatedColumns = Float.valueOf((totalElements / (float) calculatedRows) + 0.5f).intValue();
             } else if(dynamicTableModel.getNumRows() == 0 && dynamicTableModel.getNumColumns() >= 1) {
                 calculatedColumns = dynamicTableModel.getNumColumns();
-                calculatedRows = new Float((totalElements / (float) calculatedColumns) + 0.5).intValue();
+                calculatedRows = Float.valueOf((totalElements / (float) calculatedColumns) + 0.5f).intValue();
             // unlimited rows and columns (impossible) so default a single row with n columns:
             }else if(dynamicTableModel.getNumColumns() == 0 && dynamicTableModel.getNumRows() == 0) {
                 calculatedRows = 1;

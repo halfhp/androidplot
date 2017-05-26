@@ -16,11 +16,12 @@
 
 package com.androidplot.xy;
 
-import android.content.*;
-import android.graphics.*;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 
-import com.androidplot.ui.*;
-import com.androidplot.util.*;
+import com.androidplot.ui.SeriesRenderer;
+import com.androidplot.util.PixelUtils;
 
 /**
  * Format for drawing a value using {@link BubbleRenderer}.
@@ -51,7 +52,7 @@ public class BubbleFormatter extends XYSeriesFormatter<XYRegionFormatter> {
         setPointLabeler(new PointLabeler<BubbleSeries>() {
             @Override
             public String getLabel(BubbleSeries series, int index) {
-                return series.getZ(index) + "";
+                return String.valueOf(series.getZ(index));
             }
         });
     }

@@ -17,10 +17,15 @@
 package com.androidplot.xy;
 
 import android.graphics.Canvas;
+
 import com.androidplot.Plot;
 import com.androidplot.PlotListener;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
@@ -82,10 +87,8 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
     }
 
     protected static List<Number> asNumberList(Number... model) {
-        List<Number> numbers = new ArrayList<>();
-        for(Number n : model) {
-            numbers.add(n);
-        }
+        List<Number> numbers = new ArrayList<>(model.length);
+        Collections.addAll(numbers, model);
         return numbers;
     }
 

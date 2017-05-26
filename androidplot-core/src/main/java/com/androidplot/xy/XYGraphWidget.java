@@ -16,19 +16,33 @@
 
 package com.androidplot.xy;
 
-import android.content.res.*;
-import android.graphics.*;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PointF;
+import android.graphics.RectF;
 
-import com.androidplot.*;
+import com.androidplot.R;
 import com.androidplot.Region;
 import com.androidplot.exception.PlotRenderException;
-import com.androidplot.ui.*;
+import com.androidplot.ui.Insets;
+import com.androidplot.ui.LayoutManager;
+import com.androidplot.ui.RenderStack;
+import com.androidplot.ui.Size;
 import com.androidplot.ui.widget.Widget;
-import com.androidplot.util.*;
+import com.androidplot.util.AttrUtils;
+import com.androidplot.util.FontUtils;
+import com.androidplot.util.PixelUtils;
+import com.androidplot.util.RectFUtils;
 
 import java.text.DecimalFormat;
 import java.text.Format;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
 
 /**
  * Displays graphical data (lines, points, etc.) annotated with domain and range tick markers.
@@ -121,14 +135,14 @@ public class XYGraphWidget extends Widget {
     /**
      * Set of edges for which line labels should be displayed
      */
-    private Set<Edge> lineLabelEdges = new HashSet<>();
+    private EnumSet<Edge> lineLabelEdges = EnumSet.noneOf(Edge.class);
 
     private RenderStack<? extends XYSeries, ? extends XYSeriesFormatter> renderStack;
 
     private CursorLabelFormatter cursorLabelFormatter;
 
-    private HashMap<Edge, LineLabelStyle> lineLabelStyles = getDefaultLineLabelStyles();
-    private HashMap<Edge, LineLabelRenderer> lineLabelRenderers = getDefaultLineLabelRenderers();
+    private Map<Edge, LineLabelStyle> lineLabelStyles = getDefaultLineLabelStyles();
+    private Map<Edge, LineLabelRenderer> lineLabelRenderers = getDefaultLineLabelRenderers();
 
     public static class LineLabelRenderer {
 
@@ -1051,8 +1065,8 @@ public class XYGraphWidget extends Widget {
         this.lineExtensionRight = lineExtensionRight;
     }
 
-    protected HashMap<Edge, LineLabelStyle> getDefaultLineLabelStyles() {
-        HashMap<Edge, LineLabelStyle> defaults = new HashMap<>();
+    protected Map<Edge, LineLabelStyle> getDefaultLineLabelStyles() {
+        EnumMap<Edge, LineLabelStyle> defaults = new EnumMap<>(Edge.class);
         defaults.put(Edge.TOP, new LineLabelStyle());
         defaults.put(Edge.BOTTOM, new LineLabelStyle());
         defaults.put(Edge.LEFT, new LineLabelStyle());
@@ -1060,8 +1074,8 @@ public class XYGraphWidget extends Widget {
         return defaults;
     }
 
-    protected HashMap<Edge, LineLabelRenderer> getDefaultLineLabelRenderers() {
-        HashMap<Edge, LineLabelRenderer> defaults = new HashMap<>();
+    protected Map<Edge, LineLabelRenderer> getDefaultLineLabelRenderers() {
+        EnumMap<Edge, LineLabelRenderer> defaults = new EnumMap<>(Edge.class);
         defaults.put(Edge.TOP, new LineLabelRenderer());
         defaults.put(Edge.BOTTOM, new LineLabelRenderer());
         defaults.put(Edge.LEFT, new LineLabelRenderer());
@@ -1145,17 +1159,15 @@ public class XYGraphWidget extends Widget {
     }
 
     public void setLineLabelEdges(Edge... positions) {
-        Set<Edge> positionSet = new HashSet<>();
+        EnumSet<Edge> positionSet = EnumSet.noneOf(Edge.class);
         if(positions != null) {
-            for(Edge position : positions) {
-                positionSet.add(position);
-            }
+            Collections.addAll(positionSet, positions);
         }
-        setLineLabelEdges(positionSet);
+        this.lineLabelEdges = positionSet;
     }
 
-    public void setLineLabelEdges(Set<Edge> positions) {
-        this.lineLabelEdges = positions;
+    public void setLineLabelEdges(Collection<Edge> positions) {
+        this.lineLabelEdges = EnumSet.copyOf(positions);
     }
 
     protected void setLineLabelEdges(int bitfield) {

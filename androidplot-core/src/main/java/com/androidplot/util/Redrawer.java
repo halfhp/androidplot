@@ -17,11 +17,12 @@
 package com.androidplot.util;
 
 import android.util.Log;
+
 import com.androidplot.Plot;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,7 +53,7 @@ public class Redrawer implements Runnable {
      * @param startImmediately If true, invokes run() immediately after construction.
      */
     public Redrawer(List<Plot> plots, float maxRefreshRate, boolean startImmediately) {
-        this.plots = new ArrayList<>();
+        this.plots = new ArrayList<>(plots.size());
         for(Plot plot : plots) {
             this.plots.add(new WeakReference<>(plot));
         }
@@ -65,7 +66,7 @@ public class Redrawer implements Runnable {
     }
 
     public Redrawer(Plot plot, float maxRefreshRate, boolean startImmediately) {
-        this(Arrays.asList(new Plot[]{plot}), maxRefreshRate, startImmediately);
+        this(Collections.singletonList(plot), maxRefreshRate, startImmediately);
     }
 
     /**
@@ -121,7 +122,7 @@ public class Redrawer implements Runnable {
                 }
             }
         }
-        } catch(InterruptedException e) {
+        } catch (InterruptedException ignored) {
 
         } finally {
             Log.d(TAG, "Redrawer thread exited.");

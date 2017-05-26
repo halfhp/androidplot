@@ -1,8 +1,11 @@
 package com.androidplot.xy;
 
-import com.androidplot.util.*;
+import android.support.annotation.NonNull;
 
-import java.util.*;
+import com.androidplot.util.FastNumber;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An efficient implementation of {@link EditableXYSeries} intended for use cases where
@@ -14,7 +17,9 @@ import java.util.*;
  */
 public class FixedSizeEditableXYSeries implements EditableXYSeries {
 
+    @NonNull
     private List<FastNumber> xVals = new ArrayList<>();
+    @NonNull
     private List<FastNumber> yVals = new ArrayList<>();
     private String title;
 
@@ -24,12 +29,12 @@ public class FixedSizeEditableXYSeries implements EditableXYSeries {
     }
 
     @Override
-    public void setX(Number x, int index) {
+    public void setX(@NonNull Number x, int index) {
         xVals.set(index, new FastNumber(x));
     }
 
     @Override
-    public void setY(Number y, int index) {
+    public void setY(@NonNull Number y, int index) {
         yVals.set(index, new FastNumber(y));
     }
 
@@ -44,7 +49,7 @@ public class FixedSizeEditableXYSeries implements EditableXYSeries {
         resize(yVals, size);
     }
 
-    protected void resize(List list, int size) {
+    protected void resize(@NonNull List list, int size) {
         if (size > list.size()) {
             while (list.size() < size) {
                 list.add(null);

@@ -1,6 +1,7 @@
 package com.androidplot.util;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * An extension of {@link Number} optimized for speed at the cost of memory.
@@ -78,7 +79,7 @@ public class FastNumber extends Number {
      * instance {@code new Integer(0).equals(new Double(0))} returns {@code false}
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -97,6 +98,7 @@ public class FastNumber extends Number {
         return number.hashCode();
     }
 
+    @NonNull
     @Override
     public String toString() {
         return String.valueOf(doubleValue());

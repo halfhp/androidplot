@@ -1,6 +1,7 @@
 package com.androidplot.xy;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.androidplot.util.FastNumber;
 
@@ -19,6 +20,7 @@ public class FixedSizeEditableXYSeries implements EditableXYSeries {
 
     @NonNull
     private List<FastNumber> xVals = new ArrayList<>();
+
     @NonNull
     private List<FastNumber> yVals = new ArrayList<>();
     private String title;
@@ -29,13 +31,13 @@ public class FixedSizeEditableXYSeries implements EditableXYSeries {
     }
 
     @Override
-    public void setX(@NonNull Number x, int index) {
-        xVals.set(index, new FastNumber(x));
+    public void setX(@Nullable Number x, int index) {
+        xVals.set(index, FastNumber.orNull(x));
     }
 
     @Override
-    public void setY(@NonNull Number y, int index) {
-        yVals.set(index, new FastNumber(y));
+    public void setY(@Nullable Number y, int index) {
+        yVals.set(index, FastNumber.orNull(y));
     }
 
     /**

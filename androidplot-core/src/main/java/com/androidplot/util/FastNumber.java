@@ -8,8 +8,7 @@ import android.support.annotation.Nullable;
  */
 public class FastNumber extends Number {
 
-    @NonNull
-    private final Number number;
+    @NonNull private final Number number;
     private boolean hasDoublePrimitive;
     private boolean hasFloatPrimitive;
     private boolean hasIntPrimitive;
@@ -18,7 +17,21 @@ public class FastNumber extends Number {
     private float floatPrimitive;
     private int intPrimitive;
 
-    public FastNumber(@NonNull Number number) {
+    /**
+     * Safe-instantiator of FastNumber; returns a null result if the input Number is also null.
+     * @param number
+     * @return
+     */
+    public static FastNumber orNull(@NonNull Number number) {
+        if(number == null) {
+            return null;
+        } else {
+            return new FastNumber(number);
+        }
+    }
+
+    private FastNumber(@NonNull Number number) {
+
         //noinspection ConstantConditions //in case someone ignores the @NonNull annotation
         if (number == null) {
             throw new IllegalArgumentException("number parameter cannot be null");

@@ -694,15 +694,15 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
 
     public void updateDomainMinMaxForOriginModel() {
         double origin = userDomainOrigin.doubleValue();
-        double maxXDelta = distance(bounds.getMaxX().doubleValue(), origin);
-        double minXDelta = distance(bounds.getMinX().doubleValue(), origin);
-        double delta = maxXDelta > minXDelta ? maxXDelta : minXDelta;
-        double dlb = origin - delta;
-        double dub = origin + delta;
+        double maxDelta = distance(bounds.getMaxX().doubleValue(), origin);
+        double minDelta = distance(bounds.getMinX().doubleValue(), origin);
+        double delta = maxDelta > minDelta ? maxDelta : minDelta;
+        double lowerBoundary = origin - delta;
+        double upperBoundary = origin + delta;
         switch (domainOriginBoundaryMode) {
             case AUTO:
-                bounds.setMinX(dlb);
-                bounds.setMaxX(dub);
+                bounds.setMinX(lowerBoundary);
+                bounds.setMaxX(upperBoundary);
 
                 break;
             // if fixed, then the value already exists within "user" vals.
@@ -710,28 +710,28 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
                 break;
             case GROW: {
 
-                if (prevMinX == null || dlb < prevMinX.doubleValue()) {
-                    bounds.setMinX(dlb);
+                if (prevMinX == null || lowerBoundary < prevMinX.doubleValue()) {
+                    bounds.setMinX(lowerBoundary);
                 } else {
                     bounds.setMinX(prevMinX);
                 }
 
-                if (prevMaxX == null || dub > prevMaxX.doubleValue()) {
-                    bounds.setMaxX(dub);
+                if (prevMaxX == null || upperBoundary > prevMaxX.doubleValue()) {
+                    bounds.setMaxX(upperBoundary);
                 } else {
                     bounds.setMaxX(prevMaxX);
                 }
             }
             break;
             case SHRINK:
-                if (prevMinX == null || dlb > prevMinX.doubleValue()) {
-                    bounds.setMinX(dlb);
+                if (prevMinX == null || lowerBoundary > prevMinX.doubleValue()) {
+                    bounds.setMinX(lowerBoundary);
                 } else {
                     bounds.setMinX(prevMinX);
                 }
 
-                if (prevMaxX == null || dub < prevMaxX.doubleValue()) {
-                    bounds.setMaxX(dub);
+                if (prevMaxX == null || upperBoundary < prevMaxX.doubleValue()) {
+                    bounds.setMaxX(upperBoundary);
                 } else {
                     bounds.setMaxX(prevMaxX);
                 }
@@ -745,14 +745,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         switch (rangeOriginBoundaryMode) {
             case AUTO:
                 double origin = userRangeOrigin.doubleValue();
-                double maxYDelta = distance(bounds.getMaxY().doubleValue(), origin);
-                double minYDelta = distance(bounds.getMinY().doubleValue(), origin);
-                if (maxYDelta > minYDelta) {
-                    bounds.setMinY(origin - maxYDelta);
-                    bounds.setMaxY(origin + maxYDelta);
+                double maxDelta = distance(bounds.getMaxY().doubleValue(), origin);
+                double minDelta = distance(bounds.getMinY().doubleValue(), origin);
+                if (maxDelta > minDelta) {
+                    bounds.setMinY(origin - maxDelta);
+                    bounds.setMaxY(origin + maxDelta);
                 } else {
-                    bounds.setMinY(origin - minYDelta);
-                    bounds.setMaxY(origin + minYDelta);
+                    bounds.setMinY(origin - minDelta);
+                    bounds.setMaxY(origin + minDelta);
                 }
                 break;
             case FIXED:

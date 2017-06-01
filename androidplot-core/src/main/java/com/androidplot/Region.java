@@ -71,7 +71,7 @@ public class Region {
             Number l = getMax() == null || getMin() == null ?
                    null : getMax().doubleValue() - getMin().doubleValue();
             if(l != null) {
-                cachedLength = new FastNumber(l);
+                cachedLength = FastNumber.orNull(l);
             }
         }
         return cachedLength;
@@ -216,7 +216,7 @@ public class Region {
                 this.min = null;
             }
         } else if (this.min == null || !this.min.equals(min)) {
-            this.min = new FastNumber(min);
+            this.min = FastNumber.orNull(min);
         }
     }
 
@@ -238,7 +238,7 @@ public class Region {
                 this.max = null;
             }
         } else if (this.max == null || !this.max.equals(max)) {
-            this.max = new FastNumber(max);
+            this.max = FastNumber.orNull(max);
         }
     }
 

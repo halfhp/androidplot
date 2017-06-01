@@ -65,7 +65,6 @@ public class SeriesUtils {
      * @since 0.9.7
      */
     public static RectRegion minMax(XYConstraints constraints, List<XYSeries> seriesList) {
-        // TODO: this is inefficient...clean it up!
         return minMax(constraints, seriesList.toArray(new XYSeries[seriesList.size()]));
     }
 
@@ -86,23 +85,17 @@ public class SeriesUtils {
             for (XYSeries series : seriesArray) {
 
                 // if this is an advanced xy series then minMax have already been calculated for us:
-                if(series instanceof FastXYSeries) {
-                    final RectRegion seriesBounds = ((FastXYSeries) series).minMax();
-                    if (seriesBounds == null) {
+                boolean isPreCalculated = false;
+                if (series instanceof FastXYSeries) {
+                    final RectRegion b = ((FastXYSeries) series).minMax();
+                    if(b == null) {
                         continue;
                     }
-                    if(constraints == null) {
-                        bounds.union(seriesBounds);
-                    } else {
-                        if (constraints.contains(seriesBounds.getMinX(), seriesBounds.getMinY())) {
-                            bounds.union(seriesBounds.getMinX(), seriesBounds.getMinY());
-                        }
-                        if (constraints.contains(seriesBounds.getMaxX(), seriesBounds.getMaxY())) {
-                            bounds.union(seriesBounds.getMaxX(), seriesBounds.getMaxY());
-                        }
+                    if(constraints == null || constraints.contains(b)) {
+                        bounds.union(b);
                     }
-
-                } else if (series.size() > 0) {
+                }
+                if (!isPreCalculated && series.size() > 0) {
                     for (int i = 0; i < series.size(); i++) {
                         final Number xi = series.getX(i);
                         final Number yi = series.getY(i);

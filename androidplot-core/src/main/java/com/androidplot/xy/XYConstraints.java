@@ -16,6 +16,9 @@
 
 package com.androidplot.xy;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * Calculates the min/max constraints for an xy plane.
  *
@@ -45,11 +48,16 @@ public class XYConstraints {
         this(null, null, null, null);
     }
 
-    public XYConstraints(Number minX, Number maxX, Number minY, Number maxY) {
+    public XYConstraints(@Nullable Number minX, @Nullable Number maxX, @Nullable Number minY, @Nullable Number maxY) {
         this.minX = minX;
         this.minY = minY;
         this.maxX = maxX;
         this.maxY = maxY;
+    }
+
+    public boolean contains(@NonNull RectRegion rectRegion) {
+        return contains(rectRegion.getMinY(), rectRegion.getMinY())
+                && contains(rectRegion.getMaxX(), rectRegion.getMaxY());
     }
 
     public boolean contains(Number x, Number y) {
@@ -80,84 +88,94 @@ public class XYConstraints {
         return true;
     }
 
+    @Nullable
     public Number getMinX() {
         return minX;
     }
 
+    @Nullable
     public Number getMaxX() {
         return maxX;
     }
 
+    @Nullable
     public Number getMinY() {
         return minY;
     }
 
+    @Nullable
     public Number getMaxY() {
         return maxY;
     }
 
+    public void setMinX(@Nullable Number minX) {
+        this.minX = minX;
+    }
+
+    public void setMaxX(@Nullable Number maxX) {
+        this.maxX = maxX;
+    }
+
+    public void setMinY(@Nullable Number minY) {
+        this.minY = minY;
+    }
+
+    public void setMaxY(@Nullable Number maxY) {
+        this.maxY = maxY;
+    }
+
+    @NonNull
     public XYFramingModel getDomainFramingModel() {
         return domainFramingModel;
     }
 
-    public void setDomainFramingModel(XYFramingModel domainFramingModel) {
+    public void setDomainFramingModel(@NonNull XYFramingModel domainFramingModel) {
         this.domainFramingModel = domainFramingModel;
     }
 
+    @NonNull
     public XYFramingModel getRangeFramingModel() {
         return rangeFramingModel;
     }
 
-    public void setRangeFramingModel(XYFramingModel rangeFramingModel) {
+    public void setRangeFramingModel(@NonNull XYFramingModel rangeFramingModel) {
         this.rangeFramingModel = rangeFramingModel;
     }
 
+    @NonNull
     public BoundaryMode getDomainUpperBoundaryMode() {
         return domainUpperBoundaryMode;
     }
 
-    public void setDomainUpperBoundaryMode(BoundaryMode domainUpperBoundaryMode) {
+    public void setDomainUpperBoundaryMode(@NonNull BoundaryMode domainUpperBoundaryMode) {
         this.domainUpperBoundaryMode = domainUpperBoundaryMode;
     }
 
+    @NonNull
     public BoundaryMode getDomainLowerBoundaryMode() {
         return domainLowerBoundaryMode;
     }
 
-    public void setDomainLowerBoundaryMode(BoundaryMode domainLowerBoundaryMode) {
+    public void setDomainLowerBoundaryMode(@NonNull BoundaryMode domainLowerBoundaryMode) {
         this.domainLowerBoundaryMode = domainLowerBoundaryMode;
     }
 
+    @NonNull
     public BoundaryMode getRangeUpperBoundaryMode() {
         return rangeUpperBoundaryMode;
     }
 
-    public void setRangeUpperBoundaryMode(BoundaryMode rangeUpperBoundaryMode) {
+    public void setRangeUpperBoundaryMode(@NonNull BoundaryMode rangeUpperBoundaryMode) {
         this.rangeUpperBoundaryMode = rangeUpperBoundaryMode;
     }
 
+    @NonNull
     public BoundaryMode getRangeLowerBoundaryMode() {
         return rangeLowerBoundaryMode;
     }
 
-    public void setRangeLowerBoundaryMode(BoundaryMode rangeLowerBoundaryMode) {
+    public void setRangeLowerBoundaryMode(@NonNull BoundaryMode rangeLowerBoundaryMode) {
         this.rangeLowerBoundaryMode = rangeLowerBoundaryMode;
-    }
-
-    public void setMinX(Number minX) {
-        this.minX = minX;
-    }
-
-    public void setMaxX(Number maxX) {
-        this.maxX = maxX;
-    }
-
-    public void setMinY(Number minY) {
-        this.minY = minY;
-    }
-
-    public void setMaxY(Number maxY) {
-        this.maxY = maxY;
     }
 
     @Override

@@ -51,7 +51,7 @@ public class SeriesUtilsTest {
     }
 
     @Test
-    public void testSeriesMinMax() {
+    public void minMax_onSimpleXYSeries_calculatesExpectedRegion() {
         SimpleXYSeries series = new SimpleXYSeries(LINEAR, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, null);
         RectRegion minMax = SeriesUtils.minMax(series);
         assertEquals(0, minMax.getMinX().doubleValue(), 0);
@@ -103,14 +103,68 @@ public class SeriesUtilsTest {
     }
 
     @Test
-    public void minMax_usesSeriesMinMax_onFastXYSeries() {
+    public void minMax_onFastXYSeries_usesSeriesMinMax() {
         FastXYSeries series = mock(FastXYSeries.class);
         SeriesUtils.minMax(series);
         verify(series).minMax();
     }
 
     @Test
-    public void testListMinMax() {
+    public void minMax_calculatesExpectedRegion_onFastXYSeriesWithLayoutConstraints() {
+        FastXYSeries series = new FastXYSeries() {
+
+            // create a couple arrays of y-values to plot:
+            final ArrayList<Integer> times = new ArrayList<>();
+            final ArrayList<Integer> values = new ArrayList<>();
+
+            {
+                for (int i = 0; i < 10; i++) {
+                    times.add(i);
+                    values.add(i);
+                }
+            }
+
+            @Override
+            public int size() {
+                return times.size();
+            }
+
+            @Override
+            public Number getX(int index) {
+                return times.get(index);
+            }
+
+            @Override
+            public Number getY(int index) {
+                return values.get(index);
+            }
+
+            @Override
+            public String getTitle() {
+                return "Isaac's crazy thing";
+            }
+
+            @Override
+            public RectRegion minMax() {
+                return new RectRegion(0, 10, 0, 10);
+            }
+        };
+
+        final XYConstraints constraints = new XYConstraints();
+        constraints.setDomainLowerBoundaryMode(BoundaryMode.FIXED);
+        constraints.setDomainUpperBoundaryMode(BoundaryMode.FIXED);
+        constraints.setMinX(5);
+        constraints.setMaxX(9);
+
+        final RectRegion result = SeriesUtils.minMax(constraints, series);
+        assertEquals(5d, result.getMinX().doubleValue());
+        assertEquals(9d, result.getMaxX().doubleValue());
+        assertEquals(5d, result.getMinY().doubleValue());
+        assertEquals(9d, result.getMaxY().doubleValue());
+    }
+
+    @Test
+    public void minMax_onSeriesList_producesAggregateResult() {
         Region minMax = SeriesUtils.minMax(LINEAR);
         assertEquals(1, minMax.getMin().doubleValue(), 0);
         assertEquals(8, minMax.getMax().doubleValue(), 0);
@@ -141,7 +195,7 @@ public class SeriesUtilsTest {
     }
 
     @Test
-    public void testGetNullRegion() {
+    public void getNullRegion_producesExpectedResult() {
         XYSeries s1 = new SimpleXYSeries(
                 SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED, "s1",
                 0, 0, // 0
@@ -176,7 +230,7 @@ public class SeriesUtilsTest {
     }
 
     @Test
-    public void testIboundsMin() {
+    public void iBoundsMin_findsMin() {
         XYSeries s1 = new SimpleXYSeries(
                 Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
                 Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
@@ -203,7 +257,7 @@ public class SeriesUtilsTest {
     }
 
     @Test
-    public void testIboundsMax() {
+    public void iBoundsMax_findsMax() {
         XYSeries s1 = new SimpleXYSeries(
                 Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
                 Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
@@ -230,7 +284,7 @@ public class SeriesUtilsTest {
     }
 
     @Test
-    public void testIbounds() {
+    public void iBounds_findsMinMax() {
         FastXYSeries series = mock(FastXYSeries.class);
         when(series.size()).thenReturn(3);
         when(series.getX(0)).thenReturn(0);

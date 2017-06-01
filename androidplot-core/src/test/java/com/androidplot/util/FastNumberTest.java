@@ -9,6 +9,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings({"UnnecessaryBoxing", "ObjectEqualsNull", "EqualsBetweenInconvertibleTypes", "EqualsWithItself", "NumberEquality"})
@@ -84,16 +85,16 @@ public class FastNumberTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void constructor_throwsException_ifNumberIsNull() {
+    @Test
+    public void orNull_returnsNull_ifNullNumber() {
         //noinspection ConstantConditions
-        new FastNumber(null);
+        assertNull(FastNumber.orNull(null));
     }
 
     @Test
     public void equals_returnsTrue_ifFromSameNumberInstance() {
         for (Number number : NUMBERS) {
-            assertTrue("Equality test failed on " + number, new FastNumber(number).equals(new FastNumber(number)));
+            assertTrue("Equality test failed on " + number, FastNumber.orNull(number).equals(FastNumber.orNull(number)));
         }
     }
 
@@ -102,7 +103,7 @@ public class FastNumberTest {
         assertEquals("misconfigured test values", NUMBERS.length, NUMBERS_CLONE.length);
         for (int i = 0; i < NUMBERS.length; i++) {
             assertEquals("misconfigured test values", NUMBERS[i], NUMBERS_CLONE[i]);
-            assertTrue(new FastNumber(NUMBERS[i]).equals(new FastNumber(NUMBERS_CLONE[i])));
+            assertTrue(FastNumber.orNull(NUMBERS[i]).equals(FastNumber.orNull(NUMBERS_CLONE[i])));
         }
     }
 
@@ -114,7 +115,7 @@ public class FastNumberTest {
                     continue;
                 }
                 assertNotEquals("duplicate test values at index " + i + " and " + j, NUMBERS[i], NUMBERS[j]);
-                assertFalse(new FastNumber(NUMBERS[i]).equals(new FastNumber(NUMBERS[j])));
+                assertFalse(FastNumber.orNull(NUMBERS[i]).equals(FastNumber.orNull(NUMBERS[j])));
             }
         }
     }
@@ -123,8 +124,8 @@ public class FastNumberTest {
     public void hashCode_isEqual_ifInstanceIsEqual() {
         for (Number number : NUMBERS) {
             for (Number number2 : NUMBERS) {
-                FastNumber fastNumber1 = new FastNumber(number);
-                FastNumber fastNumber2 = new FastNumber(number2);
+                FastNumber fastNumber1 = FastNumber.orNull(number);
+                FastNumber fastNumber2 = FastNumber.orNull(number2);
                 if (fastNumber1.equals(fastNumber2)) {
                     assertEquals(fastNumber1.hashCode(), fastNumber2.hashCode());
                 }

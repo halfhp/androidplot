@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.LayoutManager;
@@ -13,6 +14,8 @@ import com.androidplot.ui.TableModel;
 import com.androidplot.util.FontUtils;
 import com.androidplot.util.PixelUtils;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,6 +36,8 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
 
     private boolean drawIconBackgroundEnabled = true;
     private boolean drawIconBorderEnabled = true;
+
+    private Comparator<ItemT> legendItemComparator;
 
     {
         textPaint = new Paint();
@@ -59,6 +64,9 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
     @Override
     protected void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
         final List<ItemT> items = getLegendItems();
+        if(legendItemComparator != null) {
+            Collections.sort(items, legendItemComparator);
+        }
         final Iterator<RectF> cellRectIterator = tableModel.getIterator(widgetRect, items.size());
         for(ItemT item : items) {
             final RectF cellRect = cellRectIterator.next();
@@ -173,4 +181,17 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
         this.iconSize = iconSize;
     }
 
+    public Comparator<ItemT> getLegendItemComparator() {
+        return legendItemComparator;
+    }
+
+    /**
+     * Set a scheme for sorting the display order or legend items.  By default no sorting is applied
+     * and {@link com.androidplot.Series} items typically appear in the order which the series was
+     * added to the {@link com.androidplot.Plot}.
+     * @param legendItemComparator
+     */
+    public void setLegendItemComparator(Comparator<ItemT> legendItemComparator) {
+        this.legendItemComparator = legendItemComparator;
+    }
 }

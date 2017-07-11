@@ -29,27 +29,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.Map.Entry;
 
 /**
  * Displays a legend for each series added to the owning {@link XYPlot}.
  */
 public class XYLegendWidget extends LegendWidget<XYLegendItem> {
 
-    /**
-     * Used to alphabetically sort Region legend entries.
-     */
-    private static class RegionEntryComparator implements Comparator<Map.Entry<XYRegionFormatter, String>> {
-        @Override
-        public int compare(Map.Entry<XYRegionFormatter, String> o1, Map.Entry<XYRegionFormatter, String> o2) {
-            return o1.getValue().compareTo(o2.getValue());
-        }
-    }
-
     private XYPlot plot;
-
-    private static final RegionEntryComparator regionEntryComparator = new RegionEntryComparator();
 
     public XYLegendWidget(LayoutManager layoutManager, XYPlot plot,
                           Size widgetSize,
@@ -57,6 +44,18 @@ public class XYLegendWidget extends LegendWidget<XYLegendItem> {
                           Size iconSize) {
         super(tableModel, layoutManager, widgetSize, iconSize);
         this.plot = plot;
+
+        // Set a default comparator that sorts by type and then alphabetically
+        setLegendItemComparator(new Comparator<XYLegendItem>() {
+            @Override
+            public int compare(XYLegendItem o1, XYLegendItem o2) {
+                if(o1.type == o2.type) {
+                    return o1.getTitle().compareTo(o2.getTitle());
+                } else {
+                    return(o1.type.compareTo(o2.type));
+                }
+            }
+        });
     }
 
     protected void drawRegionLegendIcon(Canvas canvas, RectF rect, XYRegionFormatter formatter) {
@@ -75,7 +74,6 @@ public class XYLegendWidget extends LegendWidget<XYLegendItem> {
                 break;
             default:
                 throw new UnsupportedOperationException("Unexpected item type: " + XYLegendItem.type);
-
         }
     }
 
@@ -86,16 +84,11 @@ public class XYLegendWidget extends LegendWidget<XYLegendItem> {
             items.add(new XYLegendItem(XYLegendItem.Type.SERIES, sfPair.getFormatter(), sfPair.getSeries().getTitle()));
         }
 
-        // alphabetically sorted regions:
-        TreeSet<Map.Entry<XYRegionFormatter, String>> sortedRegions = new TreeSet<>(regionEntryComparator);
-
         for (XYSeriesRenderer renderer : plot.getRendererList()) {
             Hashtable<XYRegionFormatter, String> urf = renderer.getUniqueRegionFormatters();
-            sortedRegions.addAll(urf.entrySet());
-        }
-
-        for (Map.Entry<XYRegionFormatter, String> item : sortedRegions) {
-            items.add(new XYLegendItem(XYLegendItem.Type.REGION, item.getKey(), item.getValue()));
+            for (Entry<XYRegionFormatter, String> entry : urf.entrySet()) {
+                items.add(new XYLegendItem(XYLegendItem.Type.REGION, entry.getKey(), entry.getValue()));
+            }
         }
 
         return items;

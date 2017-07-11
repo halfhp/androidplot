@@ -19,59 +19,57 @@ package com.androidplot.xy;
 import android.graphics.*;
 import com.androidplot.Plot;
 import com.androidplot.test.AndroidplotTest;
+import com.androidplot.ui.DynamicTableModel;
+import com.androidplot.ui.LayoutManager;
+import com.androidplot.ui.Size;
+import com.androidplot.ui.SizeMode;
+import com.androidplot.ui.TableModel;
+
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.robolectric.RuntimeEnvironment;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class XYLegendWidgetTest extends AndroidplotTest {
 
-    static class MockXYPlot extends XYPlot {
+    @Mock LayoutManager layoutManager;
+    @Mock XYPlot xyPlot;
+    @Mock Canvas canvas;
+    @Mock XYRegionFormatter xyRegionFormatter;
 
-        public MockXYPlot() {
-            super(RuntimeEnvironment.application, "Test",
-                    Plot.RenderMode.USE_MAIN_THREAD);
-        }
+    Size widgetSize = new Size(100, SizeMode.ABSOLUTE, 100, SizeMode.ABSOLUTE);
+    Size iconSize = new Size(10, SizeMode.ABSOLUTE, 10, SizeMode.ABSOLUTE);
 
-        public void exposedOnSizeChanged(int w, int h, int oldw, int oldh) {
-            this.onSizeChanged(w, h, oldw, oldh);
-        }
+    XYLegendWidget legendWidget;
 
-        public void exposedOnDraw(Canvas canvas) {
-            this.onDraw(canvas);
-        }
+    @Before
+    public void before() {
+        legendWidget = spy(new XYLegendWidget(layoutManager, xyPlot, widgetSize,
+                new DynamicTableModel(4, 4), iconSize));
     }
-
-    @After
-    public void tearDown() throws Exception {}
 
     @Test
-    public void testDoOnDraw() throws Exception {
-        MockXYPlot plot = new MockXYPlot();
+    public void doOnDraw_drawsAllItems() throws Exception {
+        final List<XYLegendItem> legendItems = new ArrayList<>();
+        legendItems.add(new XYLegendItem(XYLegendItem.Type.REGION, xyRegionFormatter, "foo"));
+        legendItems.add(new XYLegendItem(XYLegendItem.Type.REGION, xyRegionFormatter, "bar"));
+        doReturn(legendItems).when(legendWidget).getLegendItems();
+        legendWidget.draw(canvas);
 
-        SimpleXYSeries s1 = new SimpleXYSeries((Arrays.asList(1, 2, 3)),
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1");
-
-        plot.addSeries(s1, new LineAndPointFormatter(
-                Color.RED, Color.GREEN, Color.BLUE, null));
-
-        assertEquals(1, plot.getRegistry().size());
-
-        plot.exposedOnSizeChanged(100, 100, 100, 100);
-        plot.redraw();
-        // have to manually invoke this because the invalidate()
-        // invoked by redraw() is a stub and will not result in onDraw being called.
-        plot.exposedOnDraw(new Canvas());
-
-        plot.removeSeries(s1);
-        assertEquals(0, plot.getRegistry().size());
-        plot.addSeries(s1, new BarFormatter(Color.RED, Color.GREEN));
-        plot.redraw();
-
-        // throws NullPointerException before fix
-        // for ANDROIDPLOT-166 was applied.
-        plot.exposedOnDraw(new Canvas());
+        verify(legendWidget, times(2))
+                .drawRegionLegendIcon(eq(canvas), any(RectF.class), any(XYRegionFormatter.class));
     }
-
 }

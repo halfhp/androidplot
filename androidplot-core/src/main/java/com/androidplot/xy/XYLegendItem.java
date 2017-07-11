@@ -2,9 +2,9 @@ package com.androidplot.xy;
 
 import android.support.annotation.NonNull;
 
-import com.androidplot.ui.widget.LegendWidget;
+import com.androidplot.ui.widget.LegendItem;
 
-public class XYLegendItem implements LegendWidget.Item {
+public class XYLegendItem implements LegendItem {
 
     public enum Type {
         SERIES,

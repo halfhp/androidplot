@@ -38,8 +38,7 @@ import java.util.TreeSet;
 public class XYLegendWidget extends LegendWidget<XYLegendItem> {
 
     /**
-     * This class is of no use outside of XYLegendWidget.  It's just used to alphabetically sort
-     * Region legend entries.
+     * Used to alphabetically sort Region legend entries.
      */
     private static class RegionEntryComparator implements Comparator<Map.Entry<XYRegionFormatter, String>> {
         @Override
@@ -61,8 +60,8 @@ public class XYLegendWidget extends LegendWidget<XYLegendItem> {
     }
 
     protected void drawRegionLegendIcon(Canvas canvas, RectF rect, XYRegionFormatter formatter) {
-            canvas.drawRect(rect, formatter.getPaint());
-        }
+        canvas.drawRect(rect, formatter.getPaint());
+    }
 
     @Override
     protected void drawIcon(@NonNull Canvas canvas, @NonNull RectF iconRect, @NonNull XYLegendItem XYLegendItem) {
@@ -83,19 +82,19 @@ public class XYLegendWidget extends LegendWidget<XYLegendItem> {
     @Override
     protected List<XYLegendItem> getLegendItems() {
         final ArrayList<XYLegendItem> items = new ArrayList<>();
-        for(SeriesBundle<XYSeries, XYSeriesFormatter> sfPair : plot.getRegistry().getLegendEnabledItems()) {
+        for (SeriesBundle<XYSeries, XYSeriesFormatter> sfPair : plot.getRegistry().getLegendEnabledItems()) {
             items.add(new XYLegendItem(XYLegendItem.Type.SERIES, sfPair.getFormatter(), sfPair.getSeries().getTitle()));
         }
 
-        // Keep an alphabetically sorted list of regions:
-        TreeSet<Map.Entry<XYRegionFormatter, String>> sortedRegions = new TreeSet<Map.Entry<XYRegionFormatter, String>>(regionEntryComparator);
+        // alphabetically sorted regions:
+        TreeSet<Map.Entry<XYRegionFormatter, String>> sortedRegions = new TreeSet<>(regionEntryComparator);
 
-        for(XYSeriesRenderer renderer : plot.getRendererList()) {
+        for (XYSeriesRenderer renderer : plot.getRendererList()) {
             Hashtable<XYRegionFormatter, String> urf = renderer.getUniqueRegionFormatters();
             sortedRegions.addAll(urf.entrySet());
         }
 
-        for(Map.Entry<XYRegionFormatter, String> item : sortedRegions) {
+        for (Map.Entry<XYRegionFormatter, String> item : sortedRegions) {
             items.add(new XYLegendItem(XYLegendItem.Type.REGION, item.getKey(), item.getValue()));
         }
 

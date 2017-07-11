@@ -16,7 +16,11 @@ import com.androidplot.util.PixelUtils;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class LegendWidget<ItemT extends LegendWidget.Item> extends Widget {
+/**
+ * Provides core functionality for displaying a legend widget within a {@link com.androidplot.Plot}.
+ * @param <ItemT>
+ */
+public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
 
     private static final float DEFAULT_TEXT_SIZE_DP = 20;
 
@@ -69,8 +73,18 @@ public abstract class LegendWidget<ItemT extends LegendWidget.Item> extends Widg
         drawIcon(canvas, iconRect, item);
     }
 
+    /**
+     * Draw the icon representing the legend item
+     * @param canvas
+     * @param iconRect The space to be occupied by the icon.
+     * @param item
+     */
     protected abstract void drawIcon(@NonNull Canvas canvas, @NonNull RectF iconRect, @NonNull ItemT item);
 
+    /**
+     *
+     * @return The list of legend items to be drawn.  This is used to calculate table dimensions etc.
+     */
     protected abstract List<ItemT> getLegendItems();
 
     private RectF getIconRect(RectF cellRect) {
@@ -83,14 +97,28 @@ public abstract class LegendWidget<ItemT extends LegendWidget.Item> extends Widg
         return iconRect;
     }
 
-    private void beginDrawingCell(Canvas canvas, RectF iconRect) {
+    /**
+     * Done at the start of rendering a new cell.  Whatever is drawn here will be beneath the rest
+     * of the cell content; typically used to draw backgrounds.
+     * @param canvas
+     * @param iconRect
+     */
+    protected void beginDrawingCell(Canvas canvas, RectF iconRect) {
 
         if(drawIconBackgroundEnabled && iconBackgroundPaint != null) {
             canvas.drawRect(iconRect, iconBackgroundPaint);
         }
     }
 
-    private void finishDrawingCell(Canvas canvas, RectF cellRect, RectF iconRect, Item item) {
+    /**
+     * Done at the end of rendering a new cell.  Whatever is drawn here will be on top of
+     * the rest of the cell content; typically used to draw borders and text.
+     * @param canvas
+     * @param cellRect
+     * @param iconRect
+     * @param legendItem
+     */
+    protected void finishDrawingCell(Canvas canvas, RectF cellRect, RectF iconRect, LegendItem legendItem) {
 
         if(drawIconBorderEnabled && iconBorderPaint != null) {
             canvas.drawRect(iconRect, iconBorderPaint);
@@ -99,9 +127,9 @@ public abstract class LegendWidget<ItemT extends LegendWidget.Item> extends Widg
         float centeredTextOriginY = getRectCenterY(cellRect) + (FontUtils.getFontHeight(textPaint)/2);
 
         if (textPaint.getTextAlign().equals(Paint.Align.RIGHT)) {
-            canvas.drawText(item.getTitle(), iconRect.left - 2, centeredTextOriginY, textPaint);
+            canvas.drawText(legendItem.getTitle(), iconRect.left - 2, centeredTextOriginY, textPaint);
         } else {
-            canvas.drawText(item.getTitle(), iconRect.right + 2, centeredTextOriginY, textPaint);
+            canvas.drawText(legendItem.getTitle(), iconRect.right + 2, centeredTextOriginY, textPaint);
         }
     }
 
@@ -145,7 +173,4 @@ public abstract class LegendWidget<ItemT extends LegendWidget.Item> extends Widg
         this.iconSize = iconSize;
     }
 
-    public interface Item {
-        String getTitle();
-    }
 }

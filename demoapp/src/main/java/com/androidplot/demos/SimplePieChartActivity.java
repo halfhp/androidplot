@@ -62,6 +62,9 @@ public class SimplePieChartActivity extends Activity
         // initialize our XYPlot reference:
         pie = (PieChart) findViewById(R.id.mySimplePieChart);
 
+        // enable the legend:
+        pie.getLegend().setVisible(true);
+
         final float padding = PixelUtils.dpToPix(30);
         pie.getPie().setPadding(padding, padding, padding, padding);
 
@@ -183,36 +186,10 @@ public class SimplePieChartActivity extends Activity
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float scale = valueAnimator.getAnimatedFraction();
-//                scalingSeries1.setScale(scale);
-//                scalingSeries2.setScale(scale);
                 renderer.setExtentDegs(360 * scale);
                 pie.redraw();
             }
         });
-//        animator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animator) {
-//                // the animation is over, so show point labels:
-//                series1Format.getPointLabelFormatter().getTextPaint().setColor(Color.WHITE);
-//                series2Format.getPointLabelFormatter().getTextPaint().setColor(Color.WHITE);
-//                plot.redraw();
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animator) {
-//
-//            }
-//        });
 
         // the animation will run for 1.5 seconds:
         animator.setDuration(1500);

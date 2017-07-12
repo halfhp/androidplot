@@ -38,6 +38,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,8 +48,7 @@ public class XYLegendWidgetTest extends AndroidplotTest {
     @Mock XYPlot xyPlot;
     @Mock Canvas canvas;
     @Mock XYRegionFormatter xyRegionFormatter;
-    @Mock XYSeriesFormatter xySeriesFormatter;
-    @Mock XYSeriesRenderer xySeriesRenderer;
+    LineAndPointRenderer lineAndPointRenderer;
 
     Size widgetSize = new Size(100, SizeMode.ABSOLUTE, 100, SizeMode.ABSOLUTE);
     Size iconSize = new Size(10, SizeMode.ABSOLUTE, 10, SizeMode.ABSOLUTE);
@@ -62,34 +62,46 @@ public class XYLegendWidgetTest extends AndroidplotTest {
         legendWidget = spy(new XYLegendWidget(layoutManager, xyPlot, widgetSize,
                 new DynamicTableModel(4, 4), iconSize));
 
+        lineAndPointRenderer = new LineAndPointRenderer(xyPlot);
+
         when(xyPlot.getRegistry()).thenReturn(seriesRegistry);
-        when(xyPlot.getRenderer(any(Class.class))).thenReturn(xySeriesRenderer);
+        when(xyPlot.getRendererList()).thenReturn(Lists.<XYSeriesRenderer>newArrayList(lineAndPointRenderer));
+        when(xyPlot.getRenderer(any(Class.class))).thenReturn(lineAndPointRenderer);
     }
 
     @Test
     public void draw_drawsLegendIcons_forEnabledItemsOnly() throws Exception {
         final XYSeries  s1 = mock(XYSeries.class);
-        final XYSeriesFormatter f1 = mock(XYSeriesFormatter.class);
+        final XYSeriesFormatter f1 = new LineAndPointFormatter();
+        f1.setLegendIconEnabled(true);
 
         final XYSeries  s2 = mock(XYSeries.class);
-        final XYSeriesFormatter f2 = mock(XYSeriesFormatter.class);
+        final XYSeriesFormatter f2 = new LineAndPointFormatter();
+        f2.setLegendIconEnabled(false);
 
-        when(f1.isLegendIconEnabled()).thenReturn(true);
-        when(f2.isLegendIconEnabled()).thenReturn(false);
+        final RectRegion r1 = new RectRegion(0, 0, 10, 10, "r1");
+        final RectRegion r2 = new RectRegion(0, 0, 20, 20, "r2");
+        f1.addRegion(r1, new XYRegionFormatter(0));
+        f2.addRegion(r2, new XYRegionFormatter(0));
 
         seriesRegistry.add(s1, f1);
         seriesRegistry.add(s2, f2);
         legendWidget.draw(canvas);
 
-        verify(legendWidget, never()).drawRegionLegendIcon(any(Canvas.class), any(RectF.class), any(XYRegionFormatter.class));
-        verify(legendWidget).drawIcon(any(Canvas.class), any(RectF.class), any(XYLegendItem.class));
+        verify(legendWidget, times(2))
+                .drawRegionLegendIcon(any(Canvas.class), any(RectF.class), any(XYRegionFormatter.class));
+        verify(legendWidget, times(3))
+                .drawIcon(any(Canvas.class), any(RectF.class), any(XYLegendItem.class));
     }
 
     @Test
     public void draw_sortsItemsAlphabeticallyByTitle() throws Exception{
-        final XYLegendItem i1 = new XYLegendItem(XYLegendItem.Type.SERIES, xySeriesFormatter, "zoo");
-        final XYLegendItem i2 = new XYLegendItem(XYLegendItem.Type.SERIES, xySeriesFormatter, "apple");
-        final XYLegendItem i3 = new XYLegendItem(XYLegendItem.Type.SERIES, xySeriesFormatter, "boo");
+        final XYLegendItem i1 = new XYLegendItem(XYLegendItem.Type.SERIES,
+                new LineAndPointFormatter(), "zoo");
+        final XYLegendItem i2 = new XYLegendItem(XYLegendItem.Type.SERIES,
+                new LineAndPointFormatter(), "apple");
+        final XYLegendItem i3 = new XYLegendItem(XYLegendItem.Type.SERIES,
+                new LineAndPointFormatter(), "boo");
 
         final List<XYLegendItem> legendItems = Lists.newArrayList(i1, i2, i3);
         doReturn(legendItems).when(legendWidget).getLegendItems();

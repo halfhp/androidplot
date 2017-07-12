@@ -15,6 +15,7 @@ specific plot types explaining styling and other advanced topics.
 * [Quickstart](quickstart.md) :star:
 * [Quickstart (YouTube Video)](https://www.youtube.com/watch?v=wEFkzQY_wWI) :movie_camera:
 * [Plot Composition](plot_composition.md)
+* [The Legend](legend.md)
 * [XY Plots](xyplot.md)
 * [Bar Charts](barchart.md)
 * [Candlestick Charts](candlestick.md)

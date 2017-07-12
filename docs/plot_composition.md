@@ -1,26 +1,26 @@
 # Plot Composition
-All plots in Androidplot inherit from the abstract base class Plot which provides common behaviors
-for all Plot implementations.
+All plots in Androidplot inherit from the abstract base class `Plot` which provides common behaviors
+for all `Plot` implementations.
 
 # Widgets
-Plots are composed of one or more Widgets.  A Widget is an abstraction of a visual
+Plots are composed of one or more Widgets.  A `Widget` is an abstraction of a visual
 component that may be positioned and scaled within the visible area of a Plot.  For example,
-an XY Plot is typically composed of these 5 Widgets:
+an `XYPlot` is typically composed of these 5 `Widgets`:
 
 * Title
 * Graph
 * Domain Label
 * Range Label
-* Legend
+* [Legend](legend.md)
 
-All Plot implementations will contain at least one default Widget providing the core
-behavior encapsulated by that Plot.  In addition to moving and scaling these Widgets, developers may
-also extend them and replace the Plot's default instance with the derived implenentation in order to 
+All implementations of `Plot` will contain at least one default `Widget` providing the core
+behavior encapsulated by that `Plot`.  In addition to moving and scaling a `Widget`, developers may
+also extend them and replace the `Plot` instance's default instance with the derived implementation in order to 
 get custom behavior.
 
 # The LayoutManager
-The LayoutManager provides the logic for visually positioning and scaling Widgets; all Plot implementations
-contain an instance of LayoutManager that can be retrieved via `Plot.getLayoutManager()`.
+The `LayoutManager` provides the logic for visually positioning and scaling Widgets; all `Plot` implementations
+contain an instance of `LayoutManager` that can be retrieved via `Plot.getLayoutManager()`.
 
 ## Z-Indexing
 Z-indexing is a 2D drawing concept which associates each drawable entity with a value that determines
@@ -28,12 +28,12 @@ which elements get drawn onto the screen first, producing the visual effect that
 on top of others.
 
 While Androidplot uses the term "z-index" it's implemented internally as a linked list to prevent the possibility
-of duplicate index values and therefore ensuring that the drawing order of Widgets is always explicit.
+of duplicate index values and therefore ensuring that `Widget` drawing order is always explicit.
 The [Layerable](../androidplot-core/src/main/java/com/androidplot/util/Layerable.java) interface 
-defines methods used for manipulating the z-index of a Widget.
+defines methods used for manipulating the z-index of a `Widget`.
 
 ## Adding & Removing Widgets
-New Widgets can be added either to the front or back of the z-index using these methods:
+New `Widget` instances can be added either to the front or back of the z-index using these methods:
 
 * `LayoutManager.addToTop(Widget)`
 * `LayoutManager.addToBottom(Widget)`

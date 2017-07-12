@@ -13,7 +13,7 @@ plot.getLegend().setVisible(true|false);
 ```
 
 # Hiding Series Items
-You can tell Androidplot not to generate a legend item for a Series by configuring it's associated
+You can tell Androidplot not to generate a legend item for a `Series` by configuring it's associated
 `Formatter`:
 
 ```java
@@ -57,3 +57,7 @@ plot.getLegend().setLegendItemComparator(myComparator);
 
 Using a custom `Comparator` in conjunction with `ROW_MAJOR` and `COLUMN_MAJOR` properties on the `TableModel`
 (show above) gives you full control over the display ordering of your legend entries.
+
+# Positioning and Resizing
+The legend is just an implementation of a Widget and is positioned and resized in the same ways
+that all Widget instances are positioned.  See the [Plot Composition](plot_composition.md) doc for details.

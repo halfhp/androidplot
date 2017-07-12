@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A stack of series to be rendered.  The stack order is immutable  but individual elements may be
+ * A stack of series to be rendered.  The stack order is immutable but individual elements may be
  * manipulated via the public methods of {@link RenderStack.StackElement}.
  */
 public class RenderStack<SeriesType extends Series, FormatterType extends Formatter> {

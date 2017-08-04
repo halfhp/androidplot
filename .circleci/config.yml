@@ -30,8 +30,8 @@ jobs:
     steps:
       - checkout
 
-      - run: echo 'export KEYSTORE=${HOME}/repo/${CIRCLE_PROJECT_REPONAME}/sigining.keystore' >> $BASH_ENV
-      - run: echo 'export PUBLISHER_ACCT_JSON_FILE=${HOME}/repo/${CIRCLE_PROJECT_REPONAME}/publisher_profile.json' >> $BASH_ENV
+      - run: echo 'export KEYSTORE=${HOME}/repo/sigining.keystore' >> $BASH_ENV
+      - run: echo 'export PUBLISHER_ACCT_JSON_FILE=${HOME}/repo/publisher_profile.json' >> $BASH_ENV
 
       # Download and cache dependencies
       - restore_cache:

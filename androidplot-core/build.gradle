@@ -74,7 +74,7 @@ android {
     lintOptions {
         abortOnError false
     }
-    buildToolsVersion '25.0.0'
+    buildToolsVersion theBuildToolsVersion
 }
 
 group = 'com.androidplot'
@@ -86,7 +86,7 @@ def gitUrl = 'https://github.com/halfhp/androidplot.git'
 dependencies {
 
     compile 'com.halfhp.fig:figlib:1.0.3'
-    compile 'com.android.support:support-annotations:24.2.0'
+    compile 'com.android.support:support-annotations:25.3.1'
     testCompile "org.mockito:mockito-core:1.10.19"
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile "org.robolectric:robolectric:3.1"

@@ -110,7 +110,7 @@ public class PieRendererTest extends AndroidplotTest {
     }
 
     @Test
-    public void testGetContainingSegment() throws Exception {
+    public void getContainingSegment_returnsCorrectSegment() throws Exception {
         Segment segment1 = spy(new Segment("s1", 25));
         Segment segment2 = spy(new Segment("s2", 25));
         Segment segment3 = spy(new Segment("s3", 25));
@@ -145,6 +145,45 @@ public class PieRendererTest extends AndroidplotTest {
 
         // northwest
         assertEquals(segment4, renderer.getContainingSegment(new PointF(0, 0)));
+
+        // northeast
+        assertEquals(segment1, renderer.getContainingSegment(new PointF(100, 0)));
+    }
+
+    @Test
+    public void getContainingSegment_handlesSegmentsLargerThanHalfPie() throws Exception {
+        Segment segment1 = spy(new Segment("s1", 25));
+        Segment segment2 = spy(new Segment("s2", 24));
+        Segment segment3 = spy(new Segment("s3", 51));
+        SegmentFormatter formatter = spy(
+                new SegmentFormatter(Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN));
+        PieRenderer renderer = formatter.getRendererInstance(pieChart);
+
+        pieChart.addSegment(segment1, formatter);
+        pieChart.addSegment(segment2, formatter);
+        pieChart.addSegment(segment3, formatter);
+
+        // southeast
+        assertEquals(segment1, renderer.getContainingSegment(new PointF(100, 100)));
+
+        // southwest
+        assertEquals(segment2, renderer.getContainingSegment(new PointF(0, 100)));
+
+        // northwest
+        assertEquals(segment3, renderer.getContainingSegment(new PointF(0, 0)));
+
+        // northeast
+        assertEquals(segment3, renderer.getContainingSegment(new PointF(100, 0)));
+
+        renderer.setStartDegs(90);
+        // southeast
+        assertEquals(segment2, renderer.getContainingSegment(new PointF(100, 100)));
+
+        // southwest
+        assertEquals(segment3, renderer.getContainingSegment(new PointF(0, 100)));
+
+        // northwest
+        assertEquals(segment3, renderer.getContainingSegment(new PointF(0, 0)));
 
         // northeast
         assertEquals(segment1, renderer.getContainingSegment(new PointF(100, 0)));

@@ -28,10 +28,10 @@ jobs:
 #      PUBLISHER_ACCT_JSON_FILE: ${CIRCLE_WORKING_DIRECTORY}/publisher_profile.json
 
     steps:
+      - checkout
+
       - run: echo 'export KEYSTORE=${HOME}/${CIRCLE_PROJECT_REPONAME}/sigining.keystore' >> $BASH_ENV
       - run: echo 'export PUBLISHER_ACCT_JSON_FILE=${HOME}/${CIRCLE_PROJECT_REPONAME}/publisher_profile.json' >> $BASH_ENV
-
-      - checkout
 
       # Download and cache dependencies
       - restore_cache:

@@ -12,6 +12,5 @@ DemoApp/.settings
 DemoApp/bin
 DemoApp/gen
 DemoApp/target
-.idea/libraries
-.idea/*.xml
+.idea
 **/R.java

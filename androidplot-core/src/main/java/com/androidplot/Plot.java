@@ -21,6 +21,7 @@ import android.content.res.TypedArray;
 import android.graphics.*;
 import android.os.Build;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -804,7 +805,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * "heavy lifting".
      * @param canvas
      */
-    protected synchronized void renderOnCanvas(Canvas canvas) {
+    protected synchronized void renderOnCanvas(@Nullable Canvas canvas) {
+        if(canvas == null) {
+            return;
+        }
         try {
             // any series interested in synchronizing with plot should
             // implement PlotListener.onBeforeDraw(...) and do a read lock from within its

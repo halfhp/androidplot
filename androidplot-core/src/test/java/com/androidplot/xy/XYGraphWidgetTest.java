@@ -79,7 +79,7 @@ public class XYGraphWidgetTest extends AndroidplotTest {
         xyPlot.setRangeStep(StepMode.INCREMENT_BY_VAL, 1);
 
         graphWidget = spy(new XYGraphWidget(layoutManager, xyPlot, size));
-        graphWidget.setGridRect(new RectF(0, 0, 100, 100));
+        graphWidget.setGridRect(new RectF(0, 0, 10, 100));
         graphWidget.setLabelRect(new RectF(0, 0, 100, 100));
     }
 
@@ -253,11 +253,11 @@ public class XYGraphWidgetTest extends AndroidplotTest {
         assertEquals(-100, coords.x.intValue());
         assertEquals(100, coords.y.intValue());
 
-        coords = graphWidget.screenToSeries(new PointF(100, 100));
+        coords = graphWidget.screenToSeries(new PointF(10, 100));
         assertEquals(100, coords.x.intValue());
         assertEquals(-100, coords.y.intValue());
 
-        coords = graphWidget.screenToSeries(new PointF(50, 50));
+        coords = graphWidget.screenToSeries(new PointF(5, 50));
         assertEquals(0, coords.x.intValue());
         assertEquals(0, coords.y.intValue());
     }
@@ -271,11 +271,11 @@ public class XYGraphWidgetTest extends AndroidplotTest {
         assertEquals(0f, point.y);
 
         point = graphWidget.seriesToScreen(new XYCoords(100, -100));
-        assertEquals(100f, point.x);
+        assertEquals(10f, point.x);
         assertEquals(100f, point.y);
 
         point = graphWidget.seriesToScreen(new XYCoords(0, 0));
-        assertEquals(50f, point.x);
+        assertEquals(5f, point.x);
         assertEquals(50f, point.y);
     }
 
@@ -284,8 +284,8 @@ public class XYGraphWidgetTest extends AndroidplotTest {
         when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
 
         assertEquals(-100, graphWidget.screenToSeriesX(new PointF(0, 0)).intValue());
-        assertEquals(100, graphWidget.screenToSeriesX(new PointF(100, 100)).intValue());
-        assertEquals(0, graphWidget.screenToSeriesX(new PointF(50, 50)).intValue());
+        assertEquals(100, graphWidget.screenToSeriesX(new PointF(10, 100)).intValue());
+        assertEquals(0, graphWidget.screenToSeriesX(new PointF(5, 50)).intValue());
     }
 
     @Test
@@ -302,16 +302,16 @@ public class XYGraphWidgetTest extends AndroidplotTest {
         when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
 
         assertEquals(0f, graphWidget.seriesToScreenX(-100));
-        assertEquals(100f, graphWidget.seriesToScreenX(100));
-        assertEquals(50f, graphWidget.seriesToScreenX(0));
+        assertEquals(10f, graphWidget.seriesToScreenX(100));
+        assertEquals(5f, graphWidget.seriesToScreenX(0));
     }
 
     @Test
     public void testSeriesToScreenY() throws Exception {
         when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
 
-        assertEquals(0f, graphWidget.seriesToScreenY(100));
-        assertEquals(100f, graphWidget.seriesToScreenY(-100));
+        assertEquals(100f, graphWidget.seriesToScreenY(100));
+        assertEquals(0f, graphWidget.seriesToScreenY(-100));
         assertEquals(50f, graphWidget.seriesToScreenY(0));
     }
 }

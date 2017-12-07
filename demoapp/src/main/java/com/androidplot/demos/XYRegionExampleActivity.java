@@ -69,8 +69,8 @@ public class XYRegionExampleActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xyregion_example);
-        plot = (XYPlot) findViewById(R.id.xyRegionExamplePlot);
-        timCB = (CheckBox) findViewById(R.id.s1CheckBox);
+        plot = findViewById(R.id.xyRegionExamplePlot);
+        timCB = findViewById(R.id.s1CheckBox);
         timCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -78,7 +78,7 @@ public class XYRegionExampleActivity extends Activity {
             }
         });
 
-        nickCB = (CheckBox) findViewById(R.id.s2CheckBox);
+        nickCB = findViewById(R.id.s2CheckBox);
         nickCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -86,7 +86,7 @@ public class XYRegionExampleActivity extends Activity {
             }
         });
 
-        r2CheckBox = (CheckBox) findViewById(R.id.r2CheckBox);
+        r2CheckBox = findViewById(R.id.r2CheckBox);
         r2CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -94,7 +94,7 @@ public class XYRegionExampleActivity extends Activity {
             }
         });
 
-        r3CheckBox = (CheckBox) findViewById(R.id.r3CheckBox);
+        r3CheckBox = findViewById(R.id.r3CheckBox);
         r3CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -102,7 +102,7 @@ public class XYRegionExampleActivity extends Activity {
             }
         });
 
-        r4CheckBox = (CheckBox) findViewById(R.id.r4CheckBox);
+        r4CheckBox = findViewById(R.id.r4CheckBox);
         r4CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

@@ -21,9 +21,9 @@ dependencies {
 	compile project(':androidplot-core')
     compile 'com.crittercism:crittercism-android-agent:5.4.0'
 
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 }
 
 buildscript {
@@ -31,7 +31,6 @@ buildscript {
     repositories {
         mavenCentral()
     }
-
     dependencies {
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
     }
@@ -39,12 +38,11 @@ buildscript {
 
 android {
     compileSdkVersion theCompileSdkVersion
-    buildToolsVersion theBuildToolsVersion
 
     defaultConfig {
         versionCode theVersionCode
         versionName theVersionName
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion theTargetSdkVersion
         applicationId "com.androidplot.demos"
     }
@@ -76,7 +74,6 @@ android {
     lintOptions {
         abortOnError false
     }
-    buildToolsVersion '25.0.0'
 }
 
 play {

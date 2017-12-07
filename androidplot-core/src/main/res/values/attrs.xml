@@ -570,7 +570,7 @@ __boolean__
 -->
         <attr name="rangeTitleVisible" format="boolean"/>
 <!--
-### graphHeight
+### drawGridOnTop
 __boolean__
 <br/>
 (default is false) When set to true, grid lines are drawn on top of rendered series data

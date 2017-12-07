@@ -32,99 +32,117 @@
 
             <Button
                 android:id="@+id/startSimplePieExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Pie Chart"/>
 
             <Button
                 android:id="@+id/startSimpleXYExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="A Simple XY Plot"/>
 
             <Button
                 android:id="@+id/animatedXYPlotExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Animated XY Plot"/>
 
             <Button
                 android:id="@+id/startScatterExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="XY Scatter Plot"/>
 
             <Button
                 android:id="@+id/startDynamicXYExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="A Dynamic XY Plot"/>
 
             <Button
                 android:id="@+id/startCandlestickExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Candlestick Chart"/>
 
             <Button
                 android:id="@+id/startOrSensorExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Realtime Orientation Sensor Plot"/>
 
             <Button
                 android:id="@+id/startDualScaleExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Dual Scale XY"/>
 
             <Button
                 android:id="@+id/startTimeSeriesExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/ts_title"/>
 
             <Button
                 android:id="@+id/startStepChartExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Step Chart"
                 />
 
             <Button
                 android:id="@+id/startScrollZoomButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Scroll and Zoom"
                 />
 
             <Button
                 android:id="@+id/startBarPlotExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Bar Plot"/>
 
             <Button
                 android:id="@+id/startXyRegionExampleButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="XYRegion Example"
                 android:enabled="true"/>
 
             <Button
                 android:id="@+id/startXyListViewExButton"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="ListView of XYPlots"
                 android:enabled="true"/>
 
             <Button
                 android:id="@+id/startXYPlotWithBgImgExample"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="XY Background Example"
                 android:enabled="true"/>
 
             <Button
                 android:id="@+id/startECGExample"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="ECG Example"
                 android:enabled="true"/>
 
             <Button
                 android:id="@+id/fxPlotExample"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="f(x) Example"
                 android:enabled="true"/>
 
             <Button
                 android:id="@+id/bubbleChartExample"
-                style="@style/toc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Bubble Chart Example"
                 android:enabled="true"/>
         </LinearLayout>

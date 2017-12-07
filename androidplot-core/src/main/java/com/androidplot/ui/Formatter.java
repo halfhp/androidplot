@@ -48,7 +48,11 @@ public abstract class Formatter<PlotType extends Plot> {
     }
 
     public void configure(Context ctx, int xmlCfgId) {
-        Fig.configure(ctx, this, xmlCfgId);
+        try {
+            Fig.configure(ctx, this, xmlCfgId);
+        } catch (FigException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

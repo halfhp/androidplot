@@ -17,27 +17,27 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:ap="http://schemas.android.com/apk/res-auto"
-
-              style="@style/sample_activity"
-              android:orientation="vertical">
+    xmlns:ap="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.androidplot.xy.XYPlot
-            android:id="@+id/plot1"
-            style="@style/APDefacto.Light"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            ap:title="@string/ts_plot1_title"
-            ap:paddingTop="10dp"
-            ap:paddingBottom="10dp"
-            ap:paddingLeft="10dp"
-            ap:paddingRight="10dp"
-            ap:backgroundColor="@color/ap_white"
-            ap:graphBackgroundColor="@color/ap_white"
-            ap:lineLabelRotationBottom="-45"
-            ap:gridInsetLeft="35dp"
-            ap:gridInsetBottom="40dp"
-            ap:lineLabelInsetLeft="25dp"
-            ap:lineLabelInsetBottom="25dp"
-            renderMode="use_main_thread"/>
+        android:id="@+id/plot1"
+        style="@style/APDefacto.Light"
+        renderMode="use_main_thread"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ap:backgroundColor="@color/ap_white"
+        ap:graphBackgroundColor="@color/ap_white"
+        ap:gridInsetBottom="40dp"
+        ap:gridInsetLeft="35dp"
+        ap:lineLabelInsetBottom="25dp"
+        ap:lineLabelInsetLeft="25dp"
+        ap:lineLabelRotationBottom="-45"
+        ap:paddingBottom="10dp"
+        ap:paddingLeft="10dp"
+        ap:paddingRight="10dp"
+        ap:paddingTop="10dp"
+        ap:title="@string/ts_plot1_title" />
 </LinearLayout>

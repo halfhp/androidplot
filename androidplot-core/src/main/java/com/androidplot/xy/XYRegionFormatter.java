@@ -43,7 +43,11 @@ public class XYRegionFormatter {
     public XYRegionFormatter(Context ctx, int xmlCfgId) {
         // prevent configuration of classes derived from this one:
         if (getClass().equals(XYRegionFormatter.class)) {
-            Fig.configure(ctx, this, xmlCfgId);
+            try {
+                Fig.configure(ctx, this, xmlCfgId);
+            } catch (FigException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

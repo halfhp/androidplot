@@ -76,6 +76,9 @@ Using example #1 above, an Anchor value of `Anchor.LEFT_TOP` means that  the top
 would be positioned at the screen coordinate [200, 50].
 
 #### Examples
+The examples below illustrate positioning an `XYGraphWidget` of an `XYPlot`.
+
+xml:
 ```xml
 ap:graphAnchor="right_bottom"
 ap:graphHorizontalPositioning="absolute_from_right"
@@ -83,8 +86,16 @@ ap:graphHorizontalPosition="0dp"
 ap:graphVerticalPositioning="relative_from_bottom"
 ap:graphVerticalPosition="0dp"
 ```
+java:
+```java
+plot.getGraph().position(
+        0, HorizontalPositioning.ABSOLUTE_FROM_RIGHT,
+        0, VerticalPositioning.RELATIVE_TO_BOTTOM);
+```
 ![alt text](images/positioning/bottom-right-absolute.png "bottom-right-absolute")
 ***
+
+xml:
 ```xml
 ap:graphAnchor="right_bottom"
 ap:graphHorizontalPositioning="absolute_from_right"
@@ -92,8 +103,16 @@ ap:graphHorizontalPosition="10dp"
 ap:graphVerticalPositioning="relative_from_bottom"
 ap:graphVerticalPosition="10dp"
 ```
+java:
+```java
+plot.getGraph().position(
+        PixelUtils.dpToPix(10), HorizontalPositioning.ABSOLUTE_FROM_RIGHT,
+        PixelUtils.dpToPix(10), VerticalPositioning.RELATIVE_TO_BOTTOM);
+```
 ![alt text](images/positioning/bottom-right-absolute-with-offset.png "bottom-right-absolute-with-offset")
 ***
+
+xml:
 ```xml
 ap:graphAnchor="right_bottom"
 ap:graphHorizontalPositioning="absolute_from_left"
@@ -101,8 +120,16 @@ ap:graphHorizontalPosition="0dp"
 ap:graphVerticalPositioning="relative_from_top"
 ap:graphVerticalPosition="0dp"
 ```
-![alt text](images/positioning/top-left-absolute.png "top-left-absolute")
+java:
+```java
+plot.getGraph().position(
+        0, HorizontalPositioning.ABSOLUTE_FROM_LEFT,
+        0, VerticalPositioning.RELATIVE_TO_TOP);
+```
+![alt text](image``s/positioning/top-left-absolute.png "top-left-absolute")
 ***
+
+xml:
 ```xml
 ap:graphAnchor="center"
 ap:graphHorizontalPositioning="absolute_from_center"
@@ -110,17 +137,111 @@ ap:graphHorizontalPosition="0dp"
 ap:graphVerticalPositioning="absolute_from_center"
 ap:graphVerticalPosition="0dp"
 ```
+java:
+```java
+plot.getGraph().position(
+        0, HorizontalPositioning.ABSOLUTE_FROM_CENTER,
+        0, VerticalPositioning.ABSOLUTE_FROM_CENTER);
+```
 ![alt text](images/positioning/center-absolute.png "center-absolute")
 
 
-## Scaling Widgets
-TODO
+## Sizing Widgets
+The size and shape of a `Widget` is controlled by it's `setSize(Size)` method.
+
+### Size
+The `Size` parameter of `Widget.setSize(Size)` defines the height and width of the associated Widget.
+It is composed of two `SizeMetric` instances; one for height and one for width.
+`Size` provides two constructors: `Size(SizeMetric, SizeMetric)` or
+`Size(int, SizeMode, int, SizeMode)`.  Constructor params represent height and width respectively.
 
 ### SizeMetric
-TODO
+A `SizeMetric` is composed of a `SizeMode` and a float value.  There are three kinds of `SizeMode`:
+
+* ABSOLUTE - float value defines the size metric as an absolute value in pixels.
+* RELATIVE - float value defines the size of the metric relative to the size of the containing Plot along
+the associated axis, in the range of 0.0 to 1.0.
+* FILL - float value defines an absolute value in pixels to subtract from the size of the containing 
+Plot along the associated axis and the SizeMetric "fills" the difference.
 
 #### Examples
-TODO
+The examples below illustrate positioning an `XYGraphWidget` of an `XYPlot` and
+assume centered positioning is applied as described in the [Positioning Widgets](#positioning-widgets) section above.
+
+xml:
+```xml
+ap:graphHeightMode="absolute"
+ap:graphHeight="100dp"
+ap:graphWidthMode="absolute"
+ap:graphWidth="100dp"
+```
+java:
+```java
+plot.getGraph().setSize(new Size(
+        PixelUtils.dpToPix(100), SizeMode.ABSOLUTE,
+        PixelUtils.dpToPix(100), SizeMode.ABSOLUTE));
+```
+![alt text](images/sizing/abs100x-abs100y.png "x=100|ABSOLUTE, y=100|ABSOLUTE")
+***
+xml:
+```xml
+ap:graphHeightMode="absolute"
+ap:graphHeight="150dp"
+ap:graphWidthMode="absolute"
+ap:graphWidth="100dp"
+```
+java:
+```java
+plot.getGraph().setSize(new Size(
+        PixelUtils.dpToPix(150), SizeMode.ABSOLUTE,
+        PixelUtils.dpToPix(100), SizeMode.ABSOLUTE));
+```
+![alt text](images/sizing/abs100x-abs150y.png "x=100|ABSOLUTE, y=150|ABSOLUTE")
+***
+xml:
+```xml
+ap:graphHeightMode="relative"
+ap:graphHeight="1.0"
+ap:graphWidthMode="absolute"
+ap:graphWidth="100dp"
+```
+java:
+```java
+plot.getGraph().setSize(new Size(
+        1.0f, SizeMode.RELATIVE,
+        PixelUtils.dpToPix(100), SizeMode.ABSOLUTE));
+```
+![alt text](images/sizing/abs100x-rel1y.png "x=100|ABSOLUTE, y=1.0|RELATIVE")
+***
+xml:
+```xml
+ap:graphHeightMode="absolute"
+ap:graphHeight="100dp"
+ap:graphWidthMode="relative"
+ap:graphWidth="0.75"
+```
+java:
+```java
+plot.getGraph().setSize(new Size(
+        PixelUtils.dpToPix(100), SizeMode.ABSOLUTE,
+        0.75f, SizeMode.RELATIVE));
+```
+![alt text](images/sizing/rel075x-abs100y.png "x=0.75|RELATIVE, y=100|ABSOLUTE")
+***
+xml:
+```xml
+ap:graphHeightMode="fill"
+ap:graphHeight="50dp"
+ap:graphWidthMode="fill"
+ap:graphWidth="50dp"
+```
+java:
+```java
+plot.getGraph().setSize(new Size(
+        PixelUtils.dpToPix(50), SizeMode.FILL,
+        PixelUtils.dpToPix(50), SizeMode.FILL));
+```
+![alt text](images/sizing/fil50x-fil50y.png "x=50|FILL, y=50|FILL")
 
 ## Margins and Padding
 Every widget has a margin, padding and an optional border that can be drawn around it.  These params behave 

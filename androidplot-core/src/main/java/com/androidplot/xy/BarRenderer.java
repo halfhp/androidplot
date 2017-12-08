@@ -238,7 +238,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         return result;
     }
 
-    protected void drawBar(Canvas canvas, Bar bar, RectF rect) {
+    protected void drawBar(Canvas canvas, Bar<FormatterType> bar, RectF rect) {
 
         // null yVals are skipped:
         if(bar.getY() == null) {

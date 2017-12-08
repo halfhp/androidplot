@@ -23,6 +23,7 @@ specific plot types explaining styling and other advanced topics.
 * [Bubble Charts](bubblechart.md)
 * [Dynamic Plots](dynamicdata.md)
 * [Advanced XY Plot Topics](advanced_xy_plot.md)
+* [Custom Renderers](custom_renderer.md)
 
 # Examples
 Source code examples of the various plot types.

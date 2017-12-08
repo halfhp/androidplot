@@ -58,7 +58,6 @@ task generateAttrsMarkdown(type: AttrMarkdown) {
 
 android {
     compileSdkVersion theCompileSdkVersion
-    buildToolsVersion theBuildToolsVersion
 
     defaultConfig {
         versionCode theVersionCode
@@ -74,7 +73,6 @@ android {
     lintOptions {
         abortOnError false
     }
-    buildToolsVersion theBuildToolsVersion
 }
 
 group = 'com.androidplot'
@@ -85,8 +83,8 @@ def gitUrl = 'https://github.com/halfhp/androidplot.git'
 
 dependencies {
 
-    compile 'com.halfhp.fig:figlib:1.0.3'
-    compile 'com.android.support:support-annotations:25.3.1'
+    compile 'com.halfhp.fig:figlib:1.0.7'
+    compile 'com.android.support:support-annotations:27.0.2'
     testCompile "org.mockito:mockito-core:1.10.19"
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile "org.robolectric:robolectric:3.1"

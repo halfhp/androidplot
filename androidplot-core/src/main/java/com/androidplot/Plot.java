@@ -520,7 +520,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
             // apply "configurator" attrs: (overrides any previously applied styleable attrs)
             // filter out androidplot prefixed attrs:
-            HashMap<String, String> attrHash = new HashMap<String, String>();
+            HashMap<String, String> attrHash = new HashMap<>();
             for (int i = 0; i < attrs.getAttributeCount(); i++) {
                 String attrName = attrs.getAttributeName(i);
 
@@ -529,7 +529,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                     attrHash.put(attrName.substring(XML_ATTR_PREFIX.length() + 1), attrs.getAttributeValue(i));
                 }
             }
-            Fig.configure(getContext(), this, attrHash);
+            try {
+                Fig.configure(getContext(), this, attrHash);
+            } catch (FigException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

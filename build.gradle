@@ -23,9 +23,8 @@ allprojects {
 }
 
 ext {
-    theBuildToolsVersion = '25.0.2'
-    theCompileSdkVersion = 25
-    theTargetSdkVersion = 25
+    theCompileSdkVersion = 26
+    theTargetSdkVersion = 26
     theMinSdkVersion = 5
     theVersionName = '1.5.2'
     theVersionCode = 0
@@ -35,13 +34,14 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
+        google()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
-        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.5.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.6.0'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
     }
 }
@@ -49,6 +49,7 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
+        google()
     }
 }
 

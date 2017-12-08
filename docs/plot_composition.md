@@ -77,6 +77,8 @@ would be positioned at the screen coordinate [200, 50].
 
 #### Examples
 The examples below illustrate positioning an `XYGraphWidget` of an `XYPlot`.
+
+xml:
 ```xml
 ap:graphAnchor="right_bottom"
 ap:graphHorizontalPositioning="absolute_from_right"
@@ -84,8 +86,16 @@ ap:graphHorizontalPosition="0dp"
 ap:graphVerticalPositioning="relative_from_bottom"
 ap:graphVerticalPosition="0dp"
 ```
+java:
+```java
+plot.getGraph().position(
+        0, HorizontalPositioning.ABSOLUTE_FROM_RIGHT,
+        0, VerticalPositioning.RELATIVE_TO_BOTTOM);
+```
 ![alt text](images/positioning/bottom-right-absolute.png "bottom-right-absolute")
 ***
+
+xml:
 ```xml
 ap:graphAnchor="right_bottom"
 ap:graphHorizontalPositioning="absolute_from_right"
@@ -93,8 +103,16 @@ ap:graphHorizontalPosition="10dp"
 ap:graphVerticalPositioning="relative_from_bottom"
 ap:graphVerticalPosition="10dp"
 ```
+java:
+```java
+plot.getGraph().position(
+        PixelUtils.dpToPix(10), HorizontalPositioning.ABSOLUTE_FROM_RIGHT,
+        PixelUtils.dpToPix(10), VerticalPositioning.RELATIVE_TO_BOTTOM);
+```
 ![alt text](images/positioning/bottom-right-absolute-with-offset.png "bottom-right-absolute-with-offset")
 ***
+
+xml:
 ```xml
 ap:graphAnchor="right_bottom"
 ap:graphHorizontalPositioning="absolute_from_left"
@@ -102,14 +120,28 @@ ap:graphHorizontalPosition="0dp"
 ap:graphVerticalPositioning="relative_from_top"
 ap:graphVerticalPosition="0dp"
 ```
+java:
+```java
+plot.getGraph().position(
+        0, HorizontalPositioning.ABSOLUTE_FROM_LEFT,
+        0, VerticalPositioning.RELATIVE_TO_TOP);
+```
 ![alt text](image``s/positioning/top-left-absolute.png "top-left-absolute")
 ***
+
+xml:
 ```xml
 ap:graphAnchor="center"
 ap:graphHorizontalPositioning="absolute_from_center"
 ap:graphHorizontalPosition="0dp"
 ap:graphVerticalPositioning="absolute_from_center"
 ap:graphVerticalPosition="0dp"
+```
+java:
+```java
+plot.getGraph().position(
+        0, HorizontalPositioning.ABSOLUTE_FROM_CENTER,
+        0, VerticalPositioning.ABSOLUTE_FROM_CENTER);
 ```
 ![alt text](images/positioning/center-absolute.png "center-absolute")
 
@@ -118,8 +150,10 @@ ap:graphVerticalPosition="0dp"
 The size and shape of a `Widget` is controlled by it's `setSize(Size)` method.
 
 ### Size
-The `Size` parameter of `Widget.setSize(Size)` defines the height and width of the associated Widget.  
+The `Size` parameter of `Widget.setSize(Size)` defines the height and width of the associated Widget.
 It is composed of two `SizeMetric` instances; one for height and one for width.
+`Size` provides two constructors: `Size(SizeMetric, SizeMetric)` or
+`Size(int, SizeMode, int, SizeMode)`.  Constructor params represent height and width respectively.
 
 ### SizeMetric
 A `SizeMetric` is composed of a `SizeMode` and a float value.  There are three kinds of `SizeMode`:
@@ -130,9 +164,9 @@ the associated axis, in the range of 0.0 to 1.0.
 * FILL - float value defines an absolute value in pixels to subtract from the size of the containing 
 Plot along the associated axis and the SizeMetric "fills" the difference.
 
-
 #### Examples
-The below examples assume centered positioning (TODO define this with code).
+The examples below illustrate positioning an `XYGraphWidget` of an `XYPlot` and
+assume centered positioning is applied as described in the [Positioning Widgets](#Positioning-Widgets) section above.
 
 xml:
 ```xml

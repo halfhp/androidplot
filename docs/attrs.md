@@ -1,8 +1,12 @@
+_This documentation is auto generated from [attrs.xml](../androidplot-core/src/main/res/values/attrs.xml)._
+
 # Androidplot XML Attributes
 Attributes are broken down by element followed by either their type or list of accepted values.
-<br/>
-<br/>
-_This documentation is auto generated from [attrs.xml](../androidplot-core/src/main/res/values/attrs.xml) and should not be edited directly._
+Supported Elements:
+
+* [Plot](#Plot)
+* [XYPlot](#XYPlot)
+* [PieChart](#PieChart)
 
 ## Plot
 Plot's attrs are available in all Plot types.
@@ -111,6 +115,10 @@ __dimension|float|integer__
 * relative_from_right
 * relative_from_center
 
+`HorizontalPositioning` component of the `HorizontalPosition` of the `TextLabelWidget`
+that displays the domain title.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+
 ### domainTitleVerticalPositioning
 * absolute_from_top
 * absolute_from_bottom
@@ -119,11 +127,23 @@ __dimension|float|integer__
 * relative_from_bottom
 * relative_from_center
 
+`VerticalPositioning` component of the `VerticalPosition` of the `TextLabelWidget`
+that displays the domain title.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+
 ### domainTitleHorizontalPosition
 __dimension|float|integer__
 
+`float` value component of the `HorizontalPosition` of the `TextLabelWidget`
+that displays the domain title.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+
 ### domainTitleVerticalPosition
 __dimension|float|integer__
+
+`float` value component of the `VerticalPosition` of the `TextLabelWidget`
+that displays the domain title.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
 
 ### domainTitleAnchor
 * top_middle
@@ -200,7 +220,7 @@ __dimension|float|integer__
 ### rangeTitleVisible
 __boolean__
 
-### graphHeight
+### drawGridOnTop
 __boolean__
 <br/>
 (default is false) When set to true, grid lines are drawn on top of rendered series data
@@ -236,6 +256,9 @@ __dimension|float|integer__
 * relative_from_right
 * relative_from_center
 
+`HorizontalPositioning` component of the `HorizontalPosition` of the `XYGraphWidget`.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+
 ### graphVerticalPositioning
 * absolute_from_top
 * absolute_from_bottom
@@ -244,11 +267,20 @@ __dimension|float|integer__
 * relative_from_bottom
 * relative_from_center
 
+`VerticalPositioning` component of the `VerticalPosition` of the `XYGraphWidget`.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+
 ### graphHorizontalPosition
 __dimension|float|integer__
 
+`float` value component of the `HorizontalPosition` of the `XYGraphWidget`.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+
 ### graphVerticalPosition
 __dimension|float|integer__
+
+`float` value component of the `VerticalPosition` of the `XYGraphWidget`.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
 
 ### graphAnchor
 * top_middle
@@ -478,6 +510,8 @@ __dimension|float|integer__
 __dimension|float|integer__
 
 ### legendHorizontalPositioning
+`HorizontalPositioning` component of the `HorizontalPosition` of the `XYLegendWidget`.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
 * absolute_from_left
 * absolute_from_right
 * absolute_from_center
@@ -486,6 +520,8 @@ __dimension|float|integer__
 * relative_from_center
 
 ### legendVerticalPositioning
+`VerticalPositioning` component of the `VerticalPosition` of the `XYLegendWidget`.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
 * absolute_from_top
 * absolute_from_bottom
 * absolute_from_center
@@ -496,8 +532,14 @@ __dimension|float|integer__
 ### legendHorizontalPosition
 __dimension|float|integer__
 
+`float` value component of the `HorizontalPosition` of the `XYLegendWidget`.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+
 ### legendVerticalPosition
 __dimension|float|integer__
+
+`float` value component of the `VerticalPosition` of the `XYLegendWidget`.
+See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
 
 ### legendAnchor
 * top_middle

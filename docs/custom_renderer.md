@@ -88,7 +88,7 @@ protected void drawBar(Canvas canvas, Bar<RoundedBarFormatter> bar, RectF rect) 
 }
 ```
 
-## Using It
+## Use It
 Using the new custom renderer is as easy as adding a series to a plot using `RoundedBarFormatter`:
 
 ```java

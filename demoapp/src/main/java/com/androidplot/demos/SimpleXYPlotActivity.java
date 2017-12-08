@@ -87,19 +87,13 @@ public class SimpleXYPlotActivity extends Activity {
         series2Format.setInterpolationParams(
                 new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
 
-        plot.getGraph().setSize(new Size(
-                PixelUtils.dpToPix(100), SizeMode.ABSOLUTE,
-                PixelUtils.dpToPix(100), SizeMode.ABSOLUTE));
-
         // add a new series' to the xyplot:
         plot.addSeries(series1, series1Format);
         plot.addSeries(series2, series2Format);
 
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
             @Override
-            public StringBuffer format(Object obj,
-                                       @NonNull StringBuffer toAppendTo,
-                                       @NonNull FieldPosition pos) {
+            public StringBuffer format(Object obj, @NonNull StringBuffer toAppendTo, @NonNull FieldPosition pos) {
                 int i = Math.round(((Number) obj).floatValue());
                 return toAppendTo.append(domainLabels[i]);
             }

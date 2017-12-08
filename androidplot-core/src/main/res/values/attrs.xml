@@ -450,7 +450,7 @@ __dimension|float|integer__
 
 `HorizontalPositioning` component of the `HorizontalPosition` of the `TextLabelWidget`
 that displays the domain title.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 -->
         <attr name="domainTitleHorizontalPositioning"/>
 <!--
@@ -464,7 +464,7 @@ See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation
 
 `VerticalPositioning` component of the `VerticalPosition` of the `TextLabelWidget`
 that displays the domain title.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 -->
         <attr name="domainTitleVerticalPositioning"/>
 <!--
@@ -473,7 +473,7 @@ __dimension|float|integer__
 
 `float` value component of the `HorizontalPosition` of the `TextLabelWidget`
 that displays the domain title.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 -->
         <attr name="domainTitleHorizontalPosition" format="dimension|float|integer"/>
 <!--
@@ -482,7 +482,7 @@ __dimension|float|integer__
 
 `float` value component of the `VerticalPosition` of the `TextLabelWidget`
 that displays the domain title.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 -->
         <attr name="domainTitleVerticalPosition" format="dimension|float|integer"/>
 <!--
@@ -640,7 +640,7 @@ __dimension|float|integer__
 * relative_from_center
 
 `HorizontalPositioning` component of the `HorizontalPosition` of the `XYGraphWidget`.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 -->
         <attr name="graphHorizontalPositioning"/>
 <!--
@@ -653,7 +653,7 @@ See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation
 * relative_from_center
 
 `VerticalPositioning` component of the `VerticalPosition` of the `XYGraphWidget`.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 -->
         <attr name="graphVerticalPositioning"/>
 <!--
@@ -661,7 +661,7 @@ See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation
 __dimension|float|integer__
 
 `float` value component of the `HorizontalPosition` of the `XYGraphWidget`.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 -->
         <attr name="graphHorizontalPosition" format="dimension|float|integer"/>
 <!--
@@ -669,7 +669,7 @@ See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation
 __dimension|float|integer__
 
 `float` value component of the `VerticalPosition` of the `XYGraphWidget`.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 -->
         <attr name="graphVerticalPosition" format="dimension|float|integer"/>
 <!--
@@ -1011,7 +1011,7 @@ __dimension|float|integer__
 <!--
 ### legendHorizontalPositioning
 `HorizontalPositioning` component of the `HorizontalPosition` of the `XYLegendWidget`.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 * absolute_from_left
 * absolute_from_right
 * absolute_from_center
@@ -1023,7 +1023,7 @@ See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation
 <!--
 ### legendVerticalPositioning
 `VerticalPositioning` component of the `VerticalPosition` of the `XYLegendWidget`.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 * absolute_from_top
 * absolute_from_bottom
 * absolute_from_center
@@ -1037,7 +1037,7 @@ See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation
 __dimension|float|integer__
 
 `float` value component of the `HorizontalPosition` of the `XYLegendWidget`.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 -->
         <attr name="legendHorizontalPosition" format="dimension|float|integer"/>
 <!--
@@ -1045,7 +1045,7 @@ See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation
 __dimension|float|integer__
 
 `float` value component of the `VerticalPosition` of the `XYLegendWidget`.
-See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md@positioning-widgets) documentation.
 -->
         <attr name="legendVerticalPosition" format="dimension|float|integer"/>
 <!--

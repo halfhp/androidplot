@@ -166,7 +166,7 @@ Plot along the associated axis and the SizeMetric "fills" the difference.
 
 #### Examples
 The examples below illustrate positioning an `XYGraphWidget` of an `XYPlot` and
-assume centered positioning is applied as described in the [Positioning Widgets](#Positioning-Widgets) section above.
+assume centered positioning is applied as described in the [Positioning Widgets](#positioning-widgets) section above.
 
 xml:
 ```xml

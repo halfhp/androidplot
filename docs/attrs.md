@@ -117,7 +117,7 @@ __dimension|float|integer__
 
 `HorizontalPositioning` component of the `HorizontalPosition` of the `TextLabelWidget`
 that displays the domain title.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 
 ### domainTitleVerticalPositioning
 * absolute_from_top
@@ -129,21 +129,21 @@ See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
 
 `VerticalPositioning` component of the `VerticalPosition` of the `TextLabelWidget`
 that displays the domain title.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 
 ### domainTitleHorizontalPosition
 __dimension|float|integer__
 
 `float` value component of the `HorizontalPosition` of the `TextLabelWidget`
 that displays the domain title.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 
 ### domainTitleVerticalPosition
 __dimension|float|integer__
 
 `float` value component of the `VerticalPosition` of the `TextLabelWidget`
 that displays the domain title.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 
 ### domainTitleAnchor
 * top_middle
@@ -257,7 +257,7 @@ __dimension|float|integer__
 * relative_from_center
 
 `HorizontalPositioning` component of the `HorizontalPosition` of the `XYGraphWidget`.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 
 ### graphVerticalPositioning
 * absolute_from_top
@@ -268,19 +268,19 @@ See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
 * relative_from_center
 
 `VerticalPositioning` component of the `VerticalPosition` of the `XYGraphWidget`.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 
 ### graphHorizontalPosition
 __dimension|float|integer__
 
 `float` value component of the `HorizontalPosition` of the `XYGraphWidget`.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 
 ### graphVerticalPosition
 __dimension|float|integer__
 
 `float` value component of the `VerticalPosition` of the `XYGraphWidget`.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 
 ### graphAnchor
 * top_middle
@@ -511,7 +511,7 @@ __dimension|float|integer__
 
 ### legendHorizontalPositioning
 `HorizontalPositioning` component of the `HorizontalPosition` of the `XYLegendWidget`.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 * absolute_from_left
 * absolute_from_right
 * absolute_from_center
@@ -521,7 +521,7 @@ See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
 
 ### legendVerticalPositioning
 `VerticalPositioning` component of the `VerticalPosition` of the `XYLegendWidget`.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 * absolute_from_top
 * absolute_from_bottom
 * absolute_from_center
@@ -533,13 +533,13 @@ See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
 __dimension|float|integer__
 
 `float` value component of the `HorizontalPosition` of the `XYLegendWidget`.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 
 ### legendVerticalPosition
 __dimension|float|integer__
 
 `float` value component of the `VerticalPosition` of the `XYLegendWidget`.
-See [Positioning Widgets](plot_composition#Positioning-Widgets) documentation.
+See [Positioning Widgets](plot_composition.md#Positioning-Widgets) documentation.
 
 ### legendAnchor
 * top_middle

@@ -21,6 +21,8 @@ import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.androidplot.ui.Size;
+import com.androidplot.ui.SizeMode;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.CatmullRomInterpolator;
 import com.androidplot.xy.LineAndPointFormatter;
@@ -84,6 +86,10 @@ public class SimpleXYPlotActivity extends Activity {
 
         series2Format.setInterpolationParams(
                 new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
+
+        plot.getGraph().setSize(new Size(
+                PixelUtils.dpToPix(100), SizeMode.ABSOLUTE,
+                PixelUtils.dpToPix(100), SizeMode.ABSOLUTE));
 
         // add a new series' to the xyplot:
         plot.addSeries(series1, series1Format);

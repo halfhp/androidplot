@@ -43,7 +43,6 @@ public class SizeMetric extends LayoutMetric<SizeMode> {
 
     @Override
     public float getPixelValue(float size) {
-        //switch(layoutType)
         switch(getLayoutType()) {
             case ABSOLUTE:
                 return getValue();

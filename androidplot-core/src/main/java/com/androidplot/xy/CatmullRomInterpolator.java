@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A primitive implementation of Catmull-Rom interpolation, based on the information found at:
+ * An implementation of Catmull-Rom interpolation, based on the information found at:
  * http://stackoverflow.com/questions/9489736/catmull-rom-curve-with-no-cusps-and-no-self-intersections/19283471#19283471
  */
 public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolator.Params> {
@@ -196,7 +196,7 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
      * @return the list of coordinates that define the CatmullRom curve
      * between the points defined by index+1 and index+2.
      */
-    public List<XYCoords> interpolate(XYSeries series, int index, Params params) {
+    protected List<XYCoords> interpolate(XYSeries series, int index, Params params) {
         List<XYCoords> result = new ArrayList<>();
         double[] x = new double[4];
         double[] y = new double[4];
@@ -251,7 +251,7 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
      *             position between p1 and p2 to interpolate the value.
      * @return
      */
-    public static double interpolate(double[] p, double[] time, double t) {
+    protected static double interpolate(double[] p, double[] time, double t) {
         double L01 = p[0] * (time[1] - t) / (time[1] - time[0]) + p[1] * (t - time[0]) / (time[1] - time[0]);
         double L12 = p[1] * (time[2] - t) / (time[2] - time[1]) + p[2] * (t - time[1]) / (time[2] - time[1]);
         double L23 = p[2] * (time[3] - t) / (time[3] - time[2]) + p[3] * (t - time[2]) / (time[3] - time[2]);

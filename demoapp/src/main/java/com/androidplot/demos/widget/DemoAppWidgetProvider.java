@@ -25,6 +25,8 @@ import android.graphics.Color;
 import android.widget.RemoteViews;
 import com.androidplot.demos.R;
 import com.androidplot.ui.*;
+import com.androidplot.util.PixelUtils;
+import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
@@ -43,10 +45,6 @@ public class DemoAppWidgetProvider extends AppWidgetProvider {
 
             plot.getGraph().setMargins(0, 0, 0 , 0);
             plot.getGraph().setPadding(0, 0, 0, 0);
-//            plot.getGraphWidget().getDomainLineLabelPaint().setTextSize(PixelUtils.spToPix(10));
-//            plot.getGraphWidget().getRangeLineLabelPaint().setTextSize(PixelUtils.spToPix(10));
-//            plot.getGraphWidget().getDomainOriginLineLabelPaint().setTextSize(PixelUtils.spToPix(10));
-//            plot.getGraphWidget().getRangeOriginLineLabelPaint().setTextSize(PixelUtils.spToPix(10));
 
             plot.getGraph().position(0, HorizontalPositioning.ABSOLUTE_FROM_LEFT, 0,
                     VerticalPositioning.ABSOLUTE_FROM_TOP, Anchor.LEFT_TOP);
@@ -54,6 +52,15 @@ public class DemoAppWidgetProvider extends AppWidgetProvider {
             plot.getGraph().setSize(Size.FILL);
 
             plot.getLayoutManager().moveToTop(plot.getTitle());
+
+            plot.getGraph().setLineLabelEdges(XYGraphWidget.Edge.LEFT, XYGraphWidget.Edge.BOTTOM);
+            plot.getGraph().getLineLabelInsets().setLeft(PixelUtils.dpToPix(16));
+            plot.getGraph().getLineLabelInsets().setBottom(PixelUtils.dpToPix(4));
+            plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).getPaint().setColor(Color.RED);
+            plot.getGraph().getGridInsets().setTop(PixelUtils.dpToPix(12));
+            plot.getGraph().getGridInsets().setRight(PixelUtils.dpToPix(12));
+            plot.getGraph().getGridInsets().setLeft(PixelUtils.dpToPix(36));
+            plot.getGraph().getGridInsets().setBottom(PixelUtils.dpToPix(16));
 
             plot.measure(w, h);
             plot.layout(0, 0, w, h);

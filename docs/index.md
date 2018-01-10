@@ -42,7 +42,7 @@ Source code examples of the various plot types.
 # XML Attributes
 A complete list of XML attributes is [available here](attrs.md).
 # Javadoc
-The latest Javadocs are [available here](https://circleci.com/api/v1/project/halfhp/androidplot/latest/artifacts/0/$CIRCLE_ARTIFACTS/javadoc/index.html).
+The latest Javadocs are [available here](https://javadoc.io/doc/com.androidplot/androidplot-core).
 
 # Release Notes
 Full release notes are [available here](release_notes.md)

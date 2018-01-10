@@ -16,7 +16,7 @@ class RoundedBarFormatter extends BarFormatter {
     {
         // for now we'll hardcode some formatting values.
         // a real implementation would probably provide a constructor instead
-        getLinePaint().setColor(Color.WHITE);
+        getBorderPaint().setColor(Color.WHITE);
         getFillPaint().setColor(Color.RED);
     }
 

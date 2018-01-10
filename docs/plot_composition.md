@@ -247,7 +247,7 @@ plot.getGraph().setSize(new Size(
 Every widget has a margin, padding and an optional border that can be drawn around it.  These params behave 
 very similarly to those defined in the [CSS Box Model](http://www.w3schools.com/css/css_boxmodel.asp).
 
-## Markup Mode.
+## Markup Mode
 If you're having trouble visualizing the effects of tweaking margins and padding, you can enable
 markup mode which will highlight these spaces on each widget, as well as draw a green line around it's
 absolute border.  
@@ -281,7 +281,7 @@ text style, etc. to apply while drawing.
 ## Renderers
 The Renderer is what renders Series data onto a Plot.  Users can provide their own custom rendering behavior
 by writing their own Renderer implementation along with a custom Formatter telling Androidplot about the
-Renderer via the `Formatter.getRendererClass()` method.
+Renderer via the `Formatter.getRendererClass()` method.  See [Custom Renderer](custom_rnderer.md) documentation.
 
 # XML Styling
 Androidplot supports an increasing number of XML attributes.  The two best resources for learning about

@@ -2,7 +2,13 @@
 For details on what to expect in general when updating to a new version of Androiplot, check out the
 [versioning doc](versioning.md).
 
+# 1.5.3
+
+* Minor cleanup of Widget example source.
+* (#67) Fixes Javadoc link
+
 # 1.5.2
+
 _This version is pickier than it's predecessors about proper XML configuration.  Where
 previous versions would silently ignore illegal XML attrs, a `RuntimeException` will be thrown._
 * Added [sizing documentation](plot_composition.md#sizing-widgets)
@@ -11,6 +17,7 @@ previous versions would silently ignore illegal XML attrs, a `RuntimeException` 
 * Fixed (#63) Fixed compatibility issue with Gradle 3.x.x that caused issues with XML parsing.
 
 # 1.5.1
+
 * (#52) Fixed minor NPE issue
 * (#55) Fixed bug with `PieRenderer.getContainingSegment` not working for very large segments.
 

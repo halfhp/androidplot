@@ -22,9 +22,9 @@ _This documentation is auto generated from [attrs.xml](../androidplot-core/src/m
 Attributes are broken down by element followed by either their type or list of accepted values.
 Supported Elements:
 
-* [Plot](#Plot)
-* [XYPlot](#XYPlot)
-* [PieChart](#PieChart)
+* [Plot](#plot)
+* [XYPlot](#xyplot)
+* [PieChart](#piechart)
 -->
 <!--NODOC to generate from command line use: `./gradlew generateAttrsMarkdown` -->
 <resources>

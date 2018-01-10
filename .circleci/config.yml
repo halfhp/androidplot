@@ -79,6 +79,10 @@ jobs:
           path: androidplot-core/build/reports/tests/
           destination: test_results
 
+      - store_artifacts:
+          path: androidplot-core/build/docs/javadoc
+          destination: javadoc
+
       - store_test_results:
           path: androidplot-core/build/test-results/
 

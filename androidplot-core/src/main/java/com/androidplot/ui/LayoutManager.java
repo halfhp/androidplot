@@ -96,7 +96,7 @@ public class LayoutManager extends LinkedLayerList<Widget>
                 PositionMetrics metrics = widget.getPositionMetrics();
                 float elementWidth = widget.getWidthPix(displayDims.paddedRect.width());
                 float elementHeight = widget.getHeightPix(displayDims.paddedRect.height());
-                PointF coords = widget.getElementCoordinates(elementHeight,
+                PointF coords = Widget.calculateCoordinates(elementHeight,
                         elementWidth, displayDims.paddedRect, metrics);
 
                 DisplayDimensions dims = widget.getWidgetDimensions();

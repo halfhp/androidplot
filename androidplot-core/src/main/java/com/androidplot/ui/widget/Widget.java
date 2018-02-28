@@ -81,6 +81,7 @@ public abstract class Widget implements BoxModelable, Resizable {
     /**
      * Same as {@link #position(float, HorizontalPositioning, float, VerticalPositioning, Anchor)}
      * but with the anchor parameter defaulted to the upper left corner.
+     *
      * @param x
      * @param horizontalPositioning
      * @param y
@@ -91,11 +92,11 @@ public abstract class Widget implements BoxModelable, Resizable {
     }
 
     /**
-     * @param x            X-Coordinate of the top left corner of element.  When using RELATIVE, must be a value between 0 and 1.
+     * @param x                     X-Coordinate of the top left corner of element.  When using RELATIVE, must be a value between 0 and 1.
      * @param horizontalPositioning LayoutType to use when orienting this element's X-Coordinate.
-     * @param y            Y_VALS_ONLY-Coordinate of the top-left corner of element.  When using RELATIVE, must be a value between 0 and 1.
-     * @param verticalPositioning LayoutType to use when orienting this element's Y_VALS_ONLY-Coordinate.
-     * @param anchor       The point of reference used by this positioning call.
+     * @param y                     Y_VALS_ONLY-Coordinate of the top-left corner of element.  When using RELATIVE, must be a value between 0 and 1.
+     * @param verticalPositioning   LayoutType to use when orienting this element's Y_VALS_ONLY-Coordinate.
+     * @param anchor                The point of reference used by this positioning call.
      */
     public void position(float x, HorizontalPositioning horizontalPositioning, float y,
                          VerticalPositioning verticalPositioning, Anchor anchor) {
@@ -275,7 +276,7 @@ public abstract class Widget implements BoxModelable, Resizable {
      * into this Widget's size or position is altered.
      */
     public synchronized void refreshLayout() {
-        if(positionMetrics == null) {
+        if (positionMetrics == null) {
             // make sure positionMetrics have been set.  this method can be
             // automatically called during xml configuration of certain params
             // before the widget is fully configured.
@@ -283,7 +284,7 @@ public abstract class Widget implements BoxModelable, Resizable {
         }
         float elementWidth = getWidthPix(plotDimensions.paddedRect.width());
         float elementHeight = getHeightPix(plotDimensions.paddedRect.height());
-        PointF coords = getElementCoordinates(elementHeight,
+        PointF coords = calculateCoordinates(elementHeight,
                 elementWidth, plotDimensions.paddedRect, positionMetrics);
 
         RectF widgetRect = new RectF(coords.x, coords.y,
@@ -300,47 +301,48 @@ public abstract class Widget implements BoxModelable, Resizable {
         refreshLayout();
     }
 
-    public PointF getElementCoordinates(float height, float width, RectF viewRect, PositionMetrics metrics) {
-            float x = metrics.getXPositionMetric().getPixelValue(viewRect.width()) + viewRect.left;
-            float y = metrics.getYPositionMetric().getPixelValue(viewRect.height()) + viewRect.top;
-            PointF point = new PointF(x, y);
-            return PixelUtils.sub(point, getAnchorOffset(width, height, metrics.getAnchor()));
-        }
+
+    public static PointF calculateCoordinates(float height, float width, RectF viewRect, PositionMetrics metrics) {
+        float x = metrics.getXPositionMetric().getPixelValue(viewRect.width()) + viewRect.left;
+        float y = metrics.getYPositionMetric().getPixelValue(viewRect.height()) + viewRect.top;
+        PointF point = new PointF(x, y);
+        return PixelUtils.sub(point, getAnchorOffset(width, height, metrics.getAnchor()));
+    }
 
     public static PointF getAnchorOffset(float width, float height, Anchor anchor) {
-            PointF point = new PointF();
-            switch (anchor) {
-                case LEFT_TOP:
-                    break;
-                case LEFT_MIDDLE:
-                    point.set(0, height / 2);
-                    break;
-                case LEFT_BOTTOM:
-                    point.set(0, height);
-                    break;
-                case RIGHT_TOP:
-                    point.set(width, 0);
-                    break;
-                case RIGHT_BOTTOM:
-                    point.set(width, height);
-                    break;
-                case RIGHT_MIDDLE:
-                    point.set(width, height / 2);
-                    break;
-                case TOP_MIDDLE:
-                    point.set(width / 2, 0);
-                    break;
-                case BOTTOM_MIDDLE:
-                    point.set(width / 2, height);
-                    break;
-                case CENTER:
-                    point.set(width / 2, height / 2);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported anchor location: " + anchor);
-            }
-            return point;
+        PointF point = new PointF();
+        switch (anchor) {
+            case LEFT_TOP:
+                break;
+            case LEFT_MIDDLE:
+                point.set(0, height / 2);
+                break;
+            case LEFT_BOTTOM:
+                point.set(0, height);
+                break;
+            case RIGHT_TOP:
+                point.set(width, 0);
+                break;
+            case RIGHT_BOTTOM:
+                point.set(width, height);
+                break;
+            case RIGHT_MIDDLE:
+                point.set(width, height / 2);
+                break;
+            case TOP_MIDDLE:
+                point.set(width / 2, 0);
+                break;
+            case BOTTOM_MIDDLE:
+                point.set(width / 2, height);
+                break;
+            case CENTER:
+                point.set(width / 2, height / 2);
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported anchor location: " + anchor);
         }
+        return point;
+    }
 
     public static PointF getAnchorCoordinates(RectF widgetRect, Anchor anchor) {
         return PixelUtils.add(new PointF(widgetRect.left, widgetRect.top),
@@ -352,7 +354,7 @@ public abstract class Widget implements BoxModelable, Resizable {
     }
 
     private void checkSize(@NonNull RectF widgetRect) {
-        if(lastWidgetRect == null || !lastWidgetRect.equals(widgetRect)) {
+        if (lastWidgetRect == null || !lastWidgetRect.equals(widgetRect)) {
             onResize(lastWidgetRect, widgetRect);
         }
         lastWidgetRect = widgetRect;
@@ -362,6 +364,7 @@ public abstract class Widget implements BoxModelable, Resizable {
      * Called whenever the height or width of the Widget's reserved space has changed,
      * immediately before {@link #doOnDraw(Canvas, RectF)}.
      * May be used to efficiently carry out expensive operations only when necessary.
+     *
      * @param oldRect
      * @param newRect
      */
@@ -418,7 +421,7 @@ public abstract class Widget implements BoxModelable, Resizable {
                 throw new UnsupportedOperationException("Not yet implemented.");
 
         }
-        if(rotation != Rotation.NONE) {
+        if (rotation != Rotation.NONE) {
             canvas.rotate(rotationDegs, cx, cy);
         }
         return rect;

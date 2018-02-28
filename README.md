@@ -43,7 +43,7 @@ Technical questions should be posted using the [androidplot tag](http://stackove
 # License
 Androidplot has been made available under the Apache 2.0 license:
 
-    Copyright 2016 Androidplot.com
+    Copyright 2018 Androidplot.com
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

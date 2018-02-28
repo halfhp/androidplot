@@ -17,6 +17,9 @@
 package com.androidplot.ui.widget;
 
 import android.graphics.*;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
 import com.androidplot.util.DisplayDimensions;
@@ -42,6 +45,7 @@ public abstract class Widget implements BoxModelable, Resizable {
     private LayoutManager layoutManager;
 
     private Rotation rotation = Rotation.NONE;
+    private RectF lastWidgetRect = null;
 
     public enum Rotation {
         NINETY_DEGREES,
@@ -339,13 +343,31 @@ public abstract class Widget implements BoxModelable, Resizable {
         }
 
     public static PointF getAnchorCoordinates(RectF widgetRect, Anchor anchor) {
-            return PixelUtils.add(new PointF(widgetRect.left, widgetRect.top),
-                    getAnchorOffset(widgetRect.width(), widgetRect.height(), anchor));
-        }
+        return PixelUtils.add(new PointF(widgetRect.left, widgetRect.top),
+                getAnchorOffset(widgetRect.width(), widgetRect.height(), anchor));
+    }
 
-        public static PointF getAnchorCoordinates(float x, float y, float width, float height, Anchor anchor) {
-            return getAnchorCoordinates(new RectF(x, y, x+width, y+height), anchor);
+    public static PointF getAnchorCoordinates(float x, float y, float width, float height, Anchor anchor) {
+        return getAnchorCoordinates(new RectF(x, y, x + width, y + height), anchor);
+    }
+
+    private void checkSize(@NonNull RectF widgetRect) {
+        if(lastWidgetRect == null || !lastWidgetRect.equals(widgetRect)) {
+            onResize(lastWidgetRect, widgetRect);
         }
+        lastWidgetRect = widgetRect;
+    }
+
+    /**
+     * Called whenever the height or width of the Widget's reserved space has changed,
+     * immediately before {@link #doOnDraw(Canvas, RectF)}.
+     * May be used to efficiently carry out expensive operations only when necessary.
+     * @param oldRect
+     * @param newRect
+     */
+    protected void onResize(@Nullable RectF oldRect, @NonNull RectF newRect) {
+        // do nothing by default
+    }
 
     public void draw(Canvas canvas) throws PlotRenderException {
         if (isVisible()) {
@@ -353,12 +375,13 @@ public abstract class Widget implements BoxModelable, Resizable {
                 drawBackground(canvas, widgetDimensions.canvasRect);
             }
             canvas.save();
-            final RectF paddedRect = applyRotation(canvas, widgetDimensions.paddedRect);
-            doOnDraw(canvas, paddedRect);
+            final RectF widgetRect = applyRotation(canvas, widgetDimensions.paddedRect);
+            checkSize(widgetRect);
+            doOnDraw(canvas, widgetRect);
             canvas.restore();
 
             if (borderPaint != null) {
-                drawBorder(canvas, paddedRect);
+                drawBorder(canvas, widgetRect);
             }
         }
     }

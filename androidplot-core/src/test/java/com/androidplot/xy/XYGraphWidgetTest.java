@@ -103,7 +103,9 @@ public class XYGraphWidgetTest extends AndroidplotTest {
         doNothing().when(graphWidget).drawGrid(canvas);
         doNothing().when(graphWidget).drawData(canvas);
 
-        graphWidget.doOnDraw(canvas, new RectF(0, 0, 100, 100));
+        final RectF canvasRect = new RectF(0, 0, 100, 100);
+        graphWidget.onResize(null, canvasRect);
+        graphWidget.doOnDraw(canvas, canvasRect);
 
         InOrder io = inOrder(graphWidget);
         io.verify(graphWidget).drawGrid(canvas);
@@ -117,7 +119,9 @@ public class XYGraphWidgetTest extends AndroidplotTest {
         doNothing().when(graphWidget).drawGrid(canvas);
         doNothing().when(graphWidget).drawData(canvas);
 
-        graphWidget.doOnDraw(canvas, new RectF(0, 0, 100, 100));
+        final RectF canvasRect = new RectF(0, 0, 100, 100);
+        graphWidget.onResize(null, canvasRect);
+        graphWidget.doOnDraw(canvas, canvasRect);
 
         InOrder io = inOrder(graphWidget);
         io.verify(graphWidget).drawData(canvas);

@@ -5,6 +5,7 @@ For details on what to expect in general when updating to a new version of Andro
 # 1.5.4
 
 # (#69) Fixed a bug in `SimpleXYPlot` preventing the resizing of `Y_VALS_ONLY` formatted series.
+# (#73) Fixed a bug where dynamically resizing a Plot (by marking a sibling view as `GONE`, etc.) would not resize the graph widget.
 
 # 1.5.3
 

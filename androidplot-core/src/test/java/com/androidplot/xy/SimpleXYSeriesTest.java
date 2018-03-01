@@ -26,7 +26,7 @@ import static junit.framework.Assert.assertEquals;
 public class SimpleXYSeriesTest {
 
     @Test
-    public void testYValsOnlyConstructor() throws Exception {
+    public void constructor_yValsOnly() throws Exception {
         Number[] yVals = {5, 6, 7, 8, 9};
         SimpleXYSeries series = new SimpleXYSeries(Arrays.asList(yVals), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "test");
 
@@ -44,7 +44,7 @@ public class SimpleXYSeriesTest {
     }
 
     @Test
-    public void testXYInterleavedConstructor() throws Exception {
+    public void constructor_xyInterleaved() throws Exception {
         Number[] yVals = {55, 5, 66, 6, 77, 7, 88, 8, 99, 9};
         SimpleXYSeries series = new SimpleXYSeries(Arrays.asList(yVals), SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED, "test");
 
@@ -62,7 +62,7 @@ public class SimpleXYSeriesTest {
     }
 
     @Test
-    public void testTwoListConstructor() throws Exception {
+    public void constructor_xAndYLists() throws Exception {
         Number[] yVals = {5, 6, 7, 8, 9};
         Number[] xVals = {1, 2, 3, 4, 5};
         SimpleXYSeries series = new SimpleXYSeries(Arrays.asList(xVals), Arrays.asList(yVals), "test");
@@ -81,7 +81,7 @@ public class SimpleXYSeriesTest {
     }
 
     @Test
-    public void testPushPopStuff() throws Exception {
+    public void addRemove_modifiesSeries() throws Exception {
         Number[] yVals = {5, 6, 7, 8, 9};
         Number[] xVals = {1, 2, 3, 4, 5};
         SimpleXYSeries series = new SimpleXYSeries(Arrays.asList(xVals), Arrays.asList(yVals), "test");
@@ -108,7 +108,7 @@ public class SimpleXYSeriesTest {
     }
 
     @Test
-    public void testSet() throws Exception {
+    public void set_setsExpectedValue() throws Exception {
         Number[] yVals = {5, 6, 7, 8, 9};
         Number[] xVals = {1, 2, 3, 4, 5};
         SimpleXYSeries series = new SimpleXYSeries(Arrays.asList(xVals), Arrays.asList(yVals), "test");
@@ -129,7 +129,7 @@ public class SimpleXYSeriesTest {
     }
 
     @Test
-    public void testResize() throws Exception {
+    public void resize_emptySeries_resizesSeries() {
         SimpleXYSeries series = new SimpleXYSeries("series");
         series.resize(10);
         assertEquals(10, series.size());
@@ -148,7 +148,15 @@ public class SimpleXYSeriesTest {
     }
 
     @Test
-    public void setXY_setsXAndY() {
+    public void resize_yValsOnly_resizesSeries() {
+        SimpleXYSeries series = new SimpleXYSeries(
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "", 1, 2, 3);
+        series.resize(10);
+        assertEquals(10, series.size());
+    }
+
+    @Test
+    public void setXY_modifiesSeries() {
         SimpleXYSeries series = new SimpleXYSeries("series");
         series.resize(5);
         series.setXY(100, 200, 0);
@@ -156,6 +164,14 @@ public class SimpleXYSeriesTest {
         assertEquals(100, series.getX(0));
         assertEquals(200, series.getY(0));
 
+    }
+
+    @Test
+    public void setX_yValsOnly_changesValue() {
+        SimpleXYSeries series = new SimpleXYSeries(
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "", 1, 2, 3);
+        series.setX(9, 0);
+        assertEquals(9, series.getX(0));
     }
 
     @Test(expected = NoSuchElementException.class)

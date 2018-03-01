@@ -26,7 +26,7 @@ ext {
     theCompileSdkVersion = 26
     theTargetSdkVersion = 26
     theMinSdkVersion = 5
-    theVersionName = '1.5.3'
+    theVersionName = '1.5.4'
     theVersionCode = 0
 }
 

@@ -2,10 +2,15 @@
 For details on what to expect in general when updating to a new version of Androiplot, check out the
 [versioning doc](versioning.md).
 
+# 1.5.4
+
+* (#69) Fixed a bug in `SimpleXYPlot` preventing the resizing of `Y_VALS_ONLY` formatted series.
+* (#73) Fixed a bug where dynamically resizing a Plot (by marking a sibling view as `GONE`, etc.) would not resize the graph widget.
+
 # 1.5.3
 
 * Minor cleanup of Widget example source.
-* (#67) Fixes Javadoc link
+* (#67) Fixed Javadoc link
 
 # 1.5.2
 

@@ -680,29 +680,25 @@ public class XYGraphWidget extends Widget {
 
         // draw lines ABOVE origin:
         double yPix = rangeOriginPix - rangeStep.getStepPix();
-        for (int i = ONE; yPix >= gridRect.top - FUDGE; yPix = rangeOriginPix - (i * rangeStepPix)) {
-            double yVal = rangeOrigin.doubleValue() + i
-                    * rangeStep.getStepVal();
+        for (int i = ONE; yPix >= gridRect.top - FUDGE; i++, yPix = rangeOriginPix - (i * rangeStepPix)) {
+            double yVal = rangeOrigin.doubleValue() + i * rangeStep.getStepVal();
 
             if (yPix <= gridRect.bottom) {
                 final boolean isRangeTick = i % getLinesPerRangeLabel() == ZERO;
                 final Paint lp = isRangeTick ? rangeGridLinePaint : rangeSubGridLinePaint;
                 drawRangeLine(canvas, (float) yPix, yVal, lp, false);
             }
-            i++;
         }
 
         // draw lines BENEATH origin:
         yPix = rangeOriginPix + rangeStep.getStepPix();
-        for (int i = ONE; yPix <= gridRect.bottom + FUDGE; yPix = rangeOriginPix + (i * rangeStepPix)) {
-            double yVal = rangeOrigin.doubleValue() - i
-                    * rangeStep.getStepVal();
+        for (int i = ONE; yPix <= gridRect.bottom + FUDGE; i++, yPix = rangeOriginPix + (i * rangeStepPix)) {
+            double yVal = rangeOrigin.doubleValue() - i * rangeStep.getStepVal();
             if (yPix >= gridRect.top) {
                 final boolean isRangeTick = i % getLinesPerRangeLabel() == ZERO;
                 final Paint lp = isRangeTick ? rangeGridLinePaint : rangeSubGridLinePaint;
                 drawRangeLine(canvas, (float) yPix, yVal, lp, false);
             }
-            i++;
         }
     }
 

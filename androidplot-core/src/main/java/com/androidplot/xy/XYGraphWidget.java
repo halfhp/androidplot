@@ -635,13 +635,12 @@ public class XYGraphWidget extends Widget {
         final double domainStepPix = domainStep.getStepPix();
 
         // draw lines LEFT of origin:
-        double xPix;
         final float gridRectLeftMinusFudge = gridRect.left - FUDGE;
         for (int i = ONE; i <= (domainOriginPix - gridRectLeftMinusFudge) / domainStepPix; i++) {
-            xPix = domainOriginPix - (i * domainStepPix);
             double xVal = domainOrigin.doubleValue() - i * domainStep.getStepVal();
 
-            if (xPix <= gridRect.right) {
+            if (domainOriginPix - (i * domainStepPix) <= gridRect.right) {
+                final double xPix = domainOriginPix - (i * domainStepPix);
                 final boolean isDomainTick = i % getLinesPerDomainLabel() == ZERO;
                 final Paint lp = isDomainTick ? domainGridLinePaint : domainSubGridLinePaint;
                 drawDomainLine(canvas, (float) xPix, xVal, lp, false);
@@ -651,10 +650,10 @@ public class XYGraphWidget extends Widget {
         // draw lines RIGHT of origin:
         final float gridRectRightPlusFudge = gridRect.right + FUDGE;
         for (int i = ONE; i <= (gridRectRightPlusFudge - domainOriginPix) / domainStepPix; i++) {
-            xPix = domainOriginPix + (i * domainStepPix);
             double xVal = domainOrigin.doubleValue() + i * domainStep.getStepVal();
 
-            if (xPix >= gridRect.left) {
+            if (domainOriginPix + (i * domainStepPix) >= gridRect.left) {
+                final double xPix = domainOriginPix + (i * domainStepPix);
                 final boolean isDomainTick = i % getLinesPerDomainLabel() == ZERO;
                 final Paint lp = isDomainTick ? domainGridLinePaint : domainSubGridLinePaint;
                 drawDomainLine(canvas, (float) xPix, xVal, lp, false);
@@ -684,13 +683,12 @@ public class XYGraphWidget extends Widget {
         final double rangeStepPix = rangeStep.getStepPix();
 
         // draw lines ABOVE origin:
-        double yPix;
         final float gridRectTopMinusFudge = gridRect.top - FUDGE;
         for (int i = ONE; i <= (rangeOriginPix - gridRectTopMinusFudge) / rangeStepPix; i++) {
-            yPix = rangeOriginPix - (i * rangeStepPix);
             double yVal = rangeOrigin.doubleValue() + i * rangeStep.getStepVal();
 
-            if (yPix <= gridRect.bottom) {
+            if (rangeOriginPix - (i * rangeStepPix) <= gridRect.bottom) {
+                final double yPix = rangeOriginPix - (i * rangeStepPix);
                 final boolean isRangeTick = i % getLinesPerRangeLabel() == ZERO;
                 final Paint lp = isRangeTick ? rangeGridLinePaint : rangeSubGridLinePaint;
                 drawRangeLine(canvas, (float) yPix, yVal, lp, false);
@@ -700,9 +698,9 @@ public class XYGraphWidget extends Widget {
         // draw lines BENEATH origin:
         final float gridRectBottomPlusFudge = gridRect.bottom + FUDGE;
         for (int i = ONE; i <= (gridRectBottomPlusFudge - rangeOriginPix) / rangeStepPix; i++) {
-            yPix = rangeOriginPix + (i * rangeStepPix);
             double yVal = rangeOrigin.doubleValue() - i * rangeStep.getStepVal();
-            if (yPix >= gridRect.top) {
+            if (rangeOriginPix + (i * rangeStepPix) >= gridRect.top) {
+                final double yPix = rangeOriginPix + (i * rangeStepPix);
                 final boolean isRangeTick = i % getLinesPerRangeLabel() == ZERO;
                 final Paint lp = isRangeTick ? rangeGridLinePaint : rangeSubGridLinePaint;
                 drawRangeLine(canvas, (float) yPix, yVal, lp, false);

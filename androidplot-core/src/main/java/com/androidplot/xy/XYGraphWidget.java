@@ -633,8 +633,8 @@ public class XYGraphWidget extends Widget {
         }
 
         // draw lines LEFT of origin:
-        double xPix = domainOriginPix - domainStep.getStepPix();
-        for (int i = ONE; xPix >= gridRect.left - FUDGE; i++) {
+        double xPix;
+        for (int i = ONE; domainOriginPix - (i * domainStep.getStepPix()) >= gridRect.left - FUDGE; i++) {
             xPix = domainOriginPix - (i * domainStep.getStepPix());
             double xVal = domainOrigin.doubleValue() - i * domainStep.getStepVal();
 
@@ -646,8 +646,7 @@ public class XYGraphWidget extends Widget {
         }
 
         // draw lines RIGHT of origin:
-        xPix = domainOriginPix + domainStep.getStepPix();
-        for (int i = ONE; xPix <= gridRect.right + FUDGE; i++) {
+        for (int i = ONE; domainOriginPix + (i * domainStep.getStepPix()) <= gridRect.right + FUDGE; i++) {
             xPix = domainOriginPix + (i * domainStep.getStepPix());
             double xVal = domainOrigin.doubleValue() + i * domainStep.getStepVal();
 
@@ -681,8 +680,8 @@ public class XYGraphWidget extends Widget {
         final double rangeStepPix = rangeStep.getStepPix();
 
         // draw lines ABOVE origin:
-        double yPix = rangeOriginPix - rangeStep.getStepPix();
-        for (int i = ONE; yPix >= gridRect.top - FUDGE; i++) {
+        double yPix;
+        for (int i = ONE; rangeOriginPix - (i * rangeStepPix) >= gridRect.top - FUDGE; i++) {
             yPix = rangeOriginPix - (i * rangeStepPix);
             double yVal = rangeOrigin.doubleValue() + i * rangeStep.getStepVal();
 
@@ -694,8 +693,7 @@ public class XYGraphWidget extends Widget {
         }
 
         // draw lines BENEATH origin:
-        yPix = rangeOriginPix + rangeStep.getStepPix();
-        for (int i = ONE; yPix <= gridRect.bottom + FUDGE; i++) {
+        for (int i = ONE; rangeOriginPix + (i * rangeStepPix) <= gridRect.bottom + FUDGE; i++) {
             yPix = rangeOriginPix + (i * rangeStepPix);
             double yVal = rangeOrigin.doubleValue() - i * rangeStep.getStepVal();
             if (yPix >= gridRect.top) {

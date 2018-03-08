@@ -634,32 +634,26 @@ public class XYGraphWidget extends Widget {
 
         // draw lines LEFT of origin:
         double xPix = domainOriginPix - domainStep.getStepPix();
-        for (int i = ONE; xPix >= gridRect.left - FUDGE; xPix = domainOriginPix
-                - (i * domainStep.getStepPix())) {
-            double xVal = domainOrigin.doubleValue() - i
-                    * domainStep.getStepVal();
+        for (int i = ONE; xPix >= gridRect.left - FUDGE; i++, xPix = domainOriginPix - (i * domainStep.getStepPix())) {
+            double xVal = domainOrigin.doubleValue() - i * domainStep.getStepVal();
 
             if (xPix <= gridRect.right) {
                 final boolean isDomainTick = i % getLinesPerDomainLabel() == ZERO;
                 final Paint lp = isDomainTick ? domainGridLinePaint : domainSubGridLinePaint;
                 drawDomainLine(canvas, (float) xPix, xVal, lp, false);
             }
-            i++;
         }
 
         // draw lines RIGHT of origin:
         xPix = domainOriginPix + domainStep.getStepPix();
-        for (int i = ONE; xPix <= gridRect.right + FUDGE; xPix = domainOriginPix
-                + (i * domainStep.getStepPix())) {
-            double xVal = domainOrigin.doubleValue() + i
-                    * domainStep.getStepVal();
+        for (int i = ONE; xPix <= gridRect.right + FUDGE; i++, xPix = domainOriginPix + (i * domainStep.getStepPix())) {
+            double xVal = domainOrigin.doubleValue() + i * domainStep.getStepVal();
 
             if (xPix >= gridRect.left) {
                 final boolean isDomainTick = i % getLinesPerDomainLabel() == ZERO;
                 final Paint lp = isDomainTick ? domainGridLinePaint : domainSubGridLinePaint;
                 drawDomainLine(canvas, (float) xPix, xVal, lp, false);
             }
-            i++;
         }
 
         Number rangeOrigin = plot.getRangeOrigin();

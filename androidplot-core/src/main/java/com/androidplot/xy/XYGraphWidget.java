@@ -634,7 +634,8 @@ public class XYGraphWidget extends Widget {
 
         // draw lines LEFT of origin:
         double xPix;
-        for (int i = ONE; domainOriginPix - (i * domainStep.getStepPix()) >= gridRect.left - FUDGE; i++) {
+        final float gridRectLeftMinusFudge = gridRect.left - FUDGE;
+        for (int i = ONE; domainOriginPix - (i * domainStep.getStepPix()) >= gridRectLeftMinusFudge; i++) {
             xPix = domainOriginPix - (i * domainStep.getStepPix());
             double xVal = domainOrigin.doubleValue() - i * domainStep.getStepVal();
 
@@ -646,7 +647,8 @@ public class XYGraphWidget extends Widget {
         }
 
         // draw lines RIGHT of origin:
-        for (int i = ONE; domainOriginPix + (i * domainStep.getStepPix()) <= gridRect.right + FUDGE; i++) {
+        final float gridRectRightPlusFudge = gridRect.right + FUDGE;
+        for (int i = ONE; domainOriginPix + (i * domainStep.getStepPix()) <= gridRectRightPlusFudge; i++) {
             xPix = domainOriginPix + (i * domainStep.getStepPix());
             double xVal = domainOrigin.doubleValue() + i * domainStep.getStepVal();
 
@@ -681,7 +683,8 @@ public class XYGraphWidget extends Widget {
 
         // draw lines ABOVE origin:
         double yPix;
-        for (int i = ONE; rangeOriginPix - (i * rangeStepPix) >= gridRect.top - FUDGE; i++) {
+        final float gridRectTopMinusFudge = gridRect.top - FUDGE;
+        for (int i = ONE; rangeOriginPix - (i * rangeStepPix) >= gridRectTopMinusFudge; i++) {
             yPix = rangeOriginPix - (i * rangeStepPix);
             double yVal = rangeOrigin.doubleValue() + i * rangeStep.getStepVal();
 
@@ -693,7 +696,8 @@ public class XYGraphWidget extends Widget {
         }
 
         // draw lines BENEATH origin:
-        for (int i = ONE; rangeOriginPix + (i * rangeStepPix) <= gridRect.bottom + FUDGE; i++) {
+        final float gridRectBottomPlusFudge = gridRect.bottom + FUDGE;
+        for (int i = ONE; rangeOriginPix + (i * rangeStepPix) <= gridRectBottomPlusFudge; i++) {
             yPix = rangeOriginPix + (i * rangeStepPix);
             double yVal = rangeOrigin.doubleValue() - i * rangeStep.getStepVal();
             if (yPix >= gridRect.top) {

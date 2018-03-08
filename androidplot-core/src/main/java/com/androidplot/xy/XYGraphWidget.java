@@ -612,7 +612,7 @@ public class XYGraphWidget extends Widget {
 
 
         Number domainOrigin = plot.getDomainOrigin();
-        double domainOriginPix;
+        final double domainOriginPix;
         if (domainOrigin != null) {
             domainOriginPix = plot.getBounds().getxRegion().transform(
                     plot.getDomainOrigin().doubleValue(), gridRect.left, gridRect.right, false);
@@ -637,7 +637,7 @@ public class XYGraphWidget extends Widget {
         // draw lines LEFT of origin:
         double xPix;
         final float gridRectLeftMinusFudge = gridRect.left - FUDGE;
-        for (int i = ONE; i * domainStepPix <= domainOriginPix - gridRectLeftMinusFudge; i++) {
+        for (int i = ONE; i <= (domainOriginPix - gridRectLeftMinusFudge) / domainStepPix; i++) {
             xPix = domainOriginPix - (i * domainStepPix);
             double xVal = domainOrigin.doubleValue() - i * domainStep.getStepVal();
 
@@ -650,7 +650,7 @@ public class XYGraphWidget extends Widget {
 
         // draw lines RIGHT of origin:
         final float gridRectRightPlusFudge = gridRect.right + FUDGE;
-        for (int i = ONE; i * domainStepPix <= gridRectRightPlusFudge - domainOriginPix; i++) {
+        for (int i = ONE; i <= (gridRectRightPlusFudge - domainOriginPix) / domainStepPix; i++) {
             xPix = domainOriginPix + (i * domainStepPix);
             double xVal = domainOrigin.doubleValue() + i * domainStep.getStepVal();
 
@@ -662,7 +662,7 @@ public class XYGraphWidget extends Widget {
         }
 
         Number rangeOrigin = plot.getRangeOrigin();
-        double rangeOriginPix;
+        final double rangeOriginPix;
         if (rangeOrigin != null) {
             rangeOriginPix = plot.getBounds().getyRegion().transform(
                     rangeOrigin.doubleValue(), gridRect.top, gridRect.bottom, true);
@@ -686,7 +686,7 @@ public class XYGraphWidget extends Widget {
         // draw lines ABOVE origin:
         double yPix;
         final float gridRectTopMinusFudge = gridRect.top - FUDGE;
-        for (int i = ONE; i * rangeStepPix <= rangeOriginPix - gridRectTopMinusFudge; i++) {
+        for (int i = ONE; i <= (rangeOriginPix - gridRectTopMinusFudge) / rangeStepPix; i++) {
             yPix = rangeOriginPix - (i * rangeStepPix);
             double yVal = rangeOrigin.doubleValue() + i * rangeStep.getStepVal();
 
@@ -699,7 +699,7 @@ public class XYGraphWidget extends Widget {
 
         // draw lines BENEATH origin:
         final float gridRectBottomPlusFudge = gridRect.bottom + FUDGE;
-        for (int i = ONE; i * rangeStepPix <= gridRectBottomPlusFudge - rangeOriginPix; i++) {
+        for (int i = ONE; i <= (gridRectBottomPlusFudge - rangeOriginPix) / rangeStepPix; i++) {
             yPix = rangeOriginPix + (i * rangeStepPix);
             double yVal = rangeOrigin.doubleValue() - i * rangeStep.getStepVal();
             if (yPix >= gridRect.top) {

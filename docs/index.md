@@ -15,6 +15,7 @@ specific plot types explaining styling and other advanced topics.
 * [Quickstart](quickstart.md) :star:
 * [Quickstart (YouTube Video)](https://www.youtube.com/watch?v=wEFkzQY_wWI) :movie_camera:
 * [Plot Composition](plot_composition.md)
+* [The Legend](legend.md)
 * [XY Plots](xyplot.md)
 * [Bar Charts](barchart.md)
 * [Candlestick Charts](candlestick.md)
@@ -22,6 +23,7 @@ specific plot types explaining styling and other advanced topics.
 * [Bubble Charts](bubblechart.md)
 * [Dynamic Plots](dynamicdata.md)
 * [Advanced XY Plot Topics](advanced_xy_plot.md)
+* [Custom Renderers](custom_renderer.md)
 
 # Examples
 Source code examples of the various plot types.
@@ -40,7 +42,7 @@ Source code examples of the various plot types.
 # XML Attributes
 A complete list of XML attributes is [available here](attrs.md).
 # Javadoc
-The latest Javadocs are [available here](https://circleci.com/api/v1/project/halfhp/androidplot/latest/artifacts/0/$CIRCLE_ARTIFACTS/javadoc/index.html).
+The latest Javadocs are [available here](https://javadoc.io/doc/com.androidplot/androidplot-core).
 
 # Release Notes
 Full release notes are [available here](release_notes.md)

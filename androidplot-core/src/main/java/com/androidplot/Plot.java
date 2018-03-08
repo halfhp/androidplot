@@ -21,6 +21,7 @@ import android.content.res.TypedArray;
 import android.graphics.*;
 import android.os.Build;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -519,7 +520,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
             // apply "configurator" attrs: (overrides any previously applied styleable attrs)
             // filter out androidplot prefixed attrs:
-            HashMap<String, String> attrHash = new HashMap<String, String>();
+            HashMap<String, String> attrHash = new HashMap<>();
             for (int i = 0; i < attrs.getAttributeCount(); i++) {
                 String attrName = attrs.getAttributeName(i);
 
@@ -528,7 +529,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                     attrHash.put(attrName.substring(XML_ATTR_PREFIX.length() + 1), attrs.getAttributeValue(i));
                 }
             }
-            Fig.configure(getContext(), this, attrHash);
+            try {
+                Fig.configure(getContext(), this, attrHash);
+            } catch (FigException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -804,7 +809,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * "heavy lifting".
      * @param canvas
      */
-    protected synchronized void renderOnCanvas(Canvas canvas) {
+    protected synchronized void renderOnCanvas(@Nullable Canvas canvas) {
+        if(canvas == null) {
+            return;
+        }
         try {
             // any series interested in synchronizing with plot should
             // implement PlotListener.onBeforeDraw(...) and do a read lock from within its

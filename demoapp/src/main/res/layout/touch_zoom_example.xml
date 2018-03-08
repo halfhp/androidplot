@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015 AndroidPlot.com
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,46 +15,47 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:ap="http://schemas.android.com/apk/res-auto"
-              style="@style/sample_activity"
-              android:background="@color/ap_black"
-              android:orientation="vertical">
+    xmlns:ap="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ap_black"
+    android:orientation="vertical">
 
     <com.androidplot.xy.XYPlot
-        style="@style/APDefacto.Dark"
         android:id="@+id/plot"
-        ap:renderMode="use_background_thread"
+        style="@style/APDefacto.Dark"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        ap:title="A Simple XY Plot"
+        android:layout_weight="1"
         ap:drawGridOnTop="true"
-        android:layout_weight="1"/>
+        ap:renderMode="use_background_thread"
+        ap:title="A Simple XY Plot" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="3dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="5">
+            android:layout_weight="5"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="15dp"
-                android:textSize="12sp"
-                android:text="Pan"/>
+                android:text="Pan"
+                android:textSize="12sp" />
 
             <Spinner
                 android:id="@+id/pan_spinner"
-                android:padding="0dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="0dp">
 
             </Spinner>
         </LinearLayout>
@@ -63,29 +63,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="3">
+            android:layout_weight="3"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="15dp"
-                android:textSize="12sp"
-                android:text="Zoom"/>
+                android:text="Zoom"
+                android:textSize="12sp" />
 
             <Spinner
                 android:id="@+id/zoom_spinner"
-                android:padding="0dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="0dp">
 
             </Spinner>
         </LinearLayout>
     </LinearLayout>
+
     <Button
         android:id="@+id/resetButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:text="Reset"/>
+        android:text="Reset" />
 </LinearLayout>

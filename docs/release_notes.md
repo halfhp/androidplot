@@ -2,17 +2,56 @@
 For details on what to expect in general when updating to a new version of Androiplot, check out the
 [versioning doc](versioning.md).
 
+# 1.5.4
+
+* (#69) Fixed a bug in `SimpleXYPlot` preventing the resizing of `Y_VALS_ONLY` formatted series.
+* (#73) Fixed a bug where dynamically resizing a Plot (by marking a sibling view as `GONE`, etc.) would not resize the graph widget.
+
+# 1.5.3
+
+* Minor cleanup of Widget example source.
+* (#67) Fixed Javadoc link
+
+# 1.5.2
+
+_This version is pickier than it's predecessors about proper XML configuration.  Where
+previous versions would silently ignore illegal XML attrs, a `RuntimeException` will be thrown._
+* Added [sizing documentation](plot_composition.md#sizing-widgets)
+* Added [custom renderer documentation](custom_renderer.md)
+* Fixed (#61) Bug in `XYGraphWidget.screenToSeriesY(...)`.
+* Fixed (#63) Fixed compatibility issue with Gradle 3.x.x that caused issues with XML parsing.
+
+# 1.5.1
+
+* (#52) Fixed minor NPE issue
+* (#55) Fixed bug with `PieRenderer.getContainingSegment` not working for very large segments.
+
+# 1.5.0
+
+_Updates to legend functionality in this version may result in changes to the display order
+of legend items in some cases.  A custom `Comparator` can be used to resolve this if necessary;
+see the [legend doc](legend.md) for implementation details._
+
+* Added [legend doc](legend.md)
+* Added legend support to `PieChart`
+* Added configurable legend item sorting
+* (#45) Auto range boundaries calculation fix for when using a fixed domain range and a `FastXYSeries`
+* Minor Performance Optimizations
+
 # 1.4.3
+
 * (#39) `FastLineAndPointRenderer` now renders vertices for legend items.
 * Added [XML Attrs reference doc](attrs.md).
 
 # 1.4.2
+
 * (#32) New step mode: `INCREMENT_BY_FIT`.
-* (#33) PanZoom support for 'INCREMENT_BY_FIT'.
+* (#33) `PanZoom` support for `INCREMENT_BY_FIT`.
 * (#34) Removed examples and documentation for serializing `SeriesRegistry` to preserve state.
 
 # 1.4.1
-* (#26) Fixed an NPE issue when drawing null values with a PointLabeler.
+
+* (#26) Fixed an NPE issue when drawing null values with a `PointLabeler`.
 * Fixed a broken link in Quickstart doc.
 
 # 1.4.0
@@ -92,6 +131,7 @@ See the [pie chart documentation](piechart.md) for usage details.
 * Removed InteractiveXYPlot as PanZoom makes it obsolete.
 
 # 1.0.0
+
 This is a factor of several core elements of the Androidplot lib.  The general theme was to 
 make class and method names more intuitive and to make xml styling more powerful.
 

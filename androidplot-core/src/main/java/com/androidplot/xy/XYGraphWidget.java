@@ -22,6 +22,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.androidplot.R;
 import com.androidplot.Region;
@@ -489,20 +491,18 @@ public class XYGraphWidget extends Widget {
 
     protected float seriesToScreenY(Number y) {
         return (float) plot.getBounds().getyRegion().
-                transform(y.doubleValue(), gridRect.left, gridRect.right, true);
+                transform(y.doubleValue(), gridRect.bottom, gridRect.top, true);
+    }
+
+    @Override
+    protected void onResize(@Nullable RectF oldRect, @NonNull RectF newRect) {
+        gridRect = RectFUtils.applyInsets(newRect, gridInsets);
+        labelRect = RectFUtils.applyInsets(newRect, lineLabelInsets);
     }
 
     @Override
     protected void doOnDraw(Canvas canvas, RectF widgetRect)
             throws PlotRenderException {
-
-        if(gridRect == null) {
-            gridRect = RectFUtils.applyInsets(widgetRect, gridInsets);
-        }
-
-        if(labelRect == null) {
-            labelRect = RectFUtils.applyInsets(widgetRect, lineLabelInsets);
-        }
 
         // don't draw if we have no space to draw into
         if (gridRect.height() > ZERO && gridRect.width() > ZERO) {

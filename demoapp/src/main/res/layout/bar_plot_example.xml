@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015 AndroidPlot.com
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,49 +15,50 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:ap="http://schemas.android.com/apk/res-auto"
-              style="@style/sample_activity"
-              android:orientation="vertical">
+    xmlns:ap="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.androidplot.xy.XYPlot
-        style="@style/APDefacto.Light"
         android:id="@+id/plot"
+        style="@style/APDefacto.Light"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        ap:title="Growth"
+        android:layout_weight="1"
+        ap:gridClippingEnabled="false"
         ap:gridInsetLeft="35dp"
         ap:gridInsetRight="10dp"
-        ap:gridClippingEnabled="false"
-        android:layout_weight="1"/>
+        ap:title="Growth" />
 
     <LinearLayout
-        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal">
 
         <Spinner
             android:id="@+id/spRenderStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <Spinner
             android:id="@+id/spSeriesSize"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal">
 
         <Spinner
             android:id="@+id/spWidthStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <RelativeLayout
             android:id="@+id/sectionGraph"
@@ -66,43 +66,43 @@
             android:layout_height="wrap_content">
 
             <SeekBar
+                android:id="@+id/sbFixed"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:max="300"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:max="300"
-                android:progress="10"
-                android:id="@+id/sbFixed"/>
+                android:progress="10" />
 
             <SeekBar
+                android:id="@+id/sbVariable"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:max="50"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:max="50"
-                android:progress="1"
-                android:id="@+id/sbVariable"/>
+                android:progress="1" />
         </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal">
 
         <CheckBox
             android:id="@+id/s1CheckBox"
-            android:text="Series 1"
-            android:checked="true"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_width="fill_parent"/>
+            android:checked="true"
+            android:text="Series 1" />
 
         <CheckBox
             android:id="@+id/s2CheckBox"
-            android:text="Series 2"
-            android:checked="true"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_width="fill_parent"/>
+            android:checked="true"
+            android:text="Series 2" />
     </LinearLayout>
 </LinearLayout>

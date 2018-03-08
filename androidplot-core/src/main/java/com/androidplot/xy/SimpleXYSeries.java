@@ -33,9 +33,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * A convenience class used to create instances of XYPlot generated from Lists of Numbers.
  */
 public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotListener {
-
-    private static final String TAG = SimpleXYSeries.class.getName();
-
     private volatile LinkedList<Number> xVals = new LinkedList<>();
     private volatile LinkedList<Number> yVals = new LinkedList<>();
     private volatile String title = null;
@@ -144,7 +141,7 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
         lock.writeLock().lock();
         try {
             // empty the current values:
-            xVals = null;
+            xVals.clear();
             yVals.clear();
 
             // make sure the new model has data:
@@ -156,15 +153,16 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
 
                 // array containing only y-vals. assume x = index:
                 case Y_VALS_ONLY:
-                    for(Number n : model) {
-                        yVals.add(n);
+                    yVals.addAll(model);
+                    for(int i = 0; i < yVals.size(); i++) {
+                        xVals.add(i);
                     }
                     break;
 
                 // xy interleaved array:
                 case XY_VALS_INTERLEAVED:
                     if (xVals == null) {
-                        xVals = new LinkedList<Number>();
+                        xVals = new LinkedList<>();
                     }
                     if (model.size() % 2 != 0) {
                         throw new IndexOutOfBoundsException("Cannot auto-generate series from odd-sized xy List.");
@@ -217,7 +215,6 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
         try {
             lock.writeLock().lock();
             if (xVals.size() < size) {
-
                 for (int i = xVals.size(); i < size; i++) {
                     xVals.add(null);
                     yVals.add(null);

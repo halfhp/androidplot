@@ -48,9 +48,6 @@ import java.util.List;
  */
 public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, XYSeriesBundle, XYSeriesRegistry> {
 
-    private static final int DEFAULT_LEGEND_WIDGET_H_DP = 10;
-    private static final int DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP = 7;
-
     private static final int DEFAULT_GRAPH_WIDGET_H_DP = 18;
     private static final int DEFAULT_GRAPH_WIDGET_W_DP = 10;
 
@@ -60,8 +57,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
     private static final int DEFAULT_RANGE_LABEL_WIDGET_H_DP = 50;
     private static final int DEFAULT_RANGE_LABEL_WIDGET_W_DP = 10;
 
+    private static final int DEFAULT_LEGEND_WIDGET_H_DP = 10;
+    private static final int DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP = 7;
     private static final int DEFAULT_LEGEND_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_LEGEND_WIDGET_X_OFFSET_DP = 40;
+
     private static final int DEFAULT_GRAPH_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_GRAPH_WIDGET_X_OFFSET_DP = 0;
 

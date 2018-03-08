@@ -41,14 +41,14 @@ public class TouchZoomExampleActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.touch_zoom_example);
-        resetButton = (Button) findViewById(R.id.resetButton);
+        resetButton = findViewById(R.id.resetButton);
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 reset();
             }
         });
-        plot = (XYPlot) findViewById(R.id.plot);
+        plot = findViewById(R.id.plot);
 
         // set a fixed origin and a "by-value" step mode so that grid lines will
         // move dynamically with the data when the users pans or zooms:
@@ -63,8 +63,8 @@ public class TouchZoomExampleActivity extends Activity {
         plot.setRangeStepModel( new StepModelFit(plot.getBounds().getyRegion(),inc_range,NUM_GRIDLINES));
 
 
-        panSpinner = (Spinner) findViewById(R.id.pan_spinner);
-        zoomSpinner = (Spinner) findViewById(R.id.zoom_spinner);
+        panSpinner = findViewById(R.id.pan_spinner);
+        zoomSpinner = findViewById(R.id.zoom_spinner);
         plot.getGraph().setLinesPerRangeLabel(2);
         plot.getGraph().setLinesPerDomainLabel(2);
         plot.getGraph().getBackgroundPaint().setColor(Color.TRANSPARENT);

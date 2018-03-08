@@ -30,11 +30,14 @@ import java.util.List;
  */
 public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormatter> {
 
+    private static final float FULL_PIE_DEGS = 360f;
+    private static final float HALF_PIE_DEGS = 180f;
+
     // starting angle to use when drawing the first radial line of the first segment.
     private float startDegs = 0;
 
     // number of degrees to extend from startDegs; can be used to "shape" the pie chart.
-    private float extentDegs = 360;
+    private float extentDegs = FULL_PIE_DEGS;
 
     // TODO: express donut in units other than px.
     private float donutSize = 0.5f;
@@ -240,7 +243,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 
     protected PointF calculateLineEnd(PointF origin, float rad, float deg) {
 
-        double radians = deg * Math.PI / 180F;
+        double radians = deg * Math.PI / HALF_PIE_DEGS;
         double x = rad * Math.cos(radians);
         double y = rad * Math.sin(radians);
 
@@ -292,11 +295,10 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         float dx = point.x - origin.x;
         float dy = point.y - origin.y;
         double theta = Math.atan2(dy, dx);
-        double angle = (theta * (180f / Math.PI));
+        double angle = (theta * (HALF_PIE_DEGS / Math.PI));
         if (angle < 0) {
-            // convert angle to 0-360 range with 0 being in the
-            // traditional "east" orientation:
-            angle += 360f;
+            // bring into 0-360 range
+            angle += FULL_PIE_DEGS;
         }
 
         // find the segment whose starting and ending angle (degs) contains
@@ -310,10 +312,16 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
             float lastOffset = offset;
             float sweep = (float) (scale * (values[i]) * extentDegs);
             offset += sweep;
-            offset = offset % 360;
+            offset = offset % FULL_PIE_DEGS;
 
             final double dist = signedDistance(offset, angle);
-            if(dist > 0 && dist <= signedDistance(offset, lastOffset)) {
+            double endDist = signedDistance(offset, lastOffset);
+            if(endDist < 0) {
+                // segment accounts for more than 50% of the pie and wrapped around
+                // need to correct:
+                endDist = FULL_PIE_DEGS + endDist;
+            }
+            if(dist > 0 && dist <= endDist) {
                 return sfPair.getSeries();
             }
             i++;
@@ -328,10 +336,10 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
      * @return
      */
     protected static float degsToScreenDegs(float degs) {
-        degs = degs % 360;
+        degs = degs % FULL_PIE_DEGS;
 
         if (degs  > 0) {
-            return 360 - degs;
+            return FULL_PIE_DEGS - degs;
         } else {
             return degs;
         }
@@ -344,12 +352,12 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
      * @return
      */
     protected static double signedDistance(double angle1, double angle2) {
-        double d = Math.abs(angle1 - angle2) % 360;
-        double r = d > 180 ? 360 - d : d;
+        double d = Math.abs(angle1 - angle2) % FULL_PIE_DEGS;
+        double r = d > HALF_PIE_DEGS ? FULL_PIE_DEGS - d : d;
 
         //calculate sign
-        int sign = (angle1 - angle2 >= 0 && angle1 - angle2 <= 180)
-                           || (angle1 - angle2 <= -180 && angle1 - angle2 >= -360) ? 1 : -1;
+        int sign = (angle1 - angle2 >= 0 && angle1 - angle2 <= HALF_PIE_DEGS)
+                           || (angle1 - angle2 <= -HALF_PIE_DEGS && angle1 - angle2 >= -FULL_PIE_DEGS) ? 1 : -1;
         r *= sign;
         return r;
     }
@@ -359,7 +367,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
      * @param degs
      */
     protected static void validateInputDegs(float degs) {
-        if(degs < 0 || degs > 360) {
+        if(degs < 0 || degs > FULL_PIE_DEGS) {
             throw new IllegalArgumentException("Degrees values must be between 0.0 and 360.");
         }
     }

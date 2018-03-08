@@ -37,14 +37,17 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer,
     private static final int DEFAULT_PIE_WIDGET_Y_OFFSET_DP = 0;
     private static final int DEFAULT_PIE_WIDGET_X_OFFSET_DP = 0;
 
-    private static final int DEFAULT_PADDING_DP = 5;
+    private static final int DEFAULT_LEGEND_WIDGET_H_DP = 30;
+    private static final int DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP = 18;
+    private static final int DEFAULT_LEGEND_WIDGET_Y_OFFSET_DP = 0;
+    private static final int DEFAULT_LEGEND_WIDGET_X_OFFSET_DP = 40;
 
-    public void setPie(PieWidget pie) {
-        this.pie = pie;
-    }
+    private static final int DEFAULT_PADDING_DP = 5;
 
     @SuppressWarnings("FieldCanBeLocal")
     private PieWidget pie;
+
+    private PieLegendWidget legend;
 
     @Override
     protected SegmentRegistry getRegistryInstance() {
@@ -81,6 +84,28 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer,
                 VerticalPositioning.ABSOLUTE_FROM_CENTER,
                 Anchor.CENTER);
 
+        legend = new PieLegendWidget(
+                getLayoutManager(),
+                this,
+                new Size(
+                        PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_H_DP),
+                        SizeMode.ABSOLUTE, 0.5f, SizeMode.RELATIVE),
+                new DynamicTableModel(0, 1),
+                new Size(
+                        PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP),
+                        SizeMode.ABSOLUTE,
+                        PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_ICON_SIZE_DP),
+                        SizeMode.ABSOLUTE));
+
+        legend.position(
+                PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_X_OFFSET_DP),
+                HorizontalPositioning.ABSOLUTE_FROM_RIGHT,
+                PixelUtils.dpToPix(DEFAULT_LEGEND_WIDGET_Y_OFFSET_DP),
+                VerticalPositioning.ABSOLUTE_FROM_BOTTOM,
+                Anchor.RIGHT_BOTTOM);
+
+        legend.setVisible(false);
+
         final float padding = PixelUtils.dpToPix(DEFAULT_PADDING_DP);
         pie.setPadding(padding, padding, padding, padding);
     }
@@ -93,6 +118,10 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer,
                 R.styleable.pie_PieChart_pieBorderColor, R.styleable.pie_PieChart_pieBorderThickness);
     }
 
+    public void setPie(PieWidget pie) {
+        this.pie = pie;
+    }
+
     public PieWidget getPie() {
         return pie;
     }
@@ -103,5 +132,13 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer,
 
     public void removeSegment(Segment segment) {
         removeSeries(segment);
+    }
+
+    public PieLegendWidget getLegend() {
+        return legend;
+    }
+
+    public void setLegend(PieLegendWidget legend) {
+        this.legend = legend;
     }
 }

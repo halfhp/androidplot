@@ -1,0 +1,103 @@
+# Java Gradle CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 2
+
+general:
+  branches:
+    only:
+      #- circleci
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      #- image: circleci/openjdk:8-jdk
+
+      # CircleCI maintains a library of pre-built images
+            # documented at https://circleci.com/docs/2.0/circleci-images/
+      - image: circleci/android:api-26-alpha
+
+    working_directory: ~/repo
+
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+#      KEYSTORE: ${CIRCLE_WORKING_DIRECTORY}/sigining.keystore
+#      PUBLISHER_ACCT_JSON_FILE: ${CIRCLE_WORKING_DIRECTORY}/publisher_profile.json
+
+    steps:
+      - checkout
+
+      - run: echo 'export KEYSTORE=${HOME}/repo/sigining.keystore' >> $BASH_ENV
+      - run: echo 'export PUBLISHER_ACCT_JSON_FILE=${HOME}/repo/publisher_profile.json' >> $BASH_ENV
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      # Get private keys etc
+      - run: ./misc/download_keystore.sh
+      - run: ./misc/inject_circle_build_number.sh
+
+      - run: ./gradlew dependencies
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      # run tests & code coc!
+      - run: ./gradlew testDebug jacocoTestReportDebug
+
+      # build release
+      - run: ./gradlew assembleRelease
+
+      # javadoc
+      - run: ./gradlew javadoc
+
+      # trigger codecod.io
+      - run: bash <(curl -s https://codecov.io/bash)
+
+      - store_artifacts:
+          path: androidplot-core/build/outputs/aar/
+          destination: aar
+
+      - store_artifacts:
+          path: demoapp/build/outputs/apk/
+          destination: apk
+
+      - store_artifacts:
+          path: androidplot-core/build/reports/jacoco/debug/
+          destination: coverage_report
+
+      - store_artifacts:
+          path: androidplot-core/build/reports/tests/
+          destination: test_results
+
+      - store_artifacts:
+          path: androidplot-core/build/docs/javadoc
+          destination: javadoc
+
+      - store_test_results:
+          path: androidplot-core/build/test-results/
+
+      - deploy:
+          name: "Deploy to Bintray"
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ];
+              then ./gradlew bintrayUpload;
+            fi
+
+      - deploy:
+          name: "Deploy to Google Play"
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ];
+              then
+                ./misc/download_google_publisher_json.sh;
+                ./gradlew publishApkRelease
+            fi

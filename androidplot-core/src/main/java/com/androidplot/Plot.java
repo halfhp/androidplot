@@ -18,28 +18,43 @@ package com.androidplot;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.RectF;
 import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
 import com.androidplot.exception.PlotRenderException;
-import com.androidplot.ui.*;
+import com.androidplot.ui.Anchor;
+import com.androidplot.ui.BoxModel;
 import com.androidplot.ui.Formatter;
-import com.androidplot.ui.TextOrientation;
-import com.androidplot.ui.widget.TextLabelWidget;
+import com.androidplot.ui.HorizontalPositioning;
+import com.androidplot.ui.LayoutManager;
+import com.androidplot.ui.Resizable;
+import com.androidplot.ui.SeriesBundle;
 import com.androidplot.ui.SeriesRenderer;
+import com.androidplot.ui.Size;
+import com.androidplot.ui.SizeMode;
+import com.androidplot.ui.TextOrientation;
+import com.androidplot.ui.VerticalPositioning;
+import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.util.AttrUtils;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.util.PixelUtils;
-import com.androidplot.ui.HorizontalPositioning;
-import com.androidplot.ui.VerticalPositioning;
-import com.halfhp.fig.*;
+import com.halfhp.fig.Fig;
+import com.halfhp.fig.FigException;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Base class for all Plot implementations.
@@ -406,7 +421,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                     }
                     pingPong.recycle();
                 }
-            });
+            }, "renderThread");
         }
     }
 

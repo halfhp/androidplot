@@ -635,10 +635,9 @@ public class XYGraphWidget extends Widget {
         final double domainStepPix = domainStep.getStepPix();
 
         // draw lines LEFT of origin:
-        final float gridRectLeftMinusFudge = gridRect.left - FUDGE;
         double iMin = (domainOriginPix - gridRect.right) / domainStepPix;
         for (int i = (int) Math.ceil(iMin);
-             i <= (domainOriginPix - gridRectLeftMinusFudge) / domainStepPix;
+             i <= (domainOriginPix - gridRect.left + FUDGE) / domainStepPix;
              i++) {
             double xVal = domainOrigin.doubleValue() - i * domainStep.getStepVal();
             double xPix = domainOriginPix - i * domainStepPix;
@@ -648,10 +647,9 @@ public class XYGraphWidget extends Widget {
         }
 
         // draw lines RIGHT of origin:
-        final float gridRectRightPlusFudge = gridRect.right + FUDGE;
         iMin = (gridRect.left - domainOriginPix) / domainStepPix;
         for (int i = (int) Math.ceil(iMin);
-             i <= (gridRectRightPlusFudge - domainOriginPix) / domainStepPix;
+             i <= (gridRect.right + FUDGE - domainOriginPix) / domainStepPix;
              i++) {
             double xVal = domainOrigin.doubleValue() + i * domainStep.getStepVal();
             double xPix = domainOriginPix + i * domainStepPix;
@@ -683,10 +681,9 @@ public class XYGraphWidget extends Widget {
         final double rangeStepPix = rangeStep.getStepPix();
 
         // draw lines ABOVE origin:
-        final float gridRectTopMinusFudge = gridRect.top - FUDGE;
         iMin = (rangeOriginPix - gridRect.bottom) / rangeStepPix;
         for (int i = (int) Math.ceil(iMin);
-             i <= (rangeOriginPix - gridRectTopMinusFudge) / rangeStepPix;
+             i <= (rangeOriginPix - gridRect.top + FUDGE) / rangeStepPix;
              i++) {
             double yVal = rangeOrigin.doubleValue() + i * rangeStep.getStepVal();
             double yPix = rangeOriginPix - i * rangeStepPix;
@@ -696,10 +693,9 @@ public class XYGraphWidget extends Widget {
         }
 
         // draw lines BENEATH origin:
-        final float gridRectBottomPlusFudge = gridRect.bottom + FUDGE;
         iMin = (gridRect.top - rangeOriginPix) / rangeStepPix;
         for (int i = (int) Math.ceil(iMin);
-             i <= (gridRectBottomPlusFudge - rangeOriginPix) / rangeStepPix;
+             i <= (gridRect.bottom + FUDGE - rangeOriginPix) / rangeStepPix;
              i++) {
             double yVal = rangeOrigin.doubleValue() - i * rangeStep.getStepVal();
             double yPix = rangeOriginPix + i * rangeStepPix;

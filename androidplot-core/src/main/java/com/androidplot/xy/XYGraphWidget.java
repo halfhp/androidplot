@@ -666,7 +666,10 @@ public class XYGraphWidget extends Widget {
         final double kMax = (gridRect.bottom - rangeOriginPix + FUDGE) / rangeStepPix;
 
         for (int k = (int) Math.ceil(kMin); k <= kMax; k++) {
-            double yVal = rangeOrigin.doubleValue() + k * rangeStep.getStepVal();
+            // Android vertical coordinates (zero at the top of the screen) are the opposite
+            // direction of default range values (lowest on bottom of screen) so we subtract when
+            // calculating yVal
+            double yVal = rangeOrigin.doubleValue() - k * rangeStep.getStepVal();
             double yPix = rangeOriginPix + k * rangeStepPix;
             boolean isMajorTick = k % getLinesPerRangeLabel() == ZERO;
             boolean isOrigin = k == 0;

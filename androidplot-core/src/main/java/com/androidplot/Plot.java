@@ -421,7 +421,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                     }
                     pingPong.recycle();
                 }
-            }, "Android Plot Render Thread");
+            }, "Androidplot renderThread");
         }
     }
 

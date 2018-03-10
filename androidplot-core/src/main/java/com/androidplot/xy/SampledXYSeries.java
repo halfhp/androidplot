@@ -89,7 +89,7 @@ public class SampledXYSeries implements FastXYSeries, OrderedXYSeries {
                         lastResamplingException = ex;
                     }
                 }
-            });
+            }, "Androidplot XY Series Sampler");
             getZoomLevels().add(thisSeries);
             threads.add(thread);
             thread.start();

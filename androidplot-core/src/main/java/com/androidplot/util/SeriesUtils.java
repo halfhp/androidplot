@@ -96,15 +96,13 @@ public class SeriesUtils {
                         continue;
                     }
                 }
-                if (series.size() > 0) {
-                    for (int i = 0; i < series.size(); i++) {
-                        final Number xi = series.getX(i);
-                        final Number yi = series.getY(i);
+                for (int i = 0; i < series.size(); i++) {
+                    final Number xi = series.getX(i);
+                    final Number yi = series.getY(i);
 
-                        // if constraints have been set, make sure this xy coordinate exists within them:
-                        if (constraints == null || constraints.contains(xi, yi)) {
-                            bounds.union(xi, yi);
-                        }
+                    // if constraints have been set, make sure this xy coordinate exists within them:
+                    if (constraints == null || constraints.contains(xi, yi)) {
+                        bounds.union(xi, yi);
                     }
                 }
             }

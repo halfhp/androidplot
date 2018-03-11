@@ -85,25 +85,24 @@ public class SeriesUtils {
             for (XYSeries series : seriesArray) {
 
                 // if this is an advanced xy series then minMax have already been calculated for us:
-                boolean isPreCalculated = false;
                 if (series instanceof FastXYSeries) {
                     final RectRegion b = ((FastXYSeries) series).minMax();
                     if(b == null) {
+                        //this series doesn't currently have min or max region (might be empty)
                         continue;
                     }
                     if(constraints == null || constraints.contains(b)) {
                         bounds.union(b);
+                        continue;
                     }
                 }
-                if (!isPreCalculated && series.size() > 0) {
-                    for (int i = 0; i < series.size(); i++) {
-                        final Number xi = series.getX(i);
-                        final Number yi = series.getY(i);
+                for (int i = 0; i < series.size(); i++) {
+                    final Number xi = series.getX(i);
+                    final Number yi = series.getY(i);
 
-                        // if constraints have been set, make sure this xy coordinate exists within them:
-                        if (constraints == null || constraints.contains(xi, yi)) {
-                            bounds.union(xi, yi);
-                        }
+                    // if constraints have been set, make sure this xy coordinate exists within them:
+                    if (constraints == null || constraints.contains(xi, yi)) {
+                        bounds.union(xi, yi);
                     }
                 }
             }

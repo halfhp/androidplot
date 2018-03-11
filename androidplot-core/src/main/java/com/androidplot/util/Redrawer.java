@@ -58,7 +58,7 @@ public class Redrawer implements Runnable {
             this.plots.add(new WeakReference<>(plot));
         }
         setMaxRefreshRate(maxRefreshRate);
-        thread = new Thread(this);
+        thread = new Thread(this, "Androidplot Redrawer");
         thread.start();
         if(startImmediately) {
             start();

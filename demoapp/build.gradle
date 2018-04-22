@@ -21,9 +21,9 @@ dependencies {
 	compile project(':androidplot-core')
     compile 'com.crittercism:crittercism-android-agent:5.4.0'
 
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
 
 buildscript {
@@ -32,7 +32,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
+        classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
     }
 }
 

@@ -21,6 +21,7 @@ import android.graphics.*;
 
 import com.androidplot.test.*;
 import com.androidplot.ui.*;
+import com.androidplot.util.DisplayDimensions;
 
 import org.junit.*;
 import org.mockito.*;
@@ -67,7 +68,7 @@ public class XYGraphWidgetTest extends AndroidplotTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         size = spy(new Size(100, SizeMode.ABSOLUTE, 100, SizeMode.ABSOLUTE));
         xyPlot = spy(new XYPlot(getContext(), "XYPlot"));
         when(xyPlot.getRegistry()).thenReturn(seriesRegistry);
@@ -83,13 +84,8 @@ public class XYGraphWidgetTest extends AndroidplotTest {
         graphWidget.setLabelRect(new RectF(0, 0, 100, 100));
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
-    public void testProcessAttrs() throws Exception {
+    public void processAttrs_withDefaults_disablesGridClipping() {
         XYGraphWidget graphWidget = spy(new XYGraphWidget(layoutManager, xyPlot, size));
 
         graphWidget.processAttrs(typedArray);
@@ -97,7 +93,7 @@ public class XYGraphWidgetTest extends AndroidplotTest {
     }
 
     @Test
-    public void testDoOnDraw_drawGridOnTopFalse() throws Exception {
+    public void doOnDraw_drawGridOnTopFalse_drawsGridAfterData() throws Exception {
         XYGraphWidget graphWidget = spy(new XYGraphWidget(layoutManager, xyPlot, size));
         graphWidget.setDrawGridOnTop(false);
         doNothing().when(graphWidget).drawGrid(canvas);
@@ -113,7 +109,7 @@ public class XYGraphWidgetTest extends AndroidplotTest {
     }
 
     @Test
-    public void testDoOnDraw_drawGridOnTopTrue() throws Exception {
+    public void doOnDraw_drawGridOnTopTrue_drawsGridBeforeData() throws Exception {
         XYGraphWidget graphWidget = spy(new XYGraphWidget(layoutManager, xyPlot, size));
         graphWidget.setDrawGridOnTop(true);
         doNothing().when(graphWidget).drawGrid(canvas);
@@ -129,7 +125,7 @@ public class XYGraphWidgetTest extends AndroidplotTest {
     }
 
     @Test
-    public void testDrawMarkers() throws Exception {
+    public void drawMarkers_drawsLineForEachMarker() {
         xyPlot.addMarker(new XValueMarker(1, "x"));
         xyPlot.addMarker(new YValueMarker(-1, "y"));
 
@@ -140,7 +136,180 @@ public class XYGraphWidgetTest extends AndroidplotTest {
                 .drawLine(anyFloat(), anyFloat(), anyFloat(), anyFloat(), any(Paint.class));
     }
 
-    protected void runDrawGridTest() {
+    @Test
+    public void drawGrid_nullOrigin_drawsGrid() {
+        when(xyPlot.getDomainOrigin()).thenReturn(null);
+        when(xyPlot.getRangeOrigin()).thenReturn(null);
+        runDrawGridTest();
+    }
+
+    @Test
+    public void drawGrid_zeroOrigin_drawsGrid() {
+        when(xyPlot.getDomainOrigin()).thenReturn(0);
+        when(xyPlot.getRangeOrigin()).thenReturn(0);
+        runDrawGridTest();
+    }
+
+    @Test
+    public void drawGrid_centeredOrigin_drawsGrid() {
+
+        // set origin to midpoint so we exercise
+        // code to draw lines on both sides of the origin:
+        when(xyPlot.getDomainOrigin()).thenReturn(50);
+        when(xyPlot.getRangeOrigin()).thenReturn(50);
+        runDrawGridTest();
+    }
+
+    @Test
+    public void drawCursors_withCursorPaintAndPosition_drawsCursorLines() {
+        final Paint domainCursorPaint = new Paint();
+        graphWidget.setDomainCursorPaint(domainCursorPaint);
+
+        final Paint rangeCursorPaint = new Paint();
+        graphWidget.setRangeCursorPaint(rangeCursorPaint);
+        graphWidget.setRangeCursorPosition(0f);
+        graphWidget.setDomainCursorPosition(0f);
+        graphWidget.drawCursors(canvas);
+
+        // expect one line to be drawn for each cursor:
+        verify(canvas, times(1)).drawLine(anyFloat(), anyFloat(), anyFloat(), anyFloat(), eq(domainCursorPaint));
+        verify(canvas, times(1)).drawLine(anyFloat(), anyFloat(), anyFloat(), anyFloat(), eq(rangeCursorPaint));
+    }
+
+    @Test
+    public void testDrawCursors_noCursorPaintOrPosition_drawsNoCursorLines() {
+        graphWidget.setDomainCursorPaint(null);
+        graphWidget.setRangeCursorPaint(null);
+
+        graphWidget.drawCursors(canvas);
+
+        // no lines should be drawn onto the canvas:
+        verify(canvas, times(0)).drawLine(anyFloat(), anyFloat(), anyFloat(), anyFloat(), any(Paint.class));
+    }
+
+    @Test
+    public void drawCursorLabel_drawsText() {
+        graphWidget.setDomainCursorPosition(0f);
+        graphWidget.setRangeCursorPosition(0f);
+        XYGraphWidget.CursorLabelFormatter clf = mock(XYGraphWidget.CursorLabelFormatter.class);
+        when(clf.getTextPaint()).thenReturn(new Paint());
+        when(clf.getLabelText(any(Number.class), any(Number.class))).thenReturn("bla");
+        when(graphWidget.getCursorLabelFormatter()).thenReturn(clf);
+        graphWidget.drawCursorLabel(canvas);
+        verify(canvas, times(1)).drawText(eq("bla"), anyFloat(), anyFloat(), any(Paint.class));
+    }
+
+    @Test
+    public void setLineLabelEdges_setsEdges() {
+
+        graphWidget.setLineLabelEdges(XYGraphWidget.Edge.LEFT, XYGraphWidget.Edge.BOTTOM);
+        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.LEFT));
+        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.BOTTOM));
+
+        graphWidget.setLineLabelEdges(XYGraphWidget.Edge.NONE);
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.TOP));
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.BOTTOM));
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.LEFT));
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.RIGHT));
+    }
+
+    @Test
+    public void setLineLabelEdges_bitfield_setsEdges() {
+
+        graphWidget.setLineLabelEdges(
+                XYGraphWidget.Edge.TOP.getValue() | XYGraphWidget.Edge.RIGHT.getValue());
+
+        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.TOP));
+        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.RIGHT));
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.BOTTOM));
+        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.LEFT));
+    }
+
+    @Test
+    public void screenToSeries_returnsSeriesCoords() {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        XYCoords coords = graphWidget.screenToSeries(new PointF(0, 0));
+        assertEquals(-100, coords.x.intValue());
+        assertEquals(100, coords.y.intValue());
+
+        coords = graphWidget.screenToSeries(new PointF(10, 100));
+        assertEquals(100, coords.x.intValue());
+        assertEquals(-100, coords.y.intValue());
+
+        coords = graphWidget.screenToSeries(new PointF(5, 50));
+        assertEquals(0, coords.x.intValue());
+        assertEquals(0, coords.y.intValue());
+    }
+
+    @Test
+    public void seriesToScreen_returnsScreenPoint() {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        PointF point = graphWidget.seriesToScreen(new XYCoords(-100, 100));
+        assertEquals(0f, point.x);
+        assertEquals(0f, point.y);
+
+        point = graphWidget.seriesToScreen(new XYCoords(100, -100));
+        assertEquals(10f, point.x);
+        assertEquals(100f, point.y);
+
+        point = graphWidget.seriesToScreen(new XYCoords(0, 0));
+        assertEquals(5f, point.x);
+        assertEquals(50f, point.y);
+    }
+
+    @Test
+    public void screenToSeriesX_returnsSeriesValue() {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        assertEquals(-100, graphWidget.screenToSeriesX(new PointF(0, 0)).intValue());
+        assertEquals(100, graphWidget.screenToSeriesX(new PointF(10, 100)).intValue());
+        assertEquals(0, graphWidget.screenToSeriesX(new PointF(5, 50)).intValue());
+    }
+
+    @Test
+    public void screenToSeriesY_returnsSeriesValue() {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        assertEquals(100, graphWidget.screenToSeriesY(new PointF(0, 0)).intValue());
+        assertEquals(-100, graphWidget.screenToSeriesY(new PointF(100, 100)).intValue());
+        assertEquals(0, graphWidget.screenToSeriesY(new PointF(50, 50)).intValue());
+    }
+
+    @Test
+    public void seriesToScreenX_returnsScreenValue() {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        assertEquals(0f, graphWidget.seriesToScreenX(-100));
+        assertEquals(10f, graphWidget.seriesToScreenX(100));
+        assertEquals(5f, graphWidget.seriesToScreenX(0));
+    }
+
+    @Test
+    public void seriesToScreenY_returnsScreenValue() {
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
+
+        assertEquals(100f, graphWidget.seriesToScreenY(100));
+        assertEquals(0f, graphWidget.seriesToScreenY(-100));
+        assertEquals(50f, graphWidget.seriesToScreenY(0));
+    }
+
+    @Test
+    public void setGridInsets_updatesGridRect() {
+        graphWidget.setGridInsets(new Insets(0, 0, 0, 0));
+        final RectF oldRect = graphWidget.getGridRect();
+
+        graphWidget.setGridInsets(new Insets(2, 2, 2, 2));
+        final RectF newRect = graphWidget.getGridRect();
+
+        assertEquals(oldRect.left + 2, newRect.left);
+        assertEquals(oldRect.top + 2, newRect.top);
+        assertEquals(oldRect.right - 2, newRect.right);
+        assertEquals(oldRect.bottom -2, newRect.bottom);
+    }
+
+    private void runDrawGridTest() {
         doNothing().when(graphWidget).
                 drawDomainLine(any(Canvas.class), anyFloat(), any(Number.class), any(Paint.class), anyBoolean());
 
@@ -158,164 +327,5 @@ public class XYGraphWidgetTest extends AndroidplotTest {
 
         verify(graphWidget, times(100))
                 .drawRangeLine(eq(canvas), anyFloat(), anyFloat(), any(Paint.class), eq(false));
-    }
-
-    @Test
-    public void testDrawGrid_nullOrigin() throws Exception {
-        when(xyPlot.getDomainOrigin()).thenReturn(null);
-        when(xyPlot.getRangeOrigin()).thenReturn(null);
-        runDrawGridTest();
-    }
-
-    @Test
-    public void testDrawGrid_zeroOrigin() throws Exception {
-        when(xyPlot.getDomainOrigin()).thenReturn(0);
-        when(xyPlot.getRangeOrigin()).thenReturn(0);
-        runDrawGridTest();
-    }
-
-    @Test
-    public void testDrawGrid_centeredOrigin() throws Exception {
-
-        // set origin to midpoint so we exercise
-        // code to draw lines on both sides of the origin:
-        when(xyPlot.getDomainOrigin()).thenReturn(50);
-        when(xyPlot.getRangeOrigin()).thenReturn(50);
-        runDrawGridTest();
-    }
-
-    @Test
-    public void testDrawCursors_ifCursorPaintAndPositionAreSet() throws Exception {
-        final Paint domainCursorPaint = new Paint();
-        graphWidget.setDomainCursorPaint(domainCursorPaint);
-
-        final Paint rangeCursorPaint = new Paint();
-        graphWidget.setRangeCursorPaint(rangeCursorPaint);
-        graphWidget.setRangeCursorPosition(0f);
-        graphWidget.setDomainCursorPosition(0f);
-        graphWidget.drawCursors(canvas);
-
-        // expect one line to be drawn for each cursor:
-        verify(canvas, times(1)).drawLine(anyFloat(), anyFloat(), anyFloat(), anyFloat(), eq(domainCursorPaint));
-        verify(canvas, times(1)).drawLine(anyFloat(), anyFloat(), anyFloat(), anyFloat(), eq(rangeCursorPaint));
-    }
-
-    @Test
-    public void testDrawCursors_ifCursorPaintAndPositionAreNotSet() throws Exception {
-        graphWidget.setDomainCursorPaint(null);
-        graphWidget.setRangeCursorPaint(null);
-
-        graphWidget.drawCursors(canvas);
-
-        // no lines should be drawn onto the canvas:
-        verify(canvas, times(0)).drawLine(anyFloat(), anyFloat(), anyFloat(), anyFloat(), any(Paint.class));
-    }
-
-    @Test
-    public void testDrawCursorLabel() throws Exception {
-        graphWidget.setDomainCursorPosition(0f);
-        graphWidget.setRangeCursorPosition(0f);
-        XYGraphWidget.CursorLabelFormatter clf = mock(XYGraphWidget.CursorLabelFormatter.class);
-        when(clf.getTextPaint()).thenReturn(new Paint());
-        when(clf.getLabelText(any(Number.class), any(Number.class))).thenReturn("bla");
-        when(graphWidget.getCursorLabelFormatter()).thenReturn(clf);
-        graphWidget.drawCursorLabel(canvas);
-        verify(canvas, times(1)).drawText(eq("bla"), anyFloat(), anyFloat(), any(Paint.class));
-    }
-
-    @Test
-    public void testSetLineLabelEdges() throws Exception {
-
-        graphWidget.setLineLabelEdges(XYGraphWidget.Edge.LEFT, XYGraphWidget.Edge.BOTTOM);
-        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.LEFT));
-        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.BOTTOM));
-
-        graphWidget.setLineLabelEdges(XYGraphWidget.Edge.NONE);
-        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.TOP));
-        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.BOTTOM));
-        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.LEFT));
-        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.RIGHT));
-    }
-
-    @Test
-    public void testSetLineLabelEdges_bitfield() throws Exception {
-
-        graphWidget.setLineLabelEdges(
-                XYGraphWidget.Edge.TOP.getValue() | XYGraphWidget.Edge.RIGHT.getValue());
-
-        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.TOP));
-        assertTrue(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.RIGHT));
-        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.BOTTOM));
-        assertFalse(graphWidget.isLineLabelEnabled(XYGraphWidget.Edge.LEFT));
-    }
-
-    @Test
-    public void testScreenToSeries() throws Exception {
-        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
-
-        XYCoords coords = graphWidget.screenToSeries(new PointF(0, 0));
-        assertEquals(-100, coords.x.intValue());
-        assertEquals(100, coords.y.intValue());
-
-        coords = graphWidget.screenToSeries(new PointF(10, 100));
-        assertEquals(100, coords.x.intValue());
-        assertEquals(-100, coords.y.intValue());
-
-        coords = graphWidget.screenToSeries(new PointF(5, 50));
-        assertEquals(0, coords.x.intValue());
-        assertEquals(0, coords.y.intValue());
-    }
-
-    @Test
-    public void testSeriesToScreen() throws Exception {
-        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
-
-        PointF point = graphWidget.seriesToScreen(new XYCoords(-100, 100));
-        assertEquals(0f, point.x);
-        assertEquals(0f, point.y);
-
-        point = graphWidget.seriesToScreen(new XYCoords(100, -100));
-        assertEquals(10f, point.x);
-        assertEquals(100f, point.y);
-
-        point = graphWidget.seriesToScreen(new XYCoords(0, 0));
-        assertEquals(5f, point.x);
-        assertEquals(50f, point.y);
-    }
-
-    @Test
-    public void testScreenToSeriesX() throws Exception {
-        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
-
-        assertEquals(-100, graphWidget.screenToSeriesX(new PointF(0, 0)).intValue());
-        assertEquals(100, graphWidget.screenToSeriesX(new PointF(10, 100)).intValue());
-        assertEquals(0, graphWidget.screenToSeriesX(new PointF(5, 50)).intValue());
-    }
-
-    @Test
-    public void testScreenToSeriesY() throws Exception {
-        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
-
-        assertEquals(100, graphWidget.screenToSeriesY(new PointF(0, 0)).intValue());
-        assertEquals(-100, graphWidget.screenToSeriesY(new PointF(100, 100)).intValue());
-        assertEquals(0, graphWidget.screenToSeriesY(new PointF(50, 50)).intValue());
-    }
-
-    @Test
-    public void testSeriesToScreenX() throws Exception {
-        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
-
-        assertEquals(0f, graphWidget.seriesToScreenX(-100));
-        assertEquals(10f, graphWidget.seriesToScreenX(100));
-        assertEquals(5f, graphWidget.seriesToScreenX(0));
-    }
-
-    @Test
-    public void testSeriesToScreenY() throws Exception {
-        when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
-
-        assertEquals(100f, graphWidget.seriesToScreenY(100));
-        assertEquals(0f, graphWidget.seriesToScreenY(-100));
-        assertEquals(50f, graphWidget.seriesToScreenY(0));
     }
 }

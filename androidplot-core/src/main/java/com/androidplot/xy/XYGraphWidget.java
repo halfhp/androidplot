@@ -530,8 +530,15 @@ public class XYGraphWidget extends Widget {
 
     @Override
     protected void onResize(@Nullable RectF oldRect, @NonNull RectF newRect) {
-        gridRect = RectFUtils.applyInsets(newRect, gridInsets);
-        labelRect = RectFUtils.applyInsets(newRect, lineLabelInsets);
+        recalculateSizes(newRect);
+    }
+
+    protected void recalculateSizes(@Nullable RectF rect) {
+        if(rect == null) {
+            rect = getWidgetDimensions().paddedRect;
+        }
+        gridRect = RectFUtils.applyInsets(rect, gridInsets);
+        labelRect = RectFUtils.applyInsets(rect, lineLabelInsets);
     }
 
     @Override
@@ -1149,6 +1156,7 @@ public class XYGraphWidget extends Widget {
 
     public void setGridInsets(Insets gridInsets) {
         this.gridInsets = gridInsets;
+        recalculateSizes(null);
     }
 
     /**
@@ -1160,6 +1168,7 @@ public class XYGraphWidget extends Widget {
 
     public void setLineLabelInsets(Insets lineLabelInsets) {
         this.lineLabelInsets = lineLabelInsets;
+        recalculateSizes(null);
     }
 
     public RectF getGridRect() {

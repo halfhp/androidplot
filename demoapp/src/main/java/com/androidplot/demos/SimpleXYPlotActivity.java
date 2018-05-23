@@ -21,8 +21,6 @@ import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.androidplot.ui.Size;
-import com.androidplot.ui.SizeMode;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.CatmullRomInterpolator;
 import com.androidplot.xy.LineAndPointFormatter;

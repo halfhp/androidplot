@@ -2,6 +2,12 @@
 For details on what to expect in general when updating to a new version of Androiplot, check out the
 [versioning doc](versioning.md).
 
+# 1.5.5
+
+* (#76) Fixed a bug that could cause a deadlock when grid steps are much larger than actual plot range.
+* (#78) Fixed a bug where setting insets on XYGraphWidget would have no effect after the plot was drawn.
+* XYGraphWidget.drawMarkerText is now marked `protected`.
+
 # 1.5.4
 
 * (#69) Fixed a bug in `SimpleXYPlot` preventing the resizing of `Y_VALS_ONLY` formatted series.

@@ -33,10 +33,4 @@
         ap:lineLabelRotationBottom="-45"
         android:layout_weight="1"/>
 
-    <Button
-        android:id="@+id/hide_button"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:text="HIDE"/>
-
 </LinearLayout>

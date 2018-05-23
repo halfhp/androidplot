@@ -530,8 +530,15 @@ public class XYGraphWidget extends Widget {
 
     @Override
     protected void onResize(@Nullable RectF oldRect, @NonNull RectF newRect) {
-        gridRect = RectFUtils.applyInsets(newRect, gridInsets);
-        labelRect = RectFUtils.applyInsets(newRect, lineLabelInsets);
+        recalculateSizes(newRect);
+    }
+
+    protected void recalculateSizes(@Nullable RectF rect) {
+        if(rect == null) {
+            rect = getWidgetDimensions().paddedRect;
+        }
+        gridRect = RectFUtils.applyInsets(rect, gridInsets);
+        labelRect = RectFUtils.applyInsets(rect, lineLabelInsets);
     }
 
     @Override
@@ -694,27 +701,29 @@ public class XYGraphWidget extends Widget {
      * @param x
      * @param y
      */
-    private void drawMarkerText(Canvas canvas, String text, ValueMarker marker,
+    protected void drawMarkerText(Canvas canvas, String text, ValueMarker marker,
                                 float x, float y) {
-        x += MARKER_LABEL_SPACING;
-        y -= MARKER_LABEL_SPACING;
-        RectF textRect = new RectF(FontUtils.getStringDimensions(
-                text,
-                marker.getTextPaint()
-        ));
-        textRect.offsetTo(x, y - textRect.height());
+        if (marker.getText() != null) {
+            x += MARKER_LABEL_SPACING;
+            y -= MARKER_LABEL_SPACING;
+            RectF textRect = new RectF(FontUtils.getStringDimensions(
+                    text,
+                    marker.getTextPaint()
+            ));
+            textRect.offsetTo(x, y - textRect.height());
 
-        if (textRect.right > gridRect.right) {
-            textRect.offset(-(textRect.right - gridRect.right), ZERO);
+            if (textRect.right > gridRect.right) {
+                textRect.offset(-(textRect.right - gridRect.right), ZERO);
+            }
+
+            if (textRect.top < gridRect.top) {
+                textRect.offset(0, gridRect.top - textRect.top);
+            }
+
+            canvas.drawText(text, textRect.left, textRect.bottom,
+                    marker.getTextPaint()
+            );
         }
-
-        if (textRect.top < gridRect.top) {
-            textRect.offset(0, gridRect.top - textRect.top);
-        }
-
-        canvas.drawText(text, textRect.left, textRect.bottom,
-                marker.getTextPaint()
-        );
     }
 
     protected void drawMarkers(Canvas canvas) {
@@ -731,10 +740,7 @@ public class XYGraphWidget extends Widget {
                     float xPix = marker.getTextPosition().getPixelValue(
                             gridRect.width());
                     xPix += gridRect.left;
-
-                    if (marker.getText() != null) {
-                        drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
-                    }
+                    drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
                 }
             }
         }
@@ -1149,6 +1155,7 @@ public class XYGraphWidget extends Widget {
 
     public void setGridInsets(Insets gridInsets) {
         this.gridInsets = gridInsets;
+        recalculateSizes(null);
     }
 
     /**
@@ -1160,6 +1167,7 @@ public class XYGraphWidget extends Widget {
 
     public void setLineLabelInsets(Insets lineLabelInsets) {
         this.lineLabelInsets = lineLabelInsets;
+        recalculateSizes(null);
     }
 
     public RectF getGridRect() {

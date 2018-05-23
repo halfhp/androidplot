@@ -21,8 +21,7 @@ import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.androidplot.ui.Size;
-import com.androidplot.ui.SizeMode;
+import com.androidplot.ui.Insets;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.CatmullRomInterpolator;
 import com.androidplot.xy.LineAndPointFormatter;
@@ -102,5 +101,19 @@ public class SimpleXYPlotActivity extends Activity {
                 return null;
             }
         });
+
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                plot.getGraph().setGridInsets(new Insets(120, 120, 120, 120));
+                plot.redraw();
+            }
+        }).start();
     }
 }

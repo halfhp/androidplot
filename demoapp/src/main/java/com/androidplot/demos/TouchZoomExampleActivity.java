@@ -152,6 +152,7 @@ public class TouchZoomExampleActivity extends Activity {
             }
         });
 
+
         zoomSpinner.setAdapter(
                 new ArrayAdapter<>(this, R.layout.spinner_item, PanZoom.Zoom.values()));
         zoomSpinner.setSelection(panZoom.getZoom().ordinal());
@@ -166,6 +167,20 @@ public class TouchZoomExampleActivity extends Activity {
                 // nothing to do
             }
         });
+    }
+
+    // (optional) save the current pan/zoom state
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+         bundle.putSerializable("pan-zoom-state", panZoom.getState());
+    }
+
+    // (optional) restore the previously saved pan/zoom state
+    @Override
+    public void onRestoreInstanceState(Bundle bundle) {
+        PanZoom.State state = (PanZoom.State) bundle.getSerializable("pan-zoom-state");
+        panZoom.setState(state);
+        plot.redraw();
     }
 }
 

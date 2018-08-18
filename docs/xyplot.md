@@ -217,6 +217,25 @@ then the plot will pan and zoom on both axes infinitely.  To set the plot's oute
 plot.getOuterLimits().set(0, 100, 0, 100);
 ```
 
+# Saving & Restoring PanZoom State
+The `PanZoom` class provides convenience methods for saving and restoring state from your `Activity`:
+
+```java
+// save the current pan/zoom state
+@Override
+public void onSaveInstanceState(Bundle bundle) {
+     bundle.putSerializable("pan-zoom-state", panZoom.getState());
+}
+
+// restore the previously saved pan/zoom state
+@Override
+public void onRestoreInstanceState(Bundle bundle) {
+    PanZoom.State state = (PanZoom.State) bundle.getSerializable("pan-zoom-state");
+    panZoom.setState(state);
+    plot.redraw();
+}
+```
+
 For a more detailed look at pan & zoom behavior, check out the [Touch Zoom Example source code](../demoapp/src/main/java/com/androidplot/demos/TouchZoomExampleActivity.java).
 
 # Series Renderers

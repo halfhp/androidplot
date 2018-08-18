@@ -23,10 +23,10 @@ allprojects {
 }
 
 ext {
-    theCompileSdkVersion = 26
-    theTargetSdkVersion = 26
+    theCompileSdkVersion = 28
+    theTargetSdkVersion = 28
     theMinSdkVersion = 5
-    theVersionName = '1.5.5'
+    theVersionName = '1.5.6'
     theVersionCode = 0
 }
 

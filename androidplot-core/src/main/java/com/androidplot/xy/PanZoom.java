@@ -2,11 +2,13 @@ package com.androidplot.xy;
 
 import android.graphics.RectF;
 import android.graphics.PointF;
+import android.support.annotation.NonNull;
 import android.view.*;
 
 import com.androidplot.*;
 import com.androidplot.util.*;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -35,6 +37,7 @@ public class PanZoom implements View.OnTouchListener {
     // rectangle created by the space between two fingers
     protected RectF fingersRect;
     private View.OnTouchListener delegate;
+    private State state = new State();
 
     // Definition of the touch states
     protected enum DragState {
@@ -95,7 +98,42 @@ public class PanZoom implements View.OnTouchListener {
         MIN_TICKS
     }
 
-    protected PanZoom(XYPlot plot, Pan pan, Zoom zoom) {
+    // TODO: consider making this immutable / threadsafe
+    public static class State implements Serializable {
+        private Number domainLowerBoundary;
+        private Number domainUpperBoundary;
+        private Number rangeLowerBoundary;
+        private Number rangeUpperBoundary;
+        private BoundaryMode domainBoundaryMode;
+        private BoundaryMode rangeBoundaryMode;
+
+        public void setDomainBoundaries(Number lowerBoundary, Number upperBoundary, BoundaryMode mode) {
+            this.domainLowerBoundary = lowerBoundary;
+            this.domainUpperBoundary = upperBoundary;
+            this.domainBoundaryMode = mode;
+        }
+
+        public void setRangeBoundaries(Number lowerBoundary, Number upperBoundary, BoundaryMode mode) {
+            this.rangeLowerBoundary = lowerBoundary;
+            this.rangeUpperBoundary = upperBoundary;
+            this.rangeBoundaryMode = mode;
+        }
+
+        public void applyDomainBoundaries(@NonNull XYPlot plot) {
+            plot.setDomainBoundaries(domainLowerBoundary, domainUpperBoundary, domainBoundaryMode);
+        }
+
+        public void applyRangeBoundaries(@NonNull XYPlot plot) {
+            plot.setRangeBoundaries(rangeLowerBoundary, rangeUpperBoundary, rangeBoundaryMode);
+        }
+
+        public void apply(@NonNull XYPlot plot) {
+            applyDomainBoundaries(plot);
+            applyRangeBoundaries(plot);
+        }
+    }
+
+    protected PanZoom(@NonNull XYPlot plot, Pan pan, Zoom zoom) {
         this.plot = plot;
         this.pan = pan;
         this.zoom = zoom;
@@ -103,11 +141,30 @@ public class PanZoom implements View.OnTouchListener {
     }
 
     // additional constructor not to break api
-    protected PanZoom(XYPlot plot, Pan pan, Zoom zoom, ZoomLimit limit) {
+    protected PanZoom(@NonNull XYPlot plot, Pan pan, Zoom zoom, ZoomLimit limit) {
         this.plot = plot;
         this.pan = pan;
         this.zoom = zoom;
         this.zoomLimit = limit;
+    }
+
+    public State getState() {
+        return this.state;
+    }
+
+    public void setState(@NonNull State state) {
+        this.state = state;
+        state.apply(plot);
+    }
+
+    protected void adjustRangeBoundary(Number lower, Number upper,  BoundaryMode mode) {
+        state.setRangeBoundaries(lower, upper, mode);
+        state.applyRangeBoundaries(plot);
+    }
+
+    protected void adjustDomainBoundary(Number lower, Number upper, BoundaryMode mode) {
+        state.setDomainBoundaries(lower, upper, mode);
+        state.applyDomainBoundaries(plot);
     }
 
     /**
@@ -117,7 +174,7 @@ public class PanZoom implements View.OnTouchListener {
      * @param plot
      * @return
      */
-    public static PanZoom attach(XYPlot plot) {
+    public static PanZoom attach(@NonNull XYPlot plot) {
         return attach(plot, Pan.BOTH, Zoom.SCALE);
     }
 
@@ -130,7 +187,7 @@ public class PanZoom implements View.OnTouchListener {
      * @param zoom
      * @return
      */
-    public static PanZoom attach(XYPlot plot, Pan pan, Zoom zoom) {
+    public static PanZoom attach(@NonNull XYPlot plot, @NonNull Pan pan, @NonNull Zoom zoom) {
         return attach(plot,pan,zoom, ZoomLimit.OUTER);
     }
 
@@ -142,7 +199,7 @@ public class PanZoom implements View.OnTouchListener {
      * @param limit
      * @return
      */
-    public static PanZoom attach(XYPlot plot, Pan pan, Zoom zoom, ZoomLimit limit) {
+    public static PanZoom attach(@NonNull XYPlot plot, @NonNull Pan pan, @NonNull Zoom zoom, @NonNull ZoomLimit limit) {
         PanZoom pz = new PanZoom(plot, pan, zoom, limit);
         plot.setOnTouchListener(pz);
         return pz;
@@ -237,12 +294,12 @@ public class PanZoom implements View.OnTouchListener {
         if (EnumSet.of(Pan.HORIZONTAL, Pan.BOTH).contains(pan)) {
             Region newBounds = new Region();
             calculatePan(oldFirstFinger, newBounds, true);
-            plot.setDomainBoundaries(newBounds.getMin(), newBounds.getMax(), BoundaryMode.FIXED);
+            adjustDomainBoundary(newBounds.getMin(), newBounds.getMax(), BoundaryMode.FIXED);
         }
         if (EnumSet.of(Pan.VERTICAL, Pan.BOTH).contains(pan)) {
             Region newBounds = new Region();
             calculatePan(oldFirstFinger, newBounds, false);
-            plot.setRangeBoundaries(newBounds.getMin(), newBounds.getMax(), BoundaryMode.FIXED);
+            adjustRangeBoundary(newBounds.getMin(), newBounds.getMax(), BoundaryMode.FIXED);
         }
 
         plot.redraw();
@@ -291,10 +348,9 @@ public class PanZoom implements View.OnTouchListener {
     }
 
     protected boolean isValidScale(float scale) {
-        if (Float.isInfinite(scale) || Float.isNaN(scale) || scale > -0.001 && scale < 0.001) {
-            return false;
-        }
-        return true;
+        return !Float.isInfinite(scale)
+                && !Float.isNaN(scale)
+                && (!(scale > -0.001) || !(scale < 0.001));
     }
 
     protected void zoom(final MotionEvent motionEvent) {
@@ -349,14 +405,14 @@ public class PanZoom implements View.OnTouchListener {
                 Zoom.STRETCH_BOTH,
                 Zoom.SCALE).contains(zoom)) {
             calculateZoom(newRect, scaleX, true);
-            plot.setDomainBoundaries(newRect.left, newRect.right, BoundaryMode.FIXED);
+            adjustDomainBoundary(newRect.left, newRect.right, BoundaryMode.FIXED);
         }
         if (EnumSet.of(
                 Zoom.STRETCH_VERTICAL,
                 Zoom.STRETCH_BOTH,
                 Zoom.SCALE).contains(zoom)) {
             calculateZoom(newRect, scaleY, false);
-            plot.setRangeBoundaries(newRect.top, newRect.bottom, BoundaryMode.FIXED);
+            adjustRangeBoundary(newRect.top, newRect.bottom, BoundaryMode.FIXED);
         }
         plot.redraw();
     }

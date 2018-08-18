@@ -309,7 +309,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 RectF thisRegionRectF = thisRegionTransformed.asRectF();
                 if (thisRegionRectF != null) {
                     try {
-                        canvas.save(Canvas.ALL_SAVE_FLAG);
+                        canvas.save();
                         canvas.clipPath(path);
                         canvas.drawRect(thisRegionRectF, regionFormatter.getPaint());
                     } finally {

@@ -2,6 +2,11 @@
 For details on what to expect in general when updating to a new version of Androiplot, check out the
 [versioning doc](versioning.md).
 
+# 1.5.6
+
+* Adds convenience methods for saving / restoring `PanZoom` state.
+* (#80) Targets SDK 28, fixing compatibility issues.
+
 # 1.5.5
 
 * (#76) Fixed a bug that could cause a deadlock when grid steps are much larger than actual plot range.

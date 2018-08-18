@@ -847,7 +847,7 @@ public class XYGraphWidget extends Widget {
         }
         try {
             if (isGridClippingEnabled) {
-                canvas.save(Canvas.ALL_SAVE_FLAG);
+                canvas.save();
                 canvas.clipRect(gridRect, android.graphics.Region.Op.INTERSECT);
             }
 

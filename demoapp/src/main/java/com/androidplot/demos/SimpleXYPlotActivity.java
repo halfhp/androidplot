@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 AndroidPlot.com
+ * Copyright 2018 AndroidPlot.com
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.androidplot.ui.Insets;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.CatmullRomInterpolator;
 import com.androidplot.xy.LineAndPointFormatter;
@@ -49,7 +48,7 @@ public class SimpleXYPlotActivity extends Activity {
         setContentView(R.layout.simple_xy_plot_example);
 
         // initialize our XYPlot reference:
-        plot = (XYPlot) findViewById(R.id.plot);
+        plot = findViewById(R.id.plot);
 
         // create a couple arrays of y-values to plot:
         final Number[] domainLabels = {1, 2, 3, 6, 7, 8, 9, 10, 13, 14};
@@ -101,19 +100,5 @@ public class SimpleXYPlotActivity extends Activity {
                 return null;
             }
         });
-
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                plot.getGraph().setGridInsets(new Insets(120, 120, 120, 120));
-                plot.redraw();
-            }
-        }).start();
     }
 }

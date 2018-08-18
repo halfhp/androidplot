@@ -170,7 +170,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
             canvas.drawLine(r1Inner.x, r1Inner.y, r1Outer.x, r1Outer.y, f.getRadialEdgePaint());
             canvas.drawLine(r2Inner.x, r2Inner.y, r2Outer.x, r2Outer.y, f.getRadialEdgePaint());
         } else {
-            canvas.save(Canvas.CLIP_SAVE_FLAG);
+            canvas.save();
             Path chart = new Path();
             chart.addCircle(cx, cy, outerRad, Path.Direction.CW);
             Path inside = new Path();

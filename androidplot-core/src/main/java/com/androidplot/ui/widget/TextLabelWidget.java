@@ -101,7 +101,7 @@ public class TextLabelWidget extends Widget {
                 Anchor.CENTER);
 
         try {
-            canvas.save(Canvas.ALL_SAVE_FLAG);
+            canvas.save();
             canvas.translate(start.x, start.y);
             switch (orientation) {
                 case HORIZONTAL:

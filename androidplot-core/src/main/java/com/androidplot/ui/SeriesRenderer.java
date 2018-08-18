@@ -81,7 +81,7 @@ public abstract class SeriesRenderer
 
     public void drawSeriesLegendIcon(Canvas canvas, RectF rect, SeriesFormatterType formatter) {
         try {
-            canvas.save(Canvas.ALL_SAVE_FLAG);
+            canvas.save();
             canvas.clipRect(rect, Region.Op.INTERSECT);
             doDrawLegendIcon(canvas, rect, formatter);
         } finally {

@@ -92,7 +92,7 @@ public class LayoutManager extends LinkedLayerList<Widget>
         }
         for (Widget widget : elements()) {
             try {
-                canvas.save(Canvas.ALL_SAVE_FLAG);
+                canvas.save();
                 PositionMetrics metrics = widget.getPositionMetrics();
                 float elementWidth = widget.getWidthPix(displayDims.paddedRect.width());
                 float elementHeight = widget.getHeightPix(displayDims.paddedRect.height());
@@ -140,7 +140,7 @@ public class LayoutManager extends LinkedLayerList<Widget>
 
     private static void drawSpacing(Canvas canvas, RectF outer, RectF inner, Paint paint) {
         try {
-            canvas.save(Canvas.ALL_SAVE_FLAG);
+            canvas.save();
             canvas.clipRect(inner, Region.Op.DIFFERENCE);
             canvas.drawRect(outer, paint);
         } finally {

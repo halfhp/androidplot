@@ -162,7 +162,7 @@ __boolean__
 ### rangeTitle
 __string__
 
-### rangeTitleColor
+### rangeTitleTextColor
 __color__
 
 ### rangeTitleTextSize

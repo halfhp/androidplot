@@ -27,7 +27,7 @@ class RoundedBarFormatter extends BarFormatter {
 
     @Override
     public RoundedBarRenderer doGetRendererInstance(XYPlot xyPlot) {
-        return new RoundedBarRenderer(plot);
+        return new RoundedBarRenderer(xyPlot);
     }
 }
 ```

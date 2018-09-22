@@ -87,14 +87,14 @@ These are the horizontal lines drawn on a graph.  These lines are configured via
 Androidplot provides these step modes:
 
 ### Subdivide
-When using `BoundaryMode.SUBDIVIDE`, the graph is subdivided into the specified number of sections.
+When using `StepMode.SUBDIVIDE`, the graph is subdivided into the specified number of sections.
 
 ### IncrementByValue
-`BoundaryMode.INCREMENT_BY_VALUE` instructs Androidplot draw grid lines at the specified interval.  This
+`StepMode.INCREMENT_BY_VALUE` instructs Androidplot draw grid lines at the specified interval.  This
 is the most commonly used modes as is produces an easy to read result.
 
 ### IncrementByPixels
-`BoundaryMode.INCREMENT_BY_PIXELS` behaves identically to `BoundaryMode.INCREMENT_BY_VALUE` except that 
+`StepMode.INCREMENT_BY_PIXELS` behaves identically to `StepMode.INCREMENT_BY_VALUE` except that 
 the increment quantity is expressed in pixels.
 
 ## Domain & Range Labels

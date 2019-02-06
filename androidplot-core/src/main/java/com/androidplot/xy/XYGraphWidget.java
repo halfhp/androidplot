@@ -27,7 +27,6 @@ import android.support.annotation.Nullable;
 
 import com.androidplot.R;
 import com.androidplot.Region;
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.Insets;
 import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.RenderStack;
@@ -542,8 +541,7 @@ public class XYGraphWidget extends Widget {
     }
 
     @Override
-    protected void doOnDraw(Canvas canvas, RectF widgetRect)
-            throws PlotRenderException {
+    protected void doOnDraw(Canvas canvas, RectF widgetRect) {
 
         // don't draw if we have no space to draw into
         if (gridRect.height() > ZERO && gridRect.width() > ZERO) {
@@ -839,9 +837,8 @@ public class XYGraphWidget extends Widget {
      * Draws lines and points for each element in the series.
      *
      * @param canvas
-     * @throws PlotRenderException
      */
-    protected void drawData(Canvas canvas) throws PlotRenderException {
+    protected void drawData(Canvas canvas) {
         if (drawGridOnTop) {
             drawGridBackground(canvas);
         }

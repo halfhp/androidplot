@@ -18,7 +18,6 @@ package com.androidplot.pie;
 
 import android.graphics.*;
 
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.SeriesBundle;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.RenderStack;
@@ -58,7 +57,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
 
     @Override
     public void onRender(Canvas canvas, RectF plotArea, Segment series, SegmentFormatter formatter,
-            RenderStack stack) throws PlotRenderException {
+            RenderStack stack) {
 
         // This renderer renders all series in one shot, so exclude any remaining series
         // from causing subsequent invocations of onRender:

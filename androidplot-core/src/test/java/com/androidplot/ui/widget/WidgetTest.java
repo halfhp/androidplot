@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.test.AndroidplotTest;
 import com.androidplot.ui.Anchor;
 import com.androidplot.ui.HorizontalPositioning;
@@ -88,7 +87,7 @@ public class WidgetTest extends AndroidplotTest {
     }
 
     @Test
-    public void draw_sizeChanged_invokesOnResizeBeforeDoOnDraw() throws Exception {
+    public void draw_sizeChanged_invokesOnResizeBeforeDoOnDraw() {
         InOrder inOrder = Mockito.inOrder(widget);
 
         widget.draw(canvas);
@@ -105,7 +104,7 @@ public class WidgetTest extends AndroidplotTest {
         }
 
         @Override
-        protected void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
+        protected void doOnDraw(Canvas canvas, RectF widgetRect) {
             // nothing to do
         }
     }

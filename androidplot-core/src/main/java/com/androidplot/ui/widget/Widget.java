@@ -20,7 +20,6 @@ import android.graphics.*;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.*;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.ui.HorizontalPositioning;
@@ -372,7 +371,7 @@ public abstract class Widget implements BoxModelable, Resizable {
         // do nothing by default
     }
 
-    public void draw(Canvas canvas) throws PlotRenderException {
+    public void draw(Canvas canvas) {
         if (isVisible()) {
             if (backgroundPaint != null) {
                 drawBackground(canvas, widgetDimensions.canvasRect);
@@ -439,7 +438,7 @@ public abstract class Widget implements BoxModelable, Resizable {
      * @param canvas     The Canvas to draw onto
      * @param widgetRect the size and coordinates of this widget
      */
-    protected abstract void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException;
+    protected abstract void doOnDraw(Canvas canvas, RectF widgetRect);
 
     public Paint getBorderPaint() {
         return borderPaint;

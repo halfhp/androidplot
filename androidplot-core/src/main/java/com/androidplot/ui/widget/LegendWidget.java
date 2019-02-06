@@ -5,9 +5,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.Size;
 import com.androidplot.ui.TableModel;
@@ -62,7 +59,7 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
     }
 
     @Override
-    protected void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
+    protected void doOnDraw(Canvas canvas, RectF widgetRect) {
         final List<ItemT> items = getLegendItems();
         if(legendItemComparator != null) {
             Collections.sort(items, legendItemComparator);

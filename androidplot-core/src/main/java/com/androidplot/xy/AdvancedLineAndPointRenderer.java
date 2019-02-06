@@ -18,7 +18,6 @@ package com.androidplot.xy;
 
 import android.content.*;
 import android.graphics.*;
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesRenderer;
 
@@ -41,7 +40,7 @@ public class AdvancedLineAndPointRenderer extends XYSeriesRenderer<XYSeries, Adv
     }
 
     @Override
-    protected void onRender(Canvas canvas, RectF plotArea, XYSeries series, Formatter formatter, RenderStack stack) throws PlotRenderException {
+    protected void onRender(Canvas canvas, RectF plotArea, XYSeries series, Formatter formatter, RenderStack stack) {
         PointF thisPoint;
         PointF lastPoint = null;
         for (int i = 0; i < series.size(); i++) {

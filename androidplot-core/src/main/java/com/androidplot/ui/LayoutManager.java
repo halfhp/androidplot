@@ -25,7 +25,6 @@ import android.graphics.Region;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.util.LinkedLayerList;
@@ -83,7 +82,7 @@ public class LayoutManager extends LinkedLayerList<Widget>
         setDrawOutlineShadowsEnabled(enabled);
     }
 
-    public void draw(Canvas canvas) throws PlotRenderException {
+    public void draw(Canvas canvas) {
         if(isDrawMarginsEnabled()) {
             drawSpacing(canvas, displayDims.canvasRect, displayDims.marginatedRect, marginPaint);
         }

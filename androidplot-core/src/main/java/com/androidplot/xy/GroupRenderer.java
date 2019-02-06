@@ -19,7 +19,6 @@ package com.androidplot.xy;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.util.Log;
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesBundle;
 
@@ -42,7 +41,7 @@ public abstract class GroupRenderer<FormatterType extends XYSeriesFormatter<XYRe
 
     @Override
     protected void onRender(Canvas canvas, RectF plotArea, XYSeries series,
-                         FormatterType formatter, RenderStack stack) throws PlotRenderException {
+                         FormatterType formatter, RenderStack stack) {
 
 
         // get all the data  associated with this renderer:

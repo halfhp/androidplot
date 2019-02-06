@@ -20,11 +20,8 @@ import android.content.res.TypedArray;
 import android.graphics.*;
 import android.util.*;
 
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.test.*;
 import com.androidplot.ui.*;
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.SimpleXYSeries;
 import com.halfhp.fig.*;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -36,7 +33,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,7 +43,7 @@ public class PlotTest extends AndroidplotTest {
     SeriesRegistry<MockSeriesBundle, MockSeries, Formatter> mockSeriesRegistry;
 
     @Test
-    public void testInit_withoutAttrs() throws Exception {
+    public void testInit_withoutAttrs() {
         Plot plot = mock(Plot.class);
         plot.init(RuntimeEnvironment.application, null, 0);
 
@@ -56,7 +52,7 @@ public class PlotTest extends AndroidplotTest {
     }
 
     @Test
-    public void testInit_withAttrs() throws Exception {
+    public void testInit_withAttrs() {
         Plot plot = new MockPlot("MockPlot");
         AttributeSet attrs = mock(AttributeSet.class);
         plot.init(RuntimeEnvironment.application, attrs, 0);
@@ -64,7 +60,7 @@ public class PlotTest extends AndroidplotTest {
     }
 
     @Test
-    public void testAddSeries() throws Exception {
+    public void testAddSeries() {
         Plot plot = new MockPlot("MockPlot");
 
         MockSeries m1 = new MockSeries();
@@ -97,7 +93,7 @@ public class PlotTest extends AndroidplotTest {
     }
 
     @Test
-    public void testRemoveSeries() throws Exception {
+    public void testRemoveSeries() {
 
         Plot plot = new MockPlot("MockPlot");
 
@@ -157,7 +153,7 @@ public class PlotTest extends AndroidplotTest {
 
 
     @Test
-    public void testGetFormatter() throws Exception {
+    public void testGetFormatter() {
         Plot plot = new MockPlot("MockPlot");
 
         MockSeries m1 = new MockSeries();
@@ -185,7 +181,7 @@ public class PlotTest extends AndroidplotTest {
     }
 
     @Test
-    public void testGetRendererList() throws Exception {
+    public void testGetRendererList() {
 
         Plot plot = new MockPlot("MockPlot");
 
@@ -206,7 +202,7 @@ public class PlotTest extends AndroidplotTest {
     }
 
     @Test
-    public void testAddListener() throws Exception {
+    public void testAddListener() {
         Plot plot = new MockPlot("MockPlot");
         ArrayList<PlotListener> listeners = plot.getListeners();
 
@@ -232,7 +228,7 @@ public class PlotTest extends AndroidplotTest {
     }
 
     @Test
-    public void testRemoveListener() throws Exception {
+    public void testRemoveListener() {
         Plot plot = new MockPlot("MockPlot");
         ArrayList<PlotListener> listeners = plot.getListeners();
 
@@ -379,7 +375,7 @@ public class PlotTest extends AndroidplotTest {
         }
 
         @Override
-        public void onRender(Canvas canvas, RectF plotArea, Series series, Formatter formatter, RenderStack stack) throws PlotRenderException {
+        public void onRender(Canvas canvas, RectF plotArea, Series series, Formatter formatter, RenderStack stack) {
 
         }
 
@@ -396,7 +392,7 @@ public class PlotTest extends AndroidplotTest {
         }
 
         @Override
-        public void onRender(Canvas canvas, RectF plotArea, Series series, Formatter formatter, RenderStack stack) throws PlotRenderException {
+        public void onRender(Canvas canvas, RectF plotArea, Series series, Formatter formatter, RenderStack stack) {
 
         }
 

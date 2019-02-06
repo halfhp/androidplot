@@ -22,7 +22,6 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesRenderer;
 
@@ -51,7 +50,7 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
     }
 
     @Override
-    protected void onRender(Canvas canvas, RectF plotArea, XYSeries series, Formatter formatter, RenderStack stack) throws PlotRenderException {
+    protected void onRender(Canvas canvas, RectF plotArea, XYSeries series, Formatter formatter, RenderStack stack) {
 
         segmentOffsets.clear();
         segmentLengths.clear();

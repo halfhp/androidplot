@@ -25,7 +25,6 @@ import android.graphics.RectF;
 import com.androidplot.Plot;
 import com.androidplot.PlotListener;
 import com.androidplot.Region;
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.util.*;
 
@@ -63,7 +62,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     }
 
     @Override
-    public void onRender(Canvas canvas, RectF plotArea, XYSeries series, FormatterType formatter, RenderStack stack) throws PlotRenderException {
+    public void onRender(Canvas canvas, RectF plotArea, XYSeries series, FormatterType formatter, RenderStack stack) {
         drawSeries(canvas, plotArea, series, formatter);
     }
 

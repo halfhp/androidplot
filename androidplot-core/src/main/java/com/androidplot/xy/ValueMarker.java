@@ -16,16 +16,22 @@
 
 package com.androidplot.xy;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
+
 import com.androidplot.ui.PositionMetric;
 import com.androidplot.ui.TextOrientation;
+import com.androidplot.util.FontUtils;
 
 /**
  * Encapsulates a single axis line marker drawn onto an XYPlot at a specified value.
  * @param <PositionMetricType>
  */
 public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
+
+    private static final int MARKER_LABEL_SPACING = 2;
 
     public String getText() {
         return text;
@@ -135,4 +141,37 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
     public void setTextPosition(PositionMetricType textPosition) {
         this.textPosition = textPosition;
     }
+
+    /**
+     * Renders the text associated with user defined markers
+     *
+     * @param canvas
+     * @param text
+     * @param gridRect
+     * @param x
+     * @param y
+     */
+    protected void drawMarkerText(Canvas canvas, String text, RectF gridRect,
+                                  float x, float y) {
+        if (getText() != null) {
+            x += MARKER_LABEL_SPACING;
+            y -= MARKER_LABEL_SPACING;
+            RectF textRect = new RectF(FontUtils.getStringDimensions(text, getTextPaint()
+            ));
+            textRect.offsetTo(x, y - textRect.height());
+
+            if (textRect.right > gridRect.right) {
+                textRect.offset(-(textRect.right - gridRect.right), 0);
+            }
+
+            if (textRect.top < gridRect.top) {
+                textRect.offset(0, gridRect.top - textRect.top);
+            }
+
+            canvas.drawText(text, textRect.left, textRect.bottom, getTextPaint()
+            );
+        }
+    }
+
+    public abstract void draw(Canvas canvas, XYPlot plot, RectF gridRect);
 }

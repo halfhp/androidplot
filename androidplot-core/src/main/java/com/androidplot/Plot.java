@@ -230,8 +230,12 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 bgBuffer = null;
                 fgBuffer = null;
             } else {
-                bgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
-                fgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
+                try {
+                    bgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+                    fgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+                } catch(IllegalArgumentException e) {
+                    throw new IllegalArgumentException("Illegal argument passed to Bitmap.createBitmap.  width: " + w + " height: " + h);
+                }
             }
         }
 

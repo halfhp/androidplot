@@ -240,11 +240,21 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
 
         public void recycle() {
-            bgBuffer.recycle();
-            bgBuffer = null;
+            /**
+             * TODO: Issue #93 There have been rare reports of NPE's originating from here.
+             * Most likely there is something deeper that is amiss, but for now we'll simply
+             * do a null check before recycling.
+             */
+            if(bgBuffer != null) {
+                bgBuffer.recycle();
+                bgBuffer = null;
+            }
 
-            fgBuffer.recycle();
-            fgBuffer = null;
+            if(fgBuffer != null) {
+                fgBuffer.recycle();
+                fgBuffer = null;
+            }
+
             System.gc();
         }
 

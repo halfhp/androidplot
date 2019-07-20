@@ -14,8 +14,23 @@
  *    limitations under the License.
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'com.github.triplet.play'
+//apply plugin: 'com.android.application'
+//apply plugin: 'com.github.triplet.play'
+
+buildscript {
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.github.triplet.gradle:play-publisher:2.2.1'
+    }
+}
+
+plugins {
+    id 'com.android.application'
+    id 'com.github.triplet.play' version '2.2.1'
+}
 
 dependencies {
 	implementation project(':androidplot-core')
@@ -24,16 +39,6 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
-}
-
-buildscript {
-
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
-    }
 }
 
 android {
@@ -78,6 +83,6 @@ android {
 
 play {
     // see: https://github.com/Triple-T/gradle-play-publisher
-    jsonFile = file(System.getenv("PUBLISHER_ACCT_JSON_FILE") ?: "publisher.json")
+    serviceAccountCredentials = file(System.getenv("PUBLISHER_ACCT_JSON_FILE") ?: "publisher.json")
     track = 'beta'
 }

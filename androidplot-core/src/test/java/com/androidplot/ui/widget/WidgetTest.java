@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.test.AndroidplotTest;
 import com.androidplot.ui.Anchor;
 import com.androidplot.ui.HorizontalPositioning;
@@ -22,6 +21,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
@@ -88,14 +89,14 @@ public class WidgetTest extends AndroidplotTest {
     }
 
     @Test
-    public void draw_sizeChanged_invokesOnResizeBeforeDoOnDraw() throws Exception {
+    public void draw_sizeChanged_invokesOnResizeBeforeDoOnDraw() {
         InOrder inOrder = Mockito.inOrder(widget);
 
         widget.draw(canvas);
 
-        inOrder.verify(widget).onResize(any(RectF.class), any(RectF.class));
+        inOrder.verify(widget).onResize(isNull(RectF.class), any(RectF.class));
         inOrder.verify(widget).doOnDraw(eq(canvas), any(RectF.class));
-        verify(widget).onResize(any(RectF.class), any(RectF.class));
+        verify(widget).onResize(isNull(RectF.class), any(RectF.class));
     }
 
     static class TestWidget extends Widget {
@@ -105,7 +106,7 @@ public class WidgetTest extends AndroidplotTest {
         }
 
         @Override
-        protected void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
+        protected void doOnDraw(Canvas canvas, RectF widgetRect) {
             // nothing to do
         }
     }

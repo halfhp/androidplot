@@ -31,7 +31,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.Anchor;
 import com.androidplot.ui.BoxModel;
 import com.androidplot.ui.Formatter;
@@ -231,17 +230,31 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 bgBuffer = null;
                 fgBuffer = null;
             } else {
-                bgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
-                fgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
+                try {
+                    bgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+                    fgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+                } catch(IllegalArgumentException e) {
+                    throw new IllegalArgumentException("Illegal argument passed to Bitmap.createBitmap.  width: " + w + " height: " + h);
+                }
             }
         }
 
         public void recycle() {
-            bgBuffer.recycle();
-            bgBuffer = null;
+            /**
+             * TODO: Issue #93 There have been rare reports of NPE's originating from here.
+             * Most likely there is something deeper that is amiss, but for now we'll simply
+             * do a null check before recycling.
+             */
+            if(bgBuffer != null) {
+                bgBuffer.recycle();
+                bgBuffer = null;
+            }
 
-            fgBuffer.recycle();
-            fgBuffer = null;
+            if(fgBuffer != null) {
+                fgBuffer.recycle();
+                fgBuffer = null;
+            }
+
             System.gc();
         }
 
@@ -847,8 +860,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 if (getBorderPaint() != null) {
                     drawBorder(canvas, displayDims.marginatedRect);
                 }
-            } catch (PlotRenderException e) {
-                Log.e(TAG, "Exception while rendering Plot.", e);
             } catch (Exception e) {
                 Log.e(TAG, "Exception while rendering Plot.", e);
             }
@@ -883,7 +894,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      * Draws the plot's outer border.
      * @param canvas
-     * @throws PlotRenderException
      */
     protected void drawBorder(Canvas canvas, RectF dims) {
         drawRect(canvas, dims, borderPaint);

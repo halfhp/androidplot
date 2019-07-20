@@ -51,7 +51,13 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
     public enum BarOrientation {
 
         /**
-         * Bars are drawn "overlapping" one another, with taller bars being drawn behind
+         * Bars are drawn overlapping one another, in the order their respective series
+         * was added to the plot.
+         */
+        IN_ORDER,
+
+        /**
+         * Bars are drawn overlapping one another, with taller bars being drawn behind
          * the shorter ones.
          */
         OVERLAID,           // bars are overlaid in descending y-val order (largest val in back)
@@ -187,6 +193,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
 
             final BarComparator comparator = getBarComparator(rangeOriginPx);
             switch (barOrientation) {
+                case IN_ORDER:
                 case OVERLAID:
                     Collections.sort(barGroup.bars, comparator);
                     for (Bar bar : barGroup.bars) {
@@ -366,6 +373,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
                     } else {
                         return Float.valueOf(bar1.yPix).compareTo(bar2.yPix);
                     }
+                case IN_ORDER:
                 case SIDE_BY_SIDE:
                 case STACKED:
                 default:

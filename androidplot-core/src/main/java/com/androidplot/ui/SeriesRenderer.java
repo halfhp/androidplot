@@ -20,7 +20,6 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.graphics.Region;
 import com.androidplot.Series;
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.Plot;
 
 import java.util.ArrayList;
@@ -52,10 +51,9 @@ public abstract class SeriesRenderer
      * @param canvas
      * @param plotArea
      * @param sfPair The series / formatter pair to be rendered
-     * @throws PlotRenderException
      */
     public void render(Canvas canvas, RectF plotArea, SeriesBundle<SeriesType,
-                SeriesFormatterType> sfPair, RenderStack stack) throws PlotRenderException {
+                SeriesFormatterType> sfPair, RenderStack stack) {
         onRender(canvas, plotArea, sfPair.getSeries(), sfPair.getFormatter(), stack);
     }
 
@@ -67,10 +65,9 @@ public abstract class SeriesRenderer
      * @param formatter The getFormatter that should be used to render the series
      * @param stack Ordered list of all series being renderered.  May be manipulated by the Renderer
      *              to gain effect.
-     * @throws PlotRenderException
      */
     protected abstract void onRender(Canvas canvas, RectF plotArea, SeriesType series,
-                                  SeriesFormatterType formatter, RenderStack stack) throws PlotRenderException;
+                                  SeriesFormatterType formatter, RenderStack stack);
 
     /**
      * Draw the legend icon in the rect passed in.

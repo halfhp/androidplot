@@ -3,7 +3,6 @@ package com.androidplot.xy;
 import android.graphics.*;
 
 import com.androidplot.Region;
-import com.androidplot.exception.*;
 import com.androidplot.ui.*;
 import com.androidplot.util.*;
 
@@ -45,7 +44,7 @@ public class BubbleRenderer<FormatterType extends BubbleFormatter> extends XYSer
 
     @Override
     protected void onRender(Canvas canvas, RectF plotArea, BubbleSeries series,
-            FormatterType formatter, RenderStack stack) throws PlotRenderException {
+            FormatterType formatter, RenderStack stack) {
 
         Region magnitudeBounds = calculateBounds();
         for(int i = 0; i < series.size(); i++) {

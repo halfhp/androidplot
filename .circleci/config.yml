@@ -52,7 +52,7 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # run tests & code coc!
-      - run: ./gradlew testDebug jacocoTestReportDebug
+      - run: ./gradlew testDebugUnitTest jacocoTestDebugUnitTestReport
 
       # build release
       - run: ./gradlew assembleRelease

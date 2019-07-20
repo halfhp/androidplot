@@ -30,6 +30,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyFloat;
@@ -323,9 +324,9 @@ public class XYGraphWidgetTest extends AndroidplotTest {
 
         // expecting a 100x100 grid to be drawn:
         verify(graphWidget, times(100))
-                .drawDomainLine(eq(canvas), anyFloat(), anyFloat(), any(Paint.class), eq(false));
+                .drawDomainLine(eq(canvas), anyFloat(), anyDouble(), any(Paint.class), eq(false));
 
         verify(graphWidget, times(100))
-                .drawRangeLine(eq(canvas), anyFloat(), anyFloat(), any(Paint.class), eq(false));
+                .drawRangeLine(eq(canvas), anyFloat(), anyDouble(), any(Paint.class), eq(false));
     }
 }

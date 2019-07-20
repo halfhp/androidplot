@@ -27,7 +27,6 @@ import android.support.annotation.Nullable;
 
 import com.androidplot.R;
 import com.androidplot.Region;
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.Insets;
 import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.RenderStack;
@@ -62,8 +61,6 @@ public class XYGraphWidget extends Widget {
     private static final float FUDGE = 0.00001f;
 
     private static final float DEFAULT_LINE_LABEL_TEXT_SIZE_PX = PixelUtils.spToPix(15);
-
-    private static final int MARKER_LABEL_SPACING = TWO;
 
     /**
      * Line interval per range label
@@ -542,8 +539,7 @@ public class XYGraphWidget extends Widget {
     }
 
     @Override
-    protected void doOnDraw(Canvas canvas, RectF widgetRect)
-            throws PlotRenderException {
+    protected void doOnDraw(Canvas canvas, RectF widgetRect) {
 
         // don't draw if we have no space to draw into
         if (gridRect.height() > ZERO && gridRect.width() > ZERO) {
@@ -692,74 +688,16 @@ public class XYGraphWidget extends Widget {
         }
     }
 
-    /**
-     * Renders the text associated with user defined markers
-     *
-     * @param canvas
-     * @param text
-     * @param marker
-     * @param x
-     * @param y
-     */
-    protected void drawMarkerText(Canvas canvas, String text, ValueMarker marker,
-                                float x, float y) {
-        if (marker.getText() != null) {
-            x += MARKER_LABEL_SPACING;
-            y -= MARKER_LABEL_SPACING;
-            RectF textRect = new RectF(FontUtils.getStringDimensions(
-                    text,
-                    marker.getTextPaint()
-            ));
-            textRect.offsetTo(x, y - textRect.height());
-
-            if (textRect.right > gridRect.right) {
-                textRect.offset(-(textRect.right - gridRect.right), ZERO);
-            }
-
-            if (textRect.top < gridRect.top) {
-                textRect.offset(0, gridRect.top - textRect.top);
-            }
-
-            canvas.drawText(text, textRect.left, textRect.bottom,
-                    marker.getTextPaint()
-            );
-        }
-    }
-
     protected void drawMarkers(Canvas canvas) {
         if (plot.getYValueMarkers() != null && plot.getYValueMarkers().size() > 0) {
             for (YValueMarker marker : plot.getYValueMarkers()) {
-                if (marker.getValue() != null) {
-                    float yPix = (float) plot.getBounds().yRegion
-                            .transform(marker.getValue()
-                                    .doubleValue(), gridRect.top, gridRect.bottom, true);
-                    canvas.drawLine(gridRect.left, yPix,
-                            gridRect.right, yPix, marker.getLinePaint()
-                    );
-
-                    float xPix = marker.getTextPosition().getPixelValue(
-                            gridRect.width());
-                    xPix += gridRect.left;
-                    drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
-                }
+                marker.draw(canvas, plot, gridRect);
             }
         }
 
         if (plot.getXValueMarkers() != null && plot.getXValueMarkers().size() > 0) {
             for (XValueMarker marker : plot.getXValueMarkers()) {
-                if (marker.getValue() != null) {
-                    float xPix = (float) plot.getBounds().xRegion
-                            .transform(marker.getValue()
-                                    .doubleValue(), gridRect.left, gridRect.right, false);
-                    canvas.drawLine(xPix, gridRect.top, xPix, gridRect.bottom,
-                            marker.getLinePaint()
-                    );
-                    float yPix = marker.getTextPosition().getPixelValue(gridRect.height());
-                    yPix += gridRect.top;
-                    if (marker.getText() != null) {
-                        drawMarkerText(canvas, marker.getText(), marker, xPix, yPix);
-                    }
-                }
+                marker.draw(canvas, plot, gridRect);
             }
         }
     }
@@ -839,9 +777,8 @@ public class XYGraphWidget extends Widget {
      * Draws lines and points for each element in the series.
      *
      * @param canvas
-     * @throws PlotRenderException
      */
-    protected void drawData(Canvas canvas) throws PlotRenderException {
+    protected void drawData(Canvas canvas) {
         if (drawGridOnTop) {
             drawGridBackground(canvas);
         }

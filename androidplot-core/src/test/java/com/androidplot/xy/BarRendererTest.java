@@ -61,14 +61,14 @@ public class BarRendererTest extends AndroidplotTest {
     ArgumentCaptor<RectF> rectCaptor;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         canvas = spy(new Canvas());
         xyPlot = spy(new XYPlot(getContext(), "My Plot"));
         barFormatter = spy(new BarFormatter(Color.RED, Color.RED));
     }
 
     @Test
-    public void testOnRender_handlesNullValues() throws Exception {
+    public void onRender_handlesNullValues() {
         XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", null, 5, null);
         XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", null, 5, null);
 
@@ -83,7 +83,7 @@ public class BarRendererTest extends AndroidplotTest {
     }
 
     @Test
-    public void testOnRender_stacked() throws Exception {
+    public void onRender_stacked() {
         XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 2, 5, 7);
         XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 8, 5, 3);
 
@@ -119,7 +119,7 @@ public class BarRendererTest extends AndroidplotTest {
     }
 
     @Test
-    public void testOnRender_sideBySide() throws Exception {
+    public void onRender_sideBySide() {
         XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 0, 5, 10);
         XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 1, 7.5, 10);
 
@@ -150,7 +150,35 @@ public class BarRendererTest extends AndroidplotTest {
     }
 
     @Test
-    public void testOnRender_overlaid() throws Exception {
+    public void onRender_inOrder_drawsFirstAddedSeriesFirst() {
+        XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 1, 5, 6);
+        XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 2, 4, 7);
+
+        BarRenderer renderer = setupRendererForTesting(s1, s2);
+        renderer.setBarOrientation(BarRenderer.BarOrientation.IN_ORDER);
+
+        xyPlot.setUserRangeOrigin(0);
+        xyPlot.calculateMinMaxVals();
+        renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);
+
+        verify(renderer, times(6))
+                .drawBar(eq(canvas), barCaptor.capture(), rectCaptor.capture());
+
+        // list of all bars drawn, in the exact order they were drawn.
+        List<BarRenderer.Bar> bars = barCaptor.getAllValues();
+
+        assertEquals(bars.get(0).getY(), s1.getY(0));
+        assertEquals(bars.get(1).getY(), s2.getY(0));
+
+        assertEquals(bars.get(2).getY(), s1.getY(1));
+        assertEquals(bars.get(3).getY(), s2.getY(1));
+
+        assertEquals(bars.get(4).getY(), s1.getY(2));
+        assertEquals(bars.get(5).getY(), s2.getY(2));
+    }
+
+    @Test
+    public void onRender_overlaid_drawsBarsWithExpectedHeight() {
         XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 0, 5, 10);
         XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 1, 7.5, 10);
 
@@ -183,10 +211,9 @@ public class BarRendererTest extends AndroidplotTest {
     /**
      * Verify that positive values are drawn in order of highest yVal, while negative values are
      * drawn in order of lowest yVal.
-     * @throws Exception
      */
     @Test
-    public void testOnRender_overlaid_drawsBarsInOrder() throws Exception {
+    public void onRender_overlaid_drawsSmallestBarsLast() {
         XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", -1, -2, 1, 2);
         XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", -2, -1, 2, 1);
 
@@ -211,7 +238,7 @@ public class BarRendererTest extends AndroidplotTest {
     }
 
     @Test
-    public void testFixedBarWidth() throws Exception {
+    public void onRender_fixedBarWidth_rendersAllBarsWithSameWidth() {
         XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 0, 5, 10);
         XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 1, 7.5, 10);
 
@@ -233,7 +260,7 @@ public class BarRendererTest extends AndroidplotTest {
     }
 
     @Test
-    public void testFixedGapWidth() throws Exception {
+    public void onRender_fixedGapWidth_rendersFixedGapBetweenAllBars() {
         XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 0, 5, 10);
         XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 1, 7.5, 10);
 

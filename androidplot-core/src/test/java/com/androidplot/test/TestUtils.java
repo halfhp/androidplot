@@ -56,11 +56,11 @@ public abstract class TestUtils {
      */
     @SuppressLint("NewApi")
     public static MotionEvent newPointerDownEvent(int finger1x, int finger1y, int finger2x, int finger2y) {
-        MotionEvent me = MotionEvent.obtain(0, 0, 0, 0, 0, 0);
+        MotionEvent me = MotionEvent.obtain(0, 0, MotionEvent.ACTION_POINTER_DOWN, finger1x, finger1y, 0);
         ShadowMotionEvent sme = shadowOf(me);
-        sme.setAction(MotionEvent.ACTION_POINTER_DOWN);
+        //sme.setAction(MotionEvent.ACTION_POINTER_DOWN);
         sme.setPointerIds(0, 1);
-        sme.setLocation(finger1x, finger1y);
+        //sme.setLocation(finger1x, finger1y);
         sme.setPointer2(finger2x, finger2y);
         return me;
     }

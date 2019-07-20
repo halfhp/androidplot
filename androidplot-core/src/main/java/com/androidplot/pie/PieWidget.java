@@ -17,7 +17,6 @@
 package com.androidplot.pie;
 
 import android.graphics.*;
-import com.androidplot.exception.PlotRenderException;
 import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.Size;
 import com.androidplot.ui.widget.Widget;
@@ -38,7 +37,7 @@ public class PieWidget extends Widget {
     }
 
     @Override
-    protected void doOnDraw(Canvas canvas, RectF widgetRect) throws PlotRenderException {
+    protected void doOnDraw(Canvas canvas, RectF widgetRect) {
         renderStack.sync();
         for(RenderStack.StackElement thisElement : renderStack.getElements()) {
             if(thisElement.isEnabled()) {

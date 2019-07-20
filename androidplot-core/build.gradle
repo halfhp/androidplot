@@ -66,11 +66,11 @@ android {
         testApplicationId "com.androidplot.test"
     }
 
-    buildTypes {
-        debug {
-            testCoverageEnabled true
-        }
-    }
+//    buildTypes {
+//        debug {
+//            testCoverageEnabled true
+//        }
+//    }
 
     /**
      * TODO: enable and address lint issues.

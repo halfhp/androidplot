@@ -7,6 +7,8 @@ For details on what to expect in general when updating to a new version of Andro
 * (#94) Potential fix / better error logging for a crash caused by a buffered canvas resize with illegal arguments.
 * (#93) Fix Android 9 compiler warnings.
 * (#83) Fix NPE when attempting to recycle an already null buffered canvas instance.
+* Remove unused `PlotRenderException`.
+* Added `IN_ORDER` BarRenderer mode.
 
 # 1.5.6
 * Adds convenience methods for saving / restoring `PanZoom` state.

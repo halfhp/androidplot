@@ -66,11 +66,13 @@ android {
         testApplicationId "com.androidplot.test"
     }
 
-//    buildTypes {
-//        debug {
-//            testCoverageEnabled true
-//        }
-//    }
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
 
     /**
      * TODO: enable and address lint issues.

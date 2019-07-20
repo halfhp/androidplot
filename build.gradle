@@ -41,8 +41,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.4.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
-        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.15.0'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
     }
 }
 

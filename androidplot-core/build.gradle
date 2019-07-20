@@ -17,8 +17,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.vanniktech.android.junit.jacoco'
-apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'jacoco-android'
 
 class AttrMarkdown extends DefaultTask {
 
@@ -65,6 +64,12 @@ android {
         minSdkVersion theMinSdkVersion
         targetSdkVersion theTargetSdkVersion
         testApplicationId "com.androidplot.test"
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
     }
 
     /**

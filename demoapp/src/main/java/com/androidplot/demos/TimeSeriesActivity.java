@@ -16,6 +16,7 @@
 
 package com.androidplot.demos;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -102,6 +103,7 @@ public class TimeSeriesActivity extends Activity {
                     // create a simple date format that draws on the year portion of our timestamp.
                     // see http://download.oracle.com/javase/1.4.2/docs/api/java/text/SimpleDateFormat.html
                     // for a full description of SimpleDateFormat.
+                    @SuppressLint("SimpleDateFormat")
                     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy");
 
                     @Override

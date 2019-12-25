@@ -18,6 +18,7 @@ package com.androidplot.demos;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.*;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ public class SimplePieChartActivity extends Activity
     private Segment s3;
     private Segment s4;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate(Bundle savedInstanceState)
     {

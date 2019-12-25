@@ -78,10 +78,10 @@ public class ListViewActivity extends Activity {
                 double bp = Math.random();
 
                 LineAndPointFormatter lpf = new LineAndPointFormatter(
-                        Color.rgb(new Double(rl * 255).intValue(),
-                                new Double(gl * 255).intValue(), new Double(bl * 255).intValue()),
-                        Color.rgb(new Double(rp * 255).intValue(),
-                                new Double(gp * 255).intValue(), new Double(bp * 255).intValue()),
+                        Color.rgb(Double.valueOf(rl * 255).intValue(),
+                                Double.valueOf(gl * 255).intValue(), Double.valueOf(bl * 255).intValue()),
+                        Color.rgb(Double.valueOf(rp * 255).intValue(),
+                                Double.valueOf(gp * 255).intValue(), Double.valueOf(bp * 255).intValue()),
                         null, null);
 
                 // for fun, configure interpolation on the formatter:

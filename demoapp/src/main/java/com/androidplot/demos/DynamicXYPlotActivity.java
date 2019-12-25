@@ -138,8 +138,8 @@ public class DynamicXYPlotActivity extends Activity {
         private static final int MAX_AMP_SEED = 100;
         private static final int MIN_AMP_SEED = 10;
         private static final int AMP_STEP = 1;
-        public static final int SINE1 = 0;
-        public static final int SINE2 = 1;
+        static final int SINE1 = 0;
+        static final int SINE2 = 1;
         private static final int SAMPLE_SIZE = 31;
         private int phase = 0;
         private int sinAmp = 1;
@@ -150,7 +150,7 @@ public class DynamicXYPlotActivity extends Activity {
             notifier = new MyObservable();
         }
 
-        public void stopThread() {
+        void stopThread() {
             keepRunning = false;
         }
 
@@ -181,18 +181,18 @@ public class DynamicXYPlotActivity extends Activity {
             }
         }
 
-        public int getItemCount(int series) {
+        int getItemCount(int series) {
             return SAMPLE_SIZE;
         }
 
-        public Number getX(int series, int index) {
+        Number getX(int series, int index) {
             if (index >= SAMPLE_SIZE) {
                 throw new IllegalArgumentException();
             }
             return index;
         }
 
-        public Number getY(int series, int index) {
+        Number getY(int series, int index) {
             if (index >= SAMPLE_SIZE) {
                 throw new IllegalArgumentException();
             }
@@ -208,7 +208,7 @@ public class DynamicXYPlotActivity extends Activity {
             }
         }
 
-        public void addObserver(Observer observer) {
+        void addObserver(Observer observer) {
             notifier.addObserver(observer);
         }
 
@@ -223,7 +223,7 @@ public class DynamicXYPlotActivity extends Activity {
         private int seriesIndex;
         private String title;
 
-        public SampleDynamicSeries(SampleDynamicXYDatasource datasource, int seriesIndex, String title) {
+        SampleDynamicSeries(SampleDynamicXYDatasource datasource, int seriesIndex, String title) {
             this.datasource = datasource;
             this.seriesIndex = seriesIndex;
             this.title = title;

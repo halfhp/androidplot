@@ -82,7 +82,7 @@ public class ECGExample extends Activity {
 
         private int trailSize;
 
-        public MyFadeFormatter(int trailSize) {
+        MyFadeFormatter(int trailSize) {
             this.trailSize = trailSize;
         }
 
@@ -125,7 +125,7 @@ public class ECGExample extends Activity {
          * @param size Sample size contained within this model
          * @param updateFreqHz Frequency at which new samples are added to the model
          */
-        public ECGModel(int size, int updateFreqHz) {
+        ECGModel(int size, int updateFreqHz) {
             data = new Number[size];
             for(int i = 0; i < data.length; i++) {
                 data[i] = 0;
@@ -176,7 +176,7 @@ public class ECGExample extends Activity {
             });
         }
 
-        public void start(final WeakReference<AdvancedLineAndPointRenderer> rendererRef) {
+        void start(final WeakReference<AdvancedLineAndPointRenderer> rendererRef) {
             this.rendererRef = rendererRef;
             keepRunning = true;
             thread.start();

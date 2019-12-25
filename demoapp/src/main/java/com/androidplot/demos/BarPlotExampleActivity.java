@@ -22,6 +22,7 @@ import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.Arrays;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -86,6 +87,7 @@ public class BarPlotExampleActivity extends Activity {
 
     private Pair<Integer, XYSeries> selection;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate(Bundle savedInstanceState) {
 

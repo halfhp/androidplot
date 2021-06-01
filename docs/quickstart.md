@@ -14,7 +14,7 @@ To use the library in your gradle project add the following to your build.gradle
 
 ```groovy
 dependencies {
-    compile "com.androidplot:androidplot-core:1.5.7"
+    implementation "com.androidplot:androidplot-core:1.5.7"
 }
 ```
 
@@ -53,6 +53,32 @@ directly within your Plot's XML, prefixing each property with "androidPlot".  Ex
 
 ```xml
 androidPlot.title="My Plot"
+```
+
+Add these files to your **/res/xml** directory:
+
+#### /res/xml/line_point_formatter_with_labels.xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<config
+    linePaint.strokeWidth="5dp"
+    linePaint.color="#00AA00"
+    vertexPaint.color="#007700"
+    vertexPaint.strokeWidth="20dp"
+    fillPaint.color="#00000000"
+    pointLabelFormatter.textPaint.color="#CCCCCC"/>
+```
+
+#### /res/xml/line_point_formatter_with_labels_2.xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<config
+    linePaint.strokeWidth="5dp"
+    linePaint.color="#0000AA"
+    vertexPaint.strokeWidth="20dp"
+    vertexPaint.color="#000099"
+    fillPaint.color="#00000000"
+    pointLabelFormatter.textPaint.color="#CCCCCC"/>
 ```
 
 # Create an Activity
@@ -151,7 +177,6 @@ public class SimpleXYPlotActivity extends Activity {
 }
 ```
 
-
 One potentially confusing section of the code above are the initializations of LineAndPointFormatter   
 You probably noticed that they take a mysterious reference to an xml resource file. This is actually 
 using [Fig](https://github.com/halfhp/fig) to configure the instance properties from XML.  
@@ -172,32 +197,6 @@ LineAndPointFormatter series1Format = new LineAndPointFormatter(Color.RED, Color
 In general XML configuration should be used over programmatic configuration when possible as it produces 
 more flexibility in terms of defining properties by screen density etc..  For more details on how to 
 programmatically configure Formatters etc. consult the latest Javadocs.
-
-Continuing with the original example above, add these files to your **/res/xml** directory:
-
-#### /res/xml/line_point_formatter_with_labels.xml
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<config
-    linePaint.strokeWidth="5dp"
-    linePaint.color="#00AA00"
-    vertexPaint.color="#007700"
-    vertexPaint.strokeWidth="20dp"
-    fillPaint.color="#00000000"
-    pointLabelFormatter.textPaint.color="#CCCCCC"/>
-```
-
-#### /res/xml/line_point_formatter_with_labels_2.xml
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<config
-    linePaint.strokeWidth="5dp"
-    linePaint.color="#0000AA"
-    vertexPaint.strokeWidth="20dp"
-    vertexPaint.color="#000099"
-    fillPaint.color="#00000000"
-    pointLabelFormatter.textPaint.color="#CCCCCC"/>
-```
 
 # Whats Next?
 Learn about [Plot Composition](plot_composition.md) or continue with [XYPlots](xyplot.md).

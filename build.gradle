@@ -14,11 +14,9 @@
  *    limitations under the License.
  */
 
-apply plugin: 'java'
-
 ext {
-    theCompileSdkVersion = 28
-    theTargetSdkVersion = 28
+    theCompileSdkVersion = 30
+    theTargetSdkVersion = 30
     theMinSdkVersion = 5
     theVersionName = '1.5.7'
     theVersionCode = 1

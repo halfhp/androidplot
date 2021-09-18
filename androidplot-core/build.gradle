@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'jacoco-android'
+plugins {
+    id 'com.android.library'
+    id 'com.dicedmelon.gradle.jacoco-android'
+}
 
 class AttrMarkdown extends DefaultTask {
 
@@ -59,8 +59,6 @@ android {
     compileSdkVersion theCompileSdkVersion
 
     defaultConfig {
-        versionCode theVersionCode
-        versionName theVersionName
         minSdkVersion theMinSdkVersion
         targetSdkVersion theTargetSdkVersion
         testApplicationId "com.androidplot.test"
@@ -90,7 +88,7 @@ def gitUrl = 'https://github.com/halfhp/androidplot.git'
 
 dependencies {
 
-    implementation 'com.halfhp.fig:figlib:1.0.7'
+    implementation 'com.halfhp.fig:figlib:1.0'
     implementation 'com.android.support:support-annotations:28.0.0'
     testImplementation "org.mockito:mockito-core:3.0.0"
     testImplementation group: 'junit', name: 'junit', version: '4.12'
@@ -121,61 +119,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from android.sourceSets.main.java.srcDirs
-}
-
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'aar'
-                name 'Androidplot Core Library'
-                description = "Androidplot is a library for creating dynamic and static charts within your Android application."
-                url siteUrl
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'halfhp'
-                        name 'Nick Fellows'
-                        email 'halfhp@gmail.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-
-                }
-            }
-        }
-    }
-}
-
-bintray {
-
-    // these environment vars must be set when deploying to bintray.
-    // note: BINTRAY_PASSWORD is actually the api key, but naming it 'password'
-    // tells the CI environment to obfuscate the value in public logs.
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_PASSWORD')
-
-
-    configurations = ['archives']
-    pkg {
-        version {
-            name = theVersionName
-        }
-        repo = "androidplot"
-        name = "com.androidplot:androidplot-core"
-        issueTrackerUrl = "https://github.com/halfhp/androidplot/issues"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-    }
 }
 
 javadoc {

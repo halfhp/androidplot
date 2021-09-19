@@ -30,8 +30,8 @@ Supported Elements:
 <resources>
 
     <attr name="renderMode" format="enum">
-        <enum name="use_background_thread" value="0"/>
         <enum name="use_main_thread" value="0"/>
+        <enum name="use_background_thread" value="1"/>
     </attr>
 
     <attr name="previewMode" format="enum">

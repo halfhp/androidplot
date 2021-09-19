@@ -1,7 +1,7 @@
 package com.androidplot.pie;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.androidplot.ui.widget.LegendItem;
 

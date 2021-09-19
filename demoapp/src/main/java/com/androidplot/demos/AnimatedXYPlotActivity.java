@@ -21,7 +21,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.androidplot.xy.BoundaryMode;

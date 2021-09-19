@@ -26,10 +26,11 @@ import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.os.Build;
 import android.os.Looper;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import com.androidplot.ui.Anchor;
 import com.androidplot.ui.BoxModel;

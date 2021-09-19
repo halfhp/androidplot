@@ -1,6 +1,6 @@
 package com.androidplot.xy;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.androidplot.ui.widget.LegendItem;
 

@@ -23,7 +23,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.SimpleXYSeries;

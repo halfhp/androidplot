@@ -2,7 +2,7 @@ package com.androidplot.xy;
 
 import android.graphics.RectF;
 import android.graphics.PointF;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.*;
 
 import com.androidplot.*;

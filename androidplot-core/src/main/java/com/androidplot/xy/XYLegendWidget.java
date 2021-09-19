@@ -17,7 +17,7 @@
 package com.androidplot.xy;
 
 import android.graphics.*;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.SeriesBundle;

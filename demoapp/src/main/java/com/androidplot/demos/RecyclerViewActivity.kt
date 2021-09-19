@@ -54,22 +54,12 @@ class RecyclerViewActivity : Activity() {
         private val binding: RecyclerviewExampleItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(data: List<SeriesBundle<XYSeries, LineAndPointFormatter>>, title: String) {
-
             val plot = binding.plot
             plot.clear()
             plot.title.text = title
-            for (sf in data) {
-                plot.addSeries(sf.series, sf.formatter)
-            }
+            data.map { plot.addSeries(it.series, it.formatter) }
+            plot.redraw()
         }
-
-        // called by the adapter whenever a holder is attached.
-        // this is necessary to do if you want to use background rendering mode.
-        // otherwise just put the redraw in the bind method above.
-        fun redraw() {
-            binding.plot.redraw()
-        }
-
     }
 
     class MyRecyclerViewAdapter : RecyclerView.Adapter<MyRecyclerViewHolder>() {
@@ -82,12 +72,6 @@ class RecyclerViewActivity : Activity() {
 
         override fun onBindViewHolder(holder: MyRecyclerViewHolder, position: Int) {
             holder.bind(seriesData[position], "Series $position")
-        }
-
-        // necessary only if you use background rendering mode:
-        override fun onViewAttachedToWindow(holder: MyRecyclerViewHolder) {
-            super.onViewAttachedToWindow(holder)
-            holder.redraw()
         }
 
         override fun getItemCount() = seriesData.size

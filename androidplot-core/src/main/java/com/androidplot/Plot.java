@@ -769,11 +769,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 synchronized (renderSync) {
                     renderSync.notify();
                 }
-            } else if(renderThread == null) {
-                pingPong.resizeToLast();
-                startBackgroundRendering();
-                renderThread.start();
             }
+
         } else if(renderMode == RenderMode.USE_MAIN_THREAD) {
 
             // are we on the UI thread?
@@ -799,6 +796,18 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         synchronized(renderSync) {
             keepRunning = false;
             renderSync.notify();
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        // necessary to support rendering in recyclerview etc.
+        if(renderMode == RenderMode.USE_BACKGROUND_THREAD && renderThread == null) {
+            pingPong.resizeToLast();
+            startBackgroundRendering();
+            renderThread.start();
         }
     }
 

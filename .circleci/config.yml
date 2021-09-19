@@ -87,17 +87,19 @@ jobs:
           path: androidplot-core/build/test-results/
 
       - deploy:
-          name: "Publish Artifacts"
+          name: "Publish"
           command: |
             if [ "${CIRCLE_BRANCH}" == "project-updates" ];
-              then ./gradlew publish;
-            fi
-
-      - deploy:
-          name: "Publish to Google Play"
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ];
               then
                 ./misc/download_google_publisher_json.sh;
-                ./gradlew publishApkRelease
+                ./gradlew publish;
             fi
+
+#      - deploy:
+#          name: "Publish to Google Play"
+#          command: |
+#            if [ "${CIRCLE_BRANCH}" == "master" ];
+#              then
+#                ./misc/download_google_publisher_json.sh;
+#                ./gradlew publishApkRelease
+#            fi

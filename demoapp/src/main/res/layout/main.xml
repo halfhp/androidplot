@@ -119,6 +119,13 @@
                 android:enabled="true"/>
 
             <Button
+                android:id="@+id/startXyRecyclerViewExButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="RecyclerView of XYPlots"
+                android:enabled="true"/>
+
+            <Button
                 android:id="@+id/startXYPlotWithBgImgExample"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

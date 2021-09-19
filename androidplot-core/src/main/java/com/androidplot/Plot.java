@@ -212,6 +212,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      *  that is being used.
      */
     private static class BufferedCanvas {
+        private int lastHeight = 0;
+        private int lastWidth = 0;
         private volatile Bitmap bgBuffer;  // all drawing is done on this buffer.
         private volatile Bitmap fgBuffer;
         private Canvas canvas = new Canvas();
@@ -226,11 +228,21 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             fgBuffer = tmp;
         }
 
+        /**
+         * Used when rendering in background mode and a view is attached
+         * but not resized, so that rendering buffers will be reinitialized.
+         */
+        public void resizeToLast() {
+            resize(lastHeight, lastWidth);
+        }
+
         public synchronized void resize(int h, int w) {
             if (w <= 0 || h <= 0) {
                 bgBuffer = null;
                 fgBuffer = null;
             } else {
+                lastHeight = h;
+                lastWidth = w;
                 try {
                     bgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
                     fgBuffer = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
@@ -408,35 +420,43 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
         layoutManager.onPostInit();
         if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
-            renderThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
+            startBackgroundRendering();
+        }
+    }
 
-                    keepRunning = true;
-                    while (keepRunning) {
-                        isIdle = false;
-                        synchronized (pingPong) {
-                            Canvas c = pingPong.getCanvas();
-                            renderOnCanvas(c);
-                            pingPong.swap();
-                        }
-                        synchronized (renderSync) {
-                            postInvalidate();
-                            // prevent this thread from becoming an orphan
-                            // after the view is destroyed
-                            if (keepRunning) {
-                                try {
-                                    renderSync.wait();
-                                } catch (InterruptedException e) {
-                                    keepRunning = false;
-                                }
-                            }
+    protected void startBackgroundRendering() {
+        if(renderThread != null) {
+            return;
+        }
+
+        renderThread = new Thread(() -> {
+            System.out.println("Thread started with id " + this.hashCode());
+
+            keepRunning = true;
+            while (keepRunning) {
+                isIdle = false;
+                synchronized (pingPong) {
+                    Canvas c = pingPong.getCanvas();
+                    renderOnCanvas(c);
+                    pingPong.swap();
+                }
+                synchronized (renderSync) {
+                    postInvalidate();
+                    // prevent this thread from becoming an orphan
+                    // after the view is destroyed
+                    if (keepRunning) {
+                        try {
+                            renderSync.wait();
+                        } catch (InterruptedException e) {
+                            keepRunning = false;
                         }
                     }
-                    pingPong.recycle();
                 }
-            }, "Androidplot renderThread");
-        }
+            }
+            System.out.println("Thread exited with id " + this.hashCode());
+            renderThread = null;
+            pingPong.recycle();
+        }, "Androidplot renderThread");
     }
 
     /**
@@ -745,10 +765,14 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             // only enter synchronized block if the call is expected to block OR
             // if the render thread is idle, so we know that we won't have to wait to
             // obtain a lock.
-            if (isIdle) {
+            if (renderThread != null && isIdle) {
                 synchronized (renderSync) {
                     renderSync.notify();
                 }
+            } else if(renderThread == null) {
+                pingPong.resizeToLast();
+                startBackgroundRendering();
+                renderThread.start();
             }
         } else if(renderMode == RenderMode.USE_MAIN_THREAD) {
 
@@ -777,7 +801,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             renderSync.notify();
         }
     }
-
 
     @Override
     protected synchronized void onSizeChanged (int w, int h, int oldw, int oldh) {

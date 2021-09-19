@@ -17,6 +17,8 @@
 plugins {
     id 'com.android.library'
     id 'com.dicedmelon.gradle.jacoco-android'
+    id 'maven-publish'
+    id 'signing'
 }
 
 class AttrMarkdown extends DefaultTask {
@@ -119,6 +121,68 @@ task sourcesJar(type: Jar) {
 
 javadoc {
     options.overview = "src/main/java/overview.html"
+}
+
+afterEvaluate {
+    publishing {
+        repositories {
+            maven {
+                name = "Maven Central"
+                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = System.getenv("OSSRH_ACTOR")
+                    password = System.getenv("OSSRH_TOKEN")
+                }
+            }
+        }
+
+        publications {
+            release(MavenPublication) {
+
+                from components.release
+
+                // You can then customize attributes of the publication as shown below.
+                groupId = 'com.androidplot'
+                artifactId = 'androidplot'
+                version = theVersionName
+
+                pom {
+                    packaging 'aar'
+                    name = 'Androidplot'
+                    description = "Configure any object from XML."
+                    url = gitUrl
+                    licenses {
+                        license {
+                            name = 'The Apache Software License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'halfhp'
+                            name = 'Nick Fellows'
+                            email = 'halfhp@gmail.com'
+                        }
+                    }
+                    scm {
+                        connection = gitUrl
+                        developerConnection = gitUrl
+                        url = gitUrl
+
+                    }
+                }
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    signing {
+        def signingKey = System.getenv("SIGNING_KEY")
+        def signingPassword = System.getenv("SIGNING_PASSWORD")
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications.release
+    }
 }
 
 artifacts {

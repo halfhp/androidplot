@@ -14,9 +14,6 @@
  *    limitations under the License.
  */
 
-//apply plugin: 'com.android.application'
-//apply plugin: 'com.github.triplet.play'
-
 buildscript {
 
     repositories {

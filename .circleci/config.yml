@@ -87,14 +87,14 @@ jobs:
           path: androidplot-core/build/test-results/
 
       - deploy:
-          name: "Deploy to Bintray"
+          name: "Publish Artifacts"
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ];
-              then ./gradlew bintrayUpload;
+            if [ "${CIRCLE_BRANCH}" == "project-updates" ];
+              then ./gradlew publish;
             fi
 
       - deploy:
-          name: "Deploy to Google Play"
+          name: "Publish to Google Play"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ];
               then

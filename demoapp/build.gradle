@@ -14,22 +14,19 @@
  *    limitations under the License.
  */
 
-//apply plugin: 'com.android.application'
-//apply plugin: 'com.github.triplet.play'
-
 buildscript {
 
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.github.triplet.gradle:play-publisher:2.2.1'
+        classpath 'com.github.triplet.gradle:play-publisher:3.6.0'
     }
 }
 
 plugins {
     id 'com.android.application'
-    id 'com.github.triplet.play' version '2.2.1'
+    id 'com.github.triplet.play' version '3.6.0'
 }
 
 dependencies {
@@ -37,7 +34,9 @@ dependencies {
     implementation 'com.crittercism:crittercism-android-agent:5.4.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
 }
 
@@ -72,17 +71,14 @@ android {
         }
     }
 
-
-    /**
-     * TODO: uncomment this and address all the lint issues.
-     */
     lintOptions {
+        // TODO: set to true and address all the lint issues.
         abortOnError false
     }
 }
 
 play {
     // see: https://github.com/Triple-T/gradle-play-publisher
-    serviceAccountCredentials = file(System.getenv("PUBLISHER_ACCT_JSON_FILE") ?: "publisher.json")
+    serviceAccountCredentials.set(file(System.getenv("PUBLISHER_ACCT_JSON_FILE") ?: "publisher.json"))
     track = 'beta'
 }

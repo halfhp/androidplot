@@ -14,9 +14,12 @@ To use the library in your gradle project add the following to your build.gradle
 
 ```groovy
 dependencies {
-    implementation "com.androidplot:androidplot-core:1.5.7"
+    implementation "com.androidplot:androidplot-core:1.5.8"
 }
 ```
+
+*NOTE: As of version 1.5.8 Androidplot has migrated over from the Android Support Libraries to androidx.
+If you have a very old project and experience issues, may need to stay on version 1.5.7*
 
 If you’re using Proguard obfuscation (Projects created by Android Studio do by default) you’ll also 
 want add this to your proguard-rules.pro file:

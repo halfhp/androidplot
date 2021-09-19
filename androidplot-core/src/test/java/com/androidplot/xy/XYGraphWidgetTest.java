@@ -298,10 +298,10 @@ public class XYGraphWidgetTest extends AndroidplotTest {
 
     @Test
     public void setGridInsets_updatesGridRect() {
-        graphWidget.setGridInsets(new Insets(0, 0, 0, 0));
+        graphWidget.setGridInsets(new com.androidplot.ui.Insets(0, 0, 0, 0));
         final RectF oldRect = graphWidget.getGridRect();
 
-        graphWidget.setGridInsets(new Insets(2, 2, 2, 2));
+        graphWidget.setGridInsets(new com.androidplot.ui.Insets(2, 2, 2, 2));
         final RectF newRect = graphWidget.getGridRect();
 
         assertEquals(oldRect.left + 2, newRect.left);

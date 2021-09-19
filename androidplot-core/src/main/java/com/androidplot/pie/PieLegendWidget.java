@@ -2,7 +2,7 @@ package com.androidplot.pie;
 
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.androidplot.ui.LayoutManager;
 import com.androidplot.ui.SeriesBundle;

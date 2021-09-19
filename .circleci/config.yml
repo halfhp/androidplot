@@ -16,7 +16,7 @@ jobs:
 
       # CircleCI maintains a library of pre-built images
             # documented at https://circleci.com/docs/2.0/circleci-images/
-      - image: circleci/android:api-28-alpha
+      - image: circleci/android:api-30
 
     working_directory: ~/repo
 
@@ -87,17 +87,10 @@ jobs:
           path: androidplot-core/build/test-results/
 
       - deploy:
-          name: "Deploy to Bintray"
+          name: "Publish"
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ];
-              then ./gradlew bintrayUpload;
-            fi
-
-      - deploy:
-          name: "Deploy to Google Play"
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ];
+            if [ "${CIRCLE_BRANCH}" == "project-updates" ];
               then
                 ./misc/download_google_publisher_json.sh;
-                ./gradlew publishApkRelease
+                ./gradlew publish;
             fi

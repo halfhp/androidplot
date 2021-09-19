@@ -2,7 +2,7 @@ package com.androidplot.ui.widget;
 
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.androidplot.test.AndroidplotTest;
 import com.androidplot.ui.Anchor;

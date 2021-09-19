@@ -17,8 +17,8 @@
 package com.androidplot.ui.widget;
 
 import android.graphics.*;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 
 import com.androidplot.ui.*;
 import com.androidplot.util.DisplayDimensions;

@@ -14,34 +14,25 @@
  *    limitations under the License.
  */
 
-apply plugin: 'java'
-
-allprojects {
-    repositories {
-        jcenter()
-    }
-}
-
 ext {
-    theCompileSdkVersion = 28
-    theTargetSdkVersion = 28
+    theCompileSdkVersion = 30
+    theTargetSdkVersion = 30
     theMinSdkVersion = 5
-    theVersionName = '1.5.7'
+    theVersionName = '1.5.8'
     theVersionCode = 1
+    gitUrl = 'https://github.com/halfhp/androidplot.git'
 }
 
 buildscript {
     repositories {
         mavenCentral()
-        jcenter()
+        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
         google()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.5-SNAPSHOT'
     }
 }
 

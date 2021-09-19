@@ -16,7 +16,7 @@
 
 package com.androidplot.ui;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class PositionMetrics implements Comparable<PositionMetrics> {
 

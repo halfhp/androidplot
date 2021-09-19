@@ -19,7 +19,7 @@ package com.androidplot.demos;
 import android.app.Activity;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.CatmullRomInterpolator;

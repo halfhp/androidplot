@@ -39,12 +39,5 @@ allprojects {
     repositories {
         mavenCentral()
         google()
-        maven {
-            url "https://maven.pkg.github.com/halfhp/*"
-            credentials {
-                username "anon"
-                password "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"
-            }
-        }
     }
 }

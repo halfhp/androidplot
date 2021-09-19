@@ -145,6 +145,16 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     public enum RenderMode {
         /**
+         * Do everything in the primary thread.  This is the preferred method of drawing static charts
+         * and dynamic data that consists of a small number of points. This mode uses less memory at
+         * the cost of poor CPU utilization.
+         *
+         * XML value: use_main_thread
+         * @since 0.5.1
+         */
+        USE_MAIN_THREAD,
+
+        /**
          * Use a second thread and an off-screen buffer to do drawing.  This is the preferred method
          * of drawing dynamic data and static data that consists of a large number of points.  This mode
          * provides more efficient CPU utilization at the cost of increased memory usage.  As of
@@ -153,17 +163,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
          * XML value: use_background_thread
          * @since 0.5.1
          */
-        USE_BACKGROUND_THREAD,
-
-        /**
-         * Do everything in the primary thread.  This is the preferred method of drawing static charts
-         * and dynamic data that consists of a small number of points. This mode uses less memory at
-         * the cost of poor CPU utilization.
-         *
-         * XML value: use_main_thread
-         * @since 0.5.1
-         */
-        USE_MAIN_THREAD
+        USE_BACKGROUND_THREAD
     }
     private BoxModel boxModel = new BoxModel();
 

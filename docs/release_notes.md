@@ -2,6 +2,13 @@
 For details on what to expect in general when updating to a new version of Androiplot, check out the
 [versioning doc](versioning.md).
 
+# 1.5.9
+* (#107) Fix ambiguous ordinal for render mode attributes
+* (#104) Fix issue with background rendering in RecyclerView.
+* Adds a RecyclerView example to demo app.
+
+# 1.5.8
+* Maintenance release - update dependences, get off jcenter, etc.
 
 # 1.5.7
 * (#94) Potential fix / better error logging for a crash caused by a buffered canvas resize with illegal arguments.

@@ -15,12 +15,13 @@
  */
 
 buildscript {
-
+    ext.kotlin_version = '1.5.31'
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath 'com.github.triplet.gradle:play-publisher:3.6.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -29,9 +30,14 @@ plugins {
     id 'com.github.triplet.play' version '3.6.0'
 }
 
+apply plugin: 'kotlin-android'
+
 dependencies {
+    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 	implementation project(':androidplot-core')
     implementation 'com.crittercism:crittercism-android-agent:5.4.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
 
@@ -42,6 +48,10 @@ dependencies {
 
 android {
     compileSdkVersion theCompileSdkVersion
+
+    buildFeatures {
+        viewBinding true
+    }
 
     defaultConfig {
         versionCode theVersionCode
@@ -81,4 +91,7 @@ play {
     // see: https://github.com/Triple-T/gradle-play-publisher
     serviceAccountCredentials.set(file(System.getenv("PUBLISHER_ACCT_JSON_FILE") ?: "publisher.json"))
     track = 'beta'
+}
+repositories {
+    mavenCentral()
 }

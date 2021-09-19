@@ -95,6 +95,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ListViewActivity" android:label="ListView Example"/>
+        <activity android:name=".RecyclerViewActivity" android:label="RecyclerView Example"/>
         <activity android:name=".XYRegionExampleActivity" android:label="XYRegion Example">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -94,12 +94,3 @@ jobs:
                 ./misc/download_google_publisher_json.sh;
                 ./gradlew publish;
             fi
-
-#      - deploy:
-#          name: "Publish to Google Play"
-#          command: |
-#            if [ "${CIRCLE_BRANCH}" == "master" ];
-#              then
-#                ./misc/download_google_publisher_json.sh;
-#                ./gradlew publishApkRelease
-#            fi

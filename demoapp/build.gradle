@@ -20,13 +20,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.github.triplet.gradle:play-publisher:2.2.1'
+        classpath 'com.github.triplet.gradle:play-publisher:3.6.0'
     }
 }
 
 plugins {
     id 'com.android.application'
-    id 'com.github.triplet.play' version '2.2.1'
+    id 'com.github.triplet.play' version '3.6.0'
 }
 
 dependencies {
@@ -79,6 +79,6 @@ android {
 
 play {
     // see: https://github.com/Triple-T/gradle-play-publisher
-    serviceAccountCredentials = file(System.getenv("PUBLISHER_ACCT_JSON_FILE") ?: "publisher.json")
+    serviceAccountCredentials.set(file(System.getenv("PUBLISHER_ACCT_JSON_FILE") ?: "publisher.json"))
     track = 'beta'
 }

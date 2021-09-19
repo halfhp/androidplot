@@ -89,7 +89,7 @@ jobs:
       - deploy:
           name: "Publish"
           command: |
-            if [ "${CIRCLE_BRANCH}" == "project-updates" ];
+            if [ "${CIRCLE_BRANCH}" == "master" ];
               then
                 ./misc/download_google_publisher_json.sh;
                 ./gradlew publish;

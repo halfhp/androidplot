@@ -37,7 +37,9 @@ dependencies {
     implementation 'com.crittercism:crittercism-android-agent:5.4.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
 }
 
@@ -72,11 +74,8 @@ android {
         }
     }
 
-
-    /**
-     * TODO: uncomment this and address all the lint issues.
-     */
     lintOptions {
+        // TODO: set to true and address all the lint issues.
         abortOnError false
     }
 }

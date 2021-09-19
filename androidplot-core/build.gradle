@@ -73,10 +73,8 @@ android {
         }
     }
 
-    /**
-     * TODO: enable and address lint issues.
-     */
     lintOptions {
+        // TODO: enable and address lint issues.
         abortOnError false
     }
 }
@@ -91,13 +89,10 @@ dependencies {
 
     implementation 'com.halfhp.fig:figlib:1.0.11'
     implementation 'com.android.support:support-annotations:28.0.0'
-    testImplementation "org.mockito:mockito-core:3.9.0"
-    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
-    testImplementation "org.robolectric:robolectric:4.5.1"
 
-    // temp fix for:
-    // https://github.com/robolectric/robolectric/issues/1932
-    testImplementation 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
+    testImplementation "org.mockito:mockito-core:3.9.0"
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    testImplementation "org.robolectric:robolectric:4.5.1"
 }
 
 task javadoc(type: Javadoc) {

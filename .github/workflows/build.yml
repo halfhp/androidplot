@@ -1,0 +1,13 @@
+name: build androidplot
+on:
+  push:
+    branches:
+      - v1.5.10b # TODO change to master
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Build and Test
+        run: ./gradlew testDebugUnitTest jacocoTestDebugUnitTestReport

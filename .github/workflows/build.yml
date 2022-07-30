@@ -10,11 +10,11 @@ jobs:
       - shell: bash
         env:
           FOO: "THEFOO"
-        run: echo "$env:FOO" | base64 -decode >> foo.text
+        run: echo "$env:FOO" | base64 --decode >> foo.text
       - shell: bash
         env:
           ENCODED_KEYSTORE: ${{secrets.DEMOAPP_SIGNING_KEY}}
-        run: echo "$env:ENCODED_KEYSTORE" | sed 's/ /\n/g' | base64 –decode >> signing.keystore
+        run: echo "$env:ENCODED_KEYSTORE" | sed 's/ /\n/g' | base64 –-decode >> signing.keystore
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Build and Test

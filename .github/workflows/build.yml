@@ -9,7 +9,7 @@ jobs:
     steps:
       - shell: bash
         env:
-          FOO: "$$$$&&&....AAABBB"
+          FOO: "somestuff"
         run: echo $FOO | base64 -d > foo.text
       - shell: bash
         env:

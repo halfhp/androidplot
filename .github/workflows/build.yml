@@ -7,14 +7,14 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-#      - shell: bash
-#        env:
-#          FOO: "THEFOO"
-#        run: echo "$env:FOO" | base64 --decode >> foo.text
+      - shell: bash
+        env:
+          FOO: "$$$$&&&....AAABBB"
+        run: echo "$FOO" | base64 --decode >> foo.text
       - shell: bash
         env:
           ENCODED_KEYSTORE: ${{secrets.DEMOAPP_SIGNING_KEY}}
-        run: echo "$env:ENCODED_KEYSTORE" | sed 's/ /\n/g' | base64 –-decode >> signing.keystore
+        run: echo "$ENCODED_KEYSTORE" | sed 's/ /\n/g' | base64 –-decode >> signing.keystore
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Build and Test

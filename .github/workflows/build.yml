@@ -7,10 +7,10 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
-        env:
-          FOO: "THEFOO"
-        run: echo "$env:FOO" | base64 --decode >> foo.text
+#      - shell: bash
+#        env:
+#          FOO: "THEFOO"
+#        run: echo "$env:FOO" | base64 --decode >> foo.text
       - shell: bash
         env:
           ENCODED_KEYSTORE: ${{secrets.DEMOAPP_SIGNING_KEY}}

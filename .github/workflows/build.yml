@@ -11,3 +11,9 @@ jobs:
         uses: actions/checkout@v3
       - name: Build and Test
         run: ./gradlew testDebugUnitTest jacocoTestDebugUnitTestReport
+      - name: Build Release
+        run: ./gradlew assembleRelease
+      - name: Javadoc
+        run: ./gradlew javadoc
+      - name: Code Coverage
+        run: bash <(curl -s https://codecov.io/bash)

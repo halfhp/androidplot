@@ -74,11 +74,10 @@ android {
             }
         }
     }
-
-    lintOptions {
-        // TODO: enable and address lint issues.
+    lint {
         abortOnError false
     }
+
 }
 
 group = 'com.androidplot'

@@ -7,6 +7,11 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
+      - shell: bash
+        env:
+          ENCODED_KEYSTORE: ${{ secrets.DEMOAPP_SIGNING_KEY }}
+        run: |
+          "$env:ENCODED_KEYSTORE" | base64 --decode >> keystore.jks
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Build and Test

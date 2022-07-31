@@ -46,4 +46,6 @@ jobs:
         env:
           OSSRH_ACTOR: ${{ secrets.OSSRH_ACTOR }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
         run: ./gradlew publish

@@ -10,7 +10,7 @@ jobs:
       - shell: bash
         env:
           FOO: "somestuff"
-        run: echo "aaaaaa" | base64 -di
+        run: echo "aaa" | base64 | base64 -d
       - shell: bash
         env:
           ENCODED_KEYSTORE: ${{secrets.DEMOAPP_SIGNING_KEY}}

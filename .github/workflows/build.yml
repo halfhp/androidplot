@@ -7,11 +7,11 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
-        env:
-          FOO: "somestuff"
-        run: |
-          echo $FOO | base64 | sed 's/ /\n/g' | base64 -d > output.txt
+#      - shell: bash
+#        env:
+#          FOO: "somestuff"
+#        run: |
+#          echo $FOO | base64 | sed 's/ /\n/g' | base64 -d > output.txt
       - shell: bash
         env:
           ENCODED_KEYSTORE: ${{ secrets.DEMOAPP_SIGNING_KEY }}

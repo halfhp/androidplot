@@ -7,25 +7,15 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-#      - shell: bash
-#        env:
-#          FOO: "somestuff"
-#        run: |
-#          echo $FOO | base64 | sed 's/ /\n/g' | base64 -d > output.txt
       - name: Decode Keystore
         env:
           ENCODED: ${{ secrets.DEMOAPP_KEYSTORE }}
         run: |
-          echo $ENCODED | base64 -di > signing.keystore
-#      - name: Decode Keystore (2)
-#        env:
-#          ENCODED_KEYSTORE: ${{ secrets.DEMOAPP_KEYSTORE }}
-#        run: |
-#          echo $ENCODED_KEYSTORE | base64 –di > signing.keystore
+          echo $ENCODED | base64 -di > demoapp/keystore.jks
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Build and Test
-        run: ./gradlew testDebugUnitTest jacocoTestDebugUnitTestReport
+#      - name: Build and Test
+#        run: ./gradlew testDebugUnitTest jacocoTestDebugUnitTestReport
       - name: Build Release
         run: ./gradlew assembleRelease
       - name: Javadoc

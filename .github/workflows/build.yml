@@ -19,7 +19,7 @@ jobs:
           echo $ENCODED_STRING | base64 -di > signing.keystore
       - name: Decode Keystore (2)
         env:
-          ENCODED_KEYSTORE: ${{secrets.DEMOAPP_KEYSTORE}}
+          ENCODED_KEYSTORE: ${{ secrets.DEMOAPP_KEYSTORE }}
         run: |
           echo $ENCODED_KEYSTORE | base64 –di > signing.keystore
       - name: Checkout Code

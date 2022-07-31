@@ -10,7 +10,7 @@ jobs:
       - shell: bash
         env:
           FOO: "somestuff"
-        run: echo "abcdefg" > foo.txt
+        run: echo "abcdefg"
       - shell: bash
         env:
           ENCODED_KEYSTORE: ${{secrets.DEMOAPP_SIGNING_KEY}}

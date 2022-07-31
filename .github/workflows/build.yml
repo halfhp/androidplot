@@ -14,14 +14,14 @@ jobs:
 #          echo $FOO | base64 | sed 's/ /\n/g' | base64 -d > output.txt
       - name: Decode Keystore
         env:
-          ENCODED_STRING: ${{ secrets.DEMOAPP_KEYSTORE }}
+          ENCODED: ${{ secrets.DEMOAPP_KEYSTORE }}
         run: |
-          echo $ENCODED_STRING | base64 -di > signing.keystore
-      - name: Decode Keystore (2)
-        env:
-          ENCODED_KEYSTORE: ${{ secrets.DEMOAPP_KEYSTORE }}
-        run: |
-          echo $ENCODED_KEYSTORE | base64 –di > signing.keystore
+          echo $ENCODED | base64 -di > signing.keystore
+#      - name: Decode Keystore (2)
+#        env:
+#          ENCODED_KEYSTORE: ${{ secrets.DEMOAPP_KEYSTORE }}
+#        run: |
+#          echo $ENCODED_KEYSTORE | base64 –di > signing.keystore
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Build and Test

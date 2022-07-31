@@ -20,7 +20,8 @@ jobs:
       - shell: bash
         env:
           ENCODED_KEYSTORE: ${{secrets.DEMOAPP_KEYSTORE}}
-        run: echo $ENCODED_KEYSTORE | base64 –d > signing.keystore
+        run: |
+          echo $ENCODED_KEYSTORE | base64 –di > signing.keystore
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Build and Test

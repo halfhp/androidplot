@@ -30,9 +30,14 @@ jobs:
       - name: Code Coverage
         run: bash <(curl -s https://codecov.io/bash)
 
-      - name: Store Demoapp APK
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Store Core Library
+          path: androidplot-core/build/outputs/aar/*.aar
+          retention-days: 30
+
+      - uses: actions/upload-artifact@v3
         with:
           name: Store Demoapp APK
-          path: demoapp/build/outputs
+          path: demoapp/build/outputs/apk/release/*.apk
           retention-days: 30

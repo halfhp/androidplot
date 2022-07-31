@@ -14,13 +14,8 @@ jobs:
 #          echo $FOO | base64 | sed 's/ /\n/g' | base64 -d > output.txt
       - shell: bash
         env:
-          ENCODED_KEYSTORE: ${{ secrets.DEMOAPP_SIGNING_KEY }}
-        run: echo $ENCODED_KEYSTORE
-      - shell: bash
-        env:
-          ENCODED_KEYSTORE: ${{ secrets.DEMOAPP_SIGNING_KEY }}
-        run: |
-          echo $ENCODED_KEYSTORE | base64 –d > signing.keystore
+          ENCODED_KEYSTORE: ${{ secrets.DEMOAPP_KEYSTORE }}
+        run: echo $ENCODED_KEYSTORE | base64 –d > signing.keystore
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Build and Test

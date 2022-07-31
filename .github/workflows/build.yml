@@ -11,7 +11,7 @@ jobs:
         env:
           ENCODED: ${{ secrets.DEMOAPP_KEYSTORE }}
         run: |
-          echo $ENCODED | base64 -di > androidplot/demoapp/keystore.jks
+          echo $ENCODED | base64 -di > demoapp/keystore.jks
       - name: Checkout Code
         uses: actions/checkout@v3
 #      - name: Build and Test

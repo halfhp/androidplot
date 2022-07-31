@@ -9,19 +9,22 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Decode Keystore
-        env:
-          ENCODED: ${{ secrets.DEMOAPP_KEYSTORE }}
-        run: |
-          echo $ENCODED | base64 -di > "${GITHUB_WORKSPACE}/demoapp/keystore.jks"
-#      - name: Build and Test
-#        run: ./gradlew testDebugUnitTest jacocoTestDebugUnitTestReport
+#      - name: Decode Keystore
+#        env:
+#          ENCODED: ${{ secrets.DEMOAPP_KEYSTORE }}
+#        run: |
+#          echo $ENCODED | base64 -di > "${GITHUB_WORKSPACE}/demoapp/keystore.jks"
+      - name: Build and Test
+        run: ./gradlew testDebugUnitTest jacocoTestDebugUnitTestReport
       - name: Build Release
         env:
+          ENCODED: ${{ secrets.DEMOAPP_KEYSTORE }}
           KEY_ALIAS: Key0
           KEYSTORE_PASSWORD: ${{ secrets.DEMOAPP_KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.DEMOAPP_KEY_PASSWORD }}
-        run: ./gradlew assembleRelease
+        run: |
+          echo $ENCODED | base64 -di > "${GITHUB_WORKSPACE}/demoapp/keystore.jks"
+          ./gradlew assembleRelease
       - name: Javadoc
         run: ./gradlew javadoc
       - name: Code Coverage

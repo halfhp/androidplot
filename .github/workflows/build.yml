@@ -10,7 +10,7 @@ jobs:
       - shell: bash
         env:
           FOO: "somestuff"
-        run: echo $FOO | base64 -d > foo.text
+        run: echo $FOO | base64 -d --ignore-garbage > foo.txt
       - shell: bash
         env:
           ENCODED_KEYSTORE: ${{secrets.DEMOAPP_SIGNING_KEY}}

@@ -11,6 +11,8 @@ jobs:
         env:
           ENCODED: ${{ secrets.DEMOAPP_KEYSTORE }}
         run: |
+          echo pwd
+          echo ls
           echo $ENCODED | base64 -di > demoapp/keystore.jks
       - name: Checkout Code
         uses: actions/checkout@v3

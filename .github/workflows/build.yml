@@ -11,7 +11,7 @@ jobs:
         env:
           ENCODED: ${{ secrets.DEMOAPP_KEYSTORE }}
         run: |
-          echo $ENCODED | base64 -di > "${GITHUB_WORKSPACE}/demoapp/keystore.jks"
+          echo $ENCODED | base64 -di > "${GITHUB_WORKSPACE}/keystore.jks"
       - name: Checkout Code
         uses: actions/checkout@v3
 #      - name: Build and Test

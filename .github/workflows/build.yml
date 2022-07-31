@@ -17,6 +17,10 @@ jobs:
 #      - name: Build and Test
 #        run: ./gradlew testDebugUnitTest jacocoTestDebugUnitTestReport
       - name: Build Release
+        env:
+          KEY_ALIAS: Key0
+          KEYSTORE_PASSWORD: ${{ secrets.DEMOAPP_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.DEMOAPP_KEY_PASSWORD }}
         run: ./gradlew assembleRelease
       - name: Javadoc
         run: ./gradlew javadoc

@@ -88,8 +88,6 @@ public class SimpleXYPlotActivity extends Activity {
         // add a new series' to the xyplot:
         plot.addSeries(series1, series1Format);
         plot.addSeries(series2, series2Format);
-        plot.setLinesPerRangeLabel(3);
-        plot.setLinesPerDomainLabel(2);
 
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
             @Override

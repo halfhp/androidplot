@@ -1,6 +1,9 @@
 # ![image](docs/images/aplogo_small.png) Androidplot [![AndroidPlot](https://www.appbrain.com/stats/libraries/shield/androidplot.svg)](https://www.appbrain.com/stats/libraries/details/androidplot/androidplot) [![Codix](http://codix.io/gh/badge/halfhp/androidplot)](http://codix.io/gh/repo/halfhp/androidplot) [![codecov](https://codecov.io/gh/halfhp/androidplot/branch/master/graph/badge.svg)](https://codecov.io/gh/halfhp/androidplot) [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/androidplot.svg?style=social&label=Follow%20Us)](https://twitter.com/androidplot)
 
-A library for creating dynamic and static charts in Android apps. Compatible with all versions of Android from 1.6 onward.
+A library for creating dynamic and static charts in Android apps. 
+
+Androidplot is compatible with all versions of Android from 1.6 onward, works equally with Kotlin and Java codebases
+and is compatible with Jetpack compose.
 
 If you enjoy the lib, please [rate us on codix.io](http://codix.io/gh/repo/halfhp/androidplot)!
 

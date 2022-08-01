@@ -18,16 +18,11 @@ package com.androidplot.demos
 import android.app.Activity
 import android.os.Bundle
 import android.content.Intent
-import android.util.Log
 import com.androidplot.demos.databinding.MainBinding
 
 class MainActivity : Activity() {
 
     private lateinit var binding: MainBinding
-
-    companion object {
-        private val TAG = MainActivity::class.java.name
-    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

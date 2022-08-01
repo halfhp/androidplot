@@ -27,76 +27,88 @@
                  android:icon="@drawable/ic_launcher">
 
         <activity android:name=".MainActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".SimplePieChartActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity android:name=".AnimatedXYPlotActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity android:name=".SimpleXYPlotActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".ScatterPlotActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".BarPlotExampleActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity android:name=".DynamicXYPlotActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity android:name=".CandlestickChartActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity android:name=".OrientationSensorExampleActivity"
                   android:label="@string/app_name"
-                  android:screenOrientation="landscape">
+                  android:screenOrientation="landscape"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".StepChartExampleActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".TouchZoomExampleActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".ListViewActivity" android:label="ListView Example"/>
         <activity android:name=".RecyclerViewActivity" android:label="RecyclerView Example"/>
-        <activity android:name=".XYRegionExampleActivity" android:label="XYRegion Example">
+        <activity android:name=".XYRegionExampleActivity" android:label="XYRegion Example"
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -112,7 +124,8 @@
         <receiver
                 android:icon="@drawable/ic_launcher"
                 android:label="Example Widget"
-                android:name="com.androidplot.demos.widget.DemoAppWidgetProvider" >
+                android:name="com.androidplot.demos.widget.DemoAppWidgetProvider"
+            android:exported="false">
             <intent-filter >
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

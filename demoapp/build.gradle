@@ -15,7 +15,7 @@
  */
 
 buildscript {
-    ext.kotlin_version = '1.5.31'
+    ext.kotlin_version = '1.7.10'
     repositories {
         mavenCentral()
     }
@@ -33,16 +33,12 @@ plugins {
 apply plugin: 'kotlin-android'
 
 dependencies {
-    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "androidx.core:core-ktx:1.8.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 	implementation project(':androidplot-core')
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
-
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
-
-    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 }
 
 android {

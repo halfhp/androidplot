@@ -27,7 +27,6 @@ import org.mockito.*;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class LTTBSamplerTest extends AndroidplotTest {

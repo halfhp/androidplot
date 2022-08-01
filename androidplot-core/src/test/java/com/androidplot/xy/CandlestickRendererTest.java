@@ -24,7 +24,6 @@ import com.androidplot.ui.*;
 import org.junit.*;
 import org.mockito.*;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class CandlestickRendererTest extends AndroidplotTest {

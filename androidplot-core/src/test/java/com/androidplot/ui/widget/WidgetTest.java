@@ -21,10 +21,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.nullable;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -94,9 +94,9 @@ public class WidgetTest extends AndroidplotTest {
 
         widget.draw(canvas);
 
-        inOrder.verify(widget).onResize(isNull(RectF.class), any(RectF.class));
+        inOrder.verify(widget).onResize(isNull(), any(RectF.class));
         inOrder.verify(widget).doOnDraw(eq(canvas), any(RectF.class));
-        verify(widget).onResize(isNull(RectF.class), any(RectF.class));
+        verify(widget).onResize(isNull(), any(RectF.class));
     }
 
     static class TestWidget extends Widget {

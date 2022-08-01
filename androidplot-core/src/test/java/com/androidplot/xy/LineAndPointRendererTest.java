@@ -26,7 +26,6 @@ import org.mockito.*;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 public class LineAndPointRendererTest extends AndroidplotTest {

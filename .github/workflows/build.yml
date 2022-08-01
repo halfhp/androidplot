@@ -1,8 +1,5 @@
 name: build androidplot
-on:
-  push:
-    branches:
-      - v1.5.10b # TODO change to master
+on: [push]
 jobs:
   build-and-test:
     runs-on: ubuntu-latest

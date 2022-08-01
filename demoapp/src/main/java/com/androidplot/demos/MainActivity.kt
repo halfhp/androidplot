@@ -17,7 +17,6 @@ package com.androidplot.demos
 
 import android.app.Activity
 import android.os.Bundle
-import com.crittercism.app.Crittercism
 import android.content.Intent
 import android.util.Log
 import com.androidplot.demos.databinding.MainBinding
@@ -28,18 +27,11 @@ class MainActivity : Activity() {
 
     companion object {
         private val TAG = MainActivity::class.java.name
-
-        // DO *NOT* CHANGE THIS LINE! (CI-MATCH-POPULATE)
-        private val CRITTERCISM_APP_ID: String? = null
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainBinding.inflate(layoutInflater)
-        if (CRITTERCISM_APP_ID != null) {
-            Log.d(TAG, "Crittercism initialized.")
-            Crittercism.initialize(applicationContext, CRITTERCISM_APP_ID)
-        }
 
         binding.animatedXYPlotExButton.setOnClickListener {
             startActivity(Intent(this, AnimatedXYPlotActivity::class.java))

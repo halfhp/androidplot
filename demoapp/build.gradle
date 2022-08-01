@@ -36,7 +36,6 @@ dependencies {
     implementation "androidx.core:core-ktx:1.6.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 	implementation project(':androidplot-core')
-    implementation 'com.crittercism:crittercism-android-agent:5.4.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'

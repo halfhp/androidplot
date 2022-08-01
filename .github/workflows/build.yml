@@ -37,12 +37,14 @@ jobs:
           retention-days: 30
 
       - uses: actions/upload-artifact@v3
+        if: github.ref_name == 'master'
         with:
           name: Demoapp APK
           path: demoapp/build/outputs/apk/release/*.apk
           retention-days: 30
 
       - name: Stage for Maven Central
+        if: github.ref_name == 'master'
         env:
           OSSRH_ACTOR: ${{ secrets.OSSRH_ACTOR }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}

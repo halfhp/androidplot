@@ -14,7 +14,7 @@ To use the library in your gradle project add the following to your build.gradle
 
 ```groovy
 dependencies {
-    implementation "com.androidplot:androidplot-core:1.5.9"
+    implementation "com.androidplot:androidplot-core:1.5.10"
 }
 ```
 

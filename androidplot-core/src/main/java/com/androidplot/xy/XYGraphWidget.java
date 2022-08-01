@@ -564,7 +564,7 @@ public class XYGraphWidget extends Widget {
     }
 
     protected void drawDomainLine(Canvas canvas, float xPix, Number xVal,
-                                  Paint linePaint, boolean isOrigin) {
+                                  Paint linePaint, boolean isOrigin, boolean shouldDrawLabel) {
 
         // lines
         if (linePaint != null) {
@@ -574,12 +574,19 @@ public class XYGraphWidget extends Widget {
         }
 
         // labels
-        drawLineLabel(canvas, Edge.TOP, xVal, xPix, labelRect.top, isOrigin);
-        drawLineLabel(canvas, Edge.BOTTOM, xVal, xPix, labelRect.bottom, isOrigin);
+        if(shouldDrawLabel) {
+            if (isLineLabelEnabled(Edge.TOP)) {
+                drawLineLabel(canvas, Edge.TOP, xVal, xPix, labelRect.top, isOrigin);
+            }
+
+            if (isLineLabelEnabled(Edge.BOTTOM)) {
+                drawLineLabel(canvas, Edge.BOTTOM, xVal, xPix, labelRect.bottom, isOrigin);
+            }
+        }
     }
 
     protected void drawRangeLine(Canvas canvas, float yPix, Number yVal,
-                                 Paint linePaint, boolean isOrigin) {
+                                 Paint linePaint, boolean isOrigin, boolean shouldDrawLabel) {
         // lines
         if (linePaint != null) {
             canvas.drawLine(gridRect.left - lineExtensionLeft, yPix,
@@ -587,9 +594,15 @@ public class XYGraphWidget extends Widget {
             );
         }
 
-        // labels
-        drawLineLabel(canvas, Edge.LEFT, yVal, labelRect.left, yPix, isOrigin);
-        drawLineLabel(canvas, Edge.RIGHT, yVal, labelRect.right, yPix, isOrigin);
+        if(shouldDrawLabel) {
+            // labels
+            if (isLineLabelEnabled(Edge.LEFT)) {
+                drawLineLabel(canvas, Edge.LEFT, yVal, labelRect.left, yPix, isOrigin);
+            }
+            if (isLineLabelEnabled(Edge.RIGHT)) {
+                drawLineLabel(canvas, Edge.RIGHT, yVal, labelRect.right, yPix, isOrigin);
+            }
+        }
     }
 
     protected void drawLineLabel(Canvas canvas,
@@ -598,9 +611,7 @@ public class XYGraphWidget extends Widget {
                                  float x,
                                  float y,
                                  boolean isOrigin) {
-        if (isLineLabelEnabled(edge)) {
-            getLineLabelRenderer(edge).drawLabel(canvas, getLineLabelStyle(edge), val, x, y, isOrigin);
-        }
+        getLineLabelRenderer(edge).drawLabel(canvas, getLineLabelStyle(edge), val, x, y, isOrigin);
     }
 
     /**
@@ -646,7 +657,7 @@ public class XYGraphWidget extends Widget {
             } else {
                 linePaint = domainSubGridLinePaint;
             }
-            drawDomainLine(canvas, (float) xPix, xVal, linePaint, isOrigin);
+            drawDomainLine(canvas, (float) xPix, xVal, linePaint, isOrigin, isMajorTick);
         }
 
         Number rangeOrigin = plot.getRangeOrigin();
@@ -684,7 +695,7 @@ public class XYGraphWidget extends Widget {
             } else {
                 linePaint = rangeSubGridLinePaint;
             }
-            drawRangeLine(canvas, (float) yPix, yVal, linePaint, isOrigin);
+            drawRangeLine(canvas, (float) yPix, yVal, linePaint, isOrigin, isMajorTick);
         }
     }
 

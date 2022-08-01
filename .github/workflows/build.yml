@@ -1,0 +1,53 @@
+name: build androidplot
+on:
+  push:
+    branches:
+      - v1.5.10b # TODO change to master
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build and Test
+        run: ./gradlew testDebugUnitTest jacocoTestDebugUnitTestReport
+
+      - name: Build Release
+        env:
+          ENCODED: ${{ secrets.DEMOAPP_KEYSTORE }}
+          KEYSTORE: keystore.jks
+          KEY_ALIAS: Key0
+          KEYSTORE_PASSWORD: ${{ secrets.DEMOAPP_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.DEMOAPP_KEY_PASSWORD }}
+        run: |
+          echo $ENCODED | base64 -di > "${GITHUB_WORKSPACE}/demoapp/keystore.jks"
+          ./gradlew assembleRelease
+
+      - name: Javadoc
+        run: ./gradlew javadoc
+
+      - name: Code Coverage
+        run: bash <(curl -s https://codecov.io/bash)
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Core Library
+          path: androidplot-core/build/outputs/aar/*.aar
+          retention-days: 30
+
+      - uses: actions/upload-artifact@v3
+        if: github.ref_name == 'master'
+        with:
+          name: Demoapp APK
+          path: demoapp/build/outputs/apk/release/*.apk
+          retention-days: 30
+
+      - name: Stage for Maven Central
+        if: github.ref_name == 'master'
+        env:
+          OSSRH_ACTOR: ${{ secrets.OSSRH_ACTOR }}
+          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
+        run: ./gradlew publish

@@ -118,14 +118,14 @@ The exact size of the `BarGroup` is specified in pixels and the space between ea
 is dynamically calculated based on that size.
 
 ```java
-barRenderer.setBarWidth(BarRenderer.BarGroupWidthMode.FIXED_WIDTH, PixelUtils.dpToPix(25));
+barRenderer.setBarGroupWidth(BarRenderer.BarGroupWidthMode.FIXED_WIDTH, PixelUtils.dpToPix(25));
 ```
 ##### FIXED_GAP
 The exact size of the "gap" between each `BarGroup` is specified in pixels and the size of each `BarGroup`
 is dynamically calculated based on that spacing.
 
 ```java
-barRenderer.setBarWidth(BarRenderer.BarGroupWidthMode.FIXED_GAP, PixelUtils.dpToPix(5));
+barRenderer.setBarGroupWidth(BarRenderer.BarGroupWidthMode.FIXED_GAP, PixelUtils.dpToPix(5));
 ```
 
 # Example

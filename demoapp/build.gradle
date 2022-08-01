@@ -80,11 +80,10 @@ android {
             debuggable true
         }
     }
-
-    lintOptions {
-        // TODO: set to true and address all the lint issues.
+    lint {
         abortOnError false
     }
+
 }
 
 play {

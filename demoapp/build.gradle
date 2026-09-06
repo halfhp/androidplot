@@ -14,31 +14,21 @@
  *    limitations under the License.
  */
 
-buildscript {
-    ext.kotlin_version = '2.0.0'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.github.triplet.gradle:play-publisher:3.6.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 plugins {
     id 'com.android.application'
-    id 'com.github.triplet.play' version '3.6.0'
+    id 'com.github.triplet.play' version '4.1.1'
 }
 
-apply plugin: 'kotlin-android'
-
 dependencies {
-    implementation "androidx.core:core-ktx:1.13.1"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // kotlin.stdlib.default.dependency=false is set in gradle.properties so that the pure-java
+    // core lib doesn't publish a kotlin-stdlib dependency; declare it explicitly here instead.
+    // Version should match the Kotlin compiler bundled with AGP's built-in Kotlin support.
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.2.10"
+    implementation "androidx.core:core-ktx:1.19.0"
 	implementation project(':androidplot-core')
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 }
 
 kotlin {
@@ -52,17 +42,17 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    compileSdkVersion theCompileSdkVersion
+    compileSdk rootProject.ext.theCompileSdkVersion
 
     buildFeatures {
-        viewBinding true
+        viewBinding = true
     }
 
     defaultConfig {
-        versionCode theVersionCode
-        versionName theVersionName
-        minSdkVersion 19
-        targetSdkVersion theTargetSdkVersion
+        versionCode rootProject.ext.theVersionCode
+        versionName rootProject.ext.theVersionName
+        minSdk 23
+        targetSdk rootProject.ext.theTargetSdkVersion
         applicationId "com.androidplot.demos"
     }
 
@@ -77,18 +67,17 @@ android {
 
     buildTypes {
         release {
-            zipAlignEnabled true
-            signingConfig signingConfigs.release
+            signingConfig = signingConfigs.release
         }
 
         debug {
-            debuggable true
+            debuggable = true
         }
     }
     lint {
-        abortOnError false
+        abortOnError = false
     }
-    namespace 'com.androidplot.demos'
+    namespace = 'com.androidplot.demos'
 
 }
 

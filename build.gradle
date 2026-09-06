@@ -15,8 +15,8 @@
  */
 
 ext {
-    theCompileSdkVersion = 34
-    theTargetSdkVersion = 34
+    theCompileSdkVersion = 37
+    theTargetSdkVersion = 37
     theMinSdkVersion = 5
     theVersionName = '1.5.11'
     theVersionCode = 227
@@ -26,14 +26,14 @@ ext {
 buildscript {
     repositories {
         mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
+        maven { url = "https://plugins.gradle.org/m2/" }
+        maven { url = 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
         google()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.5.2'
-        classpath 'com.mxalbert.gradle:jacoco-android:0.2.0'
+        classpath 'com.android.tools.build:gradle:9.4.0'
+        classpath 'com.mxalbert.gradle:jacoco-android:0.2.1'
     }
 }
 

@@ -21,16 +21,19 @@ plugins {
     id 'signing'
 }
 
-class AttrMarkdown extends DefaultTask {
+abstract class AttrMarkdown extends DefaultTask {
 
-    def inFile
-    def outFile
+    @InputFile
+    File inFile
+
+    @OutputFile
+    File outFile
 
     @TaskAction
     def generate() {
-        def input = project.file(inFile)
+        def input = inFile
 
-        def output = project.file(outFile)
+        def output = outFile
         if (output.exists()) {
             output.delete()
         }
@@ -53,9 +56,9 @@ class AttrMarkdown extends DefaultTask {
  *
  * The generated doc will appear in / replace androidplot/docs/attrs.md
  */
-task generateAttrsMarkdown(type: AttrMarkdown) {
-    inFile = { "src/main/res/values/attrs.xml" }
-    outFile = { "../docs/attrs.md" }
+tasks.register('generateAttrsMarkdown', AttrMarkdown) {
+    inFile = file("src/main/res/values/attrs.xml")
+    outFile = file("../docs/attrs.md")
 }
 
 android {
@@ -67,9 +70,9 @@ android {
 
 
     defaultConfig {
-        compileSdk theCompileSdkVersion
-        minSdkVersion theMinSdkVersion
-        targetSdkVersion theTargetSdkVersion
+        compileSdk rootProject.ext.theCompileSdkVersion
+        minSdk rootProject.ext.theMinSdkVersion
+        targetSdk rootProject.ext.theTargetSdkVersion
         testApplicationId "com.androidplot.test"
     }
 
@@ -82,9 +85,9 @@ android {
         }
     }
     lint {
-        abortOnError false
+        abortOnError = false
     }
-    namespace 'com.androidplot'
+    namespace = 'com.androidplot'
 
     publishing {
         singleVariant("release") {
@@ -95,7 +98,7 @@ android {
 }
 
 group = 'com.androidplot'
-version = theVersionName
+version = rootProject.ext.theVersionName
 
 def siteUrl = 'http://androidplot.com'
 def gitUrl = 'https://github.com/halfhp/androidplot.git'
@@ -103,11 +106,11 @@ def gitUrl = 'https://github.com/halfhp/androidplot.git'
 dependencies {
 
     implementation 'com.halfhp.fig:figlib:1.0.11'
-    implementation 'androidx.annotation:annotation:1.8.2'
+    implementation 'androidx.annotation:annotation:1.10.0'
 
-    testImplementation "org.mockito:mockito-core:5.7.0"
-    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-    testImplementation "org.robolectric:robolectric:4.7.3"
+    testImplementation "org.mockito:mockito-core:5.23.0"
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.robolectric:robolectric:4.16.1"
 }
 
 // TODO: get javadoc working again at some point
@@ -150,10 +153,10 @@ afterEvaluate {
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.androidplot'
                 artifactId = 'androidplot-core'
-                version = theVersionName
+                version = rootProject.ext.theVersionName
 
                 pom {
-                    packaging 'aar'
+                    packaging = 'aar'
                     name = 'Androidplot'
                     description = "Configure any object from XML."
                     url = gitUrl

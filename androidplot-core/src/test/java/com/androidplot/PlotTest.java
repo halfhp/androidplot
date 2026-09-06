@@ -25,6 +25,7 @@ import com.androidplot.ui.*;
 import com.halfhp.fig.*;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +57,7 @@ public class PlotTest extends AndroidplotTest {
     @Test
     public void testInit_withAttrs() {
         Plot plot = spy(new MockPlot("MockPlot"));
-        AttributeSet attrs = mock(AttributeSet.class);
+        AttributeSet attrs = Robolectric.buildAttributeSet().build();
         plot.init(RuntimeEnvironment.application, attrs, 0);
 
         verify(plot, times(1)).onPreInit();

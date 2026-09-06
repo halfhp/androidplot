@@ -1,6 +1,9 @@
 name: build androidplot
 
-on: [push]
+on:
+  push:
+    branches: [master]
+  pull_request:
 
 permissions:
   contents: read
@@ -16,22 +19,34 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set Up JDK 17
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # Caches Gradle distributions and dependencies between runs.
+      # Caches Gradle distributions and dependencies between runs. Only master
+      # writes to the cache so feature branches don't evict useful entries.
       - name: Set Up Gradle
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/master' }}
 
       - name: Build and Test
-        run: ./gradlew testDebugUnitTest jacocoTestDebugUnitTestReport
+        run: ./gradlew testDebugUnitTest jacocoTestDebugUnitTestReport lint :androidplot-core:assembleRelease
 
-      - name: Build Release
+      # Signing secrets are unavailable to pull requests from forks, so only
+      # build the signed demoapp when they are present.
+      - name: Check for Signing Secrets
+        id: signing
+        env:
+          KEYSTORE_B64: ${{ secrets.DEMOAPP_KEYSTORE }}
+        run: echo "available=${{ env.KEYSTORE_B64 != '' }}" >> "$GITHUB_OUTPUT"
+
+      - name: Build Signed Demoapp
+        if: steps.signing.outputs.available == 'true'
         env:
           ENCODED: ${{ secrets.DEMOAPP_KEYSTORE }}
           KEYSTORE: keystore.jks
@@ -40,15 +55,36 @@ jobs:
           KEY_PASSWORD: ${{ secrets.DEMOAPP_KEY_PASSWORD }}
         run: |
           printf '%s' "$ENCODED" | base64 -d > "${GITHUB_WORKSPACE}/demoapp/keystore.jks"
-          ./gradlew assembleRelease
+          ./gradlew :demoapp:assembleRelease
 
+      - name: Build Unsigned Demoapp
+        if: steps.signing.outputs.available != 'true'
+        run: ./gradlew :demoapp:assembleDebug
+
+      # Requires a CODECOV_TOKEN secret (tokenless uploads are rejected for
+      # protected branches). Upload failures are surfaced on the step but do
+      # not fail the job.
       - name: Upload Code Coverage
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        continue-on-error: true
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: androidplot-core/build/jacoco/jacoco.xml
+          fail_ci_if_error: true
+
+      - name: Upload Test and Lint Reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: Reports
+          path: |
+            **/build/reports/tests/
+            **/build/reports/lint-results-*.html
+          retention-days: 14
+          if-no-files-found: ignore
 
       - name: Upload Core Library AAR
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: Core Library
           path: androidplot-core/build/outputs/aar/*.aar
@@ -56,18 +92,8 @@ jobs:
 
       - name: Upload Demoapp APK
         if: github.ref_name == 'master'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: Demoapp APK
           path: demoapp/build/outputs/apk/release/*.apk
           retention-days: 30
-
-      # TODO: OSSRH was decommissioned; this must move to the Central Publisher Portal.
-      - name: Stage for Maven Central
-        if: github.ref_name == 'master'
-        env:
-          OSSRH_ACTOR: ${{ secrets.OSSRH_ACTOR }}
-          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
-          SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
-          SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
-        run: ./gradlew publish

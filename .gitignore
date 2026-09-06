@@ -14,3 +14,7 @@ DemoApp/gen
 DemoApp/target
 .idea
 **/R.java
+
+# CI-provisioned credentials
+demoapp/keystore.jks
+demoapp/publisher.json

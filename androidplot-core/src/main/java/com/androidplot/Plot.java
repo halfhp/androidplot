@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import androidx.annotation.NonNull;
 
 /**
  * Base class for all Plot implementations.
@@ -56,6 +57,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     private static final int DEFAULT_TITLE_WIDGET_TEXT_SIZE_SP = 10;
 
+    @NonNull
     public DisplayDimensions getDisplayDimensions() {
         return displayDims;
     }
@@ -64,6 +66,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * Used for caching renderer instances.  Note that once a renderer is initialized it remains initialized
      * for the life of the application; does not and should not be destroyed until the application exits.
      */
+    @NonNull
     public HashMap<Class<? extends RendererType>, RendererType> getRenderers() {
         return renderers;
     }
@@ -71,11 +74,12 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      * Associates lists series and getFormatter pairs with the class of the Renderer used to render them.
      */
+    @NonNull
     public RegistryType getRegistry() {
         return registry;
     }
 
-    public void setRegistry(RegistryType registry) {
+    public void setRegistry(@NonNull RegistryType registry) {
         this.registry = registry;
         for(BundleType bundle : registry.getSeriesAndFormatterList()) {
             attachSeries(bundle.getSeries(), bundle.getFormatter());
@@ -86,17 +90,19 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      *
      * @return A new instance of RegistryType
      */
+    @NonNull
     protected abstract RegistryType getRegistryInstance();
 
+    @NonNull
     public TextLabelWidget getTitle() {
         return title;
     }
 
-    public void setTitle(TextLabelWidget title) {
+    public void setTitle(@NonNull TextLabelWidget title) {
         this.title = title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@Nullable String title) {
         getTitle().setText(title);
     }
 
@@ -371,7 +377,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param context
      * @param title The display title of this Plot.
      */
-    public Plot(Context context, String title) {
+    public Plot(@NonNull Context context, @Nullable String title) {
         this(context, title, RenderMode.USE_MAIN_THREAD);
     }
 
@@ -380,7 +386,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param context
      * @param title The display title of this Plot.
      */
-    public Plot(Context context, String title, RenderMode mode) {
+    public Plot(@NonNull Context context, @Nullable String title, @NonNull RenderMode mode) {
         super(context);
         this.renderMode = mode;
         init(context, null, 0);
@@ -403,7 +409,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param context
      * @param attrs
      */
-    public Plot(Context context, AttributeSet attrs) {
+    public Plot(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs, 0);
     }
@@ -424,7 +430,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param attrs
      * @param defStyle
      */
-    public Plot(Context context, AttributeSet attrs, int defStyle) {
+    public Plot(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs, defStyle);
     }
@@ -446,7 +452,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * Attempting to reassign the render mode at runtime will result in unexpected behavior.
      * @param mode
      */
-    public void setRenderMode(RenderMode mode) {
+    public void setRenderMode(@NonNull RenderMode mode) {
         this.renderMode = mode;
     }
 
@@ -466,7 +472,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         // nothing to do by default
     }
 
-    protected final void init(Context context, AttributeSet attrs, int defStyle) {
+    protected final void init(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
         PixelUtils.init(context);
         layoutManager = new LayoutManager();
         title = new TextLabelWidget(layoutManager, new Size(25,
@@ -513,7 +519,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * not attempt to apply the Plot.title styleable attribute etc.  Do not invoke recycle() on attrs.
      * @param attrs Attrs for the derived class.
      */
-    protected abstract void processAttrs(TypedArray attrs);
+    protected abstract void processAttrs(@NonNull TypedArray attrs);
 
     /**
      * Apply base class attrs.
@@ -634,29 +640,31 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
     }
 
+    @NonNull
     public RenderMode getRenderMode() {
         return renderMode;
     }
 
-    public synchronized boolean addListener(PlotListener listener) {
+    public synchronized boolean addListener(@NonNull PlotListener listener) {
         return !listeners.contains(listener) && listeners.add(listener);
     }
 
-    public synchronized boolean removeListener(PlotListener listener) {
+    public synchronized boolean removeListener(@NonNull PlotListener listener) {
         return listeners.remove(listener);
     }
 
+    @NonNull
     protected List<PlotListener> getListeners() {
         return listeners;
     }
 
-    protected void notifyListenersBeforeDraw(Canvas canvas) {
+    protected void notifyListenersBeforeDraw(@NonNull Canvas canvas) {
         for (PlotListener listener : listeners) {
             listener.onBeforeDraw(this, canvas);
         }
     }
 
-    protected void notifyListenersAfterDraw(Canvas canvas) {
+    protected void notifyListenersAfterDraw(@NonNull Canvas canvas) {
         for (PlotListener listener : listeners) {
             listener.onAfterDraw(this, canvas);
         }
@@ -671,7 +679,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @return True if all series were successfully added, false otherwise.
      * @since 0.9.7
      */
-    public synchronized boolean addSeries(FormatterType formatter, SeriesType... series) {
+    public synchronized boolean addSeries(@NonNull FormatterType formatter, @NonNull SeriesType... series) {
         for(SeriesType s : series) {
             if(!addSeries(s, formatter)) {
                 return false;
@@ -686,13 +694,13 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param formatter
      * @return True if the series was added or false if the series / formatter pair already exists in the registry.
      */
-    public synchronized boolean addSeries(SeriesType series, FormatterType formatter) {
+    public synchronized boolean addSeries(@NonNull SeriesType series, @NonNull FormatterType formatter) {
         final boolean result = getRegistry().add(series, formatter);
         attachSeries(series, formatter);
         return result;
     }
 
-    protected void attachSeries(SeriesType series, FormatterType formatter) {
+    protected void attachSeries(@NonNull SeriesType series, @NonNull FormatterType formatter) {
 
         Class rendererClass = formatter.getRendererClass();
 
@@ -713,7 +721,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param rendererClass
      * @return The {@link SeriesBundle} that matches the series and rendererClass params, or null if one is not found.
      */
-    protected SeriesBundle<SeriesType, FormatterType> getSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
+    @Nullable
+    protected SeriesBundle<SeriesType, FormatterType> getSeries(@NonNull SeriesType series, @NonNull Class<? extends RendererType> rendererClass) {
         for(SeriesBundle<SeriesType, FormatterType> thisPair : getSeries(series)) {
             if(thisPair.getFormatter().getRendererClass() == rendererClass) {
                 return thisPair;
@@ -727,7 +736,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param series
      * @return A List of {@link SeriesBundle} instances that reference series.
      */
-    protected List<SeriesBundle<SeriesType, FormatterType>> getSeries(SeriesType series) {
+    @NonNull
+    protected List<SeriesBundle<SeriesType, FormatterType>> getSeries(@NonNull SeriesType series) {
         return getRegistry().get(series);
     }
 
@@ -739,7 +749,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param rendererClass
      * @return True if anything was removed, false otherwise
      */
-    public synchronized boolean removeSeries(SeriesType series, Class<? extends RendererType> rendererClass) {
+    public synchronized boolean removeSeries(@NonNull SeriesType series, @NonNull Class<? extends RendererType> rendererClass) {
 
         List removedItems = getRegistry().remove(series, rendererClass);
 
@@ -755,7 +765,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * Remove all occurrences of series regardless of the associated Renderer.
      * @param series
      */
-    public synchronized void removeSeries(SeriesType series) {
+    public synchronized void removeSeries(@NonNull SeriesType series) {
         // if series implements PlotListener, remove it from listeners:
         if (series instanceof PlotListener) {
             removeListener((PlotListener) series);
@@ -786,14 +796,17 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param rendererClass
      * @return The Formatter instance corresponding to the specified  series / renderer pair.
      */
-    public FormatterType getFormatter(SeriesType series, Class<? extends RendererType> rendererClass) {
+    @NonNull
+    public FormatterType getFormatter(@NonNull SeriesType series, @NonNull Class<? extends RendererType> rendererClass) {
         return getSeries(series, rendererClass).getFormatter();
     }
 
-    public <T extends RendererType> T getRenderer(Class<T> rendererClass) {
+    @Nullable
+    public <T extends RendererType> T getRenderer(@NonNull Class<T> rendererClass) {
         return (T) getRenderers().get(rendererClass);
     }
 
+    @NonNull
     public List<RendererType> getRendererList() {
         return new ArrayList<>(getRenderers().values());
     }
@@ -831,7 +844,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     @Override
-    public synchronized void layout(final DisplayDimensions dims) {
+    public synchronized void layout(@NonNull final DisplayDimensions dims) {
         this.displayDims = dims;
         layoutManager.layout(displayDims);
     }
@@ -990,7 +1003,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * @param radiusX Sets the X radius for BorderStyle.ROUNDED.  Use null for all other styles.
      * @param radiusY Sets the Y radius for BorderStyle.ROUNDED.  Use null for all other styles.
      */
-    public void setBorderStyle(BorderStyle style, Float radiusX, Float radiusY) {
+    public void setBorderStyle(@NonNull BorderStyle style, @Nullable Float radiusX, @Nullable Float radiusY) {
         if (style == Plot.BorderStyle.ROUNDED) {
             if (radiusX == null || radiusY == null){
                 throw new IllegalArgumentException("radiusX and radiusY cannot be null when using BorderStyle.ROUNDED");
@@ -1005,15 +1018,15 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * Draws the plot's outer border.
      * @param canvas
      */
-    protected void drawBorder(Canvas canvas, RectF dims) {
+    protected void drawBorder(@NonNull Canvas canvas, @NonNull RectF dims) {
         drawRect(canvas, dims, borderPaint);
     }
 
-    protected void drawBackground(Canvas canvas, RectF dims) {
+    protected void drawBackground(@NonNull Canvas canvas, @NonNull RectF dims) {
         drawRect(canvas, dims, backgroundPaint);
     }
 
-    protected void drawRect(Canvas canvas, RectF dims, Paint paint) {
+    protected void drawRect(@NonNull Canvas canvas, @NonNull RectF dims, @NonNull Paint paint) {
         switch (borderStyle) {
             case ROUNDED:
                 canvas.drawRoundRect(dims, borderRadiusX, borderRadiusY, paint);
@@ -1025,19 +1038,21 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         }
     }
 
+    @NonNull
     public LayoutManager getLayoutManager() {
         return layoutManager;
     }
 
-    public void setLayoutManager(LayoutManager layoutManager) {
+    public void setLayoutManager(@NonNull LayoutManager layoutManager) {
         this.layoutManager = layoutManager;
     }
 
+    @Nullable
     public Paint getBackgroundPaint() {
         return backgroundPaint;
     }
 
-    public void setBackgroundPaint(Paint backgroundPaint) {
+    public void setBackgroundPaint(@Nullable Paint backgroundPaint) {
         this.backgroundPaint = backgroundPaint;
     }
 
@@ -1133,6 +1148,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         boxModel.setPaddingRight(plotPaddingRight);
     }
 
+    @Nullable
     public Paint getBorderPaint() {
         return borderPaint;
     }
@@ -1143,7 +1159,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      * Paint.Style.STROKE.
      * @param borderPaint
      */
-    public void setBorderPaint(Paint borderPaint) {
+    public void setBorderPaint(@Nullable Paint borderPaint) {
         if(borderPaint == null) {
             this.borderPaint = null;
         } else {

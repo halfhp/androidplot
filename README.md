@@ -21,7 +21,7 @@ If you enjoy the lib, please [rate us on codix.io](https://codix.io/gh/repo/half
 * Dynamic plots
 * Pan & Zoom
 * Background-thread rendering
-* Large datasets (automatic downsampling)
+* Large datasets (zoom-aware downsampling)
 * Value markers & shaded regions
 * XML styling & custom renderers
 

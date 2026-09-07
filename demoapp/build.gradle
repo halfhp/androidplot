@@ -15,6 +15,11 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
+
+    // Robolectric tests exercising every example activity; same versions as androidplot-core.
+    // The Robolectric SDK level is pinned in src/test/resources/robolectric.properties.
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.robolectric:robolectric:4.16.1"
 }
 
 kotlin {
@@ -84,6 +89,13 @@ android {
             debuggable = true
         }
     }
+    testOptions {
+        unitTests {
+            // lets Robolectric inflate the example layouts and read the manifest
+            includeAndroidResources = true
+        }
+    }
+
     lint {
         abortOnError = false
     }

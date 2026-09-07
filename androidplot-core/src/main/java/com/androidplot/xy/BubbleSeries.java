@@ -2,6 +2,8 @@
 package com.androidplot.xy;
 
 import java.util.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Created by halfhp on 9/17/16.
@@ -17,7 +19,7 @@ public class BubbleSeries implements XYSeries {
      *
      * @param interleavedValues Interleaved values ordered as x, y, z; total size must be a multiple of 3.
      */
-    public BubbleSeries(Number... interleavedValues) {
+    public BubbleSeries(@NonNull Number... interleavedValues) {
         if(interleavedValues == null || interleavedValues.length % 3 > 0) {
             throw new RuntimeException("BubbleSeries interleave array length must be a non-zero multiple of 3.");
         }
@@ -32,7 +34,7 @@ public class BubbleSeries implements XYSeries {
         }
     }
 
-    public BubbleSeries(List<Number> yVals, List<Number> zVals, String title) {
+    public BubbleSeries(@NonNull List<Number> yVals, @NonNull List<Number> zVals, @Nullable String title) {
         this.yVals = yVals;
         this.zVals = zVals;
         this.title = title;
@@ -43,7 +45,7 @@ public class BubbleSeries implements XYSeries {
         }
     }
 
-    public BubbleSeries(List<Number> xVals, List<Number> yVals, List<Number> zVals, String title) {
+    public BubbleSeries(@NonNull List<Number> xVals, @NonNull List<Number> yVals, @NonNull List<Number> zVals, @Nullable String title) {
         this.xVals = xVals;
         this.yVals = yVals;
         this.zVals = zVals;
@@ -51,6 +53,7 @@ public class BubbleSeries implements XYSeries {
     }
 
     @Override
+    @Nullable
     public String getTitle() {
         return title;
     }
@@ -61,19 +64,23 @@ public class BubbleSeries implements XYSeries {
     }
 
     @Override
+    @Nullable
     public Number getX(int index) {
         return xVals.get(index);
     }
 
     @Override
+    @Nullable
     public Number getY(int index) {
         return yVals.get(index);
     }
 
+    @Nullable
     public Number getZ(int index) {
         return zVals.get(index);
     }
 
+    @NonNull
     public List<Number> getZVals() {
         return zVals;
     }

@@ -4,6 +4,8 @@
 package com.androidplot;
 
 import com.androidplot.util.FastNumber;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * A one dimensional region represented by a starting and ending value.
@@ -17,7 +19,8 @@ public class Region {
 
     public Region() {}
 
-    public static Region withDefaults(Region defaults) {
+    @NonNull
+    public static Region withDefaults(@NonNull Region defaults) {
         if(defaults == null || !defaults.isDefined()) {
             throw new IllegalArgumentException("When specifying default min and max must both be non-null values");
         }
@@ -33,7 +36,7 @@ public class Region {
      * relative to its position (null v1 = negative infinity, null v2 = positive infinity) and
      * is never reordered.
      */
-    public Region(Number v1, Number v2) {
+    public Region(@Nullable Number v1, @Nullable Number v2) {
         if (v1 != null && v2 != null && v1.doubleValue() > v2.doubleValue()) {
             this.setMin(v2);
             this.setMax(v1);
@@ -43,7 +46,7 @@ public class Region {
         }
     }
 
-    public void setMinMax(Region region) {
+    public void setMinMax(@NonNull Region region) {
         setMin(region.getMin());
         setMax(region.getMax());
     }
@@ -55,10 +58,12 @@ public class Region {
      * @return The distance between val1 and val2 or null if either parameters are null.
      * @since 0.9.7
      */
-    public static Number measure(Number v1, Number v2) {
+    @Nullable
+    public static Number measure(@Nullable Number v1, @Nullable Number v2) {
         return new Region(v1, v2).length();
     }
 
+    @Nullable
     public Number length() {
         if(cachedLength == null) {
             Number l = getMax() == null || getMin() == null ?
@@ -75,11 +80,11 @@ public class Region {
      * @param value
      * @return
      */
-    public boolean contains(Number value) {
+    public boolean contains(@NonNull Number value) {
         return value.doubleValue() >= getMin().doubleValue() && value.doubleValue() <= getMax().doubleValue();
     }
 
-    public boolean intersects(Region region) {
+    public boolean intersects(@NonNull Region region) {
         return intersects(region.getMin(), region.getMax());
     }
 
@@ -87,6 +92,7 @@ public class Region {
      *
      * @return Middle value within this region
      */
+    @NonNull
     public Number center() {
         return getMax().doubleValue() - (length().doubleValue() / 2);
     }
@@ -98,11 +104,13 @@ public class Region {
      * @param region2
      * @return
      */
-    public Number transform(double value, Region region2) {
+    @NonNull
+    public Number transform(double value, @NonNull Region region2) {
         return transform(value, region2, false);
     }
 
-    public Number transform(double value, Region region2, boolean flip) {
+    @NonNull
+    public Number transform(double value, @NonNull Region region2, boolean flip) {
         return transform(value, region2.getMin().doubleValue(), region2.getMax().doubleValue(), flip);
     }
 
@@ -125,7 +133,8 @@ public class Region {
         }
     }
 
-    public Number ratio(Region r2) {
+    @NonNull
+    public Number ratio(@NonNull Region r2) {
         return ratio(r2.getMin().doubleValue(), r2.getMax().doubleValue());
     }
 
@@ -140,7 +149,7 @@ public class Region {
     }
 
 
-    public void union(Number value) {
+    public void union(@Nullable Number value) {
         if(value == null) {
             return;
         }
@@ -163,7 +172,7 @@ public class Region {
      * The result of a union will always be an equal or larger size region.
      * @param input
      */
-    public void union(Region input) {
+    public void union(@NonNull Region input) {
         union(input.getMin());
         union(input.getMax());
     }
@@ -172,7 +181,7 @@ public class Region {
      * The result of an intersect will always be an equal or smaller size region.
      * @param input
      */
-    public void intersect(Region input) {
+    public void intersect(@NonNull Region input) {
         if(getMin().doubleValue() < input.getMin().doubleValue()) {
             setMin(input.getMin());
         }
@@ -190,7 +199,7 @@ public class Region {
      * @param line2Max
      * @return
      */
-    public  boolean intersects(Number line2Min, Number line2Max) {
+    public  boolean intersects(@Nullable Number line2Min, @Nullable Number line2Max) {
         final double min1 = getMin() == null ? Double.NEGATIVE_INFINITY : getMin().doubleValue();
         final double max1 = getMax() == null ? Double.POSITIVE_INFINITY : getMax().doubleValue();
         final double min2 = line2Min == null ? Double.NEGATIVE_INFINITY : line2Min.doubleValue();
@@ -207,11 +216,12 @@ public class Region {
         return min != null;
     }
 
+    @Nullable
     public Number getMin() {
         return isMinSet() ? min : defaults.min;
     }
 
-    public void setMin(Number min) {
+    public void setMin(@Nullable Number min) {
         cachedLength = null;
         if(min == null) {
             if(defaults == null) {
@@ -229,11 +239,12 @@ public class Region {
         return max != null;
     }
 
+    @Nullable
     public Number getMax() {
         return isMaxSet() ? max : defaults.max;
     }
 
-    public void setMax(Number max) {
+    public void setMax(@Nullable Number max) {
         cachedLength = null;
         if(max == null) {
             if(defaults == null) {

@@ -23,7 +23,8 @@ public class FastNumber extends Number {
      * @param number
      * @return
      */
-    public static FastNumber orNull(@NonNull Number number) {
+    @Nullable
+    public static FastNumber orNull(@Nullable Number number) {
         if(number == null) {
             return null;
         } else {

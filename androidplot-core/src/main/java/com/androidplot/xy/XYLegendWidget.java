@@ -24,10 +24,10 @@ public class XYLegendWidget extends LegendWidget<XYLegendItem> {
 
     private XYPlot plot;
 
-    public XYLegendWidget(LayoutManager layoutManager, XYPlot plot,
-                          Size widgetSize,
-                          TableModel tableModel,
-                          Size iconSize) {
+    public XYLegendWidget(@NonNull LayoutManager layoutManager, @NonNull XYPlot plot,
+                          @NonNull Size widgetSize,
+                          @NonNull TableModel tableModel,
+                          @NonNull Size iconSize) {
         super(tableModel, layoutManager, widgetSize, iconSize);
         this.plot = plot;
 
@@ -47,7 +47,7 @@ public class XYLegendWidget extends LegendWidget<XYLegendItem> {
         });
     }
 
-    protected void drawRegionLegendIcon(Canvas canvas, RectF rect, XYRegionFormatter formatter) {
+    protected void drawRegionLegendIcon(@NonNull Canvas canvas, @NonNull RectF rect, @NonNull XYRegionFormatter formatter) {
         canvas.drawRect(rect, formatter.getPaint());
     }
 
@@ -67,6 +67,7 @@ public class XYLegendWidget extends LegendWidget<XYLegendItem> {
     }
 
     @Override
+    @NonNull
     protected List<XYLegendItem> getLegendItems() {
         final ArrayList<XYLegendItem> items = new ArrayList<>();
         for (SeriesBundle<XYSeries, XYSeriesFormatter> sfPair : plot.getRegistry().getLegendEnabledItems()) {

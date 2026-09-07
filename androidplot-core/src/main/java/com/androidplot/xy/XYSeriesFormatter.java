@@ -7,6 +7,8 @@ import android.content.Context;
 import com.androidplot.ui.Formatter;
 import com.androidplot.util.LayerHash;
 import com.androidplot.util.Layerable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFormatter> extends Formatter<XYPlot> {
 
@@ -28,15 +30,15 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
 
     public XYSeriesFormatter() {}
 
-    public XYSeriesFormatter(Context context, int xmlCfgId) {
+    public XYSeriesFormatter(@NonNull Context context, int xmlCfgId) {
         super(context, xmlCfgId);
     }
 
-    public void addRegion(RectRegion region, XYRegionFormatterType regionFormatter) {
+    public void addRegion(@NonNull RectRegion region, @NonNull XYRegionFormatterType regionFormatter) {
         regions.addToBottom(region, regionFormatter);
     }
 
-    public void removeRegion(RectRegion region) {
+    public void removeRegion(@NonNull RectRegion region) {
         regions.remove(region);
     }
 
@@ -44,6 +46,7 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
      * Can be used to access z-index manipulation methods of ZIndexable.
      * @return
      */
+    @NonNull
     public Layerable<RectRegion> getRegions() {
         return regions;
     }
@@ -52,16 +55,18 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
      * @param region
      * @return
      */
-    public XYRegionFormatterType getRegionFormatter(RectRegion region) {
+    @Nullable
+    public XYRegionFormatterType getRegionFormatter(@NonNull RectRegion region) {
         return regions.get(region);
     }
 
 
+    @Nullable
     public PointLabeler getPointLabeler() {
         return pointLabeler;
     }
 
-    public void setPointLabeler(PointLabeler pointLabeler) {
+    public void setPointLabeler(@Nullable PointLabeler pointLabeler) {
         this.pointLabeler = pointLabeler;
     }
 
@@ -69,6 +74,7 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
         return pointLabelFormatter != null;
     }
 
+    @NonNull
     public PointLabelFormatter getPointLabelFormatter() {
         if(pointLabelFormatter == null) {
             pointLabelFormatter = new PointLabelFormatter();
@@ -76,7 +82,7 @@ public abstract class XYSeriesFormatter<XYRegionFormatterType extends XYRegionFo
         return pointLabelFormatter;
     }
 
-    public void setPointLabelFormatter(PointLabelFormatter pointLabelFormatter) {
+    public void setPointLabelFormatter(@Nullable PointLabelFormatter pointLabelFormatter) {
         this.pointLabelFormatter = pointLabelFormatter;
     }
 }

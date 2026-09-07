@@ -2,9 +2,11 @@
 
 package com.androidplot.ui;
 
+import androidx.annotation.NonNull;
+
 public class HorizontalPosition extends PositionMetric<HorizontalPositioning> {
 
-    public HorizontalPosition(float value, HorizontalPositioning layoutStyle) {
+    public HorizontalPosition(float value, @NonNull HorizontalPositioning layoutStyle) {
         super(value, layoutStyle);
         validatePair(value, layoutStyle);
     }
@@ -13,7 +15,7 @@ public class HorizontalPosition extends PositionMetric<HorizontalPositioning> {
      * Throws IllegalArgumentException if there is a problem.
      * @param value
      */
-    protected void validatePair(float value, HorizontalPositioning layoutStyle) {
+    protected void validatePair(float value, @NonNull HorizontalPositioning layoutStyle) {
         switch(layoutStyle) {
             case ABSOLUTE_FROM_LEFT:
             case ABSOLUTE_FROM_RIGHT:
@@ -48,7 +50,7 @@ public class HorizontalPosition extends PositionMetric<HorizontalPositioning> {
     }
 
     @Override
-    public void setLayoutType(HorizontalPositioning layoutType) {
+    public void setLayoutType(@NonNull HorizontalPositioning layoutType) {
         super.setLayoutType(layoutType);
     }
 }

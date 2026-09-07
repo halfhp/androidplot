@@ -2,6 +2,7 @@
 package com.androidplot.pie;
 
 import com.androidplot.ui.*;
+import androidx.annotation.NonNull;
 
 /**
  * Manages the association between a given {@link Segment} and the {@link SegmentFormatter} that
@@ -9,7 +10,7 @@ import com.androidplot.ui.*;
  */
 public class SegmentBundle extends SeriesBundle<Segment, SegmentFormatter> {
 
-    public SegmentBundle(Segment series, SegmentFormatter formatter) {
+    public SegmentBundle(@NonNull Segment series, @NonNull SegmentFormatter formatter) {
         super(series, formatter);
     }
 }

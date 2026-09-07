@@ -11,6 +11,7 @@ import com.androidplot.util.*;
 
 import java.io.Serializable;
 import java.util.*;
+import androidx.annotation.Nullable;
 
 /**
  * Enables basic pan/zoom touch behavior for an {@link XYPlot}.
@@ -124,24 +125,24 @@ public class PanZoom implements View.OnTouchListener {
         private BoundaryMode rangeLowerBoundaryMode;
         private BoundaryMode rangeUpperBoundaryMode;
 
-        public void setDomainBoundaries(Number lowerBoundary, Number upperBoundary, BoundaryMode mode) {
+        public void setDomainBoundaries(@Nullable Number lowerBoundary, @Nullable Number upperBoundary, @Nullable BoundaryMode mode) {
             setDomainBoundaries(lowerBoundary, mode, upperBoundary, mode);
         }
 
-        public void setDomainBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode,
-                                        Number upperBoundary, BoundaryMode upperBoundaryMode) {
+        public void setDomainBoundaries(@Nullable Number lowerBoundary, @Nullable BoundaryMode lowerBoundaryMode,
+                                        @Nullable Number upperBoundary, @Nullable BoundaryMode upperBoundaryMode) {
             this.domainLowerBoundary = lowerBoundary;
             this.domainLowerBoundaryMode = lowerBoundaryMode;
             this.domainUpperBoundary = upperBoundary;
             this.domainUpperBoundaryMode = upperBoundaryMode;
         }
 
-        public void setRangeBoundaries(Number lowerBoundary, Number upperBoundary, BoundaryMode mode) {
+        public void setRangeBoundaries(@Nullable Number lowerBoundary, @Nullable Number upperBoundary, @Nullable BoundaryMode mode) {
             setRangeBoundaries(lowerBoundary, mode, upperBoundary, mode);
         }
 
-        public void setRangeBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode,
-                                       Number upperBoundary, BoundaryMode upperBoundaryMode) {
+        public void setRangeBoundaries(@Nullable Number lowerBoundary, @Nullable BoundaryMode lowerBoundaryMode,
+                                       @Nullable Number upperBoundary, @Nullable BoundaryMode upperBoundaryMode) {
             this.rangeLowerBoundary = lowerBoundary;
             this.rangeLowerBoundaryMode = lowerBoundaryMode;
             this.rangeUpperBoundary = upperBoundary;
@@ -184,7 +185,7 @@ public class PanZoom implements View.OnTouchListener {
         }
     }
 
-    protected PanZoom(@NonNull XYPlot plot, Pan pan, Zoom zoom) {
+    protected PanZoom(@NonNull XYPlot plot, @NonNull Pan pan, @NonNull Zoom zoom) {
         this.plot = plot;
         this.pan = pan;
         this.zoom = zoom;
@@ -192,7 +193,7 @@ public class PanZoom implements View.OnTouchListener {
     }
 
     // additional constructor not to break api
-    protected PanZoom(@NonNull XYPlot plot, Pan pan, Zoom zoom, ZoomLimit limit) {
+    protected PanZoom(@NonNull XYPlot plot, @NonNull Pan pan, @NonNull Zoom zoom, @NonNull ZoomLimit limit) {
         this.plot = plot;
         this.pan = pan;
         this.zoom = zoom;
@@ -204,6 +205,7 @@ public class PanZoom implements View.OnTouchListener {
      * panning / zooming that has taken place.  Suitable for persisting (eg. in an Activity's
      * saved instance state) and later restoring via {@link #setState(State)}.
      */
+    @NonNull
     public State getState() {
         final State state = new State();
         state.setDomainBoundaries(
@@ -223,11 +225,11 @@ public class PanZoom implements View.OnTouchListener {
         state.apply(plot);
     }
 
-    protected void adjustRangeBoundary(Number lower, Number upper,  BoundaryMode mode) {
+    protected void adjustRangeBoundary(@Nullable Number lower, @Nullable Number upper,  @NonNull BoundaryMode mode) {
         plot.setRangeBoundaries(lower, upper, mode);
     }
 
-    protected void adjustDomainBoundary(Number lower, Number upper, BoundaryMode mode) {
+    protected void adjustDomainBoundary(@Nullable Number lower, @Nullable Number upper, @NonNull BoundaryMode mode) {
         plot.setDomainBoundaries(lower, upper, mode);
     }
 
@@ -238,6 +240,7 @@ public class PanZoom implements View.OnTouchListener {
      * @param plot
      * @return
      */
+    @NonNull
     public static PanZoom attach(@NonNull XYPlot plot) {
         return attach(plot, Pan.BOTH, Zoom.SCALE);
     }
@@ -251,6 +254,7 @@ public class PanZoom implements View.OnTouchListener {
      * @param zoom
      * @return
      */
+    @NonNull
     public static PanZoom attach(@NonNull XYPlot plot, @NonNull Pan pan, @NonNull Zoom zoom) {
         return attach(plot,pan,zoom, ZoomLimit.OUTER);
     }
@@ -263,6 +267,7 @@ public class PanZoom implements View.OnTouchListener {
      * @param limit
      * @return
      */
+    @NonNull
     public static PanZoom attach(@NonNull XYPlot plot, @NonNull Pan pan, @NonNull Zoom zoom, @NonNull ZoomLimit limit) {
         PanZoom pz = new PanZoom(plot, pan, zoom, limit);
         plot.setOnTouchListener(pz);
@@ -327,6 +332,7 @@ public class PanZoom implements View.OnTouchListener {
      * @param secondFingerY
      * @return
      */
+    @NonNull
     protected RectF fingerDistance(float firstFingerX, float firstFingerY, float secondFingerX, float secondFingerY) {
         final float left = firstFingerX > secondFingerX ? secondFingerX : firstFingerX;
         final float right = firstFingerX > secondFingerX ? firstFingerX : secondFingerX;
@@ -340,7 +346,8 @@ public class PanZoom implements View.OnTouchListener {
      * @param evt
      * @return
      */
-    protected RectF fingerDistance(final MotionEvent evt) {
+    @NonNull
+    protected RectF fingerDistance(@NonNull final MotionEvent evt) {
         return fingerDistance(
                 evt.getX(FIRST_FINGER),
                 evt.getY(FIRST_FINGER),
@@ -348,7 +355,7 @@ public class PanZoom implements View.OnTouchListener {
                 evt.getY(SECOND_FINGER));
     }
 
-    protected void pan(final MotionEvent motionEvent) {
+    protected void pan(@NonNull final MotionEvent motionEvent) {
         if (pan == Pan.NONE) {
             return;
         }
@@ -369,7 +376,7 @@ public class PanZoom implements View.OnTouchListener {
         plot.redraw();
     }
 
-    protected void calculatePan(final PointF oldFirstFinger, Region bounds, final boolean horizontal) {
+    protected void calculatePan(@NonNull final PointF oldFirstFinger, @NonNull Region bounds, final boolean horizontal) {
         // all value-space arithmetic is done in double; float has too little precision for
         // large magnitude axes (ex. epoch millis) to register small finger movements.
         final Region current = horizontal ? plot.getBounds().getxRegion() : plot.getBounds().getyRegion();
@@ -421,7 +428,7 @@ public class PanZoom implements View.OnTouchListener {
                 && (!(scale > -0.001) || !(scale < 0.001));
     }
 
-    protected void zoom(final MotionEvent motionEvent) {
+    protected void zoom(@NonNull final MotionEvent motionEvent) {
         if (zoom == Zoom.NONE) {
             return;
         }
@@ -495,7 +502,7 @@ public class PanZoom implements View.OnTouchListener {
      * @param isHorizontal
      */
     @Deprecated
-    protected void calculateZoom(RectF newRect, float scale, boolean isHorizontal) {
+    protected void calculateZoom(@NonNull RectF newRect, float scale, boolean isHorizontal) {
         RectRegion result = new RectRegion(newRect.left, newRect.right, newRect.top, newRect.bottom);
         calculateZoom(result, scale, isHorizontal);
         if (isHorizontal) {
@@ -516,7 +523,7 @@ public class PanZoom implements View.OnTouchListener {
      * @param scale
      * @param isHorizontal
      */
-    protected void calculateZoom(RectRegion newRect, float scale, boolean isHorizontal) {
+    protected void calculateZoom(@NonNull RectRegion newRect, float scale, boolean isHorizontal) {
         final double calcMax;
         final double span;
         final RectRegion bounds = plot.getBounds();
@@ -577,30 +584,34 @@ public class PanZoom implements View.OnTouchListener {
         }
     }
 
+    @NonNull
     public Pan getPan() {
         return pan;
     }
 
-    public void setPan(Pan pan) {
+    public void setPan(@NonNull Pan pan) {
         this.pan = pan;
     }
 
+    @NonNull
     public Zoom getZoom() {
         return zoom;
     }
 
-    public void setZoom(Zoom zoom) {
+    public void setZoom(@NonNull Zoom zoom) {
         this.zoom = zoom;
     }
 
+    @NonNull
     public ZoomLimit getZoomLimit() {
         return zoomLimit;
     }
 
-    public void setZoomLimit(ZoomLimit zoomLimit) {
+    public void setZoomLimit(@NonNull ZoomLimit zoomLimit) {
         this.zoomLimit = zoomLimit;
     }
 
+    @Nullable
     public View.OnTouchListener getDelegate() {
         return delegate;
     }
@@ -612,7 +623,7 @@ public class PanZoom implements View.OnTouchListener {
      * would when attaching directly to an instance of {@link View}.
      * @param delegate
      */
-    public void setDelegate(View.OnTouchListener delegate) {
+    public void setDelegate(@Nullable View.OnTouchListener delegate) {
         this.delegate = delegate;
     }
 
@@ -622,11 +633,12 @@ public class PanZoom implements View.OnTouchListener {
         this.setFingersRect(null);
     }
 
+    @Nullable
     protected RectF getFingersRect() {
         return fingersRect;
     }
 
-    protected void setFingersRect(RectF fingersRect) {
+    protected void setFingersRect(@Nullable RectF fingersRect) {
         this.fingersRect = fingersRect;
     }
 }

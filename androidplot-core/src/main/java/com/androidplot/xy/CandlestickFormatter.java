@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.PixelUtils;
+import androidx.annotation.NonNull;
 
 /**
  * Format for drawing a value using {@link CandlestickRenderer}.
@@ -36,6 +37,7 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
         TRIANGULAR
     }
 
+    @NonNull
     protected static Paint getDefaultFillPaint(int color) {
         Paint p = new Paint();
         p.setStyle(Paint.Style.FILL);
@@ -43,6 +45,7 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
         return p;
     }
 
+    @NonNull
     protected static Paint getDefaultStrokePaint(int color) {
         Paint p = new Paint();
         p.setStyle(Paint.Style.STROKE);
@@ -52,7 +55,7 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
         return p;
     }
 
-    public CandlestickFormatter(Context context, int xmlCfgId) {
+    public CandlestickFormatter(@NonNull Context context, int xmlCfgId) {
         this();
         configure(context, xmlCfgId);
     }
@@ -68,9 +71,9 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
                 BodyStyle.SQUARE);
     }
 
-    public CandlestickFormatter(Paint wickPaint, Paint risingBodyFillPaint, Paint fallingBodyFillPaint,
-                                Paint risingBodyStrokePaint, Paint fallingBodyStrokePaint,
-                                Paint upperCapPaint, Paint lowerCapPaint, BodyStyle bodyStyle) {
+    public CandlestickFormatter(@NonNull Paint wickPaint, @NonNull Paint risingBodyFillPaint, @NonNull Paint fallingBodyFillPaint,
+                                @NonNull Paint risingBodyStrokePaint, @NonNull Paint fallingBodyStrokePaint,
+                                @NonNull Paint upperCapPaint, @NonNull Paint lowerCapPaint, @NonNull BodyStyle bodyStyle) {
         setWickPaint(wickPaint);
         setRisingBodyFillPaint(risingBodyFillPaint);
         setFallingBodyFillPaint(fallingBodyFillPaint);
@@ -82,52 +85,59 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
     }
 
     @Override
+    @NonNull
     public Class<? extends SeriesRenderer> getRendererClass() {
         return CandlestickRenderer.class;
     }
 
     @Override
-    public SeriesRenderer doGetRendererInstance(XYPlot plot) {
+    @NonNull
+    public SeriesRenderer doGetRendererInstance(@NonNull XYPlot plot) {
         return new CandlestickRenderer(plot);
     }
 
+    @NonNull
     public Paint getWickPaint() {
         return wickPaint;
     }
 
-    public void setWickPaint(Paint wickPaint) {
+    public void setWickPaint(@NonNull Paint wickPaint) {
         this.wickPaint = wickPaint;
     }
 
+    @NonNull
     public Paint getRisingBodyFillPaint() {
         return risingBodyFillPaint;
     }
 
-    public void setRisingBodyFillPaint(Paint risingBodyFillPaint) {
+    public void setRisingBodyFillPaint(@NonNull Paint risingBodyFillPaint) {
         this.risingBodyFillPaint = risingBodyFillPaint;
     }
 
+    @NonNull
     public Paint getRisingBodyStrokePaint() {
         return risingBodyStrokePaint;
     }
 
-    public void setRisingBodyStrokePaint(Paint risingBodyStrokePaint) {
+    public void setRisingBodyStrokePaint(@NonNull Paint risingBodyStrokePaint) {
         this.risingBodyStrokePaint = risingBodyStrokePaint;
     }
 
+    @NonNull
     public Paint getUpperCapPaint() {
         return upperCapPaint;
     }
 
-    public void setUpperCapPaint(Paint upperCapPaint) {
+    public void setUpperCapPaint(@NonNull Paint upperCapPaint) {
         this.upperCapPaint = upperCapPaint;
     }
 
+    @NonNull
     public Paint getLowerCapPaint() {
         return lowerCapPaint;
     }
 
-    public void setLowerCapPaint(Paint lowerCapPaint) {
+    public void setLowerCapPaint(@NonNull Paint lowerCapPaint) {
         this.lowerCapPaint = lowerCapPaint;
     }
 
@@ -155,27 +165,30 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
         this.upperCapWidth = upperCapWidth;
     }
 
+    @NonNull
     public Paint getFallingBodyFillPaint() {
         return fallingBodyFillPaint;
     }
 
-    public void setFallingBodyFillPaint(Paint fallingBodyFillPaint) {
+    public void setFallingBodyFillPaint(@NonNull Paint fallingBodyFillPaint) {
         this.fallingBodyFillPaint = fallingBodyFillPaint;
     }
 
+    @NonNull
     public Paint getFallingBodyStrokePaint() {
         return fallingBodyStrokePaint;
     }
 
-    public void setFallingBodyStrokePaint(Paint fallingBodyStrokePaint) {
+    public void setFallingBodyStrokePaint(@NonNull Paint fallingBodyStrokePaint) {
         this.fallingBodyStrokePaint = fallingBodyStrokePaint;
     }
 
+    @NonNull
     public BodyStyle getBodyStyle() {
         return bodyStyle;
     }
 
-    public void setBodyStyle(BodyStyle bodyStyle) {
+    public void setBodyStyle(@NonNull BodyStyle bodyStyle) {
         this.bodyStyle = bodyStyle;
     }
 
@@ -183,7 +196,7 @@ public class CandlestickFormatter extends XYSeriesFormatter<XYRegionFormatter> {
      * Convenience method to set caps and wick to a single color in one call.
      * @param paint
      */
-    public void setCapAndWickPaint(Paint paint) {
+    public void setCapAndWickPaint(@NonNull Paint paint) {
         setUpperCapPaint(paint);
         setLowerCapPaint(paint);
         setWickPaint(paint);

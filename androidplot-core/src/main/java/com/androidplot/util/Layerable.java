@@ -3,6 +3,7 @@
 package com.androidplot.util;
 
 import java.util.List;
+import androidx.annotation.NonNull;
 
 /**
  * Encapsulates the concept of "layerable" objects;  Each object is stored above or below each other object and may
@@ -19,7 +20,7 @@ public interface Layerable<ElementType> {
      * @param element
      * @return
      */
-    boolean moveToTop(ElementType element);
+    boolean moveToTop(@NonNull ElementType element);
 
 
     /**
@@ -28,7 +29,7 @@ public interface Layerable<ElementType> {
      * @param reference
      * @return
      */
-    boolean moveAbove(ElementType objectToMove, ElementType reference);
+    boolean moveAbove(@NonNull ElementType objectToMove, @NonNull ElementType reference);
 
 
     /**
@@ -38,14 +39,14 @@ public interface Layerable<ElementType> {
      * @param reference
      * @return
      */
-    boolean moveBeneath(ElementType objectToMove, ElementType reference);
+    boolean moveBeneath(@NonNull ElementType objectToMove, @NonNull ElementType reference);
 
     /**
      * Move beneath all other elements
      * @param key
      * @return
      */
-    boolean moveToBottom(ElementType key);
+    boolean moveToBottom(@NonNull ElementType key);
 
 
     /**
@@ -53,14 +54,15 @@ public interface Layerable<ElementType> {
      * @param key
      * @return
      */
-    boolean moveUp(ElementType key);
+    boolean moveUp(@NonNull ElementType key);
 
     /**
      * Move down by one element
      * @param key
      * @return
      */
-    boolean moveDown(ElementType key);
+    boolean moveDown(@NonNull ElementType key);
 
+    @NonNull
     List<ElementType> elements();
 }

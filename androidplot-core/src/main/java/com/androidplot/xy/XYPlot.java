@@ -29,6 +29,7 @@ import com.androidplot.util.SeriesUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import androidx.annotation.Nullable;
 
 /**
  * A View to graphically display x/y coordinates.
@@ -120,19 +121,19 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         Bar
     }
 
-    public XYPlot(Context context, String title) {
+    public XYPlot(@NonNull Context context, @Nullable String title) {
         super(context, title);
     }
 
-    public XYPlot(Context context, String title, RenderMode mode) {
+    public XYPlot(@NonNull Context context, @Nullable String title, @NonNull RenderMode mode) {
         super(context, title, mode);
     }
 
-    public XYPlot(Context context, AttributeSet attributes) {
+    public XYPlot(@NonNull Context context, @Nullable AttributeSet attributes) {
         super(context, attributes);
     }
 
-    public XYPlot(Context context, AttributeSet attrs, int defStyle) {
+    public XYPlot(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
     }
@@ -268,7 +269,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
     }
 
     @Override
-    protected void processAttrs(TypedArray attrs) {
+    protected void processAttrs(@NonNull TypedArray attrs) {
         this. previewMode = PreviewMode.values()[attrs.getInt(
                 R.styleable.xy_XYPlot_previewMode, PreviewMode.LineAndPoint.ordinal())];
 
@@ -334,7 +335,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
     }
 
     @Override
-    protected void notifyListenersBeforeDraw(Canvas canvas) {
+    protected void notifyListenersBeforeDraw(@NonNull Canvas canvas) {
         super.notifyListenersBeforeDraw(canvas);
 
         calculateMinMaxVals();
@@ -362,11 +363,11 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param point
      * @return
      */
-    public boolean containsPoint(PointF point) {
+    public boolean containsPoint(@NonNull PointF point) {
         return containsPoint(point.x, point.y);
     }
 
-    public void setCursorPosition(PointF point) {
+    public void setCursorPosition(@NonNull PointF point) {
         getGraph().setCursorPosition(point);
     }
 
@@ -381,6 +382,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @deprecated Use {@link #screenToSeriesY(float)}.
      */
     @Deprecated
+    @Nullable
     public Number getXVal(float xPix) {
         return getGraph().screenToSeriesX(xPix);
     }
@@ -391,6 +393,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @return
      * @deprecated Use {@link #screenToSeriesY(float)}.
      */
+    @Nullable
     public Number getYVal(float yPix) {
         return getGraph().screenToSeriesY(yPix);
     }
@@ -402,7 +405,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @deprecated Use {@link #screenToSeriesY(float)}.
      */
     @Deprecated
-    public Number getYVal(PointF point) {
+    @Nullable
+    public Number getYVal(@NonNull PointF point) {
         return getGraph().screenToSeriesY(point);
     }
 
@@ -413,14 +417,17 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @deprecated Use {@link #screenToSeriesY(float)}.
      */
     @Deprecated
-    public Number getXVal(PointF point) {
+    @Nullable
+    public Number getXVal(@NonNull PointF point) {
         return getGraph().screenToSeriesX(point);
     }
 
+    @Nullable
     public Number screenToSeriesX(float x) {
         return getGraph().screenToSeriesX(x);
     }
 
+    @Nullable
     public Number screenToSeriesY(float y) {
         return getGraph().screenToSeriesY(y);
     }
@@ -430,7 +437,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param x
      * @return
      */
-    public float seriesToScreenX(Number x) {
+    public float seriesToScreenX(@NonNull Number x) {
         return getGraph().seriesToScreenX(x);
     }
 
@@ -439,7 +446,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param y
      * @return
      */
-    public float seriesToScreenY(Number y) {
+    public float seriesToScreenY(@NonNull Number y) {
         return getGraph().seriesToScreenY(y);
     }
 
@@ -448,7 +455,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param xy
      * @return
      */
-    public PointF seriesToScreen(XYCoords xy) {
+    @Nullable
+    public PointF seriesToScreen(@NonNull XYCoords xy) {
         return getGraph().seriesToScreen(xy);
     }
 
@@ -457,7 +465,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param point
      * @return
      */
-    public XYCoords screentoSeries(PointF point) {
+    @Nullable
+    public XYCoords screentoSeries(@NonNull PointF point) {
         return getGraph().screenToSeries(point);
     }
 
@@ -557,7 +566,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param userMin the user-set lower boundary, or null if it was calculated
      * @param userMax the user-set upper boundary, or null if it was calculated
      */
-    protected static void padZeroLengthBounds(Region region, Number userMin, Number userMax) {
+    protected static void padZeroLengthBounds(@NonNull Region region, @Nullable Number userMin, @Nullable Number userMax) {
         if (!region.isMinSet() || !region.isMaxSet()) {
             return;
         }
@@ -581,7 +590,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param calculatedMax the max derived from series data; null if there was no data.
      * @return
      */
-    protected Number getCalculatedUpperBoundary(BoundaryMode mode, Number previousMax, Number calculatedMax) {
+    @Nullable
+    protected Number getCalculatedUpperBoundary(@NonNull BoundaryMode mode, @Nullable Number previousMax, @Nullable Number calculatedMax) {
         switch (mode) {
             case FIXED:
                 break;
@@ -611,7 +621,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param calculatedMin the min derived from series data; null if there was no data.
      * @return
      */
-    protected Number getCalculatedLowerBoundary(BoundaryMode mode, Number previousMin, Number calculatedMin) {
+    @Nullable
+    protected Number getCalculatedLowerBoundary(@NonNull BoundaryMode mode, @Nullable Number previousMin, @Nullable Number calculatedMin) {
         switch (mode) {
             case FIXED:
                 break;
@@ -670,7 +681,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param extent
      * @param mode
      */
-    public void centerOnDomainOrigin(@NonNull Number origin, Number extent, BoundaryMode mode) {
+    public void centerOnDomainOrigin(@NonNull Number origin, @Nullable Number extent, @NonNull BoundaryMode mode) {
         if (origin == null) {
             throw new IllegalArgumentException("Origin param cannot be null.");
         }
@@ -702,7 +713,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param mode
      */
     @SuppressWarnings("SameParameterValue")
-    public void centerOnRangeOrigin(@NonNull Number origin, Number extent, BoundaryMode mode) {
+    public void centerOnRangeOrigin(@NonNull Number origin, @Nullable Number extent, @NonNull BoundaryMode mode) {
         if (origin == null) {
             throw new IllegalArgumentException("Origin param cannot be null.");
         }
@@ -723,7 +734,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param extent
      * @return result[0] is min, result[1] is max
      */
-    protected Number[] getOriginMinMax(BoundaryMode mode, Number origin, Number extent) {
+    @NonNull
+    protected Number[] getOriginMinMax(@NonNull BoundaryMode mode, @NonNull Number origin, @Nullable Number extent) {
         if (mode == BoundaryMode.FIXED) {
             double o = origin.doubleValue();
             double e = extent.doubleValue();
@@ -886,11 +898,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         graph.setLinesPerDomainLabel(linesPerDomainLabel);
     }
 
+    @NonNull
     public StepMode getDomainStepMode() {
         return domainStepModel.getMode();
     }
 
-    public void setDomainStepMode(StepMode domainStepMode) {
+    public void setDomainStepMode(@NonNull StepMode domainStepMode) {
         domainStepModel.setMode(domainStepMode);
     }
 
@@ -902,16 +915,17 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         domainStepModel.setValue(domainStepValue);
     }
 
-    public void setDomainStep(StepMode mode, double value) {
+    public void setDomainStep(@NonNull StepMode mode, double value) {
         setDomainStepMode(mode);
         setDomainStepValue(value);
     }
 
+    @NonNull
     public StepMode getRangeStepMode() {
         return rangeStepModel.getMode();
     }
 
-    public void setRangeStepMode(StepMode rangeStepMode) {
+    public void setRangeStepMode(@NonNull StepMode rangeStepMode) {
         rangeStepModel.setMode(rangeStepMode);
     }
 
@@ -923,48 +937,52 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         rangeStepModel.setValue(rangeStepValue);
     }
 
-    public void setRangeStep(StepMode mode, double value) {
+    public void setRangeStep(@NonNull StepMode mode, double value) {
         setRangeStepMode(mode);
         setRangeStepValue(value);
     }
 
+    @NonNull
     public XYLegendWidget getLegend() {
         return legend;
     }
 
-    public void setLegend(XYLegendWidget legend) {
+    public void setLegend(@NonNull XYLegendWidget legend) {
         this.legend = legend;
     }
 
+    @NonNull
     public XYGraphWidget getGraph() {
         return graph;
     }
 
-    public void setGraph(XYGraphWidget graph) {
+    public void setGraph(@NonNull XYGraphWidget graph) {
         this.graph = graph;
     }
 
+    @NonNull
     public TextLabelWidget getDomainTitle() {
         return domainTitle;
     }
 
-    public void setDomainTitle(TextLabelWidget domainTitle) {
+    public void setDomainTitle(@NonNull TextLabelWidget domainTitle) {
         this.domainTitle = domainTitle;
     }
 
-    public void setDomainLabel(String domainLabel) {
+    public void setDomainLabel(@Nullable String domainLabel) {
         getDomainTitle().setText(domainLabel);
     }
 
+    @NonNull
     public TextLabelWidget getRangeTitle() {
         return rangeTitle;
     }
 
-    public void setRangeTitle(TextLabelWidget rangeTitle) {
+    public void setRangeTitle(@NonNull TextLabelWidget rangeTitle) {
         this.rangeTitle = rangeTitle;
     }
 
-    public void setRangeLabel(String rangeLabel) {
+    public void setRangeLabel(@Nullable String rangeLabel) {
         getRangeTitle().setText(rangeLabel);
     }
 
@@ -975,7 +993,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param upperBoundary
      * @param mode
      */
-    public synchronized void setDomainBoundaries(Number lowerBoundary, Number upperBoundary, BoundaryMode mode) {
+    public synchronized void setDomainBoundaries(@Nullable Number lowerBoundary, @Nullable Number upperBoundary, @NonNull BoundaryMode mode) {
         setDomainBoundaries(lowerBoundary, mode, upperBoundary, mode);
     }
 
@@ -987,8 +1005,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param upperBoundary
      * @param upperBoundaryMode
      */
-    public synchronized void setDomainBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode,
-                                                 Number upperBoundary, BoundaryMode upperBoundaryMode) {
+    public synchronized void setDomainBoundaries(@Nullable Number lowerBoundary, @NonNull BoundaryMode lowerBoundaryMode,
+                                                 @Nullable Number upperBoundary, @NonNull BoundaryMode upperBoundaryMode) {
         setDomainLowerBoundary(lowerBoundary, lowerBoundaryMode);
         setDomainUpperBoundary(upperBoundary, upperBoundaryMode);
     }
@@ -1000,7 +1018,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param upperBoundary
      * @param mode
      */
-    public synchronized void setRangeBoundaries(Number lowerBoundary, Number upperBoundary, BoundaryMode mode) {
+    public synchronized void setRangeBoundaries(@Nullable Number lowerBoundary, @Nullable Number upperBoundary, @NonNull BoundaryMode mode) {
         setRangeBoundaries(lowerBoundary, mode, upperBoundary, mode);
     }
 
@@ -1012,17 +1030,17 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param upperBoundary
      * @param upperBoundaryMode
      */
-    public synchronized void setRangeBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode,
-                                                Number upperBoundary, BoundaryMode upperBoundaryMode) {
+    public synchronized void setRangeBoundaries(@Nullable Number lowerBoundary, @NonNull BoundaryMode lowerBoundaryMode,
+                                                @Nullable Number upperBoundary, @NonNull BoundaryMode upperBoundaryMode) {
         setRangeLowerBoundary(lowerBoundary, lowerBoundaryMode);
         setRangeUpperBoundary(upperBoundary, upperBoundaryMode);
     }
 
-    protected synchronized void setDomainUpperBoundaryMode(BoundaryMode mode) {
+    protected synchronized void setDomainUpperBoundaryMode(@NonNull BoundaryMode mode) {
         constraints.setDomainUpperBoundaryMode(mode);
     }
 
-    protected synchronized void setUserMaxX(Number maxX) {
+    protected synchronized void setUserMaxX(@Nullable Number maxX) {
         constraints.setMaxX(maxX);
     }
 
@@ -1032,17 +1050,17 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param boundary
      * @param mode
      */
-    public synchronized void setDomainUpperBoundary(Number boundary, BoundaryMode mode) {
+    public synchronized void setDomainUpperBoundary(@Nullable Number boundary, @NonNull BoundaryMode mode) {
         setUserMaxX((mode == BoundaryMode.FIXED) ? boundary : null);
         setDomainUpperBoundaryMode(mode);
         setDomainFramingModel(XYFramingModel.EDGE);
     }
 
-    protected synchronized void setDomainLowerBoundaryMode(BoundaryMode mode) {
+    protected synchronized void setDomainLowerBoundaryMode(@NonNull BoundaryMode mode) {
         constraints.setDomainLowerBoundaryMode(mode);
     }
 
-    protected synchronized void setUserMinX(Number minX) {
+    protected synchronized void setUserMinX(@Nullable Number minX) {
         constraints.setMinX(minX);
     }
 
@@ -1052,17 +1070,17 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param boundary
      * @param mode
      */
-    public synchronized void setDomainLowerBoundary(Number boundary, BoundaryMode mode) {
+    public synchronized void setDomainLowerBoundary(@Nullable Number boundary, @NonNull BoundaryMode mode) {
         setUserMinX((mode == BoundaryMode.FIXED) ? boundary : null);
         setDomainLowerBoundaryMode(mode);
         setDomainFramingModel(XYFramingModel.EDGE);
     }
 
-    protected synchronized void setRangeUpperBoundaryMode(BoundaryMode mode) {
+    protected synchronized void setRangeUpperBoundaryMode(@NonNull BoundaryMode mode) {
         constraints.setRangeUpperBoundaryMode(mode);
     }
 
-    protected synchronized void setUserMaxY(Number maxY) {
+    protected synchronized void setUserMaxY(@Nullable Number maxY) {
         constraints.setMaxY(maxY);
     }
 
@@ -1072,17 +1090,17 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param boundary
      * @param mode
      */
-    public synchronized void setRangeUpperBoundary(Number boundary, BoundaryMode mode) {
+    public synchronized void setRangeUpperBoundary(@Nullable Number boundary, @NonNull BoundaryMode mode) {
         setUserMaxY((mode == BoundaryMode.FIXED) ? boundary : null);
         setRangeUpperBoundaryMode(mode);
         setRangeFramingModel(XYFramingModel.EDGE);
     }
 
-    protected synchronized void setRangeLowerBoundaryMode(BoundaryMode mode) {
+    protected synchronized void setRangeLowerBoundaryMode(@NonNull BoundaryMode mode) {
         constraints.setRangeLowerBoundaryMode(mode);
     }
 
-    protected synchronized void setUserMinY(Number minY) {
+    protected synchronized void setUserMinY(@Nullable Number minY) {
         constraints.setMinY(minY);
     }
 
@@ -1092,24 +1110,28 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param boundary
      * @param mode
      */
-    public synchronized void setRangeLowerBoundary(Number boundary, BoundaryMode mode) {
+    public synchronized void setRangeLowerBoundary(@Nullable Number boundary, @NonNull BoundaryMode mode) {
         setUserMinY((mode == BoundaryMode.FIXED) ? boundary : null);
         setRangeLowerBoundaryMode(mode);
         setRangeFramingModel(XYFramingModel.EDGE);
     }
 
+    @NonNull
     public BoundaryMode getDomainLowerBoundaryMode() {
         return constraints.getDomainLowerBoundaryMode();
     }
 
+    @NonNull
     public BoundaryMode getDomainUpperBoundaryMode() {
         return constraints.getDomainUpperBoundaryMode();
     }
 
+    @NonNull
     public BoundaryMode getRangeLowerBoundaryMode() {
         return constraints.getRangeLowerBoundaryMode();
     }
 
+    @NonNull
     public BoundaryMode getRangeUpperBoundaryMode() {
         return constraints.getRangeUpperBoundaryMode();
     }
@@ -1118,6 +1140,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @return The user specified lower domain boundary, or null if the lower domain boundary
      * mode is not {@link BoundaryMode#FIXED}.
      */
+    @Nullable
     protected Number getUserMinX() {
         return constraints.getMinX();
     }
@@ -1126,6 +1149,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @return The user specified upper domain boundary, or null if the upper domain boundary
      * mode is not {@link BoundaryMode#FIXED}.
      */
+    @Nullable
     protected Number getUserMaxX() {
         return constraints.getMaxX();
     }
@@ -1134,6 +1158,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @return The user specified lower range boundary, or null if the lower range boundary
      * mode is not {@link BoundaryMode#FIXED}.
      */
+    @Nullable
     protected Number getUserMinY() {
         return constraints.getMinY();
     }
@@ -1142,30 +1167,34 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @return The user specified upper range boundary, or null if the upper range boundary
      * mode is not {@link BoundaryMode#FIXED}.
      */
+    @Nullable
     protected Number getUserMaxY() {
         return constraints.getMaxY();
     }
 
+    @NonNull
     public XYCoords getOrigin() {
         return calculatedOrigin;
     }
 
+    @Nullable
     public Number getDomainOrigin() {
         return calculatedOrigin.x;
     }
 
+    @Nullable
     public Number getRangeOrigin() {
         return calculatedOrigin.y;
     }
 
-    public synchronized void setUserDomainOrigin(Number origin) {
+    public synchronized void setUserDomainOrigin(@NonNull Number origin) {
         if (origin == null) {
             throw new NullPointerException("Origin value cannot be null.");
         }
         this.userDomainOrigin = origin;
     }
 
-    public synchronized void setUserRangeOrigin(Number origin) {
+    public synchronized void setUserRangeOrigin(@NonNull Number origin) {
         if (origin == null) {
             throw new NullPointerException("Origin value cannot be null.");
         }
@@ -1187,6 +1216,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @return The current min/max values for real domain and range that fall within the visible
      * graph space.
      */
+    @NonNull
     public RectRegion getBounds() {
         return bounds;
     }
@@ -1197,7 +1227,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param marker The YValueMarker to be added.
      * @return true if the object was successfully added, false otherwise.
      */
-    public boolean addMarker(YValueMarker marker) {
+    public boolean addMarker(@NonNull YValueMarker marker) {
         if (yValueMarkers.contains(marker)) {
             return false;
         } else {
@@ -1211,7 +1241,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param marker
      * @return The YValueMarker removed if successfull,  null otherwise.
      */
-    public YValueMarker removeMarker(YValueMarker marker) {
+    @Nullable
+    public YValueMarker removeMarker(@NonNull YValueMarker marker) {
         int markerIndex = yValueMarkers.indexOf(marker);
         if (markerIndex == -1) {
             return null;
@@ -1246,7 +1277,7 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param marker The XValueMarker to be added.
      * @return true if the object was successfully added, false otherwise.
      */
-    public boolean addMarker(XValueMarker marker) {
+    public boolean addMarker(@NonNull XValueMarker marker) {
         return !xValueMarkers.contains(marker) && xValueMarkers.add(marker);
     }
 
@@ -1256,7 +1287,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
      * @param marker
      * @return The XValueMarker removed if successfull,  null otherwise.
      */
-    public XValueMarker removeMarker(XValueMarker marker) {
+    @Nullable
+    public XValueMarker removeMarker(@NonNull XValueMarker marker) {
         int markerIndex = xValueMarkers.indexOf(marker);
         if (markerIndex == -1) {
             return null;
@@ -1276,39 +1308,46 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         return numMarkersRemoved;
     }
 
+    @NonNull
     protected List<YValueMarker> getYValueMarkers() {
         return yValueMarkers;
     }
 
+    @NonNull
     protected List<XValueMarker> getXValueMarkers() {
         return xValueMarkers;
     }
 
+    @NonNull
     public RectRegion getInnerLimits() {
         return innerLimits;
     }
 
+    @NonNull
     public RectRegion getOuterLimits() {
         return outerLimits;
     }
 
+    @NonNull
     public StepModel getDomainStepModel() {
         return domainStepModel;
     }
 
-    public void setDomainStepModel(StepModel domainStepModel) {
+    public void setDomainStepModel(@NonNull StepModel domainStepModel) {
         this.domainStepModel = domainStepModel;
     }
 
+    @NonNull
     public StepModel getRangeStepModel() {
         return rangeStepModel;
     }
 
-    public void setRangeStepModel(StepModel rangeStepModel) {
+    public void setRangeStepModel(@NonNull StepModel rangeStepModel) {
         this.rangeStepModel = rangeStepModel;
     }
 
     @Override
+    @NonNull
     protected XYSeriesRegistry getRegistryInstance() {
         XYSeriesRegistry registry = new XYSeriesRegistry();
         return registry;

@@ -5,6 +5,8 @@ package com.androidplot.ui.widget;
 import android.graphics.*;
 import com.androidplot.ui.*;
 import com.androidplot.util.FontUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class TextLabelWidget extends Widget {
     private String text;
@@ -20,23 +22,23 @@ public class TextLabelWidget extends Widget {
         setClippingEnabled(false);
     }
 
-    public TextLabelWidget(LayoutManager layoutManager, Size size) {
+    public TextLabelWidget(@NonNull LayoutManager layoutManager, @NonNull Size size) {
         this(layoutManager, size, TextOrientation.HORIZONTAL);
     }
 
-    public TextLabelWidget(LayoutManager layoutManager, String title, Size size, TextOrientation orientation) {
+    public TextLabelWidget(@NonNull LayoutManager layoutManager, @Nullable String title, @NonNull Size size, @NonNull TextOrientation orientation) {
         this(layoutManager, size, orientation);
         setText(title);
     }
 
-    public TextLabelWidget(LayoutManager layoutManager, Size size, TextOrientation orientation) {
+    public TextLabelWidget(@NonNull LayoutManager layoutManager, @NonNull Size size, @NonNull TextOrientation orientation) {
         super(layoutManager, new Size(0, SizeMode.ABSOLUTE, 0, SizeMode.ABSOLUTE));
         setSize(size);
         this.orientation = orientation;
     }
 
     @Override
-    protected void onMetricsChanged(Size olds, Size news) {
+    protected void onMetricsChanged(@Nullable Size olds, @NonNull Size news) {
         if(autoPackEnabled) {
             pack();
         }
@@ -77,7 +79,7 @@ public class TextLabelWidget extends Widget {
      * @param widgetRect the size and coordinates of this widget
      */
     @Override
-    public void doOnDraw(Canvas canvas, RectF widgetRect) {
+    public void doOnDraw(@NonNull Canvas canvas, @NonNull RectF widgetRect) {
         if(text == null || text.length() == 0) {
             return;
         }
@@ -108,11 +110,12 @@ public class TextLabelWidget extends Widget {
         }
     }
 
+    @NonNull
     public Paint getLabelPaint() {
         return labelPaint;
     }
 
-    public void setLabelPaint(Paint labelPaint) {
+    public void setLabelPaint(@NonNull Paint labelPaint) {
         this.labelPaint = labelPaint;
 
         // when paint changes, packing params change too so run
@@ -122,11 +125,12 @@ public class TextLabelWidget extends Widget {
         }
     }
 
+    @NonNull
     public TextOrientation getOrientation() {
         return orientation;
     }
 
-    public void setOrientation(TextOrientation orientation) {
+    public void setOrientation(@NonNull TextOrientation orientation) {
         this.orientation = orientation;
         if(autoPackEnabled) {
             pack();
@@ -144,13 +148,14 @@ public class TextLabelWidget extends Widget {
         }
     }
 
-    public void setText(String text) {
+    public void setText(@Nullable String text) {
         this.text = text;
         if(autoPackEnabled) {
             pack();
         }
     }
 
+    @Nullable
     public String getText() {
         return text;
     }

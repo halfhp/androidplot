@@ -5,23 +5,26 @@ package com.androidplot.ui;
 import android.graphics.RectF;
 
 import java.util.Iterator;
+import androidx.annotation.NonNull;
 
 public abstract class TableModel {
     private TableOrder order;
 
-    protected TableModel(TableOrder order) {
+    protected TableModel(@NonNull TableOrder order) {
         setOrder(order);
     }
 
-    public abstract Iterator<RectF> getIterator(RectF tableRect, int totalElements);
+    @NonNull
+    public abstract Iterator<RectF> getIterator(@NonNull RectF tableRect, int totalElements);
 
     //public abstract RectF getCellRect(RectF tableRect, int numElements);
 
+    @NonNull
     public TableOrder getOrder() {
         return order;
     }
 
-    public void setOrder(TableOrder order) {
+    public void setOrder(@NonNull TableOrder order) {
         this.order = order;
     }
 

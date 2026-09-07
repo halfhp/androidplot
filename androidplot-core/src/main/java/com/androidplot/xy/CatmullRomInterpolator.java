@@ -4,6 +4,7 @@ package com.androidplot.xy;
 
 import java.util.ArrayList;
 import java.util.List;
+import androidx.annotation.NonNull;
 
 /**
  * An implementation of Catmull-Rom interpolation, based on the information found at:
@@ -21,12 +22,13 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
         private int pointPerSegment;
         private Type type;
 
-        public Params(int pointPerSegment, Type type) {
+        public Params(int pointPerSegment, @NonNull Type type) {
             this.pointPerSegment = pointPerSegment;
             this.type = type;
         }
 
         @Override
+        @NonNull
         public Class<CatmullRomInterpolator> getInterpolatorClass() {
             return CatmullRomInterpolator.class;
         }
@@ -39,11 +41,12 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
             this.pointPerSegment = pointPerSegment;
         }
 
+        @NonNull
         public Type getType() {
             return type;
         }
 
-        public void setType(Type type) {
+        public void setType(@NonNull Type type) {
             this.type = type;
         }
     }
@@ -105,7 +108,8 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
      * @throws java.lang.IllegalArgumentException if pointsPerSegment is less than 2.
      */
     @Override
-    public List<XYCoords> interpolate(XYSeries series, Params params) {
+    @NonNull
+    public List<XYCoords> interpolate(@NonNull XYSeries series, @NonNull Params params) {
         if (params.getPointPerSegment() < 2) {
             throw new IllegalArgumentException(
                     "pointsPerSegment must be greater than 2, since 2 points is just the linear segment.");
@@ -182,7 +186,8 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
      * @return the list of coordinates that define the CatmullRom curve
      * between the points defined by index+1 and index+2.
      */
-    protected List<XYCoords> interpolate(XYSeries series, int index, Params params) {
+    @NonNull
+    protected List<XYCoords> interpolate(@NonNull XYSeries series, int index, @NonNull Params params) {
         List<XYCoords> result = new ArrayList<>();
         double[] x = new double[4];
         double[] y = new double[4];
@@ -237,7 +242,7 @@ public class CatmullRomInterpolator implements Interpolator<CatmullRomInterpolat
      *             position between p1 and p2 to interpolate the value.
      * @return
      */
-    protected static double interpolate(double[] p, double[] time, double t) {
+    protected static double interpolate(@NonNull double[] p, @NonNull double[] time, double t) {
         double L01 = p[0] * (time[1] - t) / (time[1] - time[0]) + p[1] * (t - time[0]) / (time[1] - time[0]);
         double L12 = p[1] * (time[2] - t) / (time[2] - time[1]) + p[2] * (t - time[1]) / (time[2] - time[1]);
         double L23 = p[2] * (time[3] - t) / (time[3] - time[2]) + p[3] * (t - time[2]) / (time[3] - time[2]);

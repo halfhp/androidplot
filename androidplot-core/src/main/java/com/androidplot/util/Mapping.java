@@ -2,6 +2,9 @@
 
 package com.androidplot.util;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * Essentially just a version of the Map interface used to associate
  * a key of a given type with a value of a given type, does impose a 1:1
@@ -13,5 +16,6 @@ public interface Mapping<Key, Value> {
      * @param value
      * @return The Key associated with the specified value.
      */
-    Key get(Value value);
+    @Nullable
+    Key get(@NonNull Value value);
 }

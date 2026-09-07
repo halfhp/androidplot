@@ -4,6 +4,7 @@ package com.androidplot.xy;
 import com.androidplot.Region;
 
 import java.util.Arrays;
+import androidx.annotation.Nullable;
 
 /**
  * Subclass of StepModel that chooses from predefined step values. Depending on the currently
@@ -15,18 +16,19 @@ public class StepModelFit extends StepModel {
     private double[] steps; // list of steps to choose from
     private Region scale;   // axis region on display
 
-    public StepModelFit(Region axisRegion, double[] increments, double numLines) {
+    public StepModelFit(@Nullable Region axisRegion, @Nullable double[] increments, double numLines) {
         super(StepMode.INCREMENT_BY_FIT, numLines);
 
         setSteps(increments);
         setScale(axisRegion);
     }
 
+    @Nullable
     public double[] getSteps() {
         return steps;
     }
 
-    public void setSteps(double[] steps) {
+    public void setSteps(@Nullable double[] steps) {
 
         // sanity checks: no null, 0 or negative
         if (steps == null || steps.length == 0)
@@ -40,11 +42,12 @@ public class StepModelFit extends StepModel {
         this.steps = steps;
     }
 
+    @Nullable
     public Region getScale() {
         return scale;
     }
 
-    public void setScale(Region scale) {
+    public void setScale(@Nullable Region scale) {
         this.scale = scale;
     }
 

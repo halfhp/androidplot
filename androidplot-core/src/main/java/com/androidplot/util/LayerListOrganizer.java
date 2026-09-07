@@ -3,6 +3,7 @@
 package com.androidplot.util;
 
 import java.util.List;
+import androidx.annotation.NonNull;
 
 /**
  * Utility class providing additional element organization operations.
@@ -15,12 +16,12 @@ public class LayerListOrganizer<ElementType> implements Layerable<ElementType> {
 
     private List<ElementType> list;
 
-    public LayerListOrganizer(List<ElementType> list) {
+    public LayerListOrganizer(@NonNull List<ElementType> list) {
         this.list = list;
     }
 
 
-    public boolean moveToTop(ElementType element) {
+    public boolean moveToTop(@NonNull ElementType element) {
             if(list.remove(element)) {
                 list.add(list.size(), element);
                 return true;
@@ -36,7 +37,7 @@ public class LayerListOrganizer<ElementType> implements Layerable<ElementType> {
      * @throws IllegalArgumentException if reference is not an element of this list, or is the
      * same as objectToMove.  The list is left unchanged.
      */
-    public boolean moveAbove(ElementType objectToMove, ElementType reference) {
+    public boolean moveAbove(@NonNull ElementType objectToMove, @NonNull ElementType reference) {
         if(objectToMove == reference) {
             throw new IllegalArgumentException("Illegal argument to moveAbove(A, B); A cannot be equal to B.");
         }
@@ -55,7 +56,7 @@ public class LayerListOrganizer<ElementType> implements Layerable<ElementType> {
      * @throws IllegalArgumentException if reference is not an element of this list, or is the
      * same as objectToMove.  The list is left unchanged.
      */
-    public boolean moveBeneath(ElementType objectToMove, ElementType reference) {
+    public boolean moveBeneath(@NonNull ElementType objectToMove, @NonNull ElementType reference) {
         if (objectToMove == reference) {
             throw new IllegalArgumentException("Illegal argument to moveBeaneath(A, B); A cannot be equal to B.");
         }
@@ -75,13 +76,13 @@ public class LayerListOrganizer<ElementType> implements Layerable<ElementType> {
         }
     }
 
-    public boolean moveToBottom(ElementType key) {
+    public boolean moveToBottom(@NonNull ElementType key) {
         list.remove(key);
         list.add(ZERO, key);
         return true;
     }
 
-    public boolean moveUp(ElementType key) {
+    public boolean moveUp(@NonNull ElementType key) {
         int widgetIndex = list.indexOf(key);
         if(widgetIndex == - ONE) {
             // key not found:
@@ -96,7 +97,7 @@ public class LayerListOrganizer<ElementType> implements Layerable<ElementType> {
         return moveAbove(key, widgetAbove);
     }
 
-    public boolean moveDown(ElementType key) {
+    public boolean moveDown(@NonNull ElementType key) {
         int widgetIndex = list.indexOf(key);
         if(widgetIndex == - ONE) {
             // key not found:
@@ -112,15 +113,16 @@ public class LayerListOrganizer<ElementType> implements Layerable<ElementType> {
     }
 
     @Override
+    @NonNull
     public List<ElementType> elements() {
         return list;
     }
 
-    public void addToBottom(ElementType element) {
+    public void addToBottom(@NonNull ElementType element) {
         list.add(ZERO, element);
     }
 
-    public void addToTop(ElementType element) {
+    public void addToTop(@NonNull ElementType element) {
         list.add(list.size(), element);
     }
 }

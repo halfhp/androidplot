@@ -10,6 +10,8 @@ import com.androidplot.*;
 import com.androidplot.ui.*;
 import com.androidplot.util.AttrUtils;
 import com.androidplot.util.PixelUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Basic representation of a Pie Chart that displays a title and pie widget.
@@ -36,19 +38,20 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer,
     private PieLegendWidget legend;
 
     @Override
+    @NonNull
     protected SegmentRegistry getRegistryInstance() {
         return new SegmentRegistry();
     }
 
-    public PieChart(Context context, String title) {
+    public PieChart(@NonNull Context context, @Nullable String title) {
         super(context, title);
     }
 
-    public PieChart(Context context, String title, RenderMode mode) {
+    public PieChart(@NonNull Context context, @Nullable String title, @NonNull RenderMode mode) {
         super(context, title, mode);
     }
 
-    public PieChart(Context context, AttributeSet attributes) {
+    public PieChart(@NonNull Context context, @Nullable AttributeSet attributes) {
         super(context, attributes);
     }
 
@@ -97,34 +100,36 @@ public class PieChart extends Plot<Segment, SegmentFormatter, PieRenderer,
     }
 
     @Override
-    protected void processAttrs(TypedArray attrs) {
+    protected void processAttrs(@NonNull TypedArray attrs) {
 
         // borderPaint
         AttrUtils.configureLinePaint(attrs, getBorderPaint(),
                 R.styleable.pie_PieChart_pieBorderColor, R.styleable.pie_PieChart_pieBorderThickness);
     }
 
-    public void setPie(PieWidget pie) {
+    public void setPie(@NonNull PieWidget pie) {
         this.pie = pie;
     }
 
+    @NonNull
     public PieWidget getPie() {
         return pie;
     }
 
-    public void addSegment(Segment segment, SegmentFormatter formatter) {
+    public void addSegment(@NonNull Segment segment, @NonNull SegmentFormatter formatter) {
         addSeries(segment, formatter);
     }
 
-    public void removeSegment(Segment segment) {
+    public void removeSegment(@NonNull Segment segment) {
         removeSeries(segment);
     }
 
+    @NonNull
     public PieLegendWidget getLegend() {
         return legend;
     }
 
-    public void setLegend(PieLegendWidget legend) {
+    public void setLegend(@NonNull PieLegendWidget legend) {
         this.legend = legend;
     }
 }

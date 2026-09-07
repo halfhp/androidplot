@@ -18,10 +18,10 @@ public class PieLegendWidget extends LegendWidget<PieLegendItem> {
 
     private PieChart pieChart;
 
-    public PieLegendWidget(LayoutManager layoutManager, PieChart pieChart,
-                          Size widgetSize,
-                          TableModel tableModel,
-                          Size iconSize) {
+    public PieLegendWidget(@NonNull LayoutManager layoutManager, @NonNull PieChart pieChart,
+                          @NonNull Size widgetSize,
+                          @NonNull TableModel tableModel,
+                          @NonNull Size iconSize) {
         super(tableModel, layoutManager, widgetSize, iconSize);
         this.pieChart = pieChart;
     }
@@ -32,6 +32,7 @@ public class PieLegendWidget extends LegendWidget<PieLegendItem> {
     }
 
     @Override
+    @NonNull
     protected List<PieLegendItem> getLegendItems() {
         final List<PieLegendItem> legendItems = new ArrayList<>();
         for(SeriesBundle<Segment, SegmentFormatter> item : pieChart.getRegistry().getLegendEnabledItems()) {

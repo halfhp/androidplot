@@ -39,26 +39,28 @@ public abstract class Widget implements BoxModelable, Resizable {
         NONE,
     }
 
-    public Widget(LayoutManager layoutManager, SizeMetric heightMetric, SizeMetric widthMetric) {
+    public Widget(@NonNull LayoutManager layoutManager, @NonNull SizeMetric heightMetric, @NonNull SizeMetric widthMetric) {
         this(layoutManager, new Size(heightMetric, widthMetric));
     }
 
-    public Widget(LayoutManager layoutManager, Size size) {
+    public Widget(@NonNull LayoutManager layoutManager, @NonNull Size size) {
         this.layoutManager = layoutManager;
         Size oldSize = this.size;
         setSize(size);
         onMetricsChanged(oldSize, size);
     }
 
+    @NonNull
     public DisplayDimensions getWidgetDimensions() {
         return widgetDimensions;
     }
 
+    @NonNull
     public Anchor getAnchor() {
         return getPositionMetrics().getAnchor();
     }
 
-    public void setAnchor(Anchor anchor) {
+    public void setAnchor(@NonNull Anchor anchor) {
         getPositionMetrics().setAnchor(anchor);
     }
 
@@ -72,7 +74,7 @@ public abstract class Widget implements BoxModelable, Resizable {
      * @param y
      * @param verticalPositioning
      */
-    public void position(float x, HorizontalPositioning horizontalPositioning, float y, VerticalPositioning verticalPositioning) {
+    public void position(float x, @NonNull HorizontalPositioning horizontalPositioning, float y, @NonNull VerticalPositioning verticalPositioning) {
         position(x, horizontalPositioning, y, verticalPositioning, Anchor.LEFT_TOP);
     }
 
@@ -83,8 +85,8 @@ public abstract class Widget implements BoxModelable, Resizable {
      * @param verticalPositioning   LayoutType to use when orienting this element's Y_VALS_ONLY-Coordinate.
      * @param anchor                The point of reference used by this positioning call.
      */
-    public void position(float x, HorizontalPositioning horizontalPositioning, float y,
-                         VerticalPositioning verticalPositioning, Anchor anchor) {
+    public void position(float x, @NonNull HorizontalPositioning horizontalPositioning, float y,
+                         @NonNull VerticalPositioning verticalPositioning, @NonNull Anchor anchor) {
         setPositionMetrics(new PositionMetrics(x, horizontalPositioning, y, verticalPositioning, anchor));
 
         // only add on the first call; re-positioning an existing widget must not
@@ -100,7 +102,7 @@ public abstract class Widget implements BoxModelable, Resizable {
      * @param oldSize
      * @param newSize
      */
-    protected void onMetricsChanged(Size oldSize, Size newSize) {
+    protected void onMetricsChanged(@Nullable Size oldSize, @NonNull Size newSize) {
     }
 
     /**
@@ -116,14 +118,15 @@ public abstract class Widget implements BoxModelable, Resizable {
      * @param point
      * @return
      */
-    public boolean containsPoint(PointF point) {
+    public boolean containsPoint(@NonNull PointF point) {
         return widgetDimensions.canvasRect.contains(point.x, point.y);
     }
 
-    public void setSize(Size size) {
+    public void setSize(@NonNull Size size) {
         this.size = size;
     }
 
+    @NonNull
     public Size getSize() {
         return this.size;
     }
@@ -133,7 +136,7 @@ public abstract class Widget implements BoxModelable, Resizable {
         size.getWidth().setValue(width);
     }
 
-    public void setWidth(float width, SizeMode layoutType) {
+    public void setWidth(float width, @NonNull SizeMode layoutType) {
         size.getWidth().set(width, layoutType);
     }
 
@@ -141,14 +144,16 @@ public abstract class Widget implements BoxModelable, Resizable {
         size.getHeight().setValue(height);
     }
 
-    public void setHeight(float height, SizeMode layoutType) {
+    public void setHeight(float height, @NonNull SizeMode layoutType) {
         size.getHeight().set(height, layoutType);
     }
 
+    @NonNull
     public SizeMetric getWidthMetric() {
         return size.getWidth();
     }
 
+    @NonNull
     public SizeMetric getHeightMetric() {
         return size.getHeight();
     }
@@ -161,11 +166,13 @@ public abstract class Widget implements BoxModelable, Resizable {
         return this.size.getHeight().getPixelValue(size);
     }
 
-    public RectF getMarginatedRect(RectF widgetRect) {
+    @NonNull
+    public RectF getMarginatedRect(@NonNull RectF widgetRect) {
         return boxModel.getMarginatedRect(widgetRect);
     }
 
-    public RectF getPaddedRect(RectF widgetMarginRect) {
+    @NonNull
+    public RectF getPaddedRect(@NonNull RectF widgetMarginRect) {
         return boxModel.getPaddedRect(widgetMarginRect);
     }
 
@@ -286,20 +293,22 @@ public abstract class Widget implements BoxModelable, Resizable {
     }
 
     @Override
-    public synchronized void layout(final DisplayDimensions plotDimensions) {
+    public synchronized void layout(@NonNull final DisplayDimensions plotDimensions) {
         this.plotDimensions = plotDimensions;
         refreshLayout();
     }
 
 
-    public static PointF calculateCoordinates(float height, float width, RectF viewRect, PositionMetrics metrics) {
+    @NonNull
+    public static PointF calculateCoordinates(float height, float width, @NonNull RectF viewRect, @NonNull PositionMetrics metrics) {
         float x = metrics.getXPositionMetric().getPixelValue(viewRect.width()) + viewRect.left;
         float y = metrics.getYPositionMetric().getPixelValue(viewRect.height()) + viewRect.top;
         PointF point = new PointF(x, y);
         return PixelUtils.sub(point, getAnchorOffset(width, height, metrics.getAnchor()));
     }
 
-    public static PointF getAnchorOffset(float width, float height, Anchor anchor) {
+    @NonNull
+    public static PointF getAnchorOffset(float width, float height, @NonNull Anchor anchor) {
         PointF point = new PointF();
         switch (anchor) {
             case LEFT_TOP:
@@ -334,12 +343,14 @@ public abstract class Widget implements BoxModelable, Resizable {
         return point;
     }
 
-    public static PointF getAnchorCoordinates(RectF widgetRect, Anchor anchor) {
+    @NonNull
+    public static PointF getAnchorCoordinates(@NonNull RectF widgetRect, @NonNull Anchor anchor) {
         return PixelUtils.add(new PointF(widgetRect.left, widgetRect.top),
                 getAnchorOffset(widgetRect.width(), widgetRect.height(), anchor));
     }
 
-    public static PointF getAnchorCoordinates(float x, float y, float width, float height, Anchor anchor) {
+    @NonNull
+    public static PointF getAnchorCoordinates(float x, float y, float width, float height, @NonNull Anchor anchor) {
         return getAnchorCoordinates(new RectF(x, y, x + width, y + height), anchor);
     }
 
@@ -362,7 +373,7 @@ public abstract class Widget implements BoxModelable, Resizable {
         // do nothing by default
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         if (isVisible()) {
             if (backgroundPaint != null) {
                 drawBackground(canvas, widgetDimensions.canvasRect);
@@ -379,7 +390,8 @@ public abstract class Widget implements BoxModelable, Resizable {
         }
     }
 
-    protected RectF applyRotation(Canvas canvas, RectF rect) {
+    @NonNull
+    protected RectF applyRotation(@NonNull Canvas canvas, @NonNull RectF rect) {
         float rotationDegs = 0;
         final float cx = widgetDimensions.paddedRect.centerX();
         final float cy = widgetDimensions.paddedRect.centerY();
@@ -417,11 +429,11 @@ public abstract class Widget implements BoxModelable, Resizable {
         return rect;
     }
 
-    protected void drawBorder(Canvas canvas, RectF paddedRect) {
+    protected void drawBorder(@NonNull Canvas canvas, @NonNull RectF paddedRect) {
         canvas.drawRect(paddedRect, borderPaint);
     }
 
-    protected void drawBackground(Canvas canvas, RectF widgetRect) {
+    protected void drawBackground(@NonNull Canvas canvas, @NonNull RectF widgetRect) {
         canvas.drawRect(widgetRect, backgroundPaint);
     }
 
@@ -429,21 +441,23 @@ public abstract class Widget implements BoxModelable, Resizable {
      * @param canvas     The Canvas to draw onto
      * @param widgetRect the size and coordinates of this widget
      */
-    protected abstract void doOnDraw(Canvas canvas, RectF widgetRect);
+    protected abstract void doOnDraw(@NonNull Canvas canvas, @NonNull RectF widgetRect);
 
+    @Nullable
     public Paint getBorderPaint() {
         return borderPaint;
     }
 
-    public void setBorderPaint(Paint borderPaint) {
+    public void setBorderPaint(@Nullable Paint borderPaint) {
         this.borderPaint = borderPaint;
     }
 
+    @Nullable
     public Paint getBackgroundPaint() {
         return backgroundPaint;
     }
 
-    public void setBackgroundPaint(Paint backgroundPaint) {
+    public void setBackgroundPaint(@Nullable Paint backgroundPaint) {
         this.backgroundPaint = backgroundPaint;
     }
 
@@ -463,19 +477,21 @@ public abstract class Widget implements BoxModelable, Resizable {
         isVisible = visible;
     }
 
+    @Nullable
     public PositionMetrics getPositionMetrics() {
         return positionMetrics;
     }
 
-    public void setPositionMetrics(PositionMetrics positionMetrics) {
+    public void setPositionMetrics(@NonNull PositionMetrics positionMetrics) {
         this.positionMetrics = positionMetrics;
     }
 
+    @NonNull
     public Rotation getRotation() {
         return rotation;
     }
 
-    public void setRotation(Rotation rotation) {
+    public void setRotation(@NonNull Rotation rotation) {
         this.rotation = rotation;
     }
 }

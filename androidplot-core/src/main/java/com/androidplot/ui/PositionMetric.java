@@ -2,6 +2,8 @@
 
 package com.androidplot.ui;
 
+import androidx.annotation.NonNull;
+
 public abstract class PositionMetric<LayoutType extends Enum> extends LayoutMetric<LayoutType> {
 
     protected enum Origin {
@@ -15,7 +17,7 @@ public abstract class PositionMetric<LayoutType extends Enum> extends LayoutMetr
         RELATIVE
     }
 
-    public PositionMetric(float value, LayoutType layoutType) {
+    public PositionMetric(float value, @NonNull LayoutType layoutType) {
         super(value, layoutType);
     }
 
@@ -25,7 +27,7 @@ public abstract class PositionMetric<LayoutType extends Enum> extends LayoutMetr
      * @param layoutMode
      * @throws IllegalArgumentException
      */
-    protected static void validateValue(float value, LayoutMode layoutMode) throws IllegalArgumentException {
+    protected static void validateValue(float value, @NonNull LayoutMode layoutMode) throws IllegalArgumentException {
         switch(layoutMode) {
             case ABSOLUTE:
                 break;
@@ -40,7 +42,7 @@ public abstract class PositionMetric<LayoutType extends Enum> extends LayoutMetr
 
     }
 
-    protected float getAbsolutePosition(float size, Origin origin) {
+    protected float getAbsolutePosition(float size, @NonNull Origin origin) {
         switch(origin) {
             case FROM_BEGINING:
                 return getValue();
@@ -53,7 +55,7 @@ public abstract class PositionMetric<LayoutType extends Enum> extends LayoutMetr
         }
     }
 
-    protected float getRelativePosition(float size, Origin origin) {
+    protected float getRelativePosition(float size, @NonNull Origin origin) {
         //throw new UnsupportedOperationException("Not yet implemented.");
 
         switch(origin) {

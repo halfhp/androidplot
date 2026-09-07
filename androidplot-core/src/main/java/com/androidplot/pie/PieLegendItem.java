@@ -5,6 +5,7 @@ package com.androidplot.pie;
 import androidx.annotation.NonNull;
 
 import com.androidplot.ui.widget.LegendItem;
+import androidx.annotation.Nullable;
 
 /**
  * An item in a {@link PieLegendWidget} corresponding to a {@link Segment} in a {@link PieChart}.
@@ -21,6 +22,7 @@ public class PieLegendItem implements LegendItem {
     }
 
     @Override
+    @Nullable
     public String getTitle() {
         return segment.getTitle();
     }

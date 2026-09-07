@@ -4,6 +4,8 @@ package com.androidplot.util;
 
 import java.util.HashMap;
 import java.util.List;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * An implementation of {@link Layerable}.  Provides fast element retrieval via hash key in addition to
@@ -24,10 +26,12 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
     }
 
 
-    public ValueType get(KeyType key) {
+    @Nullable
+    public ValueType get(@NonNull KeyType key) {
         return hash.get(key);
     }
 
+    @NonNull
     public List<KeyType> getKeysAsList() {
         return zlist;
     }
@@ -38,7 +42,7 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
      * @param key
      * @param value
      */
-    public synchronized void addToTop(KeyType key, ValueType value) {
+    public synchronized void addToTop(@NonNull KeyType key, @NonNull ValueType value) {
         if(hash.containsKey(key)) {
             hash.put(key, value);
         } else {
@@ -53,7 +57,7 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
      * @param key
      * @param value
      */
-    public synchronized void addToBottom(KeyType key, ValueType value) {
+    public synchronized void addToBottom(@NonNull KeyType key, @NonNull ValueType value) {
         if(hash.containsKey(key)) {
             hash.put(key, value);
         } else {
@@ -62,7 +66,7 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
         }
     }
 
-    public synchronized boolean moveToTop(KeyType element) {
+    public synchronized boolean moveToTop(@NonNull KeyType element) {
         if(!hash.containsKey(element)) {
             return false;
         } else {
@@ -70,7 +74,7 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
         }
     }
 
-    public synchronized boolean moveAbove(KeyType objectToMove, KeyType reference) {
+    public synchronized boolean moveAbove(@NonNull KeyType objectToMove, @NonNull KeyType reference) {
         if(objectToMove == reference) {
             throw new IllegalArgumentException("Illegal argument to moveAbove(A, B); A cannot be equal to B.");
         }
@@ -81,7 +85,7 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
         }
     }
 
-    public synchronized boolean moveBeneath(KeyType objectToMove, KeyType reference) {
+    public synchronized boolean moveBeneath(@NonNull KeyType objectToMove, @NonNull KeyType reference) {
         if(objectToMove == reference) {
             throw new IllegalArgumentException("Illegal argument to moveBeaneath(A, B); A cannot be equal to B.");
         }
@@ -92,7 +96,7 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
         }
     }
 
-    public synchronized boolean moveToBottom(KeyType key) {
+    public synchronized boolean moveToBottom(@NonNull KeyType key) {
         if(!hash.containsKey(key)) {
             return false;
         } else {
@@ -100,7 +104,7 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
         }
     }
 
-    public synchronized boolean moveUp(KeyType key) {
+    public synchronized boolean moveUp(@NonNull KeyType key) {
         if (!hash.containsKey(key)) {
             return false;
         } else {
@@ -108,7 +112,7 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
         }
     }
 
-    public synchronized boolean moveDown(KeyType key) {
+    public synchronized boolean moveDown(@NonNull KeyType key) {
         if (!hash.containsKey(key)) {
             return false;
         } else {
@@ -117,6 +121,7 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
     }
 
     @Override
+    @NonNull
     public List<KeyType> elements() {
         return zlist;
     }
@@ -125,12 +130,13 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
      *
      * @return Ordered list of keys.
      */
+    @NonNull
     public List<KeyType> keys() {
         return elements();
     }
 
 
-    public synchronized boolean remove(KeyType key) {
+    public synchronized boolean remove(@NonNull KeyType key) {
         if(hash.containsKey(key)) {
             hash.remove(key);
             zlist.remove(key);
@@ -140,15 +146,18 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
         }
     }
 
+    @NonNull
     public ValueType getTop() {
         return hash.get(zlist.getLast());
     }
 
+    @NonNull
     public ValueType getBottom() {
         return hash.get(zlist.getFirst());
     }
 
-    public ValueType getAbove(KeyType key) {
+    @Nullable
+    public ValueType getAbove(@NonNull KeyType key) {
         final int index = zlist.indexOf(key);
         if(index >= 0 && index < size() - 1) {
             return hash.get(zlist.get(index + 1));
@@ -156,7 +165,8 @@ public class LayerHash<KeyType, ValueType> implements Layerable<KeyType> {
         return null;
     }
 
-    public ValueType getBeneath(KeyType key) {
+    @Nullable
+    public ValueType getBeneath(@NonNull KeyType key) {
         final int index = zlist.indexOf(key);
         if(index > 0) {
             return hash.get(zlist.get(index - 1));

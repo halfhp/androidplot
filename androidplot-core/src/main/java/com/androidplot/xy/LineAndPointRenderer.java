@@ -17,6 +17,7 @@ import com.androidplot.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import androidx.annotation.NonNull;
 
 /**
  * Renders a point as a line with the vertices marked.  Requires 2 or more points to
@@ -32,28 +33,28 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
     protected final ConcurrentHashMap<XYSeries, ArrayList<PointF>> pointsCaches
             = new ConcurrentHashMap<>(2, 0.75f, 2);
 
-    public LineAndPointRenderer(XYPlot plot) {
+    public LineAndPointRenderer(@NonNull XYPlot plot) {
         super(plot);
         plot.addListener(new PlotListener() {
             @Override
-            public void onBeforeDraw(Plot source, Canvas canvas) {
+            public void onBeforeDraw(@NonNull Plot source, @NonNull Canvas canvas) {
                 cullPointsCache();
             }
 
             @Override
-            public void onAfterDraw(Plot source, Canvas canvas) {
+            public void onAfterDraw(@NonNull Plot source, @NonNull Canvas canvas) {
 
             }
         });
     }
 
     @Override
-    public void onRender(Canvas canvas, RectF plotArea, XYSeries series, FormatterType formatter, RenderStack stack) {
+    public void onRender(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull XYSeries series, @NonNull FormatterType formatter, @NonNull RenderStack stack) {
         drawSeries(canvas, plotArea, series, formatter);
     }
 
     @Override
-    public void doDrawLegendIcon(Canvas canvas, RectF rect, LineAndPointFormatter formatter) {
+    public void doDrawLegendIcon(@NonNull Canvas canvas, @NonNull RectF rect, @NonNull LineAndPointFormatter formatter) {
         // horizontal icon:
         float centerY = rect.centerY();
         float centerX = rect.centerX();
@@ -74,7 +75,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
      * This method exists for StepRenderer to override without having to duplicate any
      * additional code.
      */
-    protected void appendToPath(Path path, PointF thisPoint, PointF lastPoint) {
+    protected void appendToPath(@NonNull Path path, @NonNull PointF thisPoint, @NonNull PointF lastPoint) {
 
         path.lineTo(thisPoint.x, thisPoint.y);
     }
@@ -86,7 +87,8 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
      * @param series
      * @return
      */
-    protected ArrayList<PointF> getPointsCache(XYSeries series) {
+    @NonNull
+    protected ArrayList<PointF> getPointsCache(@NonNull XYSeries series) {
         ArrayList<PointF> pointsCache = pointsCaches.get(series);
         final int seriesSize = series.size();
         if(pointsCache == null) {
@@ -114,7 +116,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
     }
 
-    protected void drawSeries(Canvas canvas, RectF plotArea, XYSeries series, LineAndPointFormatter formatter) {
+    protected void drawSeries(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull XYSeries series, @NonNull LineAndPointFormatter formatter) {
         PointF thisPoint;
         PointF lastPoint = null;
         PointF firstPoint = null;
@@ -218,7 +220,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
      * @return True if series can be passed to an {@link Interpolator}: it must contain at least
      * 3 vertices, none of which may have a null x or y value.
      */
-    protected boolean isInterpolatable(XYSeries series) {
+    protected boolean isInterpolatable(@NonNull XYSeries series) {
         final int size = series.size();
         if (size < 3) {
             return false;
@@ -235,7 +237,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
      * @param plotArea
      * @return The screen y-coordinate of the plot's range origin.
      */
-    protected float getRangeOriginPix(RectF plotArea) {
+    protected float getRangeOriginPix(@NonNull RectF plotArea) {
         return (float) getPlot().getBounds().getyRegion()
                 .transform(getPlot().getRangeOrigin().doubleValue(),
                         plotArea.top, plotArea.bottom, true);
@@ -246,7 +248,8 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
      * @param params
      * @return An interpol
      */
-    protected Interpolator getInterpolator(InterpolationParams params) {
+    @NonNull
+    protected Interpolator getInterpolator(@NonNull InterpolationParams params) {
         try {
             return (Interpolator) params.getInterpolatorClass().newInstance();
         } catch (InstantiationException e) {
@@ -256,12 +259,13 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
     }
 
-    protected PointF convertPoint(XYCoords coord, RectF plotArea) {
+    @NonNull
+    protected PointF convertPoint(@NonNull XYCoords coord, @NonNull RectF plotArea) {
         return getPlot().getBounds().transformScreen(coord, plotArea);
     }
 
-    protected void renderPoints(Canvas canvas, RectF plotArea, XYSeries series, int iStart, int iEnd, List<PointF> points,
-                                LineAndPointFormatter formatter) {
+    protected void renderPoints(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull XYSeries series, int iStart, int iEnd, @NonNull List<PointF> points,
+                                @NonNull LineAndPointFormatter formatter) {
         if (formatter.hasVertexPaint() || formatter.hasPointLabelFormatter()) {
             final Paint vertexPaint = formatter.hasVertexPaint() ? formatter.getVertexPaint() : null;
             final boolean hasPointLabelFormatter = formatter.hasPointLabelFormatter();
@@ -286,7 +290,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
     }
 
-    protected void renderPath(Canvas canvas, RectF plotArea, Path path, PointF firstPoint, PointF lastPoint, LineAndPointFormatter formatter) {
+    protected void renderPath(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull Path path, @NonNull PointF firstPoint, @NonNull PointF lastPoint, @NonNull LineAndPointFormatter formatter) {
         Path outlinePath = new Path(path);
 
         // determine how to close the path for filling purposes:
@@ -357,7 +361,8 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
      * @param bounds The plot's visible bounds; must be fully defined.
      * @return region itself if it is fully defined, otherwise a fully defined copy.
      */
-    protected static RectRegion clipToBounds(RectRegion region, RectRegion bounds) {
+    @NonNull
+    protected static RectRegion clipToBounds(@NonNull RectRegion region, @NonNull RectRegion bounds) {
         if (region.isFullyDefined()) {
             return region;
         }

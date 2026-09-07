@@ -3,6 +3,7 @@
 package com.androidplot.util;
 
 import android.graphics.RectF;
+import androidx.annotation.NonNull;
 
 /**
  * Convenience class for managing {@link com.androidplot.ui.BoxModel} data
@@ -25,7 +26,7 @@ public class DisplayDimensions {
     public DisplayDimensions() {
         this(initRect, initRect, initRect);
     }
-    public DisplayDimensions(RectF canvasRect, RectF marginatedRect, RectF paddedRect) {
+    public DisplayDimensions(@NonNull RectF canvasRect, @NonNull RectF marginatedRect, @NonNull RectF paddedRect) {
         this.canvasRect = canvasRect;
         this.marginatedRect = marginatedRect;
         this.paddedRect = paddedRect;

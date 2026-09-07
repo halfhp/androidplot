@@ -14,6 +14,8 @@ import android.view.View;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.util.LinkedLayerList;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class LayoutManager extends LinkedLayerList<Widget>
         implements View.OnTouchListener, Resizable {
@@ -68,7 +70,7 @@ public class LayoutManager extends LinkedLayerList<Widget>
         setDrawOutlineShadowsEnabled(enabled);
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         if(isDrawMarginsEnabled()) {
             drawSpacing(canvas, displayDims.canvasRect, displayDims.marginatedRect, marginPaint);
         }
@@ -133,7 +135,7 @@ public class LayoutManager extends LinkedLayerList<Widget>
         }
     }
 
-    protected void drawAnchor(Canvas canvas, PointF coords) {
+    protected void drawAnchor(@NonNull Canvas canvas, @NonNull PointF coords) {
         float anchorSize = 4;
         canvas.drawRect(coords.x-anchorSize, coords.y-anchorSize, coords.x+anchorSize, coords.y+anchorSize, anchorPaint);
 
@@ -147,11 +149,12 @@ public class LayoutManager extends LinkedLayerList<Widget>
         this.drawOutlinesEnabled = drawOutlinesEnabled;
     }
 
+    @NonNull
     public Paint getOutlinePaint() {
         return outlinePaint;
     }
 
-    public void setOutlinePaint(Paint outlinePaint) {
+    public void setOutlinePaint(@NonNull Paint outlinePaint) {
         this.outlinePaint = outlinePaint;
     }
 
@@ -171,11 +174,12 @@ public class LayoutManager extends LinkedLayerList<Widget>
         this.drawMarginsEnabled = drawMarginsEnabled;
     }
 
+    @NonNull
     public Paint getMarginPaint() {
         return marginPaint;
     }
 
-    public void setMarginPaint(Paint marginPaint) {
+    public void setMarginPaint(@NonNull Paint marginPaint) {
         this.marginPaint = marginPaint;
     }
 
@@ -187,11 +191,12 @@ public class LayoutManager extends LinkedLayerList<Widget>
         this.drawPaddingEnabled = drawPaddingEnabled;
     }
 
+    @NonNull
     public Paint getPaddingPaint() {
         return paddingPaint;
     }
 
-    public void setPaddingPaint(Paint paddingPaint) {
+    public void setPaddingPaint(@NonNull Paint paddingPaint) {
         this.paddingPaint = paddingPaint;
     }
 
@@ -210,11 +215,12 @@ public class LayoutManager extends LinkedLayerList<Widget>
         }
     }
 
+    @Nullable
     public Paint getOutlineShadowPaint() {
         return outlineShadowPaint;
     }
 
-    public void setOutlineShadowPaint(Paint outlineShadowPaint) {
+    public void setOutlineShadowPaint(@Nullable Paint outlineShadowPaint) {
         this.outlineShadowPaint = outlineShadowPaint;
     }
 
@@ -235,7 +241,7 @@ public class LayoutManager extends LinkedLayerList<Widget>
     }
 
     @Override
-    public void layout(final DisplayDimensions dims) {
+    public void layout(@NonNull final DisplayDimensions dims) {
         this.displayDims = dims;
 
         refreshLayout();

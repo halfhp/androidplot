@@ -11,6 +11,8 @@ import com.androidplot.ui.Size;
 import com.androidplot.ui.widget.Widget;
 import com.androidplot.xy.StepMode;
 import com.androidplot.xy.StepModel;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Methods for applying styleable attributes.
@@ -20,7 +22,7 @@ public class AttrUtils {
 
     private static final String TAG = AttrUtils.class.getName();
 
-    public static void configureInsets(TypedArray attrs, Insets insets,
+    public static void configureInsets(@NonNull TypedArray attrs, @NonNull Insets insets,
             int topAttr, int bottomAttr, int leftAttr, int rightAttr) {
         insets.setTop(attrs.getDimension(topAttr, insets.getTop()));
         insets.setBottom(attrs.getDimension(bottomAttr, insets.getBottom()));
@@ -35,7 +37,7 @@ public class AttrUtils {
      * @param colorAttr
      * @param textSizeAttr
      */
-    public static void configureTextPaint(TypedArray attrs, Paint paint,
+    public static void configureTextPaint(@Nullable TypedArray attrs, @NonNull Paint paint,
             int colorAttr, int textSizeAttr) {
         configureTextPaint(attrs, paint, colorAttr, textSizeAttr, null);
     }
@@ -48,8 +50,8 @@ public class AttrUtils {
      * @param textSizeAttr
      * @param alignAttr
      */
-    public static void configureTextPaint(TypedArray attrs, Paint paint, int colorAttr,
-            int textSizeAttr, Integer alignAttr) {
+    public static void configureTextPaint(@Nullable TypedArray attrs, @NonNull Paint paint, int colorAttr,
+            int textSizeAttr, @Nullable Integer alignAttr) {
         if(attrs != null) {
             setColor(attrs, paint, colorAttr);
             setTextSize(attrs, paint, textSizeAttr);
@@ -66,7 +68,7 @@ public class AttrUtils {
      * @param paint
      * @param alignAttr
      */
-    public static void configureTextAlign(TypedArray attrs, Paint paint, int alignAttr) {
+    public static void configureTextAlign(@Nullable TypedArray attrs, @NonNull Paint paint, int alignAttr) {
         if (attrs != null) {
             //if(attrs.hasValue(alignAttr)) {
             final Paint.Align alignment = Paint.Align.values()
@@ -83,14 +85,14 @@ public class AttrUtils {
      * @param colorAttr
      * @param strokeWidthAttr
      */
-    public static void configureLinePaint(TypedArray attrs, Paint paint, int colorAttr, int strokeWidthAttr) {
+    public static void configureLinePaint(@Nullable TypedArray attrs, @NonNull Paint paint, int colorAttr, int strokeWidthAttr) {
         if(attrs != null) {
             setColor(attrs, paint, colorAttr);
             paint.setStrokeWidth(attrs.getDimension(strokeWidthAttr, paint.getStrokeWidth()));
         }
     }
 
-    public static void setColor(TypedArray attrs, Paint paint, int attrId) {
+    public static void setColor(@NonNull TypedArray attrs, @Nullable Paint paint, int attrId) {
         if(paint == null) {
             Log.w(TAG, "Attempt to configure null Paint property for attrId: " + attrId);
         } else {
@@ -98,7 +100,7 @@ public class AttrUtils {
         }
     }
 
-    public static void setTextSize(TypedArray attrs, Paint paint, int attrId) {
+    public static void setTextSize(@NonNull TypedArray attrs, @NonNull Paint paint, int attrId) {
         paint.setTextSize(attrs.getDimension(attrId, paint.getTextSize()));
     }
 
@@ -115,7 +117,7 @@ public class AttrUtils {
      * @param paddingLeft
      * @param paddingRight
      */
-    public static void configureBoxModelable(TypedArray attrs, BoxModelable model, int marginTop, int marginBottom,
+    public static void configureBoxModelable(@Nullable TypedArray attrs, @NonNull BoxModelable model, int marginTop, int marginBottom,
                                          int marginLeft, int marginRight, int paddingTop, int paddingBottom,
                                          int paddingLeft, int paddingRight) {
         if(attrs != null) {
@@ -140,7 +142,7 @@ public class AttrUtils {
      * @param widthSizeLayoutTypeAttr
      * @param widthAttr
      */
-    public static void configureSize(TypedArray attrs, Size model, int heightSizeLayoutTypeAttr, int heightAttr,
+    public static void configureSize(@Nullable TypedArray attrs, @NonNull Size model, int heightSizeLayoutTypeAttr, int heightAttr,
                                      int widthSizeLayoutTypeAttr, int widthAttr) {
         if(attrs != null) {
             configureSizeMetric(attrs, model.getHeight(), heightSizeLayoutTypeAttr, heightAttr);
@@ -161,7 +163,7 @@ public class AttrUtils {
         return SizeMode.values()[attrs.getInt(attr, defaultValue.ordinal())];
     }
 
-    public static void configureWidget(TypedArray attrs, Widget widget, int heightSizeLayoutTypeAttr, int heightAttr,
+    public static void configureWidget(@Nullable TypedArray attrs, @NonNull Widget widget, int heightSizeLayoutTypeAttr, int heightAttr,
                                        int widthSizeLayoutTypeAttr, int widthAttr, int xLayoutStyleAttr,
                                        int xLayoutValueAttr, int yLayoutStyleAttr, int yLayoutValueAttr,
                                        int anchorPositionAttr, int visibilityAttr) {
@@ -174,7 +176,7 @@ public class AttrUtils {
         }
     }
 
-    public static void configureWidgetRotation(TypedArray attrs, Widget widget, int rotationAttr) {
+    public static void configureWidgetRotation(@Nullable TypedArray attrs, @NonNull Widget widget, int rotationAttr) {
         if(attrs != null) {
             widget.setRotation(getWidgetRotation(attrs, rotationAttr, Widget.Rotation.NONE));
         }
@@ -190,7 +192,7 @@ public class AttrUtils {
      * @param yLayoutValueAttr
      * @param anchorPositionAttr
      */
-    public static void configurePositionMetrics(TypedArray attrs, PositionMetrics metrics, int xLayoutStyleAttr,
+    public static void configurePositionMetrics(@Nullable TypedArray attrs, @Nullable PositionMetrics metrics, int xLayoutStyleAttr,
                                                 int xLayoutValueAttr, int yLayoutStyleAttr, int yLayoutValueAttr,
                                                 int anchorPositionAttr) {
         if(attrs != null && metrics != null) {
@@ -245,7 +247,7 @@ public class AttrUtils {
         return Anchor.values()[attrs.getInt(attr, defaultValue.ordinal())];
     }
 
-    public static void configureStep(TypedArray attrs, StepModel model, int stepModeAttr, int stepValueAttr) {
+    public static void configureStep(@Nullable TypedArray attrs, @NonNull StepModel model, int stepModeAttr, int stepValueAttr) {
         if(attrs != null) {
             model.setMode(StepMode.values()[attrs.getInt(stepModeAttr, model.getMode().ordinal())]);
             model.setValue(getIntFloatDimenValue(attrs, stepValueAttr, model.getValue()).doubleValue());

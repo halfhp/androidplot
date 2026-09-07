@@ -10,21 +10,26 @@ import com.androidplot.xy.XYConstraints;
 import com.androidplot.xy.XYSeries;
 
 import java.util.List;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Utilities for dealing with Series data.
  */
 public class SeriesUtils {
 
-    public static RectRegion minMax(List<XYSeries> seriesList) {
+    @NonNull
+    public static RectRegion minMax(@NonNull List<XYSeries> seriesList) {
         return minMax(null, seriesList);
     }
 
-    public static RectRegion minMax(XYSeries... seriesList) {
+    @NonNull
+    public static RectRegion minMax(@NonNull XYSeries... seriesList) {
         return minMax(null, seriesList);
     }
 
-    public static Region minMaxX(XYSeries... seriesList) {
+    @NonNull
+    public static Region minMaxX(@NonNull XYSeries... seriesList) {
         final Region bounds = new Region();
         for (XYSeries series : seriesList) {
             for (int i = 0; i < series.size(); i++) {
@@ -34,7 +39,8 @@ public class SeriesUtils {
         return bounds;
     }
 
-    public static Region minMaxY(XYSeries... seriesList) {
+    @NonNull
+    public static Region minMaxY(@NonNull XYSeries... seriesList) {
         final Region bounds = new Region();
         for (XYSeries series : seriesList) {
             for (int i = 0; i < series.size(); i++) {
@@ -50,7 +56,8 @@ public class SeriesUtils {
      * @return
      * @since 0.9.7
      */
-    public static RectRegion minMax(XYConstraints constraints, List<XYSeries> seriesList) {
+    @NonNull
+    public static RectRegion minMax(@Nullable XYConstraints constraints, @NonNull List<XYSeries> seriesList) {
         return minMax(constraints, seriesList.toArray(new XYSeries[seriesList.size()]));
     }
 
@@ -60,7 +67,8 @@ public class SeriesUtils {
      * @return
      * @since 0.9.7
      */
-    public static RectRegion minMax(XYConstraints constraints, XYSeries... seriesArray) {
+    @NonNull
+    public static RectRegion minMax(@Nullable XYConstraints constraints, @Nullable XYSeries... seriesArray) {
 
         final RectRegion bounds = new RectRegion();
 
@@ -103,7 +111,8 @@ public class SeriesUtils {
      * @param lists lists to be evaluated for min/max values.
      * @return the original bounds instance passed in
      */
-    public static Region minMax(Region bounds, List<Number>... lists) {
+    @NonNull
+    public static Region minMax(@NonNull Region bounds, @NonNull List<Number>... lists) {
         for (final List<Number> list : lists) {
             for (final Number i : list) {
                 bounds.union(i);
@@ -120,7 +129,8 @@ public class SeriesUtils {
      * @return The min/max iVals to draw.  An empty series yields [0, 0]; callers should check
      * {@link XYSeries#size()} before iterating.
      */
-    public static Region iBounds(XYSeries series, RectRegion visibleBounds) {
+    @NonNull
+    public static Region iBounds(@NonNull XYSeries series, @NonNull RectRegion visibleBounds) {
         if (series.size() == 0) {
             return new Region(0, 0);
         }
@@ -140,7 +150,7 @@ public class SeriesUtils {
      * @return The index of the smallest non-null value that is greater than visibleMax, or the index
      * of the last element if no such value exists.
      */
-    protected static int iBoundsMax(XYSeries series, double visibleMax, float step) {
+    protected static int iBoundsMax(@NonNull XYSeries series, double visibleMax, float step) {
         int max = series.size() - 1;
         final int seriesSize = series.size();
         final int steps = (int) Math.ceil(seriesSize / step);
@@ -179,7 +189,7 @@ public class SeriesUtils {
      * @return The index of the largest non-null value that is less than visible, or 0
      * (the first element index) if no such value exists.
      */
-    protected static int iBoundsMin(XYSeries series, double visibleMin, float step) {
+    protected static int iBoundsMin(@NonNull XYSeries series, double visibleMin, float step) {
         int min = 0;
         final int steps = (int) Math.ceil(series.size() / step);
         for (int stepIndex = 1; stepIndex <= steps; stepIndex++) {
@@ -216,7 +226,8 @@ public class SeriesUtils {
      * @return The iVals of the non-null values surrounding the null range. If the null range is unbounded on
      * either side then either or both min and max values will also be null.
      */
-    protected static Region getNullRegion(XYSeries series, int index) {
+    @NonNull
+    protected static Region getNullRegion(@NonNull XYSeries series, int index) {
         Region region = new Region();
         if(series.getX(index) != null) {
             throw new IllegalArgumentException("Attempt to find null region for non null index: " + index);
@@ -244,7 +255,8 @@ public class SeriesUtils {
      * @return
      * @since 0.9.7
      */
-    public static Region minMax(List<Number>... lists) {
+    @NonNull
+    public static Region minMax(@NonNull List<Number>... lists) {
         return minMax(new Region(), lists);
     }
 
@@ -254,7 +266,8 @@ public class SeriesUtils {
      * @param series
      * @return The {@link com.androidplot.xy.OrderedXYSeries.XOrder} of the series.
      */
-    public static OrderedXYSeries.XOrder getXYOrder(XYSeries series) {
+    @NonNull
+    public static OrderedXYSeries.XOrder getXYOrder(@NonNull XYSeries series) {
         return series instanceof OrderedXYSeries ?
                 ((OrderedXYSeries) series).getXOrder() : OrderedXYSeries.XOrder.NONE;
     }

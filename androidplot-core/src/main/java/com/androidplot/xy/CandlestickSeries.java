@@ -5,6 +5,7 @@ package com.androidplot.xy;
 import com.androidplot.xy.SimpleXYSeries;
 
 import java.util.*;
+import androidx.annotation.NonNull;
 
 /**
  * Convenience class for representing a series of candlestick values;
@@ -22,6 +23,7 @@ public class CandlestickSeries {
     private SimpleXYSeries openSeries = new SimpleXYSeries(null);
     private SimpleXYSeries closeSeries = new SimpleXYSeries(null);
 
+    @NonNull
     protected static List<Number> generateRange(int start, int end) {
         List<Number> range = new ArrayList<>(end - start);
         for(int i = start; i < end; i++) {
@@ -30,7 +32,7 @@ public class CandlestickSeries {
         return range;
     }
 
-    public CandlestickSeries(Item... items) {
+    public CandlestickSeries(@NonNull Item... items) {
         this(Arrays.asList(items));
     }
 
@@ -40,11 +42,11 @@ public class CandlestickSeries {
      * generated using the formula x=i.
      * @param items
      */
-    public CandlestickSeries(List<Item> items) {
+    public CandlestickSeries(@NonNull List<Item> items) {
         this(generateRange(0, items.size()), items);
     }
 
-    public CandlestickSeries(List<Number> xVals, List<Item> items) {
+    public CandlestickSeries(@NonNull List<Number> xVals, @NonNull List<Item> items) {
         if(xVals.size() != items.size()) {
             throw new IllegalArgumentException("xVals and yVals length must be identical.");
         }
@@ -57,35 +59,39 @@ public class CandlestickSeries {
         }
     }
 
+    @NonNull
     public SimpleXYSeries getHighSeries() {
         return highSeries;
     }
 
-    public void setHighSeries(SimpleXYSeries highSeries) {
+    public void setHighSeries(@NonNull SimpleXYSeries highSeries) {
         this.highSeries = highSeries;
     }
 
+    @NonNull
     public SimpleXYSeries getLowSeries() {
         return lowSeries;
     }
 
-    public void setLowSeries(SimpleXYSeries lowSeries) {
+    public void setLowSeries(@NonNull SimpleXYSeries lowSeries) {
         this.lowSeries = lowSeries;
     }
 
+    @NonNull
     public SimpleXYSeries getOpenSeries() {
         return openSeries;
     }
 
-    public void setOpenSeries(SimpleXYSeries openSeries) {
+    public void setOpenSeries(@NonNull SimpleXYSeries openSeries) {
         this.openSeries = openSeries;
     }
 
+    @NonNull
     public SimpleXYSeries getCloseSeries() {
         return closeSeries;
     }
 
-    public void setCloseSeries(SimpleXYSeries closeSeries) {
+    public void setCloseSeries(@NonNull SimpleXYSeries closeSeries) {
         this.closeSeries = closeSeries;
     }
 

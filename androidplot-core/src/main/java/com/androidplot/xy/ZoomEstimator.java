@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package com.androidplot.xy;
 
+import androidx.annotation.NonNull;
+
 /**
  * Estimates optimal zoom level to be applied to a {@link SampledXYSeries} based on the current
  * visible bounds of the owning {@link XYPlot}.
@@ -8,7 +10,7 @@ package com.androidplot.xy;
 public class ZoomEstimator extends Estimator {
 
     @Override
-    public void run(XYPlot plot, XYSeriesBundle sf) {
+    public void run(@NonNull XYPlot plot, @NonNull XYSeriesBundle sf) {
         if(sf.getSeries() instanceof SampledXYSeries) {
             SampledXYSeries oxy = (SampledXYSeries) sf.getSeries();
             if (oxy.getBounds() == null) {
@@ -25,7 +27,7 @@ public class ZoomEstimator extends Estimator {
      * @param visibleBounds
      * @return The zoom factor to apply to series, or 1 (no zoom) if series has no bounds.
      */
-    protected double calculateZoom(SampledXYSeries series, RectRegion visibleBounds) {
+    protected double calculateZoom(@NonNull SampledXYSeries series, @NonNull RectRegion visibleBounds) {
         RectRegion seriesBounds = series.getBounds();
         if (seriesBounds == null) {
             return 1;

@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import com.androidplot.Plot;
 import com.androidplot.PlotListener;
+import androidx.annotation.NonNull;
 
 /**
  * !!! THIS CLASS IS STILL UNDER DEVELOPMENT AND MAY CONTAIN BUGS !!!
@@ -73,12 +74,12 @@ public class PlotStatistics implements PlotListener {
     }
 
     @Override
-    public void onBeforeDraw(Plot source, Canvas canvas) {
+    public void onBeforeDraw(@NonNull Plot source, @NonNull Canvas canvas) {
         lastStart = System.currentTimeMillis();
     }
 
     @Override
-    public void onAfterDraw(Plot source, Canvas canvas) {
+    public void onAfterDraw(@NonNull Plot source, @NonNull Canvas canvas) {
         lastLatency = System.currentTimeMillis() - lastStart;
         if(lastLatency < shortestRenderMs) {
             shortestRenderMs = lastLatency;

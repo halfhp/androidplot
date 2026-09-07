@@ -8,6 +8,7 @@ import android.graphics.Paint;
 
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.PixelUtils;
+import androidx.annotation.NonNull;
 
 /**
  * Format for drawing a value using {@link BubbleRenderer}.
@@ -45,7 +46,7 @@ public class BubbleFormatter extends XYSeriesFormatter<XYRegionFormatter> {
 
     public BubbleFormatter() {}
 
-    public BubbleFormatter(Context context, int xmlCfgId) {
+    public BubbleFormatter(@NonNull Context context, int xmlCfgId) {
         this();
         configure(context, xmlCfgId);
     }
@@ -56,28 +57,32 @@ public class BubbleFormatter extends XYSeriesFormatter<XYRegionFormatter> {
     }
 
     @Override
+    @NonNull
     public Class<? extends SeriesRenderer> getRendererClass() {
         return BubbleRenderer.class;
     }
 
     @Override
-    public BubbleRenderer doGetRendererInstance(XYPlot plot) {
+    @NonNull
+    public BubbleRenderer doGetRendererInstance(@NonNull XYPlot plot) {
         return new BubbleRenderer(plot);
     }
 
+    @NonNull
     public Paint getStrokePaint() {
         return strokePaint;
     }
 
-    public void setStrokePaint(Paint strokePaint) {
+    public void setStrokePaint(@NonNull Paint strokePaint) {
         this.strokePaint = strokePaint;
     }
 
+    @NonNull
     public Paint getFillPaint() {
         return fillPaint;
     }
 
-    public void setFillPaint(Paint fillPaint) {
+    public void setFillPaint(@NonNull Paint fillPaint) {
         this.fillPaint = fillPaint;
     }
 }

@@ -5,6 +5,7 @@ package com.androidplot.xy;
 import android.graphics.RectF;
 
 import com.androidplot.*;
+import androidx.annotation.NonNull;
 
 /**
  * Calculates "stepping" values for a plot.  These values are most commonly used for
@@ -20,7 +21,8 @@ public class XYStepCalculator {
      * @param pixRect
      * @return
      */
-    public static Step getStep(XYPlot plot, Axis axisType, RectF pixRect) {
+    @NonNull
+    public static Step getStep(@NonNull XYPlot plot, @NonNull Axis axisType, @NonNull RectF pixRect) {
         Step step = null;
         switch(axisType) {
             case DOMAIN:
@@ -39,7 +41,8 @@ public class XYStepCalculator {
         return step;
     }
 
-    public static Step getStep(StepMode typeXY, double stepValue, Region realBounds, Region pixelBounds) {
+    @NonNull
+    public static Step getStep(@NonNull StepMode typeXY, double stepValue, @NonNull Region realBounds, @NonNull Region pixelBounds) {
         double stepVal = 0;
         double stepPix = 0;
         double stepCount = 0;

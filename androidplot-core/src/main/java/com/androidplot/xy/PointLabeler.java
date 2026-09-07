@@ -2,7 +2,10 @@
 
 package com.androidplot.xy;
 
+import androidx.annotation.NonNull;
+
 public interface PointLabeler<SeriesType extends XYSeries> {
 
-    String getLabel(SeriesType series, int index);
+    @NonNull
+    String getLabel(@NonNull SeriesType series, int index);
 }

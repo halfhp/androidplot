@@ -2,9 +2,11 @@
 
 package com.androidplot.ui;
 
+import androidx.annotation.NonNull;
+
 public class VerticalPosition extends PositionMetric<VerticalPositioning> {
 
-    public VerticalPosition(float value, VerticalPositioning layoutStyle) {
+    public VerticalPosition(float value, @NonNull VerticalPositioning layoutStyle) {
         super(value, layoutStyle);
     }
 
@@ -12,7 +14,7 @@ public class VerticalPosition extends PositionMetric<VerticalPositioning> {
      * Throws IllegalArgumentException if there is a problem.
      * @param value
      */
-    protected void validatePair(float value, VerticalPositioning layoutStyle) {
+    protected void validatePair(float value, @NonNull VerticalPositioning layoutStyle) {
         switch(layoutStyle) {
             case ABSOLUTE_FROM_TOP:
             case ABSOLUTE_FROM_BOTTOM:
@@ -47,7 +49,7 @@ public class VerticalPosition extends PositionMetric<VerticalPositioning> {
     }
 
     @Override
-    public void setLayoutType(VerticalPositioning layoutType) {
+    public void setLayoutType(@NonNull VerticalPositioning layoutType) {
         super.setLayoutType(layoutType);
     }
 }

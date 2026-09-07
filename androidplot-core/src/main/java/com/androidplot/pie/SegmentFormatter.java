@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.Formatter;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class SegmentFormatter extends Formatter<PieChart> {
 
@@ -63,7 +65,7 @@ public class SegmentFormatter extends Formatter<PieChart> {
         getLabelMarkerPaint().setStrokeWidth(DEFAULT_LABEL_MARKER_THICKNESS);
     }
 
-    public SegmentFormatter(Integer fillColor) {
+    public SegmentFormatter(@Nullable Integer fillColor) {
         if(fillColor != null) {
             getFillPaint().setColor(fillColor);
         } else {
@@ -71,19 +73,19 @@ public class SegmentFormatter extends Formatter<PieChart> {
         }
     }
 
-    public SegmentFormatter(Context context, int xmlCfgId) {
+    public SegmentFormatter(@NonNull Context context, int xmlCfgId) {
         configure(context, xmlCfgId);
     }
 
-    public SegmentFormatter(Integer fillColor, Integer borderColor) {
+    public SegmentFormatter(@Nullable Integer fillColor, @NonNull Integer borderColor) {
         this(fillColor);
         getInnerEdgePaint().setColor(borderColor);
         getOuterEdgePaint().setColor(borderColor);
         getRadialEdgePaint().setColor(borderColor);
     }
 
-    public SegmentFormatter(Integer fillColor, Integer outerEdgeColor,
-                            Integer innerEdgeColor, Integer radialEdgeColor) {
+    public SegmentFormatter(@Nullable Integer fillColor, @NonNull Integer outerEdgeColor,
+                            @NonNull Integer innerEdgeColor, @NonNull Integer radialEdgeColor) {
         this(fillColor);
         if(getOuterEdgePaint() != null) {
             getOuterEdgePaint().setColor(outerEdgeColor);
@@ -108,60 +110,68 @@ public class SegmentFormatter extends Formatter<PieChart> {
     }
 
     @Override
+    @NonNull
     public Class<? extends SeriesRenderer> getRendererClass() {
         return PieRenderer.class;
     }
 
     @Override
-    public SeriesRenderer doGetRendererInstance(PieChart plot) {
+    @NonNull
+    public SeriesRenderer doGetRendererInstance(@NonNull PieChart plot) {
         return new PieRenderer(plot);
     }
 
+    @NonNull
     public Paint getInnerEdgePaint() {
         return innerEdgePaint;
     }
 
-    public void setInnerEdgePaint(Paint innerEdgePaint) {
+    public void setInnerEdgePaint(@NonNull Paint innerEdgePaint) {
         this.innerEdgePaint = innerEdgePaint;
     }
 
+    @NonNull
     public Paint getOuterEdgePaint() {
         return outerEdgePaint;
     }
 
-    public void setOuterEdgePaint(Paint outerEdgePaint) {
+    public void setOuterEdgePaint(@NonNull Paint outerEdgePaint) {
         this.outerEdgePaint = outerEdgePaint;
     }
 
+    @NonNull
     public Paint getRadialEdgePaint() {
         return radialEdgePaint;
     }
 
-    public void setRadialEdgePaint(Paint radialEdgePaint) {
+    public void setRadialEdgePaint(@NonNull Paint radialEdgePaint) {
         this.radialEdgePaint = radialEdgePaint;
     }
 
+    @NonNull
     public Paint getFillPaint() {
         return fillPaint;
     }
 
-    public void setFillPaint(Paint fillPaint) {
+    public void setFillPaint(@NonNull Paint fillPaint) {
         this.fillPaint = fillPaint;
     }
 
+    @Nullable
     public Paint getLabelPaint() {
         return labelPaint;
     }
 
-    public void setLabelPaint(Paint labelPaint) {
+    public void setLabelPaint(@Nullable Paint labelPaint) {
         this.labelPaint = labelPaint;
     }
 
+    @NonNull
     public Paint getLabelMarkerPaint() {
         return labelMarkerPaint;
     }
 
-    public void setLabelMarkerPaint(Paint labelMarkerPaint) {
+    public void setLabelMarkerPaint(@NonNull Paint labelMarkerPaint) {
         this.labelMarkerPaint = labelMarkerPaint;
     }
 

@@ -5,19 +5,21 @@ package com.androidplot.ui;
 import android.graphics.RectF;
 
 import java.util.Iterator;
+import androidx.annotation.NonNull;
 
 public class FixedTableModel extends TableModel {
     private float cellWidth;
     private float cellHeight;
 
-    public FixedTableModel(float cellWidth, float cellHeight, TableOrder order) {
+    public FixedTableModel(float cellWidth, float cellHeight, @NonNull TableOrder order) {
         super(order);
         setCellWidth(cellWidth);
         setCellHeight(cellHeight);
     }
 
     @Override
-    public Iterator<RectF> getIterator(RectF tableRect, int totalElements) {
+    @NonNull
+    public Iterator<RectF> getIterator(@NonNull RectF tableRect, int totalElements) {
         return new FixedTableModelIterator(this, tableRect, totalElements);
     }
 

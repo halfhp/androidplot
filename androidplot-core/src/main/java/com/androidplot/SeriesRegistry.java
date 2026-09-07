@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import androidx.annotation.NonNull;
 
 /**
  * Manages a list of {@link Series} and their associated {@link Formatter} in the context of a {@link Plot}.
@@ -20,9 +21,11 @@ public abstract class SeriesRegistry
 
     private ArrayList<BundleType> registry = new ArrayList<>();
 
+    @NonNull
     public List<BundleType> getSeriesAndFormatterList() {
         return registry;
     }
+    @NonNull
     public List<SeriesType> getSeriesList() {
         List<SeriesType> result = new ArrayList<>(registry.size());
         for(SeriesBundle<SeriesType, FormatterType> sfPair : registry) {
@@ -39,21 +42,23 @@ public abstract class SeriesRegistry
         return registry.isEmpty();
     }
 
-    public synchronized boolean add(SeriesType series, FormatterType formatter) {
+    public synchronized boolean add(@NonNull SeriesType series, @NonNull FormatterType formatter) {
         if(series == null || formatter == null) {
             throw new IllegalArgumentException("Neither series nor formatter param may be null.");
         }
         return registry.add(newSeriesBundle(series, formatter));
     }
 
-    protected abstract BundleType newSeriesBundle(SeriesType series, FormatterType formatter);
+    @NonNull
+    protected abstract BundleType newSeriesBundle(@NonNull SeriesType series, @NonNull FormatterType formatter);
 
     /**
      *
      * @param series
      * @return A List of {@link SeriesBundle} instances that reference series.
      */
-    protected List<SeriesBundle<SeriesType, FormatterType>> get(SeriesType series) {
+    @NonNull
+    protected List<SeriesBundle<SeriesType, FormatterType>> get(@NonNull SeriesType series) {
         List<SeriesBundle<SeriesType, FormatterType>> results =
                 new ArrayList<>();
         for(SeriesBundle<SeriesType, FormatterType> thisPair : registry) {
@@ -64,7 +69,8 @@ public abstract class SeriesRegistry
         return results;
     }
 
-    public synchronized List<BundleType> remove(SeriesType series, Class rendererClass) {
+    @NonNull
+    public synchronized List<BundleType> remove(@NonNull SeriesType series, @NonNull Class rendererClass) {
         ArrayList<BundleType> removedItems = new ArrayList<>();
         for(Iterator<BundleType> it = registry.iterator(); it.hasNext();) {
             BundleType b = it.next();
@@ -80,7 +86,7 @@ public abstract class SeriesRegistry
      * Remove all occurrences of series regardless of the associated Renderer.
      * @param series
      */
-    public synchronized boolean remove(SeriesType series) {
+    public synchronized boolean remove(@NonNull SeriesType series) {
         boolean result = false;
         for(Iterator<BundleType> it = registry.iterator(); it.hasNext();) {
             if(it.next().getSeries() == series) {
@@ -98,6 +104,7 @@ public abstract class SeriesRegistry
         registry.clear();
     }
 
+    @NonNull
     public List<SeriesBundle<SeriesType, FormatterType>> getLegendEnabledItems() {
         List<SeriesBundle<SeriesType, FormatterType>> sfList = new ArrayList<>();
         for(SeriesBundle<SeriesType, FormatterType> sf : registry) {
@@ -108,7 +115,7 @@ public abstract class SeriesRegistry
         return sfList;
     }
 
-    public boolean contains(SeriesType series, Class<? extends FormatterType> formatterClass) {
+    public boolean contains(@NonNull SeriesType series, @NonNull Class<? extends FormatterType> formatterClass) {
         for(BundleType b : registry) {
             if(b.getFormatter().getClass() == formatterClass && b.getSeries() == series) {
                 return true;

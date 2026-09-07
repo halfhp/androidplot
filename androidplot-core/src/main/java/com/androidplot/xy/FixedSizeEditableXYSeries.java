@@ -26,7 +26,7 @@ public class FixedSizeEditableXYSeries implements EditableXYSeries {
     private List<FastNumber> yVals = new ArrayList<>();
     private String title;
 
-    public FixedSizeEditableXYSeries(String title, int size) {
+    public FixedSizeEditableXYSeries(@Nullable String title, int size) {
         setTitle(title);
         resize(size);
     }
@@ -65,11 +65,12 @@ public class FixedSizeEditableXYSeries implements EditableXYSeries {
     }
 
     @Override
+    @Nullable
     public String getTitle() {
         return this.title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@Nullable String title) {
         this.title = title;
     }
 
@@ -79,11 +80,13 @@ public class FixedSizeEditableXYSeries implements EditableXYSeries {
     }
 
     @Override
+    @Nullable
     public Number getX(int index) {
         return xVals.get(index);
     }
 
     @Override
+    @Nullable
     public Number getY(int index) {
         return yVals.get(index);
     }

@@ -5,6 +5,8 @@ import com.androidplot.*;
 import com.androidplot.util.SeriesUtils;
 
 import java.util.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * An implementation of {@link FastXYSeries} that samples its self into multiple levels to
@@ -49,7 +51,7 @@ public class SampledXYSeries implements FastXYSeries, OrderedXYSeries {
      * downsampled series until threshold is reached.
      * @param threshold The desired size of the smallest sample series.  Must be < rawData.size.
      */
-    public SampledXYSeries(XYSeries rawData, XOrder xOrder, float ratio, int threshold) {
+    public SampledXYSeries(@NonNull XYSeries rawData, @NonNull XOrder xOrder, float ratio, int threshold) {
         this.rawData = rawData;
         this.xOrder = xOrder;
         this.setRatio(ratio);
@@ -64,7 +66,7 @@ public class SampledXYSeries implements FastXYSeries, OrderedXYSeries {
      * downsampled series until threshold is reached.
      * @param threshold The desired size of the smallest sample series.  Must be < rawData.size.
      */
-    public SampledXYSeries(XYSeries rawData, float ratio, int threshold) {
+    public SampledXYSeries(@NonNull XYSeries rawData, float ratio, int threshold) {
         this(rawData, SeriesUtils.getXYOrder(rawData), ratio, threshold);
     }
 
@@ -118,6 +120,7 @@ public class SampledXYSeries implements FastXYSeries, OrderedXYSeries {
         }
     }
 
+    @NonNull
     protected List<EditableXYSeries> getZoomLevels() {
         return this.zoomLevels;
     }
@@ -154,16 +157,18 @@ public class SampledXYSeries implements FastXYSeries, OrderedXYSeries {
         return Math.pow(getRatio(), zoomLevels.size());
     }
 
+    @NonNull
     public Sampler getAlgorithm() {
         return algorithm;
     }
 
-    public void setAlgorithm(Sampler algorithm) {
+    public void setAlgorithm(@NonNull Sampler algorithm) {
         this.algorithm = algorithm;
         resample();
     }
 
     @Override
+    @Nullable
     public String getTitle() {
         return rawData.getTitle();
     }
@@ -174,11 +179,13 @@ public class SampledXYSeries implements FastXYSeries, OrderedXYSeries {
     }
 
     @Override
+    @Nullable
     public Number getX(int index) {
         return activeSeries.getX(index);
     }
 
     @Override
+    @Nullable
     public Number getY(int index) {
         return activeSeries.getY(index);
     }
@@ -198,20 +205,23 @@ public class SampledXYSeries implements FastXYSeries, OrderedXYSeries {
      * @return The min/max bounds of the raw data.  Never null after construction unless
      * explicitly set to null via {@link #setBounds(RectRegion)}.
      */
+    @Nullable
     public RectRegion getBounds() {
         return bounds;
     }
 
-    public void setBounds(RectRegion bounds) {
+    public void setBounds(@Nullable RectRegion bounds) {
         this.bounds = bounds;
     }
 
     @Override
+    @Nullable
     public RectRegion minMax() {
         return bounds;
     }
 
     @Override
+    @NonNull
     public XOrder getXOrder() {
         return xOrder;
     }

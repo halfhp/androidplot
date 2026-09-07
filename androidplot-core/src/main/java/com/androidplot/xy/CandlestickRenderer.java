@@ -7,6 +7,8 @@ import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesBundle;
 
 import java.util.List;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Renders a group of {@link com.androidplot.xy.XYSeries} as a candlestick chart
@@ -29,14 +31,14 @@ public class CandlestickRenderer<FormatterType extends CandlestickFormatter> ext
     protected static final int OPEN_INDEX = 2;
     protected static final int CLOSE_INDEX = 3;
 
-    public CandlestickRenderer(XYPlot plot) {
+    public CandlestickRenderer(@NonNull XYPlot plot) {
         super(plot);
     }
 
 
     @Override
-    public void onRender(Canvas canvas, RectF plotArea, List<SeriesBundle<XYSeries,
-                ? extends FormatterType>> sfList, int seriesSize,  RenderStack stack) {
+    public void onRender(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull List<SeriesBundle<XYSeries,
+                ? extends FormatterType>> sfList, int seriesSize,  @NonNull RenderStack stack) {
 
         final FormatterType formatter = sfList.get(0).getFormatter();
         for(int i = 0; i < seriesSize; i++) {
@@ -78,17 +80,17 @@ public class CandlestickRenderer<FormatterType extends CandlestickFormatter> ext
         }
     }
 
-    protected void drawTextLabel(Canvas canvas, PointF coords, String text, PointLabelFormatter plf) {
+    protected void drawTextLabel(@NonNull Canvas canvas, @NonNull PointF coords, @Nullable String text, @NonNull PointLabelFormatter plf) {
         if(text != null) {
             canvas.drawText(text, coords.x + plf.hOffset, coords.y + plf.vOffset, plf.getTextPaint());
         }
     }
 
-    protected void drawWick(Canvas canvas, PointF min, PointF max, FormatterType formatter) {
+    protected void drawWick(@NonNull Canvas canvas, @NonNull PointF min, @NonNull PointF max, @NonNull FormatterType formatter) {
         canvas.drawLine(min.x, min.y, max.x, max.y, formatter.getWickPaint());
     }
 
-    protected void drawBody(Canvas canvas, PointF open, PointF close, FormatterType formatter) {
+    protected void drawBody(@NonNull Canvas canvas, @NonNull PointF open, @NonNull PointF close, @NonNull FormatterType formatter) {
         final float halfWidth = formatter.getBodyWidth() / 2;
         final RectF rect = new RectF(open.x - halfWidth, open.y, close.x + halfWidth, close.y);
 
@@ -108,23 +110,23 @@ public class CandlestickRenderer<FormatterType extends CandlestickFormatter> ext
         }
     }
 
-    protected void drawUpperCap(Canvas canvas, PointF val, FormatterType formatter) {
+    protected void drawUpperCap(@NonNull Canvas canvas, @NonNull PointF val, @NonNull FormatterType formatter) {
         final float halfWidth = formatter.getUpperCapWidth();
         canvas.drawLine(val.x - halfWidth, val.y, val.x + halfWidth, val.y, formatter.getUpperCapPaint());
     }
 
-    protected void drawLowerCap(Canvas canvas, PointF val, FormatterType formatter) {
+    protected void drawLowerCap(@NonNull Canvas canvas, @NonNull PointF val, @NonNull FormatterType formatter) {
         final float halfWidth = formatter.getLowerCapWidth();
         canvas.drawLine(val.x - halfWidth, val.y, val.x + halfWidth, val.y, formatter.getLowerCapPaint());
     }
 
     @Override
-    protected void doDrawLegendIcon(Canvas canvas, RectF rect, FormatterType formatter) {
+    protected void doDrawLegendIcon(@NonNull Canvas canvas, @NonNull RectF rect, @NonNull FormatterType formatter) {
         // TODO
     }
 
-    protected void drawTriangle(Canvas canvas, RectF rect,
-                                Paint fillPaint, Paint strokePaint) {
+    protected void drawTriangle(@NonNull Canvas canvas, @NonNull RectF rect,
+                                @NonNull Paint fillPaint, @NonNull Paint strokePaint) {
         Path path = new Path();
         path.moveTo(rect.centerX(), rect.bottom);
         path.lineTo(rect.left,rect.top);

@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import androidx.annotation.Nullable;
 
 /**
  * Provides core functionality for displaying a legend widget within a {@link com.androidplot.Plot}.
@@ -60,7 +61,7 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
     }
 
     @Override
-    protected void doOnDraw(Canvas canvas, RectF widgetRect) {
+    protected void doOnDraw(@NonNull Canvas canvas, @NonNull RectF widgetRect) {
         final List<ItemT> items = getLegendItems();
         if(legendItemComparator != null) {
             Collections.sort(items, legendItemComparator);
@@ -95,6 +96,7 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
      *
      * @return The list of legend items to be drawn.  This is used to calculate table dimensions etc.
      */
+    @NonNull
     protected abstract List<ItemT> getLegendItems();
 
     private RectF getIconRect(RectF cellRect) {
@@ -113,7 +115,7 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
      * @param canvas
      * @param iconRect
      */
-    protected void beginDrawingCell(Canvas canvas, RectF iconRect) {
+    protected void beginDrawingCell(@NonNull Canvas canvas, @NonNull RectF iconRect) {
 
         if(drawIconBackgroundEnabled && iconBackgroundPaint != null) {
             canvas.drawRect(iconRect, iconBackgroundPaint);
@@ -128,7 +130,7 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
      * @param iconRect
      * @param legendItem
      */
-    protected void finishDrawingCell(Canvas canvas, RectF cellRect, RectF iconRect, LegendItem legendItem) {
+    protected void finishDrawingCell(@NonNull Canvas canvas, @NonNull RectF cellRect, @NonNull RectF iconRect, @NonNull LegendItem legendItem) {
 
         if(drawIconBorderEnabled && iconBorderPaint != null) {
             canvas.drawRect(iconRect, iconBorderPaint);
@@ -149,19 +151,20 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
         }
     }
 
-    protected static float getRectCenterY(RectF cellRect) {
+    protected static float getRectCenterY(@NonNull RectF cellRect) {
         return cellRect.top + (cellRect.height()/2);
     }
 
-    public synchronized void setTableModel(TableModel tableModel) {
+    public synchronized void setTableModel(@NonNull TableModel tableModel) {
         this.tableModel = tableModel;
     }
 
+    @NonNull
     public Paint getTextPaint() {
         return textPaint;
     }
 
-    public void setTextPaint(Paint textPaint) {
+    public void setTextPaint(@NonNull Paint textPaint) {
         this.textPaint = textPaint;
     }
 
@@ -181,14 +184,16 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
         this.drawIconBorderEnabled = drawIconBorderEnabled;
     }
 
+    @NonNull
     public Size getIconSize() {
         return iconSize;
     }
 
-    public void setIconSize(Size iconSize) {
+    public void setIconSize(@NonNull Size iconSize) {
         this.iconSize = iconSize;
     }
 
+    @Nullable
     public Comparator<ItemT> getLegendItemComparator() {
         return legendItemComparator;
     }
@@ -199,7 +204,7 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
      * added to the {@link com.androidplot.Plot}.
      * @param legendItemComparator
      */
-    public void setLegendItemComparator(Comparator<ItemT> legendItemComparator) {
+    public void setLegendItemComparator(@Nullable Comparator<ItemT> legendItemComparator) {
         this.legendItemComparator = legendItemComparator;
     }
 }

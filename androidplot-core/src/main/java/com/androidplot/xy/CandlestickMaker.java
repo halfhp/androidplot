@@ -2,6 +2,8 @@
 
 package com.androidplot.xy;
 
+import androidx.annotation.NonNull;
+
 /**
  * Helper utility to simplify the creation of of candlestick charts
  * @since 0.9.7
@@ -18,8 +20,8 @@ public abstract class CandlestickMaker {
      * @param highVals
      * @param lowVals
      */
-    public static void make(XYPlot plot, CandlestickFormatter formatter,
-                            XYSeries openVals, XYSeries closeVals, XYSeries highVals, XYSeries lowVals) {
+    public static void make(@NonNull XYPlot plot, @NonNull CandlestickFormatter formatter,
+                            @NonNull XYSeries openVals, @NonNull XYSeries closeVals, @NonNull XYSeries highVals, @NonNull XYSeries lowVals) {
         plot.addSeries(formatter, highVals, lowVals, openVals, closeVals);
     }
 
@@ -30,7 +32,7 @@ public abstract class CandlestickMaker {
      * @param series
      * @since 0.9.8
      */
-    public static void make(XYPlot plot, CandlestickFormatter formatter, CandlestickSeries series) {
+    public static void make(@NonNull XYPlot plot, @NonNull CandlestickFormatter formatter, @NonNull CandlestickSeries series) {
         make(plot, formatter, series.getOpenSeries(), series.getCloseSeries(),
                 series.getHighSeries(), series.getLowSeries());
     }
@@ -41,7 +43,7 @@ public abstract class CandlestickMaker {
      * @param series
      * @since 0.9.8
      */
-    public static void check(CandlestickSeries series) {
+    public static void check(@NonNull CandlestickSeries series) {
         check(series.getOpenSeries(), series.getCloseSeries(), series.getHighSeries(), series.getLowSeries());
     }
 
@@ -54,7 +56,7 @@ public abstract class CandlestickMaker {
      * @param lowVals
      * @since 0.9.8
      */
-    public static void check(XYSeries openVals, XYSeries closeVals, XYSeries highVals, XYSeries lowVals) {
+    public static void check(@NonNull XYSeries openVals, @NonNull XYSeries closeVals, @NonNull XYSeries highVals, @NonNull XYSeries lowVals) {
         final int size = openVals.size();
         assert closeVals.size() == size : "closeVals has irregular size.";
         assert highVals.size() == size : "highVals has irregular size.";

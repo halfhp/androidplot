@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.PixelUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Defines the visual aesthetics of an XYSeries; outline color and width, fill style,
@@ -17,6 +19,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     private static final float DEFAULT_LINE_STROKE_WIDTH_DP   = 1.5f;
     private static final float DEFAULT_VERTEX_STROKE_WIDTH_DP = 4.5f;
 
+    @NonNull
     public FillDirection getFillDirection() {
         return fillDirection;
     }
@@ -26,7 +29,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
      * See {@link FillDirection}.
      * @param fillDirection
      */
-    public void setFillDirection(FillDirection fillDirection) {
+    public void setFillDirection(@NonNull FillDirection fillDirection) {
         this.fillDirection = fillDirection;
     }
 
@@ -36,7 +39,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     protected Paint fillPaint;
     protected InterpolationParams interpolationParams;
 
-    public LineAndPointFormatter(Context context, int xmlCfgId) {
+    public LineAndPointFormatter(@NonNull Context context, int xmlCfgId) {
         super(context, xmlCfgId);
     }
 
@@ -47,13 +50,13 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         this(Color.RED, Color.GREEN, Color.BLUE, null);
     }
 
-    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor,
-            PointLabelFormatter plf) {
+    public LineAndPointFormatter(@Nullable Integer lineColor, @Nullable Integer vertexColor, @Nullable Integer fillColor,
+            @Nullable PointLabelFormatter plf) {
         this(lineColor, vertexColor, fillColor, plf, FillDirection.BOTTOM);
     }
 
-    public LineAndPointFormatter(Integer lineColor, Integer vertexColor, Integer fillColor,
-            PointLabelFormatter plf, FillDirection fillDir) {
+    public LineAndPointFormatter(@Nullable Integer lineColor, @Nullable Integer vertexColor, @Nullable Integer fillColor,
+            @Nullable PointLabelFormatter plf, @NonNull FillDirection fillDir) {
         initLinePaint(lineColor);
         initVertexPaint(vertexColor);
         initFillPaint(fillColor);
@@ -62,16 +65,18 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
     }
 
     @Override
+    @NonNull
     public Class<? extends SeriesRenderer> getRendererClass() {
         return LineAndPointRenderer.class;
     }
 
     @Override
-    public SeriesRenderer doGetRendererInstance(XYPlot plot) {
+    @NonNull
+    public SeriesRenderer doGetRendererInstance(@NonNull XYPlot plot) {
         return new LineAndPointRenderer(plot);
     }
 
-    protected void initLinePaint(Integer lineColor) {
+    protected void initLinePaint(@Nullable Integer lineColor) {
         if (lineColor == null) {
             linePaint = null;
         } else {
@@ -83,7 +88,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         }
     }
 
-    protected void initVertexPaint(Integer vertexColor) {
+    protected void initVertexPaint(@Nullable Integer vertexColor) {
         if (vertexColor == null) {
             vertexPaint = null;
         } else {
@@ -95,7 +100,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         }
     }
 
-    protected void initFillPaint(Integer fillColor) {
+    protected void initFillPaint(@Nullable Integer fillColor) {
         if (fillColor == null) {
             fillPaint = null;
         } else {
@@ -119,6 +124,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
      * {@link #hasLinePaint()}.
      * @return
      */
+    @NonNull
     public Paint getLinePaint() {
         if(linePaint == null) {
             initLinePaint(Color.TRANSPARENT);
@@ -126,7 +132,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         return linePaint;
     }
 
-    public void setLinePaint(Paint linePaint) {
+    public void setLinePaint(@Nullable Paint linePaint) {
         this.linePaint = linePaint;
     }
 
@@ -144,6 +150,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
      * {@link #hasVertexPaint()}.
      * @return
      */
+    @NonNull
     public Paint getVertexPaint() {
         if(vertexPaint == null) {
             initVertexPaint(Color.TRANSPARENT);
@@ -151,7 +158,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         return vertexPaint;
     }
 
-    public void setVertexPaint(Paint vertexPaint) {
+    public void setVertexPaint(@Nullable Paint vertexPaint) {
         this.vertexPaint = vertexPaint;
     }
 
@@ -168,6 +175,7 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
      * {@link #hasFillPaint()}.
      * @return
      */
+    @Nullable
     public Paint getFillPaint() {
         if(fillPaint == null) {
             initFillPaint(Color.TRANSPARENT);
@@ -175,15 +183,16 @@ public class LineAndPointFormatter extends XYSeriesFormatter<XYRegionFormatter> 
         return fillPaint;
     }
 
-    public void setFillPaint(Paint fillPaint) {
+    public void setFillPaint(@Nullable Paint fillPaint) {
         this.fillPaint = fillPaint;
     }
 
+    @Nullable
     public InterpolationParams getInterpolationParams() {
         return interpolationParams;
     }
 
-    public void setInterpolationParams(InterpolationParams params) {
+    public void setInterpolationParams(@Nullable InterpolationParams params) {
         this.interpolationParams = params;
     }
 }

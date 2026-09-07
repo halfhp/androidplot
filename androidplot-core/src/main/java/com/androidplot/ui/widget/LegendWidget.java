@@ -67,6 +67,10 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
         }
         final Iterator<RectF> cellRectIterator = tableModel.getIterator(widgetRect, items.size());
         for(ItemT item : items) {
+            if(!cellRectIterator.hasNext()) {
+                // the table is full; draw what fits rather than failing the whole frame:
+                break;
+            }
             final RectF cellRect = cellRectIterator.next();
             final RectF iconRect = getIconRect(cellRect);
             beginDrawingCell(canvas, iconRect);

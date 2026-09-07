@@ -99,4 +99,21 @@ public class XYLegendWidgetTest extends AndroidplotTest {
         inOrder.verify(legendWidget).drawIcon(any(Canvas.class), any(RectF.class), eq(i3));
         inOrder.verify(legendWidget).drawIcon(any(Canvas.class), any(RectF.class), eq(i1));
     }
+
+    @Test
+    public void draw_moreItemsThanTableCells_drawsWhatFitsWithoutThrowing() throws Exception {
+        // a 2x2 table can only hold 4 of the 5 items:
+        legendWidget.setTableModel(new DynamicTableModel(2, 2));
+        final List<XYLegendItem> legendItems = Lists.newArrayList();
+        for (int i = 0; i < 5; i++) {
+            legendItems.add(new XYLegendItem(XYLegendItem.Type.SERIES,
+                    new LineAndPointFormatter(), "item " + i));
+        }
+        doReturn(legendItems).when(legendWidget).getLegendItems();
+
+        legendWidget.draw(canvas);
+
+        verify(legendWidget, times(4))
+                .drawIcon(any(Canvas.class), any(RectF.class), any(XYLegendItem.class));
+    }
 }

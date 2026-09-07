@@ -72,15 +72,28 @@ jobs:
             androidplot-core/build/outputs/aar/androidplot-core-release.aar \
             demoapp/build/outputs/apk/release/demoapp-release.apk
 
-      # TODO: OSSRH was decommissioned; this must move to the Central Publisher Portal.
+      # Uploads the signed artifacts to the Central Publisher Portal's
+      # OSSRH-compatible staging API, then asks the Portal to validate and
+      # release the deployment to Maven Central.
       - name: Publish to Maven Central
         if: github.event_name != 'workflow_dispatch' || inputs.publish_maven_central
         env:
-          OSSRH_ACTOR: ${{ secrets.OSSRH_ACTOR }}
-          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
-        run: ./gradlew publish
+        run: |
+          ./gradlew publish
+          token=$(printf '%s:%s' "$MAVEN_CENTRAL_USERNAME" "$MAVEN_CENTRAL_PASSWORD" | base64 | tr -d '\n')
+          status=$(curl -sS -o /tmp/central-release.txt -w '%{http_code}' -X POST \
+            -H "Authorization: Bearer $token" \
+            "https://ossrh-staging-api.central.sonatype.com/manual/upload/defaultRepository/com.androidplot?publishing_type=automatic")
+          cat /tmp/central-release.txt; echo
+          if [ "$status" != "200" ]; then
+            echo "Central Portal release request failed with HTTP $status"
+            exit 1
+          fi
+          echo "Deployment submitted; track it at https://central.sonatype.com/publishing/deployments"
 
       # Uploads an APK rather than an app bundle. The demoapp's 2011 signing key
       # is 1024-bit RSA, which Play App Signing does not accept, and bundles

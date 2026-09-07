@@ -19,10 +19,15 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -102,6 +107,83 @@ public class BarRendererTest extends AndroidplotTest {
 
         // s2[2]
         verifyBarHeight(0, 30, barFormatter, 1);
+    }
+
+    @Test
+    public void onRender_stacked_measuresBarsFromRangeOrigin() {
+        XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 3);
+        XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", 4);
+
+        BarRenderer renderer = setupRendererForTesting(s1, s2);
+        renderer.setBarOrientation(BarRenderer.BarOrientation.STACKED);
+
+        // range 2..12 over 100px => 10px per unit; origin (y = 0) is at 120px:
+        xyPlot.setRangeBoundaries(2, 12, BoundaryMode.FIXED);
+        xyPlot.setUserRangeOrigin(0);
+        xyPlot.calculateMinMaxVals();
+        renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);
+
+        verify(renderer, times(2)).
+                drawBar(eq(canvas), any(BarRenderer.Bar.class), any(RectF.class));
+
+        // s1[0]: y = 3 spans the origin (120) to the pixel for y = 3 (90):
+        verifyBarHeight(90, 120, barFormatter, 1);
+
+        // s2[0]: y = 4 stacks on top, ending at the pixel for y = 7 (50).
+        // Previously heights were measured from the plot bottom, giving a top of 70:
+        verifyBarHeight(50, 90, barFormatter, 1);
+    }
+
+    @Test
+    public void onRender_stacked_negativeValuesStackDownwardFromRangeOrigin() {
+        XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", -2);
+        XYSeries s2 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s2", -3);
+
+        BarRenderer renderer = setupRendererForTesting(s1, s2);
+        renderer.setBarOrientation(BarRenderer.BarOrientation.STACKED);
+
+        // range -10..10 over 100px => 5px per unit; origin (y = 0) is at 50px:
+        xyPlot.setRangeBoundaries(-10, 10, BoundaryMode.FIXED);
+        xyPlot.setUserRangeOrigin(0);
+        xyPlot.calculateMinMaxVals();
+        renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);
+
+        // s1[0]: y = -2 hangs from the origin down to 60:
+        verifyBarHeight(50, 60, barFormatter, 1);
+
+        // s2[0]: y = -3 continues down to the pixel for y = -5 (75):
+        verifyBarHeight(60, 75, barFormatter, 1);
+    }
+
+    @Test
+    public void setFillPaint_null_disablesFill() {
+        BarFormatter formatter = new BarFormatter(Color.RED, Color.RED);
+        formatter.setFillPaint(null);
+
+        // previously BarFormatter shadowed the inherited fillPaint field so this stayed true:
+        assertFalse(formatter.hasFillPaint());
+        assertNull(formatter.getFillPaint());
+        assertTrue(formatter.hasLinePaint());
+
+        formatter.setBorderPaint(null);
+        assertFalse(formatter.hasLinePaint());
+        assertNull(formatter.getBorderPaint());
+    }
+
+    @Test
+    public void onRender_withNullFillAndBorderPaint_drawsNothingWithNullPaint() {
+        XYSeries s1 = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 2, 5, 7);
+        BarRenderer renderer = setupRendererForTesting(s1);
+        barFormatter.setFillPaint(null);
+        barFormatter.setBorderPaint(null);
+
+        xyPlot.setRangeBoundaries(0, 10, BoundaryMode.FIXED);
+        xyPlot.calculateMinMaxVals();
+        renderer.onRender(canvas, plotArea, s1, barFormatter, renderStack);
+        renderer.doDrawLegendIcon(canvas, new RectF(0, 0, 10, 10), barFormatter);
+
+        verify(canvas, never()).drawRect(anyFloat(), anyFloat(), anyFloat(), anyFloat(), isNull());
+        verify(canvas, never()).drawRect(any(RectF.class), isNull());
     }
 
     @Test

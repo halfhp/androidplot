@@ -15,30 +15,25 @@ import java.util.*;
  */
 public class BubbleChartActivity extends Activity {
 
-    private XYPlot plot;
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bubble_chart_example);
+        XYPlot plot = findViewById(R.id.plot);
 
-        // initialize our XYPlot reference:
-        plot = (XYPlot) findViewById(R.id.plot);
-
-        // turn the above arrays into XYSeries':
-        // (Y_VALS_ONLY means use the element index as the x value)
+        // BubbleSeries(yVals, zVals, title): x is the element index, z is bubble size
         BubbleSeries series1 = new BubbleSeries(
-                Arrays.asList(new Number[]{3, 5, 2, 3, 6}),
-                Arrays.asList(new Number[]{1, 5, 2, 2, 3}), "s1");
+                Arrays.<Number>asList(3, 5, 2, 3, 6),
+                Arrays.<Number>asList(1, 5, 2, 2, 3), "s1");
 
         BubbleSeries series2 = new BubbleSeries(
-                Arrays.asList(new Number[]{2, 7, 3, 1, 3}),
-                Arrays.asList(new Number[]{2, 1, 2, 6, 7}), "s2");
+                Arrays.<Number>asList(2, 7, 3, 1, 3),
+                Arrays.<Number>asList(2, 1, 2, 6, 7), "s2");
 
         BubbleSeries series3 = new BubbleSeries(
-                Arrays.asList(new Number[]{7, 2, 5, 6, 5}),
-                Arrays.asList(new Number[]{3, 2, 4, 6, 7}), "s3");
+                Arrays.<Number>asList(7, 2, 5, 6, 5),
+                Arrays.<Number>asList(3, 2, 4, 6, 7), "s3");
 
         plot.setDomainBoundaries(-1, 5, BoundaryMode.FIXED);
         plot.setRangeBoundaries(0, 8, BoundaryMode.FIXED);
@@ -52,6 +47,8 @@ public class BubbleChartActivity extends Activity {
         plot.addSeries(series1, bf1);
         plot.addSeries(series2, new BubbleFormatter(this, R.xml.bubble_formatter2));
         plot.addSeries(series3, new BubbleFormatter(this, R.xml.bubble_formatter3));
+
+        // pinch/drag to pan and zoom:
         PanZoom.attach(plot);
     }
 }

@@ -25,16 +25,12 @@ import java.util.Arrays;
  */
 public class SimpleXYPlotActivity extends Activity {
 
-    private XYPlot plot;
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_xy_plot_example);
-
-        // initialize our XYPlot reference:
-        plot = findViewById(R.id.plot);
+        XYPlot plot = findViewById(R.id.plot);
 
         // create a couple arrays of y-values to plot:
         final Number[] domainLabels = {1, 2, 3, 6, 7, 8, 9, 10, 13, 14};
@@ -75,6 +71,7 @@ public class SimpleXYPlotActivity extends Activity {
         plot.addSeries(series1, series1Format);
         plot.addSeries(series2, series2Format);
 
+        // map the implicit index x-values onto the domainLabels array for the bottom edge labels:
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
             @Override
             public StringBuffer format(Object obj, @NonNull StringBuffer toAppendTo, @NonNull FieldPosition pos) {

@@ -76,7 +76,9 @@ public class TouchZoomExampleActivity extends Activity {
     }
 
     private void reset() {
-        plot.setDomainBoundaries(0, 10000, BoundaryMode.FIXED);
+        // start fully zoomed out to the outer limits; pinch to zoom in, then drag to pan.
+        // (a window wider than the limits, as this example once used, can never be panned.)
+        plot.setDomainBoundaries(0, SERIES_SIZE, BoundaryMode.FIXED);
         plot.setRangeBoundaries(0, 1000, BoundaryMode.FIXED);
         plot.redraw();
     }

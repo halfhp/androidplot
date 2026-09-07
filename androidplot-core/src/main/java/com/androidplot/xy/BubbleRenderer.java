@@ -6,6 +6,8 @@ import android.graphics.*;
 import com.androidplot.Region;
 import com.androidplot.ui.*;
 import com.androidplot.util.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Renders three dimensional data onto an {@link XYPlot} as bubbles; the x/y values define the position
@@ -35,7 +37,7 @@ public class BubbleRenderer<FormatterType extends BubbleFormatter> extends XYSer
         SQUARE_ROOT
     }
 
-    public BubbleRenderer(XYPlot plot) {
+    public BubbleRenderer(@NonNull XYPlot plot) {
         super(plot);
 
         bubbleBounds = new Region(
@@ -44,8 +46,8 @@ public class BubbleRenderer<FormatterType extends BubbleFormatter> extends XYSer
     }
 
     @Override
-    protected void onRender(Canvas canvas, RectF plotArea, BubbleSeries series,
-            FormatterType formatter, RenderStack stack) {
+    protected void onRender(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull BubbleSeries series,
+            @NonNull FormatterType formatter, @NonNull RenderStack stack) {
 
         Region magnitudeBounds = calculateBounds();
         if (magnitudeBounds == null) {
@@ -74,7 +76,7 @@ public class BubbleRenderer<FormatterType extends BubbleFormatter> extends XYSer
      * @return The radius to draw a bubble of magnitude z with.  Always a finite value within
      * the configured min/max bubble radius.
      */
-    protected float calculateRadius(Region magnitudeBounds, double z) {
+    protected float calculateRadius(@NonNull Region magnitudeBounds, double z) {
         if (magnitudeBounds.length().doubleValue() == 0) {
             // all bubbles have the same magnitude so there is nothing to scale against:
             return bubbleBounds.getMax().floatValue();
@@ -93,8 +95,8 @@ public class BubbleRenderer<FormatterType extends BubbleFormatter> extends XYSer
      * @param centerPoint the x/y coords of the center of the bubble
      * @param radius size of the bubble
      */
-    protected void drawBubble(Canvas canvas, FormatterType formatter, BubbleSeries series,
-            int index, PointF centerPoint, float radius) {
+    protected void drawBubble(@NonNull Canvas canvas, @NonNull FormatterType formatter, @Nullable BubbleSeries series,
+            int index, @NonNull PointF centerPoint, float radius) {
         canvas.drawCircle(centerPoint.x, centerPoint.y, radius, formatter.getFillPaint());
         canvas.drawCircle(centerPoint.x, centerPoint.y, radius, formatter.getStrokePaint());
         if(series != null && formatter.hasPointLabelFormatter() && formatter.getPointLabeler() != null) {
@@ -108,7 +110,7 @@ public class BubbleRenderer<FormatterType extends BubbleFormatter> extends XYSer
     }
 
     @Override
-    protected void doDrawLegendIcon(Canvas canvas, RectF rect, FormatterType formatter) {
+    protected void doDrawLegendIcon(@NonNull Canvas canvas, @NonNull RectF rect, @NonNull FormatterType formatter) {
         drawBubble(canvas, formatter, null, 0,
                 new PointF(rect.centerX(), rect.centerY()), (rect.width()/2.5f));
     }
@@ -129,14 +131,16 @@ public class BubbleRenderer<FormatterType extends BubbleFormatter> extends XYSer
         bubbleBounds.setMax(maxBubbleRadius);
     }
 
+    @NonNull
     public BubbleScaleMode getBubbleScaleMode() {
         return bubbleScaleMode;
     }
 
-    public void setBubbleScaleMode(BubbleScaleMode bubbleScaleMode) {
+    public void setBubbleScaleMode(@NonNull BubbleScaleMode bubbleScaleMode) {
         this.bubbleScaleMode = bubbleScaleMode;
     }
 
+    @Nullable
     protected Region calculateBounds() {
         Region bounds = new Region();
         for(SeriesBundle<BubbleSeries, ? extends FormatterType> f : getSeriesAndFormatterList()) {

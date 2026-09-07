@@ -3,6 +3,8 @@
 package com.androidplot.xy;
 
 import com.androidplot.ui.SeriesRenderer;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class StepFormatter extends LineAndPointFormatter {
 
@@ -11,18 +13,20 @@ public class StepFormatter extends LineAndPointFormatter {
      */
     public StepFormatter() {}
 
-    public StepFormatter(Integer lineColor, Integer fillColor) {
+    public StepFormatter(@Nullable Integer lineColor, @Nullable Integer fillColor) {
         initLinePaint(lineColor);
         initFillPaint(fillColor);
     }
 
     @Override
+    @NonNull
     public Class<? extends SeriesRenderer> getRendererClass() {
         return StepRenderer.class;
     }
 
     @Override
-    public SeriesRenderer doGetRendererInstance(XYPlot plot) {
+    @NonNull
+    public SeriesRenderer doGetRendererInstance(@NonNull XYPlot plot) {
         return new StepRenderer(plot);
     }
 

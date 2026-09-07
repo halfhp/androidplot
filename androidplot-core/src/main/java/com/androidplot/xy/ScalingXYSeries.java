@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 package com.androidplot.xy;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * Wraps an existing {@link XYSeries} allowing easy scaling of that series' xy values.
  */
@@ -22,13 +25,14 @@ public class ScalingXYSeries implements XYSeries {
      * @param scale The initial scale to be applied
      * @param mode Determines which axis (or both) to which scaling will be applied.
      */
-    public ScalingXYSeries(XYSeries series, double scale, Mode mode) {
+    public ScalingXYSeries(@NonNull XYSeries series, double scale, @NonNull Mode mode) {
         this.series = series;
         this.scale = scale;
         this.mode = mode;
     }
 
     @Override
+    @Nullable
     public String getTitle() {
         return series.getTitle();
     }
@@ -39,6 +43,7 @@ public class ScalingXYSeries implements XYSeries {
     }
 
     @Override
+    @Nullable
     public Number getX(int index) {
         Number x = series.getX(index);
         if(mode == Mode.X_ONLY || mode == Mode.X_AND_Y) {
@@ -49,6 +54,7 @@ public class ScalingXYSeries implements XYSeries {
     }
 
     @Override
+    @Nullable
     public Number getY(int index) {
         Number y = series.getY(index);
         if(mode == Mode.Y_ONLY || mode == Mode.X_AND_Y) {

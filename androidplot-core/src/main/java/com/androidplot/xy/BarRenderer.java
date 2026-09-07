@@ -14,6 +14,8 @@ import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesBundle;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.util.RectFUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Renders the points in an XYSeries as bars.  See {@link BarOrientation} javadoc for details on supported
@@ -68,18 +70,20 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         FIXED_GAP     // bar width is calculated relative to a fixed gap width between each bar
     }
 
-    public BarRenderer(XYPlot plot) {
+    public BarRenderer(@NonNull XYPlot plot) {
         super(plot);
     }
 
-    public void setBarOrientation(BarOrientation renderBarOrientation) {
+    public void setBarOrientation(@NonNull BarOrientation renderBarOrientation) {
         this.barOrientation = renderBarOrientation;
     }
 
+    @NonNull
     public BarOrientation getBarOrientation() {
         return this.barOrientation;
     }
 
+    @NonNull
     public BarGroupWidthMode getBarGroupWidthMode() {
         return this.barGroupWidthMode;
     }
@@ -88,17 +92,18 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         return this.width;
     }
 
-    public void setBarGroupWidth(BarGroupWidthMode mode, float width) {
+    public void setBarGroupWidth(@NonNull BarGroupWidthMode mode, float width) {
         this.barGroupWidthMode = mode;
         this.width = width;
     }
 
+    @NonNull
     protected BarComparator getBarComparator(float rangeOriginPx) {
         return new BarComparator(getBarOrientation(), rangeOriginPx);
     }
 
     @Override
-    public void doDrawLegendIcon(Canvas canvas, RectF rect, BarFormatter formatter) {
+    public void doDrawLegendIcon(@NonNull Canvas canvas, @NonNull RectF rect, @NonNull BarFormatter formatter) {
         if (formatter.hasFillPaint()) {
             canvas.drawRect(rect, formatter.getFillPaint());
         }
@@ -115,13 +120,14 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
      * @return The desired getFormatter or null to use the default.
      */
     @SuppressWarnings("UnusedParameters")
-    public FormatterType getFormatter(int index, XYSeries series) {
+    @Nullable
+    public FormatterType getFormatter(int index, @NonNull XYSeries series) {
         return null;
     }
 
     @Override
-    public void onRender(Canvas canvas, RectF plotArea, List<SeriesBundle<XYSeries,
-            ? extends FormatterType>> sfList, int seriesSize, RenderStack stack) {
+    public void onRender(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull List<SeriesBundle<XYSeries,
+            ? extends FormatterType>> sfList, int seriesSize, @NonNull RenderStack stack) {
 
         List<BarGroup> barGroups = new ArrayList<>();
 
@@ -237,7 +243,8 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         }
     }
 
-    protected RectF createBarRect(float w1, float h1, float w2, float h2, BarFormatter formatter) {
+    @NonNull
+    protected RectF createBarRect(float w1, float h1, float w2, float h2, @NonNull BarFormatter formatter) {
         final RectF result = RectFUtils.createFromEdges(w1, h1,w2, h2);
         result.left += formatter.getMarginLeft();
         result.right -= formatter.getMarginRight();
@@ -246,7 +253,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         return result;
     }
 
-    protected void drawBar(Canvas canvas, Bar<FormatterType> bar, RectF rect) {
+    protected void drawBar(@NonNull Canvas canvas, @NonNull Bar<FormatterType> bar, @NonNull RectF rect) {
 
         // null yVals are skipped:
         if(bar.getY() == null) {
@@ -297,7 +304,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         protected BarGroup barGroup;
 
         // TODO: factor out plot param
-        public Bar(XYPlot plot, XYSeries series, FormatterType formatter, int seriesOrder, int i, RectF plotArea) {
+        public Bar(@NonNull XYPlot plot, @NonNull XYSeries series, @NonNull FormatterType formatter, int seriesOrder, int i, @NonNull RectF plotArea) {
             this.series = series;
             this.formatter = formatter;
             this.i = i;
@@ -316,6 +323,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
             }
         }
 
+        @Nullable
         public Number getY() {
             return series.getY(i);
         }
@@ -360,7 +368,7 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         private final BarOrientation barOrientation;
         private final float rangeOriginPx;
 
-        public BarComparator(BarOrientation barOrientation, float rangeOriginPx) {
+        public BarComparator(@NonNull BarOrientation barOrientation, float rangeOriginPx) {
             this.rangeOriginPx = rangeOriginPx;
             this.barOrientation = barOrientation;
         }

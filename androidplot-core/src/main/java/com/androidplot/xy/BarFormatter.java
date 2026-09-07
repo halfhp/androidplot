@@ -4,6 +4,8 @@ package com.androidplot.xy;
 import android.content.*;
 import android.graphics.Paint;
 import com.androidplot.ui.SeriesRenderer;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class BarFormatter extends LineAndPointFormatter {
 
@@ -12,6 +14,7 @@ public class BarFormatter extends LineAndPointFormatter {
      * {@link LineAndPointFormatter#getFillPaint()} no default is instantiated.
      */
     @Override
+    @Nullable
     public Paint getFillPaint() {
         return fillPaint;
     }
@@ -20,11 +23,12 @@ public class BarFormatter extends LineAndPointFormatter {
      * @return The border paint, or null if none has been set.  Bar borders are stored as the
      * inherited line paint, so {@link #hasLinePaint()} reports whether a border will be drawn.
      */
+    @Nullable
     public Paint getBorderPaint() {
         return linePaint;
     }
 
-    public void setBorderPaint(Paint borderPaint) {
+    public void setBorderPaint(@Nullable Paint borderPaint) {
         this.linePaint = borderPaint;
     }
 
@@ -51,18 +55,20 @@ public class BarFormatter extends LineAndPointFormatter {
         linePaint.setColor(borderColor);
     }
 
-    public BarFormatter(Context context, int xmlCfgId) {
+    public BarFormatter(@NonNull Context context, int xmlCfgId) {
         this();
         configure(context, xmlCfgId);
     }
 
     @Override
+    @NonNull
     public Class<? extends SeriesRenderer> getRendererClass() {
         return BarRenderer.class;
     }
 
     @Override
-    public SeriesRenderer doGetRendererInstance(XYPlot plot) {
+    @NonNull
+    public SeriesRenderer doGetRendererInstance(@NonNull XYPlot plot) {
         return new BarRenderer(plot);
     }
 

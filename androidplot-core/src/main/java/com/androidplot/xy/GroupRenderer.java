@@ -9,6 +9,7 @@ import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesBundle;
 
 import java.util.List;
+import androidx.annotation.NonNull;
 
 /**
  * Renders data to an XYPlot that potentially contains more than a single yVal per index, or in other
@@ -21,13 +22,13 @@ public abstract class GroupRenderer<FormatterType extends XYSeriesFormatter<XYRe
 
     private static final String TAG = GroupRenderer.class.getName();
 
-    public GroupRenderer(XYPlot plot) {
+    public GroupRenderer(@NonNull XYPlot plot) {
         super(plot);
     }
 
     @Override
-    protected void onRender(Canvas canvas, RectF plotArea, XYSeries series,
-                         FormatterType formatter, RenderStack stack) {
+    protected void onRender(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull XYSeries series,
+                         @NonNull FormatterType formatter, @NonNull RenderStack stack) {
 
 
         // get all the data  associated with this renderer:
@@ -65,6 +66,6 @@ public abstract class GroupRenderer<FormatterType extends XYSeriesFormatter<XYRe
      * @param sfList
      * @param stack
      */
-    public abstract void  onRender(Canvas canvas, RectF plotArea, List<SeriesBundle<XYSeries,
-                ? extends FormatterType>> sfList, int size, RenderStack stack);
+    public abstract void  onRender(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull List<SeriesBundle<XYSeries,
+                ? extends FormatterType>> sfList, int size, @NonNull RenderStack stack);
 }

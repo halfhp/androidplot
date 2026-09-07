@@ -2,6 +2,8 @@
 
 package com.androidplot.xy;
 
+import androidx.annotation.Nullable;
+
 /**
  * A pair of x/y coordinates
  */
@@ -11,7 +13,7 @@ public class XYCoords {
 
     public XYCoords() {}
 
-    public XYCoords(Number x, Number y) {
+    public XYCoords(@Nullable Number x, @Nullable Number y) {
         this.x = x;
         this.y = y;
     }

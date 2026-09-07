@@ -10,6 +10,8 @@ import android.graphics.RectF;
 import com.androidplot.ui.PositionMetric;
 import com.androidplot.ui.TextOrientation;
 import com.androidplot.util.FontUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Encapsulates a single axis line marker drawn onto an XYPlot at a specified value.
@@ -19,11 +21,12 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
 
     private static final int MARKER_LABEL_SPACING = 2;
 
+    @Nullable
     public String getText() {
         return text;
     }
 
-    public void setText(String text) {
+    public void setText(@Nullable String text) {
         this.text = text;
     }
 
@@ -45,7 +48,7 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
         textPaint.setColor(Color.RED);
     }
 
-    public ValueMarker(Number value, String text, PositionMetricType textPosition) {
+    public ValueMarker(@Nullable Number value, @Nullable String text, @NonNull PositionMetricType textPosition) {
         this.value = value;
         this.textPosition = textPosition;
         this.text = text;
@@ -59,42 +62,46 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
      * @param linePaint
      * @param textPaint
      */
-    public ValueMarker(Number value, String text, PositionMetricType textPosition, Paint linePaint, Paint textPaint) {
+    public ValueMarker(@Nullable Number value, @Nullable String text, @NonNull PositionMetricType textPosition, @NonNull Paint linePaint, @NonNull Paint textPaint) {
         this(value, text, textPosition);
         this.linePaint = linePaint;
         this.textPaint = textPaint;
     }
 
-    public ValueMarker(Number value, String text, PositionMetricType textPosition, int linePaint, int textPaint) {
+    public ValueMarker(@Nullable Number value, @Nullable String text, @NonNull PositionMetricType textPosition, int linePaint, int textPaint) {
         this(value, text, textPosition);
         this.linePaint.setColor(linePaint);
         this.textPaint.setColor(textPaint);
     }
 
+    @Nullable
     public Number getValue() {
         return value;
     }
 
-    public void setValue(Number value) {
+    public void setValue(@Nullable Number value) {
         this.value = value;
     }
 
+    @NonNull
     public Paint getLinePaint() {
         return linePaint;
     }
 
-    public void setLinePaint(Paint linePaint) {
+    public void setLinePaint(@NonNull Paint linePaint) {
         this.linePaint = linePaint;
     }
 
+    @NonNull
     public Paint getTextPaint() {
         return textPaint;
     }
 
-    public void setTextPaint(Paint textPaint) {
+    public void setTextPaint(@NonNull Paint textPaint) {
         this.textPaint = textPaint;
     }
 
+    @Nullable
     public TextOrientation getTextOrientation() {
         return textOrientation;
     }
@@ -104,7 +111,7 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
      * ValueMarker.
      * @param textOrientation
      */
-    public void setTextOrientation(TextOrientation textOrientation) {
+    public void setTextOrientation(@Nullable TextOrientation textOrientation) {
         this.textOrientation = textOrientation;
     }
 
@@ -120,11 +127,12 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
         this.textMargin = textMargin;
     }
 
+    @NonNull
     public PositionMetricType getTextPosition() {
         return textPosition;
     }
 
-    public void setTextPosition(PositionMetricType textPosition) {
+    public void setTextPosition(@NonNull PositionMetricType textPosition) {
         this.textPosition = textPosition;
     }
 
@@ -137,7 +145,7 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
      * @param x
      * @param y
      */
-    protected void drawMarkerText(Canvas canvas, String text, RectF gridRect,
+    protected void drawMarkerText(@NonNull Canvas canvas, @Nullable String text, @NonNull RectF gridRect,
                                   float x, float y) {
         if (getText() != null) {
             x += MARKER_LABEL_SPACING;
@@ -159,5 +167,5 @@ public abstract class ValueMarker<PositionMetricType extends PositionMetric> {
         }
     }
 
-    public abstract void draw(Canvas canvas, XYPlot plot, RectF gridRect);
+    public abstract void draw(@NonNull Canvas canvas, @NonNull XYPlot plot, @NonNull RectF gridRect);
 }

@@ -5,6 +5,8 @@ package com.androidplot.xy;
 import android.graphics.Color;
 import android.graphics.Paint;
 import com.androidplot.util.PixelUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class PointLabelFormatter {
     private static final float DEFAULT_H_OFFSET_DP = 0;
@@ -40,6 +42,7 @@ public class PointLabelFormatter {
         return textPaint != null;
     }
 
+    @NonNull
     public Paint getTextPaint() {
         if(textPaint == null) {
             initTextPaint(Color.TRANSPARENT);
@@ -47,11 +50,11 @@ public class PointLabelFormatter {
         return textPaint;
     }
 
-    public void setTextPaint(Paint textPaint) {
+    public void setTextPaint(@Nullable Paint textPaint) {
         this.textPaint = textPaint;
     }
 
-    protected void initTextPaint(Integer textColor) {
+    protected void initTextPaint(@Nullable Integer textColor) {
         if (textColor == null) {
             setTextPaint(null);
         } else {

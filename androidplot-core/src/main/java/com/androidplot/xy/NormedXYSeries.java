@@ -7,6 +7,8 @@ import com.androidplot.Plot;
 import com.androidplot.PlotListener;
 import com.androidplot.Region;
 import com.androidplot.util.SeriesUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Wrapper implementation of {@link XYSeries} that wraps another XYSeries, normalizing values in the range of 0 to 1.
@@ -36,7 +38,7 @@ public class NormedXYSeries implements XYSeries, PlotListener {
         final double offset;
         final boolean useOffsetCompression;
 
-        public Norm(Region minMax) {
+        public Norm(@Nullable Region minMax) {
             this(minMax, 0, false);
         }
 
@@ -51,7 +53,7 @@ public class NormedXYSeries implements XYSeries, PlotListener {
          * visible on the screen. If set to true, the specified offset MUST be > -1 and < 1.  Will be
          * ignored if bounds != null.
          */
-        public Norm(Region minMax, double offset, boolean useOffsetCompression) {
+        public Norm(@Nullable Region minMax, double offset, boolean useOffsetCompression) {
             this.minMax = minMax;
             this.offset = offset;
             this.useOffsetCompression = useOffsetCompression;
@@ -67,7 +69,7 @@ public class NormedXYSeries implements XYSeries, PlotListener {
      * Normalizes yVals only, auto calculating min/max.
      * @param rawData
      */
-    public NormedXYSeries(XYSeries rawData) {
+    public NormedXYSeries(@NonNull XYSeries rawData) {
         this(rawData, null, new Norm(null, 0, false));
     }
 
@@ -77,7 +79,7 @@ public class NormedXYSeries implements XYSeries, PlotListener {
      * @param x Normalization to apply to xVals.  Set to null to disable normalization on the x axis.
      * @param y Normalization to apply to yVals.  Set to null to disable normalization on the y axis.
      */
-    public NormedXYSeries(XYSeries rawData, Norm x, Norm y) {
+    public NormedXYSeries(@NonNull XYSeries rawData, @Nullable Norm x, @Nullable Norm y) {
         this.rawData = rawData;
         this.normX = x;
         this.normY = y;
@@ -93,7 +95,7 @@ public class NormedXYSeries implements XYSeries, PlotListener {
         normalize(normX, normY);
     }
 
-    protected void normalize(Norm x, Norm y) {
+    protected void normalize(@Nullable Norm x, @Nullable Norm y) {
         if( x != null) {
             this.minMaxX = x.minMax != null ? x.minMax : SeriesUtils.minMaxX(rawData);
             this.transformX = calculateTransform(x);
@@ -106,7 +108,7 @@ public class NormedXYSeries implements XYSeries, PlotListener {
     }
 
     @Override
-    public void onBeforeDraw(Plot source, Canvas canvas) {
+    public void onBeforeDraw(@NonNull Plot source, @NonNull Canvas canvas) {
         if (rawData instanceof PlotListener) {
             ((PlotListener) rawData).onBeforeDraw(source, canvas);
         }
@@ -114,13 +116,14 @@ public class NormedXYSeries implements XYSeries, PlotListener {
     }
 
     @Override
-    public void onAfterDraw(Plot source, Canvas canvas) {
+    public void onAfterDraw(@NonNull Plot source, @NonNull Canvas canvas) {
         if (rawData instanceof PlotListener) {
             ((PlotListener) rawData).onAfterDraw(source, canvas);
         }
     }
 
-    protected Region calculateTransform(Norm norm) {
+    @NonNull
+    protected Region calculateTransform(@NonNull Norm norm) {
             if(norm.useOffsetCompression) {
                 return new Region(
                         norm.offset > 0 ? norm.offset : 0,
@@ -131,6 +134,7 @@ public class NormedXYSeries implements XYSeries, PlotListener {
     }
 
     @Override
+    @Nullable
     public String getTitle() {
         return rawData.getTitle();
     }
@@ -140,14 +144,16 @@ public class NormedXYSeries implements XYSeries, PlotListener {
         return rawData.size();
     }
 
-    public Number denormalizeXVal(Number xVal) {
+    @Nullable
+    public Number denormalizeXVal(@Nullable Number xVal) {
         if(xVal != null) {
             return transformX.transform(xVal.doubleValue(), minMaxX);
         }
         return null;
     }
 
-    public Number denormalizeYVal(Number yVal) {
+    @Nullable
+    public Number denormalizeYVal(@Nullable Number yVal) {
         if(yVal != null) {
             return transformY.transform(yVal.doubleValue(), minMaxY);
         }
@@ -155,6 +161,7 @@ public class NormedXYSeries implements XYSeries, PlotListener {
     }
 
     @Override
+    @Nullable
     public Number getX(int index) {
         final Number xVal = rawData.getX(index);
         if(xVal != null && transformX != null) {
@@ -164,6 +171,7 @@ public class NormedXYSeries implements XYSeries, PlotListener {
     }
 
     @Override
+    @Nullable
     public Number getY(int index) {
         final Number yVal = rawData.getY(index);
         if(yVal != null && transformY != null) {

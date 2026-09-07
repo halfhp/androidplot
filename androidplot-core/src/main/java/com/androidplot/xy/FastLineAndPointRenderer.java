@@ -13,6 +13,7 @@ import com.androidplot.ui.SeriesRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
+import androidx.annotation.Nullable;
 
 /**
  * A faster implementation of of {@link LineAndPointRenderer}.  For performance reasons, has these constraints:
@@ -31,12 +32,12 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
     private float[] points;
     List<Integer> segmentOffsets = new ArrayList<>();
     List<Integer> segmentLengths = new ArrayList<>();
-    public FastLineAndPointRenderer(XYPlot plot) {
+    public FastLineAndPointRenderer(@NonNull XYPlot plot) {
         super(plot);
     }
 
     @Override
-    protected void onRender(Canvas canvas, RectF plotArea, XYSeries series, Formatter formatter, RenderStack stack) {
+    protected void onRender(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull XYSeries series, @NonNull Formatter formatter, @NonNull RenderStack stack) {
 
         segmentOffsets.clear();
         segmentLengths.clear();
@@ -90,7 +91,7 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
                                @NonNull float[] points,
                                int offset,
                                int len,
-                               Formatter formatter) {
+                               @NonNull Formatter formatter) {
         if(formatter.linePaint != null) {
             // draw lines:
             if (len >= MINIMUM_NUMBER_OF_POINTS_TO_DEFINE_A_LINE) {
@@ -130,12 +131,12 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
      */
     public static class Formatter extends LineAndPointFormatter {
 
-        public Formatter(Integer lineColor, Integer vertexColor, PointLabelFormatter plf) {
+        public Formatter(@Nullable Integer lineColor, @Nullable Integer vertexColor, @Nullable PointLabelFormatter plf) {
             super(lineColor, vertexColor, null, plf);
         }
 
         @Override
-        protected void initLinePaint(Integer lineColor) {
+        protected void initLinePaint(@Nullable Integer lineColor) {
             super.initLinePaint(lineColor);
 
             // disable anti-aliasing by default:
@@ -143,12 +144,14 @@ public class FastLineAndPointRenderer extends XYSeriesRenderer<XYSeries, FastLin
         }
 
         @Override
+        @NonNull
         public Class<? extends SeriesRenderer> getRendererClass() {
             return FastLineAndPointRenderer.class;
         }
 
         @Override
-        public SeriesRenderer doGetRendererInstance(XYPlot plot) {
+        @NonNull
+        public SeriesRenderer doGetRendererInstance(@NonNull XYPlot plot) {
             return new FastLineAndPointRenderer(plot);
         }
     }

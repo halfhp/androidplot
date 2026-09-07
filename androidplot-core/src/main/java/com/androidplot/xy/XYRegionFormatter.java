@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Paint;
 
 import com.androidplot.util.fig.*;
+import androidx.annotation.NonNull;
 
 /**
  * Base class of all XYRegionFormatters.
@@ -26,7 +27,7 @@ public class XYRegionFormatter {
      * @param ctx
      * @param xmlCfgId Id of the xml config file within /res/xml
      */
-    public XYRegionFormatter(Context ctx, int xmlCfgId) {
+    public XYRegionFormatter(@NonNull Context ctx, int xmlCfgId) {
         // prevent configuration of classes derived from this one:
         if (getClass().equals(XYRegionFormatter.class)) {
             try {
@@ -53,6 +54,7 @@ public class XYRegionFormatter {
      * Advanced users can use this method to access the Paint instance to add transparency etc.
      * @return
      */
+    @NonNull
     public Paint getPaint() {
         return paint;
     }

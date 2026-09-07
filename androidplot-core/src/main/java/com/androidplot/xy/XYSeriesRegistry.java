@@ -2,6 +2,8 @@
 package com.androidplot.xy;
 
 import com.androidplot.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Maintains the "registry" of mappings of XYSeries instances and their associated formatters.
@@ -10,7 +12,7 @@ public class XYSeriesRegistry extends SeriesRegistry<XYSeriesBundle, XYSeries, X
 
     private Estimator estimator;
 
-    public void estimate(XYPlot plot) {
+    public void estimate(@NonNull XYPlot plot) {
         if(estimator != null) {
             for (XYSeriesBundle sf : getSeriesAndFormatterList()) {
                 getEstimator().run(plot, sf);
@@ -19,7 +21,8 @@ public class XYSeriesRegistry extends SeriesRegistry<XYSeriesBundle, XYSeries, X
     }
 
     @Override
-    protected XYSeriesBundle newSeriesBundle(XYSeries series, XYSeriesFormatter formatter) {
+    @NonNull
+    protected XYSeriesBundle newSeriesBundle(@NonNull XYSeries series, @NonNull XYSeriesFormatter formatter) {
         return new XYSeriesBundle(series, formatter);
     }
 
@@ -27,11 +30,12 @@ public class XYSeriesRegistry extends SeriesRegistry<XYSeriesBundle, XYSeries, X
      *
      * @return The currently active Estimator, or null if none is set.
      */
+    @Nullable
     public Estimator getEstimator() {
         return estimator;
     }
 
-    public void setEstimator(Estimator estimator) {
+    public void setEstimator(@Nullable Estimator estimator) {
         this.estimator = estimator;
     }
 }

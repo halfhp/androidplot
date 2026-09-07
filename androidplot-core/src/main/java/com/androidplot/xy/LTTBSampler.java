@@ -2,6 +2,8 @@
 package com.androidplot.xy;
 
 import android.util.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Adapted from:
@@ -26,7 +28,8 @@ import android.util.*;
  */
 public class LTTBSampler implements Sampler {
 
-    public RectRegion run(XYSeries rawData, EditableXYSeries sampled) {
+    @NonNull
+    public RectRegion run(@NonNull XYSeries rawData, @NonNull EditableXYSeries sampled) {
         RectRegion bounds = new RectRegion();
         final int threshold = sampled.size();
         final int dataLength = rawData.size();
@@ -95,11 +98,11 @@ public class LTTBSampler implements Sampler {
         return bounds;
     }
 
-    protected void setSample(XYSeries raw, EditableXYSeries sampled, int rawIndex, int sampleIndex, RectRegion bounds) {
+    protected void setSample(@NonNull XYSeries raw, @NonNull EditableXYSeries sampled, int rawIndex, int sampleIndex, @NonNull RectRegion bounds) {
         setSample(sampled, raw.getX(rawIndex), raw.getY(rawIndex), sampleIndex, bounds);
     }
 
-    protected void setSample(EditableXYSeries sampled, Number x, Number y, int sampleIndex, RectRegion bounds) {
+    protected void setSample(@NonNull EditableXYSeries sampled, @Nullable Number x, @Nullable Number y, int sampleIndex, @NonNull RectRegion bounds) {
         bounds.union(x, y);
         sampled.setX(x, sampleIndex);
         sampled.setY(y, sampleIndex);

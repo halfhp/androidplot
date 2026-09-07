@@ -2,12 +2,14 @@
 
 package com.androidplot.xy;
 
+import androidx.annotation.NonNull;
+
 /**
  * Encapsulates a set of stepping parameters for a single axis.
  */
 public class StepModel {
 
-    public StepModel(StepMode mode, double value) {
+    public StepModel(@NonNull StepMode mode, double value) {
         setMode(mode);
         setValue(value);
     }
@@ -15,11 +17,12 @@ public class StepModel {
     private StepMode mode;
     private double value;
 
+    @NonNull
     public StepMode getMode() {
         return mode;
     }
 
-    public void setMode(StepMode mode) {
+    public void setMode(@NonNull StepMode mode) {
         this.mode = mode;
     }
 

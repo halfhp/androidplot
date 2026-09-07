@@ -46,7 +46,7 @@ public class XYConstraints {
                 && contains(rectRegion.getMaxX(), rectRegion.getMaxY());
     }
 
-    public boolean contains(Number x, Number y) {
+    public boolean contains(@Nullable Number x, @Nullable Number y) {
         if (x == null || y == null) {
             // this is essentially an invisible point:
             return false;

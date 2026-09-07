@@ -8,6 +8,8 @@ import android.graphics.RectF;
 
 import com.androidplot.ui.HorizontalPositioning;
 import com.androidplot.ui.HorizontalPosition;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class YValueMarker extends ValueMarker<HorizontalPosition> {
 
@@ -17,7 +19,7 @@ public class YValueMarker extends ValueMarker<HorizontalPosition> {
      * @param value
      * @param text Set to null to use the plot's default getFormatter.
      */
-    public YValueMarker(Number value, String text) {
+    public YValueMarker(@Nullable Number value, @Nullable String text) {
         super(value, text, new HorizontalPosition(3, HorizontalPositioning.ABSOLUTE_FROM_LEFT));
     }
 
@@ -29,7 +31,7 @@ public class YValueMarker extends ValueMarker<HorizontalPosition> {
      * @param linePaint
      * @param textPaint
      */
-    public YValueMarker(Number value, String text, HorizontalPosition textPosition, Paint linePaint, Paint textPaint) {
+    public YValueMarker(@Nullable Number value, @Nullable String text, @NonNull HorizontalPosition textPosition, @NonNull Paint linePaint, @NonNull Paint textPaint) {
         super(value, text, textPosition, linePaint, textPaint);
     }
 
@@ -41,12 +43,12 @@ public class YValueMarker extends ValueMarker<HorizontalPosition> {
      * @param linePaint
      * @param textPaint
      */
-    public YValueMarker(Number value, String text, HorizontalPosition textPosition, int linePaint, int textPaint) {
+    public YValueMarker(@Nullable Number value, @Nullable String text, @NonNull HorizontalPosition textPosition, int linePaint, int textPaint) {
         super(value, text, textPosition, linePaint, textPaint);
     }
 
     @Override
-    public void draw(Canvas canvas, XYPlot plot, RectF gridRect) {
+    public void draw(@NonNull Canvas canvas, @NonNull XYPlot plot, @NonNull RectF gridRect) {
         if (getValue() != null) {
             float yPix = (float) plot.getBounds().yRegion
                     .transform(getValue()

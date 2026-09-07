@@ -8,6 +8,8 @@ import android.graphics.RectF;
 
 import com.androidplot.ui.VerticalPositioning;
 import com.androidplot.ui.VerticalPosition;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class XValueMarker extends ValueMarker<VerticalPosition> {
 
@@ -16,7 +18,7 @@ public class XValueMarker extends ValueMarker<VerticalPosition> {
      * @param value
      * @param text Set to null to use the plot's default getFormatter.
      */
-    public XValueMarker(Number value, String text) {
+    public XValueMarker(@Nullable Number value, @Nullable String text) {
         super(value, text, new VerticalPosition(3, VerticalPositioning.ABSOLUTE_FROM_TOP));
     }
 
@@ -28,7 +30,7 @@ public class XValueMarker extends ValueMarker<VerticalPosition> {
      * @param linePaint
      * @param textPaint
      */
-    public XValueMarker(Number value, String text, VerticalPosition textPosition, Paint linePaint, Paint textPaint) {
+    public XValueMarker(@Nullable Number value, @Nullable String text, @NonNull VerticalPosition textPosition, @NonNull Paint linePaint, @NonNull Paint textPaint) {
         super(value, text, textPosition, linePaint, textPaint);
     }
 
@@ -41,12 +43,12 @@ public class XValueMarker extends ValueMarker<VerticalPosition> {
      * @param linePaint
      * @param textPaint
      */
-    public XValueMarker(Number value, String text, VerticalPosition textPosition, int linePaint, int textPaint) {
+    public XValueMarker(@Nullable Number value, @Nullable String text, @NonNull VerticalPosition textPosition, int linePaint, int textPaint) {
         super(value, text, textPosition, linePaint, textPaint);
     }
 
     @Override
-    public void draw(Canvas canvas, XYPlot plot, RectF gridRect) {
+    public void draw(@NonNull Canvas canvas, @NonNull XYPlot plot, @NonNull RectF gridRect) {
         if (getValue() != null) {
             float xPix = (float) plot.getBounds().xRegion
                     .transform(getValue().doubleValue(), gridRect.left, gridRect.right, false);

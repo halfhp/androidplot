@@ -6,6 +6,8 @@ import android.content.*;
 import android.graphics.*;
 import com.androidplot.ui.RenderStack;
 import com.androidplot.ui.SeriesRenderer;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * This is an experimental (but stable) implementation of an {@link XYSeriesRenderer} that provides instrumentation
@@ -21,12 +23,12 @@ public class AdvancedLineAndPointRenderer extends XYSeriesRenderer<XYSeries, Adv
 
     private int latestIndex;
 
-    public AdvancedLineAndPointRenderer(XYPlot plot) {
+    public AdvancedLineAndPointRenderer(@NonNull XYPlot plot) {
         super(plot);
     }
 
     @Override
-    protected void onRender(Canvas canvas, RectF plotArea, XYSeries series, Formatter formatter, RenderStack stack) {
+    protected void onRender(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull XYSeries series, @NonNull Formatter formatter, @NonNull RenderStack stack) {
         PointF thisPoint;
         PointF lastPoint = null;
         for (int i = 0; i < series.size(); i++) {
@@ -51,7 +53,7 @@ public class AdvancedLineAndPointRenderer extends XYSeriesRenderer<XYSeries, Adv
     }
 
     @Override
-    protected void doDrawLegendIcon(Canvas canvas, RectF rect, Formatter formatter) {
+    protected void doDrawLegendIcon(@NonNull Canvas canvas, @NonNull RectF rect, @NonNull Formatter formatter) {
         if(formatter.getLinePaint() != null) {
             canvas.drawLine(rect.left, rect.bottom, rect.right, rect.top, formatter.getLinePaint());
         }
@@ -78,21 +80,24 @@ public class AdvancedLineAndPointRenderer extends XYSeriesRenderer<XYSeries, Adv
             linePaint.setColor(Color.RED);
         }
 
-        public Formatter(Context context, int xmlConfigId) {
+        public Formatter(@NonNull Context context, int xmlConfigId) {
             this();
             configure(context, xmlConfigId);
         }
 
         @Override
+        @NonNull
         public Class<? extends SeriesRenderer> getRendererClass() {
             return AdvancedLineAndPointRenderer.class;
         }
 
         @Override
-        public AdvancedLineAndPointRenderer doGetRendererInstance(XYPlot plot) {
+        @NonNull
+        public AdvancedLineAndPointRenderer doGetRendererInstance(@NonNull XYPlot plot) {
             return new AdvancedLineAndPointRenderer(plot);
         }
 
+        @Nullable
         public Paint getLinePaint() {
             return linePaint;
         }
@@ -105,11 +110,12 @@ public class AdvancedLineAndPointRenderer extends XYSeriesRenderer<XYSeries, Adv
          * @param seriesSize
          * @return
          */
+        @Nullable
         public Paint getLinePaint(int thisIndex, int latestIndex, int seriesSize) {
             return getLinePaint();
         }
 
-        public void setLinePaint(Paint linePaint) {
+        public void setLinePaint(@Nullable Paint linePaint) {
             this.linePaint = linePaint;
         }
     }

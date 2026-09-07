@@ -9,6 +9,8 @@ import com.androidplot.Region;
 
 import java.util.ArrayList;
 import java.util.List;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * RectRegion is just a rectangle with additional methods for determining
@@ -26,7 +28,8 @@ public class RectRegion {
         yRegion = new Region();
     }
 
-    public static RectRegion withDefaults(RectRegion defaults) {
+    @NonNull
+    public static RectRegion withDefaults(@NonNull RectRegion defaults) {
         if(defaults == null || !defaults.isFullyDefined()) {
             throw new IllegalArgumentException("When specifying defaults, RectRegion param must contain no null values.");
         }
@@ -37,7 +40,7 @@ public class RectRegion {
         return r;
     }
 
-    public RectRegion(XYCoords min, XYCoords max) {
+    public RectRegion(@NonNull XYCoords min, @NonNull XYCoords max) {
         this(min.x, max.x, min.y, max.y);
     }
 
@@ -47,13 +50,13 @@ public class RectRegion {
      * @param minY
      * @param maxY
      */
-    public RectRegion(Number minX, Number maxX, Number minY, Number maxY, String label) {
+    public RectRegion(@Nullable Number minX, @Nullable Number maxX, @Nullable Number minY, @Nullable Number maxY, @Nullable String label) {
         xRegion = new Region(minX, maxX);
         yRegion = new Region(minY, maxY);
         this.setLabel(label);
     }
 
-    public RectRegion(RectF rect) {
+    public RectRegion(@NonNull RectF rect) {
         this(rect.left < rect.right ? rect.left : rect.right,
                 rect.right > rect.left ? rect.right : rect.left,
                 rect.bottom < rect.top ? rect.bottom : rect.top,
@@ -61,21 +64,24 @@ public class RectRegion {
     }
 
     @SuppressWarnings("SameParameterValue")
-    public RectRegion(Number minX, Number maxX, Number minY, Number maxY) {
+    public RectRegion(@Nullable Number minX, @Nullable Number maxX, @Nullable Number minY, @Nullable Number maxY) {
         this(minX, maxX, minY, maxY, null);
     }
 
-    public XYCoords transform(Number x, Number y, RectRegion region2, boolean flipX, boolean flipY) {
+    @NonNull
+    public XYCoords transform(@NonNull Number x, @NonNull Number y, @NonNull RectRegion region2, boolean flipX, boolean flipY) {
         Number xx = xRegion.transform(x.doubleValue(), region2.xRegion, flipX);
         Number yy = yRegion.transform(y.doubleValue(), region2.yRegion, flipY);
         return new XYCoords(xx, yy);
     }
 
-    public XYCoords transform(Number x, Number y, RectRegion region2) {
+    @NonNull
+    public XYCoords transform(@NonNull Number x, @NonNull Number y, @NonNull RectRegion region2) {
         return transform(x, y, region2, false, false);
     }
 
-    public XYCoords transform(XYCoords value, RectRegion region2) {
+    @NonNull
+    public XYCoords transform(@NonNull XYCoords value, @NonNull RectRegion region2) {
         return transform(value.x, value.y, region2);
     }
 
@@ -85,7 +91,8 @@ public class RectRegion {
      * @param r2 The region into which r is being transformed
      * @return
      */
-    public RectRegion transform(RectRegion r, RectRegion r2, boolean flipX, boolean flipY) {
+    @NonNull
+    public RectRegion transform(@NonNull RectRegion r, @NonNull RectRegion r2, boolean flipX, boolean flipY) {
         return new RectRegion(
                 transform(r.getMinX(), r.getMinY(), r2, flipX, flipY),
                 transform(r.getMaxX(), r.getMaxY(), r2, flipX, flipY)
@@ -101,26 +108,29 @@ public class RectRegion {
      * @param region2
      * @return
      */
-    public PointF transformScreen(Number x, Number y, RectF region2) {
+    @NonNull
+    public PointF transformScreen(@NonNull Number x, @NonNull Number y, @NonNull RectF region2) {
         return transform(x, y, region2, false, true);
     }
 
-    public void transformScreen(PointF result, Number x, Number y, RectF region2) {
+    public void transformScreen(@NonNull PointF result, @NonNull Number x, @NonNull Number y, @NonNull RectF region2) {
         transform(result, x, y, region2, false, true);
     }
 
-    public void transform(PointF result, Number x, Number y, RectF region2, boolean flipX, boolean flipY) {
+    public void transform(@NonNull PointF result, @NonNull Number x, @NonNull Number y, @NonNull RectF region2, boolean flipX, boolean flipY) {
         result.x = (float) xRegion.transform(x.doubleValue(), region2.left, region2.right, flipX);
         result.y = (float) yRegion.transform(y.doubleValue(), region2.top, region2.bottom, flipY);
     }
 
-    public PointF transform(Number x, Number y, RectF region2, boolean flipX, boolean flipY) {
+    @NonNull
+    public PointF transform(@NonNull Number x, @NonNull Number y, @NonNull RectF region2, boolean flipX, boolean flipY) {
         PointF result = new PointF();
         transform(result, x, y, region2, flipX, flipY);
         return result;
     }
 
-    public PointF transformScreen(XYCoords value, RectF region2) {
+    @NonNull
+    public PointF transformScreen(@NonNull XYCoords value, @NonNull RectF region2) {
         return transform(value, region2, false, true);
     }
 
@@ -133,11 +143,12 @@ public class RectRegion {
      * @param flipY
      * @return
      */
-    public PointF transform(XYCoords value, RectF region2, boolean flipX, boolean flipY) {
+    @NonNull
+    public PointF transform(@NonNull XYCoords value, @NonNull RectF region2, boolean flipX, boolean flipY) {
         return transform(value.x, value.y, region2, flipX, flipY);
     }
 
-    public void union(Number x, Number y) {
+    public void union(@Nullable Number x, @Nullable Number y) {
         xRegion.union(x);
         yRegion.union(y);
     }
@@ -150,12 +161,12 @@ public class RectRegion {
      * The result will always have equal or greater area than the inputs.
      * @param input
      */
-    public void union(RectRegion input) {
+    public void union(@NonNull RectRegion input) {
         xRegion.union(input.xRegion);
         yRegion.union(input.yRegion);
     }
 
-    public boolean intersects(RectRegion region) {
+    public boolean intersects(@NonNull RectRegion region) {
         return intersects(region.getMinX(), region.getMaxX(), region.getMinY(), region.getMaxY());
     }
 
@@ -170,10 +181,11 @@ public class RectRegion {
      * @param maxY
      * @return
      */
-    public boolean intersects(Number minX, Number maxX, Number minY, Number maxY) {
+    public boolean intersects(@Nullable Number minX, @Nullable Number maxX, @Nullable Number minY, @Nullable Number maxY) {
         return xRegion.intersects(minX, maxX) && yRegion.intersects(minY, maxY);
     }
 
+    @NonNull
     public RectF asRectF() {
         return new RectF(getMinX().floatValue(), getMinY().floatValue(),
                 getMaxX().floatValue(), getMaxY().floatValue());
@@ -183,7 +195,7 @@ public class RectRegion {
      * The result of an intersect is always a RectRegion with an equal or smaller area.
      * @param clippingBounds
      */
-    public void intersect(RectRegion clippingBounds) {
+    public void intersect(@NonNull RectRegion clippingBounds) {
         if(intersects(clippingBounds)) {
             xRegion.intersect(clippingBounds.xRegion);
             yRegion.intersect(clippingBounds.yRegion);
@@ -201,7 +213,8 @@ public class RectRegion {
      * @param regions The list of regions to search through
      * @return
      */
-    public List<RectRegion> intersects(List<RectRegion> regions) {
+    @NonNull
+    public List<RectRegion> intersects(@NonNull List<RectRegion> regions) {
         ArrayList<RectRegion> intersectingRegions = new ArrayList<>();
         for (RectRegion r : regions) {
             if (r.intersects(getMinX(), getMaxX(), getMinY(), getMaxY())) {
@@ -214,6 +227,7 @@ public class RectRegion {
     /**
      * @return Width of this region, in native units
      */
+    @NonNull
     public Number getWidth() {
         return distanceBetween(getMinX(), getMaxX());
     }
@@ -221,6 +235,7 @@ public class RectRegion {
     /**
      * @return Height of this region, in native units
      */
+    @NonNull
     public Number getHeight() {
         return distanceBetween(getMinY(), getMaxY());
     }
@@ -235,7 +250,7 @@ public class RectRegion {
         return Math.abs(x.doubleValue() - y.doubleValue());
     }
 
-    public void set(Number minX, Number maxX, Number minY, Number maxY) {
+    public void set(@Nullable Number minX, @Nullable Number maxX, @Nullable Number minY, @Nullable Number maxY) {
         setMinX(minX);
         setMaxX(maxX);
         setMinY(minY);
@@ -246,11 +261,12 @@ public class RectRegion {
         return  xRegion.isMinSet();
     }
 
+    @Nullable
     public Number getMinX() {
         return xRegion.getMin();
     }
 
-    public void setMinX(Number minX) {
+    public void setMinX(@Nullable Number minX) {
         xRegion.setMin(minX);
     }
 
@@ -258,11 +274,12 @@ public class RectRegion {
         return  xRegion.isMaxSet();
     }
 
+    @Nullable
     public Number getMaxX() {
         return xRegion.getMax();
     }
 
-    public void setMaxX(Number maxX) {
+    public void setMaxX(@Nullable Number maxX) {
         xRegion.setMax(maxX);
     }
 
@@ -270,11 +287,12 @@ public class RectRegion {
         return  yRegion.isMinSet();
     }
 
+    @Nullable
     public Number getMinY() {
         return yRegion.getMin();
     }
 
-    public void setMinY(Number minY) {
+    public void setMinY(@Nullable Number minY) {
         yRegion.setMin(minY);
     }
 
@@ -282,35 +300,39 @@ public class RectRegion {
         return  yRegion.isMaxSet();
     }
 
+    @Nullable
     public Number getMaxY() {
         return yRegion.getMax();
     }
 
-    public void setMaxY(Number maxY) {
+    public void setMaxY(@Nullable Number maxY) {
         yRegion.setMax(maxY);
     }
 
+    @Nullable
     public String getLabel() {
         return label;
     }
 
-    public void setLabel(String label) {
+    public void setLabel(@Nullable String label) {
         this.label = label;
     }
 
+    @NonNull
     public Region getxRegion() {
         return xRegion;
     }
 
-    public void setxRegion(Region xRegion) {
+    public void setxRegion(@NonNull Region xRegion) {
         this.xRegion = xRegion;
     }
 
+    @NonNull
     public Region getyRegion() {
         return yRegion;
     }
 
-    public void setyRegion(Region yRegion) {
+    public void setyRegion(@NonNull Region yRegion) {
         this.yRegion = yRegion;
     }
 
@@ -328,7 +350,7 @@ public class RectRegion {
      * @param y
      * @return
      */
-    public boolean contains(Number x, Number y) {
+    public boolean contains(@NonNull Number x, @NonNull Number y) {
         return getxRegion().contains(x) && getyRegion().contains(y);
     }
 

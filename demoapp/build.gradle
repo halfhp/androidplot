@@ -23,9 +23,10 @@ kotlin {
 
 // Every merge to master publishes the demoapp to the Play beta track, so the version code is
 // derived from the commit count rather than maintained by hand: it rises with every commit and
-// is the same in every workflow.  A release build (-Prelease) gets a code one higher than the
-// beta of the same commit, so a tagged release can follow a beta built from the same commit.
-// Betas carry the commit count in their version name so builds can be told apart.
+// is the same in every workflow.  Betas get even codes (2 * count) and a release build
+// (-Prelease) of the same commit the odd code above it, so a tagged release can follow a beta
+// built from the same commit without colliding with either it or the next beta.  Betas carry
+// the commit count in their version name so builds can be told apart.
 def commitCount = {
     try {
         providers.exec {
@@ -38,7 +39,7 @@ def commitCount = {
 }()
 def isRelease = project.hasProperty('release')
 def demoVersionCode = commitCount != null
-        ? commitCount * 10 + (isRelease ? 1 : 0)
+        ? commitCount * 2 + (isRelease ? 1 : 0)
         : rootProject.ext.theVersionCode
 def demoVersionName = isRelease
         ? rootProject.ext.theVersionName

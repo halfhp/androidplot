@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Fig configuration used by CandlestickFormatterTest -->
+<config
+    wickPaint.color="#FF112233"
+    risingBodyFillPaint.color="#FF00AA00"
+    fallingBodyFillPaint.color="#FFAA0000"
+    bodyWidth="9px"
+    upperCapWidth="7px"
+    lowerCapWidth="5px"
+    bodyStyle="triangular"/>

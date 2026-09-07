@@ -50,6 +50,9 @@ few changes to the API since 1.5.7 so the Javadocs should still be useful in the
 # Release Notes
 Full release notes are [available here](release_notes.md)
 
+# Releasing
+The release process is documented in [releasing.md](releasing.md).
+
 # Contributing
 _If you see something that isn't right or want to contribute, please [make a pull-request](https://help.github.com/articles/creating-a-pull-request/) - these docs 
 live the main repo in the top-level `/docs` directory.  For more info, see the [Contributing Source Code](docs/contributing.md) doc.

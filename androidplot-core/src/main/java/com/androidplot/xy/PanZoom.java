@@ -370,45 +370,49 @@ public class PanZoom implements View.OnTouchListener {
     }
 
     protected void calculatePan(final PointF oldFirstFinger, Region bounds, final boolean horizontal) {
-        final float offset;
+        // all value-space arithmetic is done in double; float has too little precision for
+        // large magnitude axes (ex. epoch millis) to register small finger movements.
+        final Region current = horizontal ? plot.getBounds().getxRegion() : plot.getBounds().getyRegion();
+        double min = current.getMin().doubleValue();
+        double max = current.getMax().doubleValue();
+        final double span = max - min;
+
         // multiply the absolute finger movement for a factor.
         // the factor is dependent on the calculated min and max
+        final double offset;
         if (horizontal) {
-            bounds.setMinMax(plot.getBounds().getxRegion());
-            offset = (oldFirstFinger.x - firstFingerPos.x) *
-                    ((bounds.getMax().floatValue() - bounds.getMin().floatValue()) / plot.getWidth());
+            offset = (oldFirstFinger.x - firstFingerPos.x) * (span / plot.getWidth());
         } else {
-            bounds.setMinMax(plot.getBounds().getyRegion());
-            offset = -(oldFirstFinger.y - firstFingerPos.y) *
-                    ((bounds.getMax().floatValue() - bounds.getMin().floatValue()) / plot.getHeight());
+            offset = -(oldFirstFinger.y - firstFingerPos.y) * (span / plot.getHeight());
         }
-        // move the calculated offset
-        bounds.setMin(bounds.getMin().floatValue() + offset);
-        bounds.setMax(bounds.getMax().floatValue() + offset);
 
-        //get the distance between max and min
-        final float diff = bounds.length().floatValue();
+        // move the calculated offset
+        min += offset;
+        max += offset;
 
         //run if we reached the limit of panning
-        if (horizontal && plot.getOuterLimits().getxRegion().isDefined()) {
-            if (bounds.getMin().floatValue() < plot.getOuterLimits().getMinX().floatValue()) {
-                bounds.setMin(plot.getOuterLimits().getMinX());
-                bounds.setMax(bounds.getMin().floatValue() + diff);
+        final RectRegion limits = plot.getOuterLimits();
+        if (horizontal && limits.getxRegion().isDefined()) {
+            if (min < limits.getMinX().doubleValue()) {
+                min = limits.getMinX().doubleValue();
+                max = min + span;
             }
-            if (bounds.getMax().floatValue() > plot.getOuterLimits().getMaxX().floatValue()) {
-                bounds.setMax(plot.getOuterLimits().getMaxX());
-                bounds.setMin(bounds.getMax().floatValue() - diff);
+            if (max > limits.getMaxX().doubleValue()) {
+                max = limits.getMaxX().doubleValue();
+                min = max - span;
             }
-        } else if(plot.getOuterLimits().getyRegion().isDefined()) {
-            if (bounds.getMin().floatValue() < plot.getOuterLimits().getMinY().floatValue()) {
-                bounds.setMin(plot.getOuterLimits().getMinY());
-                bounds.setMax(bounds.getMin().floatValue() + diff);
+        } else if (!horizontal && limits.getyRegion().isDefined()) {
+            if (min < limits.getMinY().doubleValue()) {
+                min = limits.getMinY().doubleValue();
+                max = min + span;
             }
-            if (bounds.getMax().floatValue() > plot.getOuterLimits().getMaxY().floatValue()) {
-                bounds.setMax(plot.getOuterLimits().getMaxY());
-                bounds.setMin(bounds.getMax().floatValue() - diff);
+            if (max > limits.getMaxY().doubleValue()) {
+                max = limits.getMaxY().doubleValue();
+                min = max - span;
             }
         }
+        bounds.setMin(min);
+        bounds.setMax(max);
     }
 
     protected boolean isValidScale(float scale) {
@@ -428,7 +432,7 @@ public class PanZoom implements View.OnTouchListener {
             // zooming gesture has not happened yet so skip:
             return;
         }
-        RectF newRect = new RectF();
+        RectRegion newRect = new RectRegion(0, 0, 0, 0);
 
         float scaleX = 1;
         float scaleY = 1;
@@ -469,38 +473,63 @@ public class PanZoom implements View.OnTouchListener {
                 Zoom.STRETCH_BOTH,
                 Zoom.SCALE).contains(zoom)) {
             calculateZoom(newRect, scaleX, true);
-            adjustDomainBoundary(newRect.left, newRect.right, BoundaryMode.FIXED);
+            adjustDomainBoundary(newRect.getMinX().doubleValue(),
+                    newRect.getMaxX().doubleValue(), BoundaryMode.FIXED);
         }
         if (EnumSet.of(
                 Zoom.STRETCH_VERTICAL,
                 Zoom.STRETCH_BOTH,
                 Zoom.SCALE).contains(zoom)) {
             calculateZoom(newRect, scaleY, false);
-            adjustRangeBoundary(newRect.top, newRect.bottom, BoundaryMode.FIXED);
+            adjustRangeBoundary(newRect.getMinY().doubleValue(),
+                    newRect.getMaxY().doubleValue(), BoundaryMode.FIXED);
         }
         plot.redraw();
     }
 
     /**
-     *
+     * @deprecated Use {@link #calculateZoom(RectRegion, float, boolean)}; float cannot represent
+     * the bounds of large magnitude axes accurately.
      * @param newRect RectF into which zoom calculation results should be placed.
      * @param scale
      * @param isHorizontal
      */
+    @Deprecated
     protected void calculateZoom(RectF newRect, float scale, boolean isHorizontal) {
-        final float calcMax;
-        final float span;
+        RectRegion result = new RectRegion(newRect.left, newRect.right, newRect.top, newRect.bottom);
+        calculateZoom(result, scale, isHorizontal);
+        if (isHorizontal) {
+            newRect.left = result.getMinX().floatValue();
+            newRect.right = result.getMaxX().floatValue();
+        } else {
+            newRect.top = result.getMinY().floatValue();
+            newRect.bottom = result.getMaxY().floatValue();
+        }
+    }
+
+    /**
+     * Calculates the new bounds of a single axis after zooming by scale around the current midpoint.
+     * All value-space arithmetic is done in double; float has too little precision for large
+     * magnitude axes (ex. epoch millis).
+     * @param newRect RectRegion into which zoom calculation results should be placed.  Only the
+     *                axis selected by isHorizontal is modified.
+     * @param scale
+     * @param isHorizontal
+     */
+    protected void calculateZoom(RectRegion newRect, float scale, boolean isHorizontal) {
+        final double calcMax;
+        final double span;
         final RectRegion bounds = plot.getBounds();
         if (isHorizontal) {
-            calcMax = bounds.getMaxX().floatValue();
-            span = calcMax - bounds.getMinX().floatValue();
+            calcMax = bounds.getMaxX().doubleValue();
+            span = calcMax - bounds.getMinX().doubleValue();
         } else {
-            calcMax = bounds.getMaxY().floatValue();
-            span = calcMax - bounds.getMinY().floatValue();
+            calcMax = bounds.getMaxY().doubleValue();
+            span = calcMax - bounds.getMinY().doubleValue();
         }
 
-        final float midPoint = calcMax - (span / 2.0f);
-        float offset = span * scale / 2.0f;
+        final double midPoint = calcMax - (span / 2.0);
+        double offset = span * scale / 2.0;
         final RectRegion limits = plot.getOuterLimits();
 
         if (isHorizontal ) {
@@ -508,39 +537,43 @@ public class PanZoom implements View.OnTouchListener {
             if (zoomLimit == ZoomLimit.MIN_TICKS) {
                 // make sure we do not zoom in too far (there should be at least one grid line visible)
                 if (plot.getDomainStepValue() > (scale*span)) {
-                    offset = (float)(plot.getDomainStepValue() / 2.0f);
+                    offset = plot.getDomainStepValue() / 2.0;
                 }
             }
 
-            newRect.left = midPoint - offset;
-            newRect.right = midPoint + offset;
+            double left = midPoint - offset;
+            double right = midPoint + offset;
             if(limits.isFullyDefined()) {
-                if (newRect.left < limits.getMinX().floatValue()) {
-                    newRect.left =  limits.getMinX().floatValue();
+                if (left < limits.getMinX().doubleValue()) {
+                    left = limits.getMinX().doubleValue();
                 }
-                if (newRect.right >  limits.getMaxX().floatValue()) {
-                    newRect.right =  limits.getMaxX().floatValue();
+                if (right > limits.getMaxX().doubleValue()) {
+                    right = limits.getMaxX().doubleValue();
                 }
             }
+            newRect.setMinX(left);
+            newRect.setMaxX(right);
         } else {
             // zoom limited and increment by value StepMode?
             if (zoomLimit == ZoomLimit.MIN_TICKS) {
                 // make sure we do not zoom in too far (there should be at least one grid line visible)
                 if (plot.getRangeStepValue() > (scale*span)) {
-                    offset = (float)(plot.getRangeStepValue() / 2.0f);
+                    offset = plot.getRangeStepValue() / 2.0;
                 }
             }
 
-            newRect.top = midPoint - offset;
-            newRect.bottom = midPoint + offset;
+            double top = midPoint - offset;
+            double bottom = midPoint + offset;
             if(limits.isFullyDefined()) {
-                if (newRect.top < limits.getMinY().floatValue()) {
-                    newRect.top = limits.getMinY().floatValue();
+                if (top < limits.getMinY().doubleValue()) {
+                    top = limits.getMinY().doubleValue();
                 }
-                if (newRect.bottom > limits.getMaxY().floatValue()) {
-                    newRect.bottom = limits.getMaxY().floatValue();
+                if (bottom > limits.getMaxY().doubleValue()) {
+                    bottom = limits.getMaxY().doubleValue();
                 }
             }
+            newRect.setMinY(top);
+            newRect.setMaxY(bottom);
         }
     }
 

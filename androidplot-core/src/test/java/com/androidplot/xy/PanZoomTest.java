@@ -139,26 +139,26 @@ public class PanZoomTest extends AndroidplotTest {
 
         // should result in a 2x zoom on domain centerpoint:
         panZoom.zoom(TestUtils.newPointerDownEvent(0, 0, 40, 40));
-        inOrder.verify(xyPlot).setDomainBoundaries(25f, 75f, BoundaryMode.FIXED);
-        inOrder.verify(xyPlot).setRangeBoundaries(25f, 75f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setDomainBoundaries(25.0, 75.0, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setRangeBoundaries(25.0, 75.0, BoundaryMode.FIXED);
         inOrder.verify(xyPlot).redraw();
 
         // should result in another 2x zoom on domain centerpoint:
         panZoom.zoom(TestUtils.newPointerDownEvent(0, 0, 80, 80));
-        inOrder.verify(xyPlot).setDomainBoundaries(37.5f, 62.5f, BoundaryMode.FIXED);
-        inOrder.verify(xyPlot).setRangeBoundaries(37.5f, 62.5f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setDomainBoundaries(37.5, 62.5, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setRangeBoundaries(37.5, 62.5, BoundaryMode.FIXED);
         inOrder.verify(xyPlot).redraw();
 
         // should zoom out and take us back to the original bounds:
         panZoom.zoom(TestUtils.newPointerDownEvent(0, 0, 20, 20));
-        inOrder.verify(xyPlot).setDomainBoundaries(0f, 100f, BoundaryMode.FIXED);
-        inOrder.verify(xyPlot).setRangeBoundaries(0f, 100f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setDomainBoundaries(0.0, 100.0, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setRangeBoundaries(0.0, 100.0, BoundaryMode.FIXED);
         inOrder.verify(xyPlot).redraw();
 
         // zooming out past capped bounds should not result in any change:
         panZoom.zoom(TestUtils.newPointerDownEvent(0, 0, 1, 1));
-        inOrder.verify(xyPlot).setDomainBoundaries(0f, 100f, BoundaryMode.FIXED);
-        inOrder.verify(xyPlot).setRangeBoundaries(0f, 100f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setDomainBoundaries(0.0, 100.0, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setRangeBoundaries(0.0, 100.0, BoundaryMode.FIXED);
         // TODO: if nothing changed, then why bother redrawing??
         inOrder.verify(xyPlot).redraw();
 
@@ -195,8 +195,8 @@ public class PanZoomTest extends AndroidplotTest {
         // should NOT result in a 2x zoom on domain centerpoint, but in a zoom to
         // the minimum spacing 10 and 20 respectively
         panZoom.zoom(TestUtils.newPointerDownEvent(0, 0, 40, 40));
-        inOrder.verify(xyPlot).setDomainBoundaries(5f, 15f, BoundaryMode.FIXED);
-        inOrder.verify(xyPlot).setRangeBoundaries(5f, 25f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setDomainBoundaries(5.0, 15.0, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setRangeBoundaries(5.0, 25.0, BoundaryMode.FIXED);
         inOrder.verify(xyPlot).redraw();
 
         // to zoom in beyond min limits
@@ -204,8 +204,8 @@ public class PanZoomTest extends AndroidplotTest {
 
         // should result in another 2x zoom on domain centerpoint:
         panZoom.zoom(TestUtils.newPointerDownEvent(0, 0, 80, 80));
-        inOrder.verify(xyPlot).setDomainBoundaries(7.5f, 12.5f, BoundaryMode.FIXED);
-        inOrder.verify(xyPlot).setRangeBoundaries(10f, 20f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setDomainBoundaries(7.5, 12.5, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setRangeBoundaries(10.0, 20.0, BoundaryMode.FIXED);
         inOrder.verify(xyPlot).redraw();
 
         // back to limited zoom
@@ -213,8 +213,8 @@ public class PanZoomTest extends AndroidplotTest {
 
         // try to zoom in further, should snap back to min limit:
         panZoom.zoom(TestUtils.newPointerDownEvent(0, 0, 90, 90));
-        inOrder.verify(xyPlot).setDomainBoundaries(5f, 15f, BoundaryMode.FIXED);
-        inOrder.verify(xyPlot).setRangeBoundaries(5f, 25f, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setDomainBoundaries(5.0, 15.0, BoundaryMode.FIXED);
+        inOrder.verify(xyPlot).setRangeBoundaries(5.0, 25.0, BoundaryMode.FIXED);
         inOrder.verify(xyPlot).redraw();
 
         // redraw should not be called again
@@ -223,6 +223,62 @@ public class PanZoomTest extends AndroidplotTest {
         // make sure no panning took place during these zoom ops:
         verify(panZoom, never()).pan(any(MotionEvent.class));
 
+    }
+
+    /**
+     * A 1000px wide plot showing 60 seconds of epoch milliseconds.  Dragging one finger 10px to the
+     * left must shift the domain window right by exactly 600ms; float arithmetic cannot represent
+     * that offset at this magnitude (the float ulp of 1.7e12 is 131072).
+     */
+    @Test
+    public void testPan_keepsPrecisionOnLargeMagnitudeDomain() {
+        final double minX = 1.7e12;
+        final double maxX = minX + 60000;
+        xyPlot = spy(new InstrumentedXYPlot(getContext()));
+        doReturn(1000).when(xyPlot).getWidth();
+        doReturn(500).when(xyPlot).getHeight();
+        xyPlot.setDomainBoundaries(minX, maxX, BoundaryMode.FIXED);
+        xyPlot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
+        xyPlot.redraw();
+
+        PanZoom panZoom = new PanZoom(xyPlot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.NONE);
+        panZoom.onTouch(xyPlot, MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, 100, 50, 0));
+        panZoom.onTouch(xyPlot, MotionEvent.obtain(0, 0, MotionEvent.ACTION_MOVE, 90, 50, 0));
+
+        ArgumentCaptor<Number> lower = ArgumentCaptor.forClass(Number.class);
+        ArgumentCaptor<Number> upper = ArgumentCaptor.forClass(Number.class);
+        verify(xyPlot, times(2)).setDomainBoundaries(
+                lower.capture(), upper.capture(), eq(BoundaryMode.FIXED));
+        assertEquals(minX + 600, lower.getValue().doubleValue(), 1);
+        assertEquals(maxX + 600, upper.getValue().doubleValue(), 1);
+    }
+
+    /**
+     * Outer limits defining only a range (y) constraint must not clamp a horizontal pan.
+     */
+    @Test
+    public void testPan_horizontalIgnoresRangeOnlyOuterLimits() {
+        xyPlot = spy(new InstrumentedXYPlot(getContext()));
+        doReturn(1000).when(xyPlot).getWidth();
+        doReturn(500).when(xyPlot).getHeight();
+        xyPlot.setDomainBoundaries(1000, 1100, BoundaryMode.FIXED);
+        xyPlot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
+        xyPlot.redraw();
+
+        // only y limits are defined; the domain window lies entirely outside of them:
+        xyPlot.getOuterLimits().setMinY(0);
+        xyPlot.getOuterLimits().setMaxY(100);
+
+        PanZoom panZoom = new PanZoom(xyPlot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.NONE);
+        panZoom.onTouch(xyPlot, MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, 100, 50, 0));
+        panZoom.onTouch(xyPlot, MotionEvent.obtain(0, 0, MotionEvent.ACTION_MOVE, 90, 50, 0));
+
+        ArgumentCaptor<Number> lower = ArgumentCaptor.forClass(Number.class);
+        ArgumentCaptor<Number> upper = ArgumentCaptor.forClass(Number.class);
+        verify(xyPlot, times(2)).setDomainBoundaries(
+                lower.capture(), upper.capture(), eq(BoundaryMode.FIXED));
+        assertEquals(1001d, lower.getValue().doubleValue(), 0.0001);
+        assertEquals(1101d, upper.getValue().doubleValue(), 0.0001);
     }
 
     @Test

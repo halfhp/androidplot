@@ -59,7 +59,7 @@ jobs:
           KEY_PASSWORD: ${{ secrets.DEMOAPP_KEY_PASSWORD }}
         run: |
           printf '%s' "$ENCODED" | base64 -d > "${GITHUB_WORKSPACE}/demoapp/keystore.jks"
-          ./gradlew :demoapp:assembleRelease :demoapp:bundleRelease
+          ./gradlew :demoapp:assembleRelease
 
       - name: Attach Artifacts to GitHub Release
         if: github.ref_type == 'tag'
@@ -70,8 +70,7 @@ jobs:
             || gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --generate-notes
           gh release upload "${GITHUB_REF_NAME}" --clobber \
             androidplot-core/build/outputs/aar/androidplot-core-release.aar \
-            demoapp/build/outputs/apk/release/demoapp-release.apk \
-            demoapp/build/outputs/bundle/release/demoapp-release.aab
+            demoapp/build/outputs/apk/release/demoapp-release.apk
 
       # TODO: OSSRH was decommissioned; this must move to the Central Publisher Portal.
       - name: Publish to Maven Central
@@ -83,8 +82,9 @@ jobs:
           SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
         run: ./gradlew publish
 
-      # Uploads an app bundle; the demoapp is enrolled in Play App Signing and
-      # the keystore in DEMOAPP_KEYSTORE is its upload key.
+      # Uploads an APK rather than an app bundle. The demoapp's 2011 signing key
+      # is 1024-bit RSA, which Play App Signing does not accept, and bundles
+      # require Play App Signing. Play still accepts APKs for existing apps.
       - name: Publish Demoapp to Google Play
         if: github.event_name != 'workflow_dispatch' || inputs.publish_play
         env:
@@ -96,4 +96,4 @@ jobs:
           PLAY_JSON: ${{ secrets.PLAY_PUBLISHER_JSON }}
         run: |
           printf '%s' "$PLAY_JSON" > "${GITHUB_WORKSPACE}/demoapp/publisher.json"
-          ./gradlew :demoapp:publishReleaseBundle
+          ./gradlew :demoapp:publishReleaseApk

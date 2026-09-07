@@ -359,10 +359,43 @@ public class PlotTest extends AndroidplotTest {
         }
     }
 
+    /**
+     * A redraw() issued while the render thread is busy drawing must not be dropped: the
+     * thread has to render again afterwards so the latest data reaches the screen.
+     */
+    @Test
+    public void backgroundRender_redrawDuringRender_rendersAgain() throws Exception {
+        RenderCountingPlot plot = new RenderCountingPlot();
+        plot.holdFirstRender = true;
+        try {
+            plot.onSizeChanged(100, 100, 0, 0);
+            assertTrue(plot.firstRenderStarted.await(5, TimeUnit.SECONDS));
+
+            // render thread is now blocked inside its first render
+            plot.redraw();
+            plot.redraw();
+            plot.releaseFirstRender.countDown();
+
+            assertTrue("redraw() issued during a render was dropped",
+                    plot.renderedTwice.await(5, TimeUnit.SECONDS));
+            // several requests made during one render coalesce into a single extra pass
+            plot.awaitRenderThreadParked();
+            assertEquals(2, plot.rendersOnCanvas.get());
+        } finally {
+            plot.releaseFirstRender.countDown();
+            plot.onDetachedFromWindow();
+        }
+    }
+
     /** A background-mode plot that reports when it has rendered onto a real canvas. */
     static class RenderCountingPlot extends MockPlot {
         final CountDownLatch rendered = new CountDownLatch(1);
+        final CountDownLatch renderedTwice = new CountDownLatch(2);
         final AtomicInteger rendersOnCanvas = new AtomicInteger();
+
+        volatile boolean holdFirstRender = false;
+        final CountDownLatch firstRenderStarted = new CountDownLatch(1);
+        final CountDownLatch releaseFirstRender = new CountDownLatch(1);
 
         RenderCountingPlot() {
             super("RenderCountingPlot", RenderMode.USE_BACKGROUND_THREAD);
@@ -372,8 +405,17 @@ public class PlotTest extends AndroidplotTest {
         protected synchronized void renderOnCanvas(Canvas canvas) {
             super.renderOnCanvas(canvas);
             if (canvas != null) {
+                if (holdFirstRender && rendersOnCanvas.get() == 0) {
+                    firstRenderStarted.countDown();
+                    try {
+                        releaseFirstRender.await(5, TimeUnit.SECONDS);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
                 rendersOnCanvas.incrementAndGet();
                 rendered.countDown();
+                renderedTwice.countDown();
             }
         }
 

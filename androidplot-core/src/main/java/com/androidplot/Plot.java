@@ -174,9 +174,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private final ArrayList<PlotListener> listeners;
 
     private Thread renderThread;
+    // both guarded by renderSync
     private boolean keepRunning = false;
-    // written by the render thread, read by redraw() on the UI thread
-    private volatile boolean isIdle = true;
+    private boolean redrawRequested = false;
 
     {
         listeners = new ArrayList<>();
@@ -239,7 +239,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             }
         }
 
-        public void recycle() {
+        public synchronized void recycle() {
             /**
              * TODO: Issue #93 There have been rare reports of NPE's originating from here.
              * Most likely there is something deeper that is amiss, but for now we'll simply
@@ -419,25 +419,39 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         renderThread = new Thread(() -> {
             System.out.println("Thread started with id " + this.hashCode());
 
-            keepRunning = true;
-            while (keepRunning) {
-                isIdle = false;
+            synchronized (renderSync) {
+                keepRunning = true;
+                // the first pass below renders unconditionally, which satisfies any request
+                // made before the thread started.
+                redrawRequested = false;
+            }
+            while (true) {
+                // lock order: pingPong, then this (inside renderOnCanvas).  onSizeChanged
+                // takes the same locks in the same order.
                 synchronized (pingPong) {
                     Canvas c = pingPong.getCanvas();
                     renderOnCanvas(c);
                     pingPong.swap();
                 }
+                postInvalidate();
+
+                // sleep until the next redraw request.  Requests made while rendering are
+                // remembered in redrawRequested rather than dropped, so the loop immediately
+                // renders again with the latest data; several requests coalesce into one pass.
                 synchronized (renderSync) {
-                    postInvalidate();
-                    // prevent this thread from becoming an orphan
-                    // after the view is destroyed
-                    if (keepRunning) {
+                    while (keepRunning && !redrawRequested) {
                         try {
                             renderSync.wait();
                         } catch (InterruptedException e) {
+                            // prevent this thread from becoming an orphan
+                            // after the view is destroyed
                             keepRunning = false;
                         }
                     }
+                    if (!keepRunning) {
+                        break;
+                    }
+                    redrawRequested = false;
                 }
             }
             System.out.println("Thread exited with id " + this.hashCode());
@@ -749,13 +763,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
         if (renderMode == RenderMode.USE_BACKGROUND_THREAD) {
 
-            // only enter synchronized block if the call is expected to block OR
-            // if the render thread is idle, so we know that we won't have to wait to
-            // obtain a lock.
-            if (renderThread != null && isIdle) {
-                synchronized (renderSync) {
-                    renderSync.notify();
-                }
+            // record the request so it is honored even if the render thread is busy drawing
+            // or has not started yet; renderSync is only ever held briefly.
+            synchronized (renderSync) {
+                redrawRequested = true;
+                renderSync.notify();
             }
 
         } else if(renderMode == RenderMode.USE_MAIN_THREAD) {
@@ -799,7 +811,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     @Override
-    protected synchronized void onSizeChanged (int w, int h, int oldw, int oldh) {
+    protected void onSizeChanged (int w, int h, int oldw, int oldh) {
 
         // update pixel conversion values
         PixelUtils.init(getContext());
@@ -813,16 +825,22 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
             }
         }
 
-        // pingPong is only used in background rendering mode.
-        if(renderMode == RenderMode.USE_BACKGROUND_THREAD) {
-            pingPong.resize(h, w);
-        }
-
         RectF cRect = new RectF(0, 0, w, h);
         RectF mRect = boxModel.getMarginatedRect(cRect);
         RectF pRect = boxModel.getPaddedRect(mRect);
+        DisplayDimensions dims = new DisplayDimensions(cRect, mRect, pRect);
 
-        layout(new DisplayDimensions(cRect, mRect, pRect));
+        if(renderMode == RenderMode.USE_BACKGROUND_THREAD) {
+            // resize the buffers and apply the new layout atomically with respect to the render
+            // thread, taking the locks in the same order it does (pingPong, then this) so the
+            // two can never deadlock.
+            synchronized (pingPong) {
+                pingPong.resize(h, w);
+                layout(dims);
+            }
+        } else {
+            layout(dims);
+        }
         super.onSizeChanged(w, h, oldw, oldh);
         if(renderThread != null) {
             if (!renderThread.isAlive()) {
@@ -865,10 +883,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     protected synchronized void renderOnCanvas(@Nullable Canvas canvas) {
         if(canvas == null) {
-            // nothing to draw onto yet (eg. the view currently has a zero-sized dimension so no
-            // buffers exist); the render thread must still be marked idle or redraw() will
-            // never wake it once the view is given a real size.  (#120)
-            isIdle = true;
+            // nothing to draw onto yet, eg. the view currently has a zero-sized dimension so
+            // no buffers exist.  (#120)
             return;
         }
         try {
@@ -894,7 +910,6 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
                 Log.e(TAG, "Exception while rendering Plot.", e);
             }
 
-            isIdle = true;
             // any series interested in synchronizing with plot should
             // implement PlotListener.onAfterDraw(...) and do a read unlock from within that
             // invocation. This is the entry point for that invocation.

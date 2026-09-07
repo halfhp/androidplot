@@ -3,6 +3,9 @@ For details on what to expect in general when updating to a new version of Andro
 [versioning doc](versioning.md).
 
 # 1.5.12
+* (#96) Background-mode plots are no longer forced onto a software layer, removing a full-size CPU
+  copy of the view from every frame.  `Redrawer` now tolerates plots that have been garbage
+  collected instead of crashing, and exits on its own once none remain.
 * (#125) Fix grid lines and labels not being drawn for an axis with inverted boundaries (min
   greater than max) when using `StepMode.INCREMENT_BY_VAL` or `INCREMENT_BY_FIT`.
 * (#120) Fix background-thread plots never rendering when their first layout pass gives them a
@@ -19,6 +22,10 @@ For details on what to expect in general when updating to a new version of Andro
 * Snapshot builds of unreleased changes are now published to the Central snapshots repository.
 
 **Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
+* The plot view is now composited with hardware acceleration when the app has it enabled.  The
+  rendered content is unchanged since drawing still happens on an offscreen bitmap; only the copy
+  of that bitmap to the screen changes.  Rendering cost still scales with the plot's pixel area,
+  so keep plots that redraw at high rates as small as the design allows.
 * `redraw()` requests are no longer dropped when the render thread is busy drawing.  Requests
   made during a render are coalesced into one additional render pass, so the latest data is
   always drawn.  Apps that issue `redraw()` faster than the plot can draw will see one extra

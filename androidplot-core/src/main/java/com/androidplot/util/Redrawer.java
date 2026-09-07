@@ -9,6 +9,7 @@ import com.androidplot.Plot;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -25,10 +26,10 @@ public class Redrawer implements Runnable {
     private long sleepTime;
 
     // used to temporarily pause rendering without disposing of the run thread
-    private boolean keepRunning;
+    private volatile boolean keepRunning;
 
     // when set to false, run thread will be allowed to exit the main run loop
-    private boolean keepAlive;
+    private volatile boolean keepAlive;
 
     private Thread thread;
 
@@ -95,8 +96,11 @@ public class Redrawer implements Runnable {
                 // TODO: record start and end timestamps and
                 // TODO: calculate sleepTime from that, in order to more accurately
                 // TODO: meet desired refresh rate.
-                for(WeakReference<Plot> plotRef : plots) {
-                    plotRef.get().redraw();
+                if (!redrawAll(plots)) {
+                    // every plot has been garbage collected; there is nothing left to redraw
+                    // so let the thread exit rather than spin until finish() is called.
+                    keepAlive = false;
+                    break;
                 }
                 synchronized (this) {
                     wait(sleepTime);
@@ -120,6 +124,25 @@ public class Redrawer implements Runnable {
      * refresh rate could be slower.
      * @param refreshRate Refresh rate in Hz.
      */
+    /**
+     * Redraws every plot that is still reachable, dropping references to plots that have been
+     * garbage collected.
+     *
+     * @return false if no plots remain.
+     */
+    static boolean redrawAll(List<WeakReference<Plot>> plots) {
+        Iterator<WeakReference<Plot>> it = plots.iterator();
+        while (it.hasNext()) {
+            Plot plot = it.next().get();
+            if (plot == null) {
+                it.remove();
+            } else {
+                plot.redraw();
+            }
+        }
+        return !plots.isEmpty();
+    }
+
     public void setMaxRefreshRate(float refreshRate) {
         sleepTime = (long)(ONE_SECOND_MS / refreshRate);
         Log.d(TAG, "Set Redrawer refresh rate to " +

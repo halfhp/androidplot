@@ -875,7 +875,12 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         // disable hardware acceleration if it's not explicitly supported
         // by the current Plot implementation. this run only applies to
         // honeycomb and later environments.
-        if (Build.VERSION.SDK_INT >= 11) {
+        //
+        // In background rendering mode the plot is drawn onto an offscreen bitmap and onDraw
+        // only ever copies that bitmap onto the view canvas, which hardware acceleration handles
+        // natively, so forcing a software layer there would just add a full-size CPU copy of
+        // the view on every frame.  (#96)
+        if (Build.VERSION.SDK_INT >= 11 && renderMode != RenderMode.USE_BACKGROUND_THREAD) {
             if (!isHwAccelerationSupported() && isHardwareAccelerated()) {
                 setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             }

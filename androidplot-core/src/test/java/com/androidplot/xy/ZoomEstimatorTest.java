@@ -63,4 +63,20 @@ public class ZoomEstimatorTest extends AndroidplotTest {
         assertEquals(1d, estimator.calculateZoom(series, new RectRegion(0, 1, 0, 1)));
 
     }
+
+    @Test
+    public void run_withNullSeriesBounds_leavesZoomUnchanged() {
+        ZoomEstimator estimator = new ZoomEstimator();
+        SampledXYSeries series =
+                spy(new SampledXYSeries(TestUtils
+                        .generateXYSeries("test series", 1000), 2, 100));
+        series.setBounds(null);
+        XYSeriesBundle bundle = new XYSeriesBundle(series, null);
+        when(xyPlot.getBounds()).thenReturn(new RectRegion(0, 1000, 0, 1000));
+
+        estimator.run(xyPlot, bundle);
+
+        verify(series, never()).setZoomFactor(anyDouble());
+        assertEquals(1d, estimator.calculateZoom(series, new RectRegion(0, 1000, 0, 1000)));
+    }
 }

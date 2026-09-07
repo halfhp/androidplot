@@ -25,6 +25,9 @@ For details on what to expect in general when updating to a new version of Andro
   `getState()` now snapshots the plot's actual boundaries and modes for both axes, and applying a
   state skips any axis edge it holds no mode for.  `XYPlot` gains public getters for its four
   boundary modes.
+* Fix `SampledXYSeries` crashing the render thread on its first draw: the series had no active
+  data until a zoom factor was applied, and had no bounds when its data was too small to produce
+  any sampled zoom level.  `ZoomEstimator` also tolerates a series without bounds.
 
 **Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
 * The plot view is now composited with hardware acceleration when the app has it enabled.  The

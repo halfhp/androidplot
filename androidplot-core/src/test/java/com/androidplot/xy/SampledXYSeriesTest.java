@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 package com.androidplot.xy;
 
+import android.graphics.Canvas;
+
 import com.androidplot.test.*;
 
 import org.junit.*;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -89,5 +92,70 @@ public class SampledXYSeriesTest extends AndroidplotTest {
         XYSeries rawData = TestUtils.generateXYSeriesWithNulls("my series", 10000);
         SampledXYSeries sampledXYSeries = new SampledXYSeries(rawData, 2, 200);
         assertEquals(5, sampledXYSeries.getZoomLevels().size());
+    }
+
+    @Test
+    public void constructor_withNoSampledZoomLevels_isUsableBeforeSetZoomFactor() {
+        // 150 / 2 = 75 is already below the threshold, so no sampled zoom levels are generated:
+        XYSeries rawData = TestUtils.generateXYSeries("my series", 150);
+        SampledXYSeries series = new SampledXYSeries(
+                rawData, OrderedXYSeries.XOrder.ASCENDING, 2, 100);
+
+        assertEquals(0, series.getZoomLevels().size());
+        assertEquals(150, series.size());
+        assertEquals(rawData.getY(5), series.getY(5));
+        assertNotNull(series.getBounds());
+        assertNotNull(series.minMax());
+        assertEquals(0.0, series.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(149.0, series.getBounds().getMaxX().doubleValue(), 0);
+
+        // the estimator runs against this series before the first frame:
+        assertEquals(1.0, new ZoomEstimator().calculateZoom(series, new RectRegion(0, 149, 0, 1)), 0);
+    }
+
+    @Test
+    public void constructor_withSampledZoomLevels_isUsableBeforeSetZoomFactor() {
+        XYSeries rawData = TestUtils.generateXYSeries("my series", 1000);
+        SampledXYSeries series = new SampledXYSeries(
+                rawData, OrderedXYSeries.XOrder.ASCENDING, 2, 100);
+
+        assertEquals(3, series.getZoomLevels().size());
+        assertEquals(1000, series.size());
+        assertEquals(rawData.getY(5), series.getY(5));
+        assertNotNull(series.getBounds());
+    }
+
+    @Test
+    public void firstDraw_withFixedDomainSmallerThanData_doesNotThrow() {
+        XYPlot plot = new XYPlot(getContext(), "test");
+        plot.getRegistry().setEstimator(new ZoomEstimator());
+        SampledXYSeries series = new SampledXYSeries(
+                TestUtils.generateXYSeries("my series", 1000), OrderedXYSeries.XOrder.ASCENDING, 2, 100);
+        plot.addSeries(series, new LineAndPointFormatter());
+
+        // a fixed domain window smaller than the data rejects the series' precomputed bounds,
+        // forcing the min/max calculation to walk the series point by point:
+        plot.setDomainBoundaries(10, 20, BoundaryMode.FIXED);
+
+        // this is what the render thread runs before each frame, outside of its exception guard:
+        plot.notifyListenersBeforeDraw(new Canvas());
+
+        assertEquals(10.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(20.0, plot.getBounds().getMaxX().doubleValue(), 0);
+    }
+
+    @Test
+    public void firstDraw_withNoSampledZoomLevels_doesNotThrow() {
+        XYPlot plot = new XYPlot(getContext(), "test");
+        plot.getRegistry().setEstimator(new ZoomEstimator());
+        SampledXYSeries series = new SampledXYSeries(
+                TestUtils.generateXYSeries("my series", 150), OrderedXYSeries.XOrder.ASCENDING, 2, 100);
+        plot.addSeries(series, new LineAndPointFormatter());
+
+        plot.notifyListenersBeforeDraw(new Canvas());
+
+        assertEquals(0.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(149.0, plot.getBounds().getMaxX().doubleValue(), 0);
+        assertEquals(150, series.size());
     }
 }

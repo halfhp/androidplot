@@ -28,6 +28,9 @@ For details on what to expect in general when updating to a new version of Andro
 * Fix `SampledXYSeries` crashing the render thread on its first draw: the series had no active
   data until a zoom factor was applied, and had no bounds when its data was too small to produce
   any sampled zoom level.  `ZoomEstimator` also tolerates a series without bounds.
+* Fix `ConcurrentModificationException` (and silently skipped listeners) when a `PlotListener`
+  or series removes itself from the plot from within `onBeforeDraw` / `onAfterDraw`.  The
+  listener list is now a `CopyOnWriteArrayList`; `Plot.getListeners()` returns a `List`.
 
 **Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
 * The plot view is now composited with hardware acceleration when the app has it enabled.  The

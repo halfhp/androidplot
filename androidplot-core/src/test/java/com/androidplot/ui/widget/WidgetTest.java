@@ -90,6 +90,31 @@ public class WidgetTest extends AndroidplotTest {
     }
 
     @Test
+    public void position_calledRepeatedly_addsWidgetToLayoutManagerOnceAndKeepsZOrder() {
+        final LayoutManager realLayoutManager = new LayoutManager();
+        final Widget bottom = new TestWidget(realLayoutManager, size);
+        final Widget top = new TestWidget(realLayoutManager, size);
+
+        bottom.position(0, HorizontalPositioning.ABSOLUTE_FROM_LEFT,
+                0, VerticalPositioning.ABSOLUTE_FROM_TOP);
+        top.position(0, HorizontalPositioning.ABSOLUTE_FROM_LEFT,
+                0, VerticalPositioning.ABSOLUTE_FROM_TOP);
+        assertEquals(2, realLayoutManager.size());
+        assertEquals(0, realLayoutManager.indexOf(bottom));
+        assertEquals(1, realLayoutManager.indexOf(top));
+
+        // re-positioning an already added widget must neither add it again nor change its z-order:
+        bottom.position(10, HorizontalPositioning.ABSOLUTE_FROM_RIGHT,
+                10, VerticalPositioning.ABSOLUTE_FROM_BOTTOM, Anchor.RIGHT_BOTTOM);
+        assertEquals(2, realLayoutManager.size());
+        assertEquals(0, realLayoutManager.indexOf(bottom));
+        assertEquals(0, realLayoutManager.lastIndexOf(bottom));
+        assertEquals(1, realLayoutManager.indexOf(top));
+        assertEquals(10F, bottom.getPositionMetrics().getXPositionMetric().getValue());
+        assertEquals(Anchor.RIGHT_BOTTOM, bottom.getAnchor());
+    }
+
+    @Test
     public void draw_sizeChanged_invokesOnResizeBeforeDoOnDraw() {
         InOrder inOrder = Mockito.inOrder(widget);
 

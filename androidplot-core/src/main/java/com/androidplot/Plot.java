@@ -175,7 +175,8 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
     private Thread renderThread;
     private boolean keepRunning = false;
-    private boolean isIdle = true;
+    // written by the render thread, read by redraw() on the UI thread
+    private volatile boolean isIdle = true;
 
     {
         listeners = new ArrayList<>();
@@ -823,8 +824,14 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
 
         layout(new DisplayDimensions(cRect, mRect, pRect));
         super.onSizeChanged(w, h, oldw, oldh);
-        if(renderThread != null && !renderThread.isAlive()) {
-            renderThread.start();
+        if(renderThread != null) {
+            if (!renderThread.isAlive()) {
+                renderThread.start();
+            } else {
+                // the render thread already drew at the previous size and the buffers were just
+                // replaced with blank ones, so render again at the new size.  (#120)
+                redraw();
+            }
         }
     }
 
@@ -858,6 +865,10 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
      */
     protected synchronized void renderOnCanvas(@Nullable Canvas canvas) {
         if(canvas == null) {
+            // nothing to draw onto yet (eg. the view currently has a zero-sized dimension so no
+            // buffers exist); the render thread must still be marked idle or redraw() will
+            // never wake it once the view is given a real size.  (#120)
+            isIdle = true;
             return;
         }
         try {

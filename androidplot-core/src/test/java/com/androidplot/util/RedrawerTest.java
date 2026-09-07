@@ -199,6 +199,29 @@ public class RedrawerTest extends AndroidplotTest {
         return threads;
     }
 
+    /**
+     * Hammers pause/start/finish from another thread while the redrawer runs. Before the loop
+     * re-checked its flags under the monitor, a notify() could land between the thread deciding
+     * to park and actually parking, leaving it waiting forever.
+     */
+    @Test
+    public void pauseStartFinish_underContention_alwaysExits() throws Exception {
+        for (int i = 0; i < 50; i++) {
+            Plot plot = mock(Plot.class);
+            Redrawer redrawer = new Redrawer(Collections.singletonList(plot), 1000, i % 2 == 0);
+            for (int j = 0; j < 20; j++) {
+                redrawer.pause();
+                redrawer.start();
+            }
+            redrawer.finish();
+            long deadline = System.currentTimeMillis() + 2000;
+            while (redrawerThreadAlive() && System.currentTimeMillis() < deadline) {
+                Thread.sleep(5);
+            }
+            assertFalse("redrawer thread " + i + " never exited", redrawerThreadAlive());
+        }
+    }
+
     private static boolean redrawerThreadAlive() {
         return !redrawerThreads().isEmpty();
     }

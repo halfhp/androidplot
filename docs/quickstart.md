@@ -195,7 +195,7 @@ public class SimpleXYPlotActivity extends Activity {
 
 One potentially confusing section of the code above are the initializations of LineAndPointFormatter   
 You probably noticed that they take a mysterious reference to an xml resource file. This is actually 
-using [Fig](https://github.com/halfhp/fig) to configure the instance properties from XML.  
+using [XML configuration](xml_configuration.md) to configure the instance properties from XML.  
 
 If you'd prefer to avoid the XML and keep everything in Java, just replace the code:
 

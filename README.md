@@ -11,15 +11,27 @@ If you enjoy the lib, please [rate us on codix.io](http://codix.io/gh/repo/halfh
 
 **Features:**
 
-* Line Charts
-* Scatter Charts
-* Bar Charts
-* Pie Charts
-* Step Charts
-* Candlestick Charts
-* Bubble Charts
-* Dynamic plots
-* Pan & Zoom
+<table>
+<tr>
+<td valign="top">
+<ul>
+<li>Line Charts</li>
+<li>Scatter Charts</li>
+<li>Bar Charts</li>
+<li>Pie Charts</li>
+<li>Step Charts</li>
+</ul>
+</td>
+<td valign="top">
+<ul>
+<li>Candlestick Charts</li>
+<li>Bubble Charts</li>
+<li>Dynamic plots</li>
+<li>Pan &amp; Zoom</li>
+</ul>
+</td>
+</tr>
+</table>
 
 # Usage
 

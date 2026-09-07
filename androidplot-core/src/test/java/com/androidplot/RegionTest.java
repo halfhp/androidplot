@@ -85,6 +85,21 @@ public class RegionTest {
     }
 
     @Test
+    public void transform_zeroLengthRegion_returnsCenterOfTargetRange() {
+        Region flat = new Region(5, 5);
+
+        // previously scale = (100 - 0) / 0 = Infinity and Infinity * 0 = NaN:
+        assertEquals(50, flat.transform(5, 0, 100, false), 0);
+        assertEquals(50, flat.transform(5, 0, 100, true), 0);
+        assertEquals(30, flat.transform(5, new Region(20, 40)).doubleValue(), 0);
+
+        // non-degenerate regions are unaffected:
+        Region r = new Region(0, 10);
+        assertEquals(25, r.transform(2.5, 0, 100, false), 0);
+        assertEquals(75, r.transform(2.5, 0, 100, true), 0);
+    }
+
+    @Test
     public void testIntersects() throws Exception {
         Region line1 = new Region(1, 10);
         Region line2 = new Region(11, 20);

@@ -110,6 +110,12 @@ public class Region {
         double range = length().doubleValue();
         final double r2 = max - min;
 
+        // a zero-length region cannot be scaled (the result would be NaN or infinite);
+        // map everything onto the center of the target range instead:
+        if (range == 0) {
+            return min + (r2 / 2);
+        }
+
         // TODO: refactor to use ratio here
         final double scale = r2 / range;
         if(!flip) {

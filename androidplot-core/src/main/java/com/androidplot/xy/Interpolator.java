@@ -3,6 +3,7 @@
 package com.androidplot.xy;
 
 import java.util.List;
+import androidx.annotation.NonNull;
 
 /**
  * Created by nick_f on 9/25/14.
@@ -10,5 +11,6 @@ import java.util.List;
 public interface Interpolator<ParamsType extends InterpolationParams> {
 
 
-    List<XYCoords> interpolate(XYSeries series, ParamsType params);
+    @NonNull
+    List<XYCoords> interpolate(@NonNull XYSeries series, @NonNull ParamsType params);
 }

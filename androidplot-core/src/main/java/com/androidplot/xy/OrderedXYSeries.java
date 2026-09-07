@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package com.androidplot.xy;
 
+import androidx.annotation.NonNull;
+
 /**
  * An implementation of {@link XYSeries} that gives hints to it's renderer about the order
  * of the data being rendered.
@@ -30,5 +32,6 @@ public interface OrderedXYSeries extends XYSeries {
      * The order of XVals as they appear in this series.
      * @return
      */
+    @NonNull
     XOrder getXOrder();
 }

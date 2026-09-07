@@ -2,13 +2,15 @@
 
 package com.androidplot.xy;
 
+import androidx.annotation.Nullable;
+
 /**
  * An {@link XYSeries} that exposes methods to set values and resize
  */
 public interface EditableXYSeries extends XYSeries {
 
-    void setX(Number x, int index);
-    void setY(Number y, int index);
+    void setX(@Nullable Number x, int index);
+    void setY(@Nullable Number y, int index);
 
     /**
      * Resize to accommodate the specified number of x/y pairs.  If elements must be droped, those

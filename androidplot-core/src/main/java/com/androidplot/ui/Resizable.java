@@ -3,6 +3,7 @@
 package com.androidplot.ui;
 
 import com.androidplot.util.DisplayDimensions;
+import androidx.annotation.NonNull;
 
 /**
  * Used by classes that depend on dimensional values to lay themselves out and draw.
@@ -20,5 +21,5 @@ public interface Resizable {
      * Resizables in likely undesired ways.
      * @param dims
      */
-    void layout(final DisplayDimensions dims);
+    void layout(@NonNull final DisplayDimensions dims);
 }

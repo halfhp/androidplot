@@ -5,6 +5,7 @@ package com.androidplot.ui;
 import android.content.Context;
 import com.androidplot.Plot;
 import com.androidplot.util.fig.*;
+import androidx.annotation.NonNull;
 
 /**
  * Base class of all Formatters.  Encapsulates visual elements of a series; line style, color etc.
@@ -29,11 +30,11 @@ public abstract class Formatter<PlotType extends Plot> {
 
     public Formatter() {}
 
-    public Formatter(Context ctx, int xmlCfgId) {
+    public Formatter(@NonNull Context ctx, int xmlCfgId) {
         configure(ctx, xmlCfgId);
     }
 
-    public void configure(Context ctx, int xmlCfgId) {
+    public void configure(@NonNull Context ctx, int xmlCfgId) {
         try {
             Fig.configure(ctx, this, xmlCfgId);
         } catch (FigException e) {
@@ -47,7 +48,8 @@ public abstract class Formatter<PlotType extends Plot> {
      * @param <T>
      * @return @return An instance of SeriesRenderer constructed with the specified plot.
      */
-    public <T extends SeriesRenderer> T getRendererInstance(PlotType plot) {
+    @NonNull
+    public <T extends SeriesRenderer> T getRendererInstance(@NonNull PlotType plot) {
         return (T) doGetRendererInstance(plot);
     }
 
@@ -56,13 +58,15 @@ public abstract class Formatter<PlotType extends Plot> {
      * @return The Class of SeriesRenderer that should be used when rendering series associated
      * with instances of this formatter.
      */
+    @NonNull
     public abstract Class<? extends SeriesRenderer> getRendererClass();
 
     /**
      *
      * @return An instance of SeriesRenderer constructed with the specified plot.
      */
-    protected abstract SeriesRenderer doGetRendererInstance(PlotType plot);
+    @NonNull
+    protected abstract SeriesRenderer doGetRendererInstance(@NonNull PlotType plot);
 
     public boolean isLegendIconEnabled() {
         return isLegendIconEnabled;

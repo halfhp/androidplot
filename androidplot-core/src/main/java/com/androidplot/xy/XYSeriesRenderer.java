@@ -8,6 +8,7 @@ import com.androidplot.util.Layerable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import androidx.annotation.NonNull;
 
 /**
  * Base class for all Renderers that render XYSeries data.
@@ -16,7 +17,7 @@ import java.util.Map;
 public abstract class XYSeriesRenderer<SeriesType extends XYSeries, XYFormatterType extends XYSeriesFormatter>
         extends SeriesRenderer<XYPlot, SeriesType, XYFormatterType> {
 
-    public XYSeriesRenderer(XYPlot plot) {
+    public XYSeriesRenderer(@NonNull XYPlot plot) {
         super(plot);
     }
 
@@ -25,6 +26,7 @@ public abstract class XYSeriesRenderer<SeriesType extends XYSeries, XYFormatterT
      * @return Map of all unique XYRegionFormatters to region labels, in the order the regions
      * were encountered.  A region without a label maps to null.
      */
+    @NonNull
     public Map<XYRegionFormatter, String> getUniqueRegionFormatters() {
 
         // a LinkedHashMap rather than a Hashtable; regions are not required to have a label:

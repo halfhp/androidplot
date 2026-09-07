@@ -3,6 +3,7 @@
 package com.androidplot.ui;
 
 import android.graphics.RectF;
+import androidx.annotation.NonNull;
 
 /**
  * Defines the properties of a <a href="http://www.w3.org/TR/CSS21/box.html">BoxModel</a> as used
@@ -17,14 +18,16 @@ public interface BoxModelable {
      * @param boundsRect
      * @return
      */
-    RectF getMarginatedRect(RectF boundsRect);
+    @NonNull
+    RectF getMarginatedRect(@NonNull RectF boundsRect);
 
     /**
      * Returns a RectF instance describing the inner edge of the padding layer.
      * @param marginRect
      * @return
      */
-    RectF getPaddedRect(RectF marginRect);
+    @NonNull
+    RectF getPaddedRect(@NonNull RectF marginRect);
 
 
     void setMargins(float left, float top, float right, float bottom);

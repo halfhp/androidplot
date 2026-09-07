@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package com.androidplot.xy;
 
+import androidx.annotation.Nullable;
+
 /**
  * An implementation of {@link XYSeries} that defines additional methods to speed up rendering by
  * giving a hint to the renderer about the min/max values contained in the series.
@@ -16,5 +18,6 @@ public interface FastXYSeries extends XYSeries {
      * to keep a running tally of min/max values when iterating.
      * @return A {@link RectRegion} representing the min/max values that currently exist this series.
      */
+    @Nullable
     RectRegion minMax();
 }

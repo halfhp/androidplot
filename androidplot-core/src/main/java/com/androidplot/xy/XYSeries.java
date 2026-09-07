@@ -3,6 +3,7 @@
 package com.androidplot.xy;
 
 import com.androidplot.Series;
+import androidx.annotation.Nullable;
 
 /**
  * Represents a two dimensional series of data represented as xy values.
@@ -22,6 +23,7 @@ public interface XYSeries extends Series {
      *
      * @return The x-value.
      */
+    @Nullable
     Number getX(int index);
 
     /**
@@ -32,5 +34,6 @@ public interface XYSeries extends Series {
      *
      * @return The y-value.
      */
+    @Nullable
     Number getY(int index);
 }

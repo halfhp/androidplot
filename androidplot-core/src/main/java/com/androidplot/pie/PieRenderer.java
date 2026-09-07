@@ -9,6 +9,8 @@ import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.ui.RenderStack;
 
 import java.util.List;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Basic renderer for drawing pie charts.
@@ -36,17 +38,17 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         PIXELS
     }
 
-    public PieRenderer(PieChart plot) {
+    public PieRenderer(@NonNull PieChart plot) {
         super(plot);
     }
 
-    public float getRadius(RectF rect) {
+    public float getRadius(@NonNull RectF rect) {
         return rect.width() < rect.height() ? rect.width() / 2 : rect.height() / 2;
     }
 
     @Override
-    public void onRender(Canvas canvas, RectF plotArea, Segment series, SegmentFormatter formatter,
-            RenderStack stack) {
+    public void onRender(@NonNull Canvas canvas, @NonNull RectF plotArea, @NonNull Segment series, @NonNull SegmentFormatter formatter,
+            @NonNull RenderStack stack) {
 
         // This renderer renders all series in one shot, so exclude any remaining series
         // from causing subsequent invocations of onRender:
@@ -73,7 +75,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         }
     }
 
-    protected void drawSegment(Canvas canvas, RectF bounds, Segment seg, SegmentFormatter f,
+    protected void drawSegment(@NonNull Canvas canvas, @NonNull RectF bounds, @NonNull Segment seg, @NonNull SegmentFormatter f,
             float rad, float startAngle, float sweep) {
         canvas.save();
 
@@ -196,14 +198,14 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         }
     }
 
-    protected void drawSegmentLabel(Canvas canvas, PointF origin,
-            Segment seg, SegmentFormatter f) {
+    protected void drawSegmentLabel(@NonNull Canvas canvas, @NonNull PointF origin,
+            @NonNull Segment seg, @NonNull SegmentFormatter f) {
         canvas.drawText(seg.getTitle(), origin.x, origin.y, f.getLabelPaint());
 
     }
 
     @Override
-    protected void doDrawLegendIcon(Canvas canvas, RectF rect, SegmentFormatter formatter) {
+    protected void doDrawLegendIcon(@NonNull Canvas canvas, @NonNull RectF rect, @NonNull SegmentFormatter formatter) {
         throw new UnsupportedOperationException("Not yet implemented.");
     }
 
@@ -211,7 +213,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
      * Determines how many counts there are per cent of whatever the
      * pie chart is displaying as a fraction, 1 being 100%.
      */
-    protected double calculateScale(double[] values) {
+    protected double calculateScale(@NonNull double[] values) {
         double total = 0;
         for (int i = 0; i < values.length; i++) {
             total += values[i];
@@ -224,6 +226,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
      * Retreive the raw values being rendered from each {@link Segment}.
      * @return
      */
+    @NonNull
     protected double[] getValues() {
         List<SeriesBundle<Segment, ? extends SegmentFormatter>> seriesList = getSeriesAndFormatterList();
         double[] result = new double[seriesList.size()];
@@ -235,11 +238,13 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         return result;
     }
 
+    @NonNull
     protected PointF calculateLineEnd(float x, float y, float rad, float deg) {
         return calculateLineEnd(new PointF(x, y), rad, deg);
     }
 
-    protected PointF calculateLineEnd(PointF origin, float rad, float deg) {
+    @NonNull
+    protected PointF calculateLineEnd(@NonNull PointF origin, float rad, float deg) {
 
         double radians = deg * Math.PI / HALF_PIE_DEGS;
         double x = rad * Math.cos(radians);
@@ -259,7 +264,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
      * @param size
      * @param mode
      */
-    public void setDonutSize(float size, DonutMode mode) {
+    public void setDonutSize(float size, @NonNull DonutMode mode) {
         switch (mode) {
             case PERCENT:
                 if (size < 0 || size > 1) {
@@ -284,7 +289,8 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
      * @param point The clicked point
      * @return Segment containing the clicked point.
      */
-    public Segment getContainingSegment(PointF point) {
+    @Nullable
+    public Segment getContainingSegment(@NonNull PointF point) {
 
         RectF plotArea = getPlot().getPie().getWidgetDimensions().marginatedRect;
         // figure out the angle in degrees of the line between the clicked point

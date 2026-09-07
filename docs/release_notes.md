@@ -23,8 +23,9 @@ For details on what to expect in general when updating to a new version of Andro
 * Fix crash on the render thread after restoring a `PanZoom.State` that was captured before any
   pan or zoom gesture (eg. saving `getState()` in `onSaveInstanceState` and rotating the device).
   `getState()` now snapshots the plot's actual boundaries and modes for both axes, and applying a
-  state skips any axis edge it holds no mode for.  `XYPlot` gains public getters for its four
-  boundary modes.
+  state skips any axis edge it holds no mode for.  A `State` serialized by an earlier version
+  still deserializes (its `serialVersionUID` is pinned) and restores as a no-op.  `XYPlot` gains
+  public getters for its four boundary modes.
 * Fix `SampledXYSeries` crashing the render thread on its first draw: the series had no active
   data until a zoom factor was applied, and had no bounds when its data was too small to produce
   any sampled zoom level.  `ZoomEstimator` also tolerates a series without bounds.

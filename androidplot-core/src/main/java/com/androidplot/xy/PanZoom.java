@@ -106,6 +106,15 @@ public class PanZoom implements View.OnTouchListener {
      */
     // TODO: consider making this immutable / threadsafe
     public static class State implements Serializable {
+
+        /**
+         * The JVM-computed UID of this class as it existed before per-edge boundary modes were
+         * added.  It must never change: a State serialized by an older version of the library
+         * (eg. one held in an Activity's saved instance state across an app update) must still
+         * deserialize, with any fields it lacks left null so that {@link #apply(XYPlot)} skips them.
+         */
+        private static final long serialVersionUID = -4221152827129598653L;
+
         private Number domainLowerBoundary;
         private Number domainUpperBoundary;
         private Number rangeLowerBoundary;

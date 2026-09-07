@@ -48,22 +48,40 @@ public class BubbleRenderer<FormatterType extends BubbleFormatter> extends XYSer
             FormatterType formatter, RenderStack stack) {
 
         Region magnitudeBounds = calculateBounds();
+        if (magnitudeBounds == null) {
+            // no positive z-vals; nothing to render
+            return;
+        }
         for(int i = 0; i < series.size(); i++) {
 
             // only render non-null values greater than zero:
-            if(series.getY(i) != null && series.getZ(i).doubleValue() > 0) {
+            if(series.getX(i) != null && series.getY(i) != null && series.getZ(i) != null
+                    && series.getZ(i).doubleValue() > 0) {
 
                 final PointF centerPoint = getPlot().getBounds().
                         transform(series.getX(i), series.getY(i), plotArea, false, true);
 
-                // calculate bubble radius:
-                float bubbleRadius = magnitudeBounds.
-                        transform(bubbleScaleMode == BubbleScaleMode.SQUARE_ROOT ?
-                                  Math.sqrt(series.getZ(i).doubleValue()) :
-                                  series.getZ(i).doubleValue(), bubbleBounds).floatValue();
-                drawBubble(canvas, formatter, series, i, centerPoint, bubbleRadius);
+                drawBubble(canvas, formatter, series, i, centerPoint,
+                        calculateRadius(magnitudeBounds, series.getZ(i).doubleValue()));
             }
         }
+    }
+
+    /**
+     * @param magnitudeBounds the min/max magnitude of all rendered z-vals, as calculated by
+     * {@link #calculateBounds()}.
+     * @param z
+     * @return The radius to draw a bubble of magnitude z with.  Always a finite value within
+     * the configured min/max bubble radius.
+     */
+    protected float calculateRadius(Region magnitudeBounds, double z) {
+        if (magnitudeBounds.length().doubleValue() == 0) {
+            // all bubbles have the same magnitude so there is nothing to scale against:
+            return bubbleBounds.getMax().floatValue();
+        }
+        final double magnitude = bubbleScaleMode == BubbleScaleMode.SQUARE_ROOT ?
+                Math.sqrt(z) : z;
+        return magnitudeBounds.transform(magnitude, bubbleBounds).floatValue();
     }
 
     /**
@@ -145,7 +163,7 @@ public class BubbleRenderer<FormatterType extends BubbleFormatter> extends XYSer
             }
         } else {
             // if the smallest value is negative, use zero instead since those vals arent visible:
-            bounds.setMax(0);
+            bounds.setMin(0);
         }
         return bounds;
     }

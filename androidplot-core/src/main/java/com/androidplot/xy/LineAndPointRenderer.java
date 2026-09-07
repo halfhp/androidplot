@@ -121,6 +121,11 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         path.reset();
         final List<PointF> points = getPointsCache(series);
 
+        // nothing to draw (and nothing to compute visible index bounds from):
+        if (series.size() == 0) {
+            return;
+        }
+
         int iStart = 0;
         int iEnd = series.size();
         if(SeriesUtils.getXYOrder(series) == OrderedXYSeries.XOrder.ASCENDING) {
@@ -134,6 +139,12 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 iEnd++;
             }
         }
+
+        // interpolation requires at least 3 non-null vertices; fall back to straight
+        // line segments when the series cannot be interpolated:
+        final boolean interpolate = formatter.getInterpolationParams() != null
+                && isInterpolatable(series);
+
         for (int i = iStart; i < iEnd; i++) {
             final Number y = series.getY(i);
             final Number x = series.getX(i);
@@ -153,7 +164,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
             }
 
             // don't need to do any of this if the line isnt going to be drawn:
-            if(formatter.hasLinePaint() && formatter.getInterpolationParams() == null) {
+            if(formatter.hasLinePaint() && !interpolate) {
                 if (thisPoint != null) {
 
                     // record the first point of the new Path
@@ -181,7 +192,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
 
         if(formatter.hasLinePaint()) {
-            if(formatter.getInterpolationParams() != null) {
+            if(interpolate) {
                 List<XYCoords> interpolatedPoints = getInterpolator(
                         formatter.getInterpolationParams()).interpolate(series,
                         formatter.getInterpolationParams());
@@ -200,6 +211,34 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
             }
         }
         renderPoints(canvas, plotArea, series, iStart, iEnd, points, formatter);
+    }
+
+    /**
+     * @param series
+     * @return True if series can be passed to an {@link Interpolator}: it must contain at least
+     * 3 vertices, none of which may have a null x or y value.
+     */
+    protected boolean isInterpolatable(XYSeries series) {
+        final int size = series.size();
+        if (size < 3) {
+            return false;
+        }
+        for (int i = 0; i < size; i++) {
+            if (series.getX(i) == null || series.getY(i) == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param plotArea
+     * @return The screen y-coordinate of the plot's range origin.
+     */
+    protected float getRangeOriginPix(RectF plotArea) {
+        return (float) getPlot().getBounds().getyRegion()
+                .transform(getPlot().getRangeOrigin().doubleValue(),
+                        plotArea.top, plotArea.bottom, true);
     }
 
     /**
@@ -265,9 +304,7 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
                 path.close();
                 break;
             case RANGE_ORIGIN:
-                float originPix = (float) getPlot().getBounds().getxRegion()
-                        .transform(getPlot().getRangeOrigin()
-                                .doubleValue(), plotArea.top, plotArea.bottom, true);
+                float originPix = getRangeOriginPix(plotArea);
                 path.lineTo(lastPoint.x, originPix);
                 path.lineTo(firstPoint.x, originPix);
                 path.close();

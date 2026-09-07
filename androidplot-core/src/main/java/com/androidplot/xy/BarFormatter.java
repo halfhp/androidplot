@@ -7,24 +7,26 @@ import com.androidplot.ui.SeriesRenderer;
 
 public class BarFormatter extends LineAndPointFormatter {
 
+    /**
+     * @return The fill paint, or null if none has been set.  Unlike
+     * {@link LineAndPointFormatter#getFillPaint()} no default is instantiated.
+     */
+    @Override
     public Paint getFillPaint() {
         return fillPaint;
     }
 
-    public void setFillPaint(Paint fillPaint) {
-        this.fillPaint = fillPaint;
-    }
-
+    /**
+     * @return The border paint, or null if none has been set.  Bar borders are stored as the
+     * inherited line paint, so {@link #hasLinePaint()} reports whether a border will be drawn.
+     */
     public Paint getBorderPaint() {
-        return borderPaint;
+        return linePaint;
     }
 
     public void setBorderPaint(Paint borderPaint) {
-        this.borderPaint = borderPaint;
+        this.linePaint = borderPaint;
     }
-
-    private Paint fillPaint;
-    private Paint borderPaint;
 
     private float marginTop;
     private float marginBottom;
@@ -38,15 +40,15 @@ public class BarFormatter extends LineAndPointFormatter {
         fillPaint = new Paint();
         fillPaint.setStyle(Paint.Style.FILL);
         fillPaint.setAlpha(100);
-        borderPaint = new Paint();
-        borderPaint.setStyle(Paint.Style.STROKE);
-        borderPaint.setAlpha(100);
+        linePaint = new Paint();
+        linePaint.setStyle(Paint.Style.STROKE);
+        linePaint.setAlpha(100);
     }
 
     public BarFormatter(int fillColor, int borderColor) {
         this();
         fillPaint.setColor(fillColor);
-        borderPaint.setColor(borderColor);
+        linePaint.setColor(borderColor);
     }
 
     public BarFormatter(Context context, int xmlCfgId) {

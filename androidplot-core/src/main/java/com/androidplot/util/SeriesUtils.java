@@ -117,9 +117,13 @@ public class SeriesUtils {
      * in strict ascending order; behavior is undefined otherwise.
      * @param series
      * @param visibleBounds The visible constraints of the plot
-     * @return
+     * @return The min/max iVals to draw.  An empty series yields [0, 0]; callers should check
+     * {@link XYSeries#size()} before iterating.
      */
     public static Region iBounds(XYSeries series, RectRegion visibleBounds) {
+        if (series.size() == 0) {
+            return new Region(0, 0);
+        }
         final float step = series.size() >= 200 ? 50 : 1;
         final int iBoundsMin = iBoundsMin(series, visibleBounds.getMinX().doubleValue(), step);
         final int iBoundsMax = iBoundsMax(series, visibleBounds.getMaxX().doubleValue(), step);

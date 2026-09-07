@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 package com.androidplot.xy;
 
+import android.graphics.Canvas;
+
+import com.androidplot.Plot;
+import com.androidplot.PlotListener;
 import com.androidplot.Region;
 import com.androidplot.util.SeriesUtils;
 
@@ -8,10 +12,17 @@ import com.androidplot.util.SeriesUtils;
  * Wrapper implementation of {@link XYSeries} that wraps another XYSeries, normalizing values in the range of 0 to 1.
  * Note that it's possible to push normed values outside of the standard 0, 1 range by applying
  * a sufficiently large offset.
+ *
+ * Auto-calculated min/max bounds are refreshed before each draw of the plot this series is
+ * attached to, so the wrapped series may continue to change after being wrapped.  Call
+ * {@link #normalize()} to refresh them manually.
  */
-public class NormedXYSeries implements XYSeries {
+public class NormedXYSeries implements XYSeries, PlotListener {
 
     private XYSeries rawData;
+
+    private Norm normX;
+    private Norm normY;
 
     private Region minMaxX;
     private Region minMaxY;
@@ -68,7 +79,18 @@ public class NormedXYSeries implements XYSeries {
      */
     public NormedXYSeries(XYSeries rawData, Norm x, Norm y) {
         this.rawData = rawData;
-        normalize(x, y);
+        this.normX = x;
+        this.normY = y;
+        normalize();
+    }
+
+    /**
+     * Recalculates the normalization bounds from the current contents of the wrapped series.
+     * Only auto-calculated bounds (a {@link Norm} created with a null minMax) are affected.
+     * Invoked automatically before each draw when attached to a {@link Plot}.
+     */
+    public void normalize() {
+        normalize(normX, normY);
     }
 
     protected void normalize(Norm x, Norm y) {
@@ -80,6 +102,21 @@ public class NormedXYSeries implements XYSeries {
         if( y != null) {
             this.minMaxY = y.minMax != null ? y.minMax : SeriesUtils.minMaxY(rawData);
             this.transformY = calculateTransform(y);
+        }
+    }
+
+    @Override
+    public void onBeforeDraw(Plot source, Canvas canvas) {
+        if (rawData instanceof PlotListener) {
+            ((PlotListener) rawData).onBeforeDraw(source, canvas);
+        }
+        normalize();
+    }
+
+    @Override
+    public void onAfterDraw(Plot source, Canvas canvas) {
+        if (rawData instanceof PlotListener) {
+            ((PlotListener) rawData).onAfterDraw(source, canvas);
         }
     }
 

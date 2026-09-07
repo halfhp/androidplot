@@ -102,7 +102,9 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
         if (formatter.hasFillPaint()) {
             canvas.drawRect(rect, formatter.getFillPaint());
         }
-        canvas.drawRect(rect, formatter.getBorderPaint());
+        if (formatter.hasLinePaint()) {
+            canvas.drawRect(rect, formatter.getBorderPaint());
+        }
     }
 
     /**
@@ -203,17 +205,30 @@ public class BarRenderer<FormatterType extends BarFormatter> extends GroupRender
                     }
                     break;
                 case STACKED:
-                    float bottom = (int) barGroup.plotArea.bottom;
+                    // each bar's height is the screen distance between its value and the
+                    // range origin.  Positive values stack upward from the origin while
+                    // negative values stack downward from it:
+                    float positiveBottom = rangeOriginPx;
+                    float negativeTop = rangeOriginPx;
                     Collections.sort(barGroup.bars, comparator);
                     for (Bar bar : barGroup.bars) {
                         // TODO: handling sub range-origin values for the purpose of labeling
-                        final float height = (int) bar.barGroup.plotArea.bottom - bar.yPix;
-                        final float top = bottom - height;
+                        final float height = bar.getY() != null ? rangeOriginPx - bar.yPix : 0;
+                        final float top;
+                        final float bottom;
+                        if (height >= 0) {
+                            bottom = positiveBottom;
+                            top = bottom - height;
+                            positiveBottom = top;
+                        } else {
+                            top = negativeTop;
+                            bottom = top - height;
+                            negativeTop = bottom;
+                        }
                         drawBar(canvas, bar, createBarRect(
                                 bar.barGroup.leftPix, top,
                                 bar.barGroup.rightPix, bottom,
                                 bar.formatter));
-                        bottom = top;
                     }
                     break;
                 default:

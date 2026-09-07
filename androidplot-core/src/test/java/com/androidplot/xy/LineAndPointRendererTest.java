@@ -257,6 +257,84 @@ public class LineAndPointRendererTest extends AndroidplotTest {
     }
 
     @Test
+    public void drawSeries_emptyAscendingSeries_drawsNothing() {
+        LineAndPointFormatter formatter = new LineAndPointFormatter(Color.RED, Color.RED, Color.RED, null);
+        SimpleXYSeries series = new SimpleXYSeries("empty");
+        series.setXOrder(OrderedXYSeries.XOrder.ASCENDING);
+
+        xyPlot.addSeries(series, formatter);
+        LineAndPointRenderer renderer = xyPlot.getRenderer(LineAndPointRenderer.class);
+        xyPlot.calculateMinMaxVals();
+
+        // must not throw (previously IndexOutOfBoundsException from series.getY(-1)):
+        renderer.drawSeries(canvas, plotArea, series, formatter);
+
+        verify(canvas, never()).drawPath(any(Path.class), any(Paint.class));
+        verify(canvas, never()).drawPoint(anyFloat(), anyFloat(), any(Paint.class));
+    }
+
+    @Test
+    public void drawSeries_withInterpolation_fewerThanThreePoints_drawsStraightLine() {
+        LineAndPointFormatter formatter = new LineAndPointFormatter(Color.RED, Color.RED, null, null);
+        formatter.setInterpolationParams(
+                new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
+        SimpleXYSeries series = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 1, 2);
+
+        xyPlot.addSeries(series, formatter);
+        LineAndPointRenderer renderer = xyPlot.getRenderer(LineAndPointRenderer.class);
+        xyPlot.calculateMinMaxVals();
+
+        // must not throw (previously IllegalArgumentException from the interpolator):
+        renderer.drawSeries(canvas, plotArea, series, formatter);
+
+        // the two points are still connected by a line:
+        verify(canvas, times(1)).drawPath(any(Path.class), eq(formatter.getLinePaint()));
+    }
+
+    @Test
+    public void drawSeries_withInterpolation_nullPoint_drawsStraightSegments() {
+        LineAndPointFormatter formatter = new LineAndPointFormatter(Color.RED, Color.RED, null, null);
+        formatter.setInterpolationParams(
+                new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
+        SimpleXYSeries series = new SimpleXYSeries(
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 1, 2, 3, null, 5, 6, 7);
+
+        xyPlot.addSeries(series, formatter);
+        LineAndPointRenderer renderer = xyPlot.getRenderer(LineAndPointRenderer.class);
+        xyPlot.calculateMinMaxVals();
+
+        // must not throw (previously NullPointerException from the interpolator):
+        renderer.drawSeries(canvas, plotArea, series, formatter);
+
+        // one segment on each side of the null:
+        verify(canvas, times(2)).drawPath(any(Path.class), eq(formatter.getLinePaint()));
+    }
+
+    @Test
+    public void renderPath_rangeOriginFill_closesPathAtRangeOrigin() {
+        LineAndPointFormatter formatter = new LineAndPointFormatter(
+                Color.RED, Color.RED, Color.RED, null, FillDirection.RANGE_ORIGIN);
+        SimpleXYSeries series = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "s1", 1, 2, 3);
+        xyPlot.addSeries(series, formatter);
+        LineAndPointRenderer renderer = xyPlot.getRenderer(LineAndPointRenderer.class);
+
+        // domain 0..10, range -1..1, origin at 0 => origin is the vertical center of the plot:
+        xyPlot.setDomainBoundaries(0, 10, BoundaryMode.FIXED);
+        xyPlot.setRangeBoundaries(-1, 1, BoundaryMode.FIXED);
+        xyPlot.setUserRangeOrigin(0);
+        xyPlot.calculateMinMaxVals();
+
+        Path path = spy(new Path());
+        PointF firstPoint = new PointF(10, 20);
+        PointF lastPoint = new PointF(90, 20);
+        renderer.renderPath(canvas, plotArea, path, firstPoint, lastPoint, formatter);
+
+        // (previously the origin was transformed through the domain region, yielding 100):
+        verify(path).lineTo(lastPoint.x, 50f);
+        verify(path).lineTo(firstPoint.x, 50f);
+    }
+
+    @Test
     public void drawSeries_withPointLabelFormatter_drawsPointLabels() {
         LineAndPointFormatter formatter =
                 new LineAndPointFormatter(0, 0, 0, null);

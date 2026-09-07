@@ -302,6 +302,78 @@ public class XYPlotTest extends AndroidplotTest {
     }
     
     @Test
+    public void calculateMinMaxVals_grow_ignoresPlaceholderBoundsWhenFirstFrameHasNoData() {
+        SimpleXYSeries series = new SimpleXYSeries("live");
+        plot.addSeries(series, new LineAndPointFormatter());
+        plot.setRangeBoundaries(null, null, BoundaryMode.GROW);
+
+        // first frame: no data at all
+        plot.calculateMinMaxVals();
+
+        for (int y = 50; y <= 100; y += 10) {
+            series.addLast(y - 50, y);
+        }
+        plot.calculateMinMaxVals();
+
+        // previously the placeholder -1 lower bound was latched forever:
+        assertEquals(50, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
+    @Test
+    public void calculateMinMaxVals_shrink_ignoresPlaceholderBoundsWhenFirstFrameHasNoData() {
+        SimpleXYSeries series = new SimpleXYSeries("live");
+        plot.addSeries(series, new LineAndPointFormatter());
+        plot.setRangeBoundaries(null, null, BoundaryMode.SHRINK);
+
+        // first frame: no data at all
+        plot.calculateMinMaxVals();
+
+        for (int y = 50; y <= 100; y += 10) {
+            series.addLast(y - 50, y);
+        }
+        plot.calculateMinMaxVals();
+
+        // previously produced the inverted axis [50, 1]:
+        assertEquals(50, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
+    @Test
+    public void calculateMinMaxVals_singlePoint_padsBoundsToNonZeroLength() {
+        SimpleXYSeries series = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "single", 5);
+        plot.addSeries(series, new LineAndPointFormatter());
+        plot.calculateMinMaxVals();
+
+        final double minX = plot.getBounds().getMinX().doubleValue();
+        final double maxX = plot.getBounds().getMaxX().doubleValue();
+        final double minY = plot.getBounds().getMinY().doubleValue();
+        final double maxY = plot.getBounds().getMaxY().doubleValue();
+
+        // x == 0 so it is padded by one unit; y == 5 so it is padded by 10%:
+        assertEquals(-1, minX, 0);
+        assertEquals(1, maxX, 0);
+        assertEquals(4.5, minY, 0.0001);
+        assertEquals(5.5, maxY, 0.0001);
+
+        // and the single point transforms to the center of the plot rather than NaN:
+        PointF p = plot.getBounds().transformScreen(0, 5, new RectF(0, 0, 100, 100));
+        assertEquals(50f, p.x, 0.0001f);
+        assertEquals(50f, p.y, 0.0001f);
+    }
+
+    @Test
+    public void calculateMinMaxVals_flatSeriesWithFixedLowerBound_padsOnlyTheCalculatedEdge() {
+        SimpleXYSeries series = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "flat", 5, 5, 5);
+        plot.addSeries(series, new LineAndPointFormatter());
+        plot.setRangeBoundaries(5, BoundaryMode.FIXED, null, BoundaryMode.AUTO);
+        plot.calculateMinMaxVals();
+
+        assertEquals(5, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(5.5, plot.getBounds().getMaxY().doubleValue(), 0.0001);
+    }
+
+    @Test
     public void setRangeBoundaries_calculatesCorrectMinMaxVals() throws Exception {
         plot.addSeries(series0To100, new LineAndPointFormatter());
         plot.calculateMinMaxVals();

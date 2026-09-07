@@ -37,6 +37,8 @@ For details on what to expect in general when updating to a new version of Andro
 * Fix `NullPointerException` when a `RectRegion` with a null (unbounded) edge is tested for
   intersection, eg. a fill region added to a `LineAndPointFormatter`.  Null now means infinity as
   documented, and the `Region(v1, v2)` constructor no longer swaps a null value to the wrong edge.
+* Fix `ConcurrentModificationException` on the render thread when `XYPlot` value markers are
+  added or removed while the plot is drawing; the marker lists are now `CopyOnWriteArrayList`s.
 
 **Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
 * The plot view is now composited with hardware acceleration when the app has it enabled.  The

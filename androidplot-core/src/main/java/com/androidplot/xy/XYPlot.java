@@ -25,9 +25,9 @@ import com.androidplot.util.AttrUtils;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.util.SeriesUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A View to graphically display x/y coordinates.
@@ -106,8 +106,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
     @SuppressWarnings("FieldCanBeLocal")
     private Number rangeOriginExtent = null;
 
-    private ArrayList<YValueMarker> yValueMarkers;
-    private ArrayList<XValueMarker> xValueMarkers;
+    // XYGraphWidget.drawMarkers iterates these on the render thread while markers may be
+    // added / removed from another thread, so they must be safe to mutate during iteration:
+    private List<YValueMarker> yValueMarkers;
+    private List<XValueMarker> xValueMarkers;
 
     private PreviewMode previewMode;
 
@@ -219,8 +221,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         setPlotMarginTop(PixelUtils.dpToPix(DEFAULT_PLOT_TOP_MARGIN_DP));
         setPlotMarginBottom(PixelUtils.dpToPix(DEFAULT_PLOT_BOTTOM_MARGIN_DP));
 
-        xValueMarkers = new ArrayList<>();
-        yValueMarkers = new ArrayList<>();
+        xValueMarkers = new CopyOnWriteArrayList<>();
+        yValueMarkers = new CopyOnWriteArrayList<>();
 
         domainStepModel = new StepModel(StepMode.SUBDIVIDE, 10);
         rangeStepModel = new StepModel(StepMode.SUBDIVIDE, 10);

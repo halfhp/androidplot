@@ -14,6 +14,7 @@ import org.robolectric.RuntimeEnvironment;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -159,6 +160,50 @@ public class XYPlotTest extends AndroidplotTest {
 
         assertEquals(0.0, plot.getBounds().getMinY().doubleValue(), 0);
         assertEquals(100.0, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
+    @Test
+    public void addRemoveMarker_whileIteratingYValueMarkers_doesNotThrow() throws Exception {
+        plot.addMarker(new YValueMarker(1, "one"));
+        plot.addMarker(new YValueMarker(2, "two"));
+        YValueMarker three = new YValueMarker(3, "three");
+
+        // XYGraphWidget.drawMarkers iterates this list on the render thread while markers
+        // may be added / removed from another thread:
+        Iterator<YValueMarker> iterator = plot.getYValueMarkers().iterator();
+        iterator.next();
+        plot.addMarker(three);
+        plot.removeMarker(three);
+        plot.addMarker(three);
+        iterator.next();
+        assertEquals(3, plot.getYValueMarkers().size());
+
+        iterator = plot.getYValueMarkers().iterator();
+        iterator.next();
+        assertEquals(3, plot.removeYMarkers());
+        iterator.next();
+        assertEquals(0, plot.getYValueMarkers().size());
+    }
+
+    @Test
+    public void addRemoveMarker_whileIteratingXValueMarkers_doesNotThrow() throws Exception {
+        plot.addMarker(new XValueMarker(1, "one"));
+        plot.addMarker(new XValueMarker(2, "two"));
+        XValueMarker three = new XValueMarker(3, "three");
+
+        Iterator<XValueMarker> iterator = plot.getXValueMarkers().iterator();
+        iterator.next();
+        plot.addMarker(three);
+        plot.removeMarker(three);
+        plot.addMarker(three);
+        iterator.next();
+        assertEquals(3, plot.getXValueMarkers().size());
+
+        iterator = plot.getXValueMarkers().iterator();
+        iterator.next();
+        assertEquals(3, plot.removeMarkers());
+        iterator.next();
+        assertEquals(0, plot.getXValueMarkers().size());
     }
 
     @Test(expected = IllegalArgumentException.class)

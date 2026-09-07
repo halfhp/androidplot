@@ -21,6 +21,29 @@ kotlin {
     jvmToolchain(17)
 }
 
+// Every merge to master publishes the demoapp to the Play beta track, so the version code is
+// derived from the commit count rather than maintained by hand: it rises with every commit and
+// is the same in every workflow.  A release build (-Prelease) gets a code one higher than the
+// beta of the same commit, so a tagged release can follow a beta built from the same commit.
+// Betas carry the commit count in their version name so builds can be told apart.
+def commitCount = {
+    try {
+        providers.exec {
+            commandLine 'git', 'rev-list', '--count', 'HEAD'
+        }.standardOutput.asText.get().trim().toInteger()
+    } catch (Exception e) {
+        logger.warn("demoapp: unable to determine commit count; falling back to theVersionCode")
+        null
+    }
+}()
+def isRelease = project.hasProperty('release')
+def demoVersionCode = commitCount != null
+        ? commitCount * 10 + (isRelease ? 1 : 0)
+        : rootProject.ext.theVersionCode
+def demoVersionName = isRelease
+        ? rootProject.ext.theVersionName
+        : "${rootProject.ext.theVersionName}-beta.${commitCount ?: 0}"
+
 android {
 
     compileOptions {
@@ -35,8 +58,8 @@ android {
     }
 
     defaultConfig {
-        versionCode rootProject.ext.theVersionCode
-        versionName rootProject.ext.theVersionName
+        versionCode demoVersionCode
+        versionName demoVersionName
         minSdk 23
         targetSdk rootProject.ext.theTargetSdkVersion
         applicationId "com.androidplot.demos"

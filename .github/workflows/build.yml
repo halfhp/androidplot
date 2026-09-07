@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the demoapp version code is derived from the commit count
 
       - name: Set Up JDK 17
         uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
@@ -89,6 +91,32 @@ jobs:
           name: Core Library
           path: androidplot-core/build/outputs/aar/*.aar
           retention-days: 30
+
+      # Publishes the demoapp to the Play open testing (beta) track on every merge to master
+      # that touches the library or demoapp source.  Version codes rise with the commit count,
+      # so each upload is accepted; Play reviews each one before testers see it.
+      - name: Check for Demoapp Changes
+        id: demoapp
+        if: github.ref_name == 'master'
+        run: |
+          if git diff --quiet HEAD^ HEAD -- androidplot-core/src/main demoapp/src/main demoapp/build.gradle build.gradle; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish Demoapp to Google Play (beta)
+        if: github.ref_name == 'master' && steps.demoapp.outputs.changed == 'true'
+        env:
+          KEYSTORE: keystore.jks
+          KEY_ALIAS: Key0
+          KEYSTORE_PASSWORD: ${{ secrets.DEMOAPP_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.DEMOAPP_KEY_PASSWORD }}
+          PUBLISHER_ACCT_JSON_FILE: publisher.json
+          PLAY_JSON: ${{ secrets.PLAY_PUBLISHER_JSON }}
+        run: |
+          printf '%s' "$PLAY_JSON" > "${GITHUB_WORKSPACE}/demoapp/publisher.json"
+          ./gradlew :demoapp:publishReleaseApk --track beta
 
       - name: Upload Demoapp APK
         if: github.ref_name == 'master'

@@ -490,7 +490,7 @@ public class XYGraphWidget extends Widget {
 
     protected float seriesToScreenY(Number y) {
         return (float) plot.getBounds().getyRegion().
-                transform(y.doubleValue(), gridRect.bottom, gridRect.top, true);
+                transform(y.doubleValue(), gridRect.top, gridRect.bottom, true);
     }
 
     @Override

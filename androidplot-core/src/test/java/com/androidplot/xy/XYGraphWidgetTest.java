@@ -320,9 +320,13 @@ public class XYGraphWidgetTest extends AndroidplotTest {
     public void seriesToScreenY_returnsScreenValue() {
         when(xyPlot.getBounds()).thenReturn(new RectRegion(-100, 100, -100, 100));
 
-        assertEquals(100f, graphWidget.seriesToScreenY(100));
-        assertEquals(0f, graphWidget.seriesToScreenY(-100));
+        // the max y value lands on the top edge of the grid, the min on the bottom, exactly as
+        // seriesToScreen(XYCoords) does and as the inverse of screenToSeriesY:
+        assertEquals(0f, graphWidget.seriesToScreenY(100));
+        assertEquals(100f, graphWidget.seriesToScreenY(-100));
         assertEquals(50f, graphWidget.seriesToScreenY(0));
+        assertEquals(graphWidget.seriesToScreen(new XYCoords(0, 75)).y, graphWidget.seriesToScreenY(75));
+        assertEquals(75, graphWidget.screenToSeriesY(graphWidget.seriesToScreenY(75)).intValue());
     }
 
     @Test

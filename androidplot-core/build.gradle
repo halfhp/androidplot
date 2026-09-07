@@ -137,11 +137,14 @@ afterEvaluate {
     publishing {
         repositories {
             maven {
+                // Central Publisher Portal, via its OSSRH-compatible staging API.
+                // Uploads land as a pending deployment; the release workflow then
+                // calls the Portal's manual API to publish them.
                 name = "MavenCentral"
-                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                url = "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
                 credentials {
-                    username = System.getenv("OSSRH_ACTOR")
-                    password = System.getenv("OSSRH_TOKEN")
+                    username = System.getenv("MAVEN_CENTRAL_USERNAME")
+                    password = System.getenv("MAVEN_CENTRAL_PASSWORD")
                 }
             }
         }

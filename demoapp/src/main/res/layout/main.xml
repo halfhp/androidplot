@@ -138,14 +138,13 @@
                 android:layout_height="wrap_content"
                 android:text="Bubble Chart Example"
                 android:enabled="true"/>
+            <Button
+                android:id="@+id/aboutButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/about_button"
+                android:text="@string/about_button"/>
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/aboutButton"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/about_button"/>
 </LinearLayout>
 

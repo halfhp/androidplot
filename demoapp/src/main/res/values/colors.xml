@@ -2,4 +2,5 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 <resources>
     <color name="line_point_formatter_line">#00AA00</color>
+    <color name="about_button">#2E6FB5</color>
 </resources>

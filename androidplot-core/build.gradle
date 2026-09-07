@@ -101,6 +101,18 @@ dependencies {
     testImplementation "org.mockito:mockito-core:5.23.0"
     testImplementation "junit:junit:4.13.2"
     testImplementation "org.robolectric:robolectric:4.16.1"
+    testImplementation "org.ow2.asm:asm-tree:9.8"
+    // Kotlin is only used by KotlinInteropTest; kotlin.stdlib.default.dependency=false in
+    // gradle.properties keeps the published POM free of a kotlin-stdlib dependency, and
+    // testImplementation never reaches the POM anyway.
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib:2.2.10"
+}
+
+kotlin {
+    // match the Java 17 target above (see demoapp/build.gradle)
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
 }
 
 // TODO: get javadoc working again at some point

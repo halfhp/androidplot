@@ -15,6 +15,33 @@ For details on what to expect in general when updating to a new version of Andro
   their area.
 * (#88) Fix crash when a formatter config or `androidPlot.` attribute references a color, dimension
   or integer resource.  Negative integer values are now accepted as well.
+* Fix `LineAndPointRenderer` throwing `IndexOutOfBoundsException` on every frame for an empty
+  series with `XOrder.ASCENDING`; `SeriesUtils.iBounds` no longer yields a negative index for an
+  empty series.
+* Fix `LineAndPointRenderer` throwing on every frame when interpolation is enabled on a series with
+  fewer than 3 points or a null value; such series now fall back to straight line segments.
+* Fix `GROW` / `SHRINK` boundary modes latching the placeholder `[-1, 1]` bounds when the first
+  frame is drawn before any series data exists, which left `GROW` stuck at -1 and gave `SHRINK` an
+  inverted axis.
+* Fix `XYConstraints.contains(RectRegion)` comparing the region's minimum y value against the domain
+  instead of its minimum x value.
+* Fix `FillDirection.RANGE_ORIGIN` fills being closed at the wrong screen coordinate; the range
+  origin was transformed through the domain region instead of the range region.
+* Fix `BarOrientation.STACKED` bars being measured from the bottom of the plot instead of from the
+  range origin, which produced incorrect stacks whenever the range lower boundary was not the origin.
+  Negative values now stack downward from the origin.
+* Fix `BubbleRenderer` producing infinite radii when any z-val is zero or negative, and NaN radii (no
+  bubble drawn) when all z-vals are equal or the series has a single bubble.
+* Fix a plot whose data spans a single point or a flat line rendering blank: `Region.transform` now
+  maps a zero-length region onto the center of the target range, and `XYPlot` pads a calculated axis
+  whose min equals max so the data is centered with a visible grid.
+* Fix `BarFormatter.setFillPaint(null)` / `setBorderPaint(null)` not disabling the fill / border;
+  the formatter shadowed the inherited paint fields so `hasFillPaint()` / `hasLinePaint()` kept
+  returning true and `BarRenderer` drew with a null `Paint`.
+* Fix `NormedXYSeries` returning NaN for a flat or single-point series, and drifting outside of the
+  `[0, 1]` range when the wrapped series changes after construction.  Auto-calculated bounds are now
+  refreshed before each draw (`NormedXYSeries` implements `PlotListener`) and can be refreshed
+  manually via the new `normalize()` method.
 * The XML configuration engine (formerly the separate Fig library) is now part of androidplot-core;
   the library no longer has a dependency on `com.halfhp.fig:figlib`.  See the new
   [XML Configuration](xml_configuration.md) doc.

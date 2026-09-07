@@ -105,6 +105,7 @@
         <activity android:name=".FXPlotExampleActivity"/>
         <activity android:name=".BubbleChartActivity"/>
         <activity android:name=".DualScaleActivity"/>
+        <activity android:name=".AboutActivity" android:label="@string/about_title"/>
         
         <!-- receiver for demo app widget -->
         <receiver

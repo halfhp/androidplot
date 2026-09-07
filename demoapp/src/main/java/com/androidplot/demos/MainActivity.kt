@@ -90,6 +90,10 @@ class MainActivity : Activity() {
             startActivity(Intent(this@MainActivity, BubbleChartActivity::class.java))
         }
 
+        binding.aboutButton.setOnClickListener {
+            startActivity(Intent(this@MainActivity, AboutActivity::class.java))
+        }
+
         setContentView(binding.root)
     }
 }

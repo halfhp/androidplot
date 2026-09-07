@@ -6,4 +6,22 @@
     <string name="sxy_title">A Simple XY Plot</string>
     <string name="ts_title">Time Series</string>
     <string name="ts_plot1_title">UFO Sightings</string>
+
+    <string name="about_button">About Androidplot</string>
+    <string name="about_title">About</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_description">Androidplot is an open source library for creating dynamic and
+        static charts in Android apps. This app demonstrates its plot types and features; the
+        source for every example is in the repository.</string>
+    <string name="about_links_heading">Links</string>
+    <string name="about_website">Website</string>
+    <string name="about_source">Source code on GitHub</string>
+    <string name="about_docs">Documentation</string>
+    <string name="about_issues">Report a bug</string>
+    <string name="about_license_heading">License</string>
+    <string name="about_license">Androidplot and this demo app are released under the Apache
+        License, Version 2.0.</string>
+    <string name="about_license_link">View license</string>
+    <string name="about_copyright">Copyright 2026 Androidplot.com</string>
+    <string name="about_icon_description">Androidplot logo</string>
 </resources>

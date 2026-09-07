@@ -141,12 +141,11 @@
         </LinearLayout>
     </ScrollView>
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="fill_parent"
+    <Button
+        android:id="@+id/aboutButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autoLink="web"
-        android:gravity="center"
-        android:text="http://androidplot.com"/>
+        android:text="@string/about_button"/>
 </LinearLayout>
 

@@ -42,6 +42,21 @@ For details on what to expect in general when updating to a new version of Andro
   `[0, 1]` range when the wrapped series changes after construction.  Auto-calculated bounds are now
   refreshed before each draw (`NormedXYSeries` implements `PlotListener`) and can be refreshed
   manually via the new `normalize()` method.
+* Fix the legend (along with the plot title and border) disappearing, with an exception logged on
+  every frame, when a series has no title (e.g. candlestick plots), a region has no label, or there
+  are more legend items than the legend's `TableModel` can hold.  Untitled items now draw without
+  text, an over-full legend draws what fits, and `DynamicTableModel` rounds its dynamic axis up and
+  sizes cells by the computed row/column count so a table such as `DynamicTableModel(0, 2)` fills
+  its width.  `XYSeriesRenderer.getUniqueRegionFormatters()` now returns a `Map` (a
+  `LinkedHashMap`) instead of a `Hashtable`.
+* Fix `Widget.position(...)` re-adding the widget to the `LayoutManager` on every call, which drew
+  the widget again on top of everything positioned before it (e.g. the graph covering the legend
+  and titles after `plot.getGraph().position(...)`).
+* Fix `FixedTableModel` wrapping immediately (or laying out nothing) for any table whose rect does
+  not start at the plot origin.
+* Fix the `domainTitle*` and `rangeTitle*` size, position, anchor and visibility XML attributes
+  being applied to the graph widget instead of the domain and range title widgets, so e.g.
+  `ap:domainTitleVisible="false"` hid the entire graph.
 * The XML configuration engine (formerly the separate Fig library) is now part of androidplot-core;
   the library no longer has a dependency on `com.halfhp.fig:figlib`.  See the new
   [XML Configuration](xml_configuration.md) doc.

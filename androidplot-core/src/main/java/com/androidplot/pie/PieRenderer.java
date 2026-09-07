@@ -299,14 +299,11 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
             offset += sweep;
             offset = offset % FULL_PIE_DEGS;
 
-            final double dist = signedDistance(offset, angle);
-            double endDist = signedDistance(offset, lastOffset);
-            if(endDist < 0) {
-                // segment accounts for more than 50% of the pie and wrapped around
-                // need to correct:
-                endDist = FULL_PIE_DEGS + endDist;
-            }
-            if(dist > 0 && dist <= endDist) {
+            // segments are drawn clockwise from lastOffset, so the point is inside this segment
+            // if its clockwise angular distance from the segment's start is less than the sweep.
+            // Unlike a shortest-path distance this holds for segments larger than a half pie.
+            final double distFromStart = clockwiseDistance(lastOffset, angle);
+            if (distFromStart < sweep) {
                 return sfPair.getSeries();
             }
             i++;
@@ -328,6 +325,14 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         } else {
             return degs;
         }
+    }
+
+    /**
+     * Compute the clockwise angular distance in screen degrees from {@code fromAngle} to
+     * {@code toAngle}.  The result is always in the range 0 (inclusive) to 360 (exclusive).
+     */
+    protected static double clockwiseDistance(double fromAngle, double toAngle) {
+        return ((toAngle - fromAngle) % FULL_PIE_DEGS + FULL_PIE_DEGS) % FULL_PIE_DEGS;
     }
 
     /**

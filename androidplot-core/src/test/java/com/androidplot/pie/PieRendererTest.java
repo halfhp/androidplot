@@ -175,6 +175,47 @@ public class PieRendererTest extends AndroidplotTest {
         assertEquals(segment1, renderer.getContainingSegment(new PointF(100, 0)));
     }
 
+    /**
+     * Regression test for https://github.com/halfhp/androidplot/issues/118: with values 8, 1, 1
+     * the first segment sweeps 288 degrees clockwise from east; the region just past its start
+     * (first quadrant) and the region just before its end must both hit it.
+     */
+    @Test
+    public void getContainingSegment_hitsWholeOfSegmentLargerThanHalfPie() throws Exception {
+        Segment big = spy(new Segment("big", 8));
+        Segment small1 = spy(new Segment("small1", 1));
+        Segment small2 = spy(new Segment("small2", 1));
+        SegmentFormatter formatter = spy(
+                new SegmentFormatter(Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN));
+        PieRenderer renderer = formatter.getRendererInstance(pieChart);
+
+        pieChart.addSegment(big, formatter);
+        pieChart.addSegment(small1, formatter);
+        pieChart.addSegment(small2, formatter);
+
+        // screen angle 0 is east, increasing clockwise (south is 90).
+        // big spans 0..288, small1 288..324, small2 324..360.
+        RectF area = pieChart.getPie().getWidgetDimensions().marginatedRect;
+        PointF origin = new PointF(area.centerX(), area.centerY());
+        assertEquals(big, renderer.getContainingSegment(atScreenDegs(origin, 1)));
+        assertEquals(big, renderer.getContainingSegment(atScreenDegs(origin, 45)));
+        assertEquals(big, renderer.getContainingSegment(atScreenDegs(origin, 90)));
+        assertEquals(big, renderer.getContainingSegment(atScreenDegs(origin, 180)));
+        assertEquals(big, renderer.getContainingSegment(atScreenDegs(origin, 270)));
+        assertEquals(big, renderer.getContainingSegment(atScreenDegs(origin, 287)));
+        assertEquals(small1, renderer.getContainingSegment(atScreenDegs(origin, 289)));
+        assertEquals(small1, renderer.getContainingSegment(atScreenDegs(origin, 323)));
+        assertEquals(small2, renderer.getContainingSegment(atScreenDegs(origin, 325)));
+        assertEquals(small2, renderer.getContainingSegment(atScreenDegs(origin, 359)));
+    }
+
+    /** A point 40px from origin at the given screen angle (clockwise from east). */
+    private static PointF atScreenDegs(PointF origin, double degs) {
+        double rad = Math.toRadians(degs);
+        return new PointF((float) (origin.x + 40 * Math.cos(rad)),
+                (float) (origin.y + 40 * Math.sin(rad)));
+    }
+
     @Test
     public void testDegsToScreenDegs() throws Exception {
         assertEquals(0f, PieRenderer.degsToScreenDegs(0));

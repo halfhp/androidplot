@@ -54,6 +54,9 @@ For details on what to expect in general when updating to a new version of Andro
   small drags did not move the window and zoom quantized.  The value-space math is now done in
   double.  `PanZoom.calculateZoom(RectF, float, boolean)` is deprecated in favor of a `RectRegion`
   overload.
+* Fix `PieRenderer.setDonutSize(0, DonutMode.PIXELS)` making the pie invisible; a donut size of 0
+  pixels now means no hole.
+* Fix pie segments with a zero value drawing their label on top of the neighbouring segment.
 
 **Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
 * The plot view is now composited with hardware acceleration when the app has it enabled.  The

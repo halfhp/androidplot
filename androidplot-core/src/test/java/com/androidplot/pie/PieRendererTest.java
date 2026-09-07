@@ -235,6 +235,57 @@ public class PieRendererTest extends AndroidplotTest {
     }
 
     @Test
+    public void getDonutSizePx_pixelsMode_zeroMeansNoHole() throws Exception {
+        PieRenderer renderer = new PieRenderer(pieChart);
+
+        renderer.setDonutSize(0, PieRenderer.DonutMode.PIXELS);
+        assertEquals(0f, renderer.getDonutSizePx(100));
+
+        renderer.setDonutSize(10, PieRenderer.DonutMode.PIXELS);
+        assertEquals(10f, renderer.getDonutSizePx(100));
+
+        // negative values are an inset from the outer radius:
+        renderer.setDonutSize(-10, PieRenderer.DonutMode.PIXELS);
+        assertEquals(90f, renderer.getDonutSizePx(100));
+
+        renderer.setDonutSize(0.25f, PieRenderer.DonutMode.PERCENT);
+        assertEquals(25f, renderer.getDonutSizePx(100));
+    }
+
+    @Test
+    public void drawSegment_zeroPixelDonut_drawsFullWedge() throws Exception {
+        PieRenderer renderer = new PieRenderer(pieChart);
+        renderer.setDonutSize(0, PieRenderer.DonutMode.PIXELS);
+        SegmentFormatter formatter = new SegmentFormatter(Color.GREEN);
+
+        renderer.drawSegment(canvas, plotArea, new Segment("s1", 10), formatter, 50, 0, 90);
+
+        // the inner edge of the wedge should be at the center of the pie, not at its outer radius:
+        verify(canvas).drawCircle(anyFloat(), anyFloat(), eq(0f), eq(formatter.getInnerEdgePaint()));
+        verify(canvas).drawCircle(anyFloat(), anyFloat(), eq(50f), eq(formatter.getOuterEdgePaint()));
+    }
+
+    @Test
+    public void onRender_doesNotLabelZeroValueSegments() throws Exception {
+        Segment s1 = new Segment("s1", 8);
+        Segment s2 = new Segment("s2", 0);
+        Segment s3 = new Segment("s3", 2);
+        SegmentFormatter formatter = new SegmentFormatter(Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN);
+        PieRenderer renderer = spy(formatter.getRendererInstance(pieChart));
+
+        pieChart.addSegment(s1, formatter);
+        pieChart.addSegment(s2, formatter);
+        pieChart.addSegment(s3, formatter);
+
+        renderer.onRender(canvas, plotArea, s1, formatter, renderStack);
+
+        verify(renderer).drawSegmentLabel(eq(canvas), any(PointF.class), eq(s1), eq(formatter));
+        verify(renderer, never()).drawSegmentLabel(eq(canvas), any(PointF.class), eq(s2), eq(formatter));
+        verify(renderer).drawSegmentLabel(eq(canvas), any(PointF.class), eq(s3), eq(formatter));
+        verify(canvas, times(2)).drawText(anyString(), anyFloat(), anyFloat(), any(Paint.class));
+    }
+
+    @Test
     public void testSetDonutSize() throws Exception {
 
         Segment segment1 = spy(new Segment("s1", 25));

@@ -126,8 +126,10 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
 
         lock.writeLock().lock();
         try {
-            // empty the current values:
-            xVals.clear();
+            // empty the current values (xVals is null when implicit x-vals are in use):
+            if (xVals != null) {
+                xVals.clear();
+            }
             yVals.clear();
 
             // make sure the new model has data:
@@ -140,8 +142,10 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
                 // array containing only y-vals. assume x = index:
                 case Y_VALS_ONLY:
                     yVals.addAll(model);
-                    for(int i = 0; i < yVals.size(); i++) {
-                        xVals.add(i);
+                    if (xVals != null) {
+                        for (int i = 0; i < yVals.size(); i++) {
+                            xVals.add(i);
+                        }
                     }
                     break;
 
@@ -172,10 +176,16 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
      * Sets individual x value based on index
      * @param value
      * @param index
+     * @throws IllegalStateException if this series uses implicit x-vals.
+     * See {@link #useImplicitXVals()}.
      */
     public void setX(Number value, int index) {
         lock.writeLock().lock();
         try {
+            if (xVals == null) {
+                throw new IllegalStateException(
+                        "Cannot set an x value on a series that uses implicit x-vals.");
+            }
             xVals.set(index, value);
         } finally {
             lock.writeLock().unlock();
@@ -200,14 +210,18 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
     public void resize(int size) {
         try {
             lock.writeLock().lock();
-            if (xVals.size() < size) {
-                for (int i = xVals.size(); i < size; i++) {
-                    xVals.add(null);
+            if (yVals.size() < size) {
+                for (int i = yVals.size(); i < size; i++) {
+                    if (xVals != null) {
+                        xVals.add(null);
+                    }
                     yVals.add(null);
                 }
-            } else if(xVals.size() > size) {
-                for(int i = xVals.size(); i > size; i--) {
-                    xVals.removeLast();
+            } else if(yVals.size() > size) {
+                for(int i = yVals.size(); i > size; i--) {
+                    if (xVals != null) {
+                        xVals.removeLast();
+                    }
                     yVals.removeLast();
                 }
             }
@@ -217,7 +231,8 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
     }
 
     /**
-     * Sets xy values based on index
+     * Sets xy values based on index.  If this series uses implicit x-vals
+     * (see {@link #useImplicitXVals()}) only the y value is set; xVal is ignored.
      * @param xVal
      * @param yVal
      * @param index
@@ -226,7 +241,9 @@ public class SimpleXYSeries implements EditableXYSeries, OrderedXYSeries, PlotLi
         lock.writeLock().lock();
         try {
             yVals.set(index, yVal);
-            xVals.set(index, xVal);
+            if (xVals != null) {
+                xVals.set(index, xVal);
+            }
         } finally {lock.writeLock().unlock();}
     }
 

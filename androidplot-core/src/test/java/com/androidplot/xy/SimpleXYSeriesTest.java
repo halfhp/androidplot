@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 public class SimpleXYSeriesTest {
 
@@ -187,5 +188,69 @@ public class SimpleXYSeriesTest {
 
         series.clear();
         assertEquals(0, series.size());
+    }
+
+    private static SimpleXYSeries newImplicitXSeries() {
+        SimpleXYSeries series = new SimpleXYSeries(
+                Arrays.asList(1, 2, 3),
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "series");
+        series.useImplicitXVals();
+        return series;
+    }
+
+    @Test
+    public void setModel_afterUseImplicitXVals_yValsOnly() {
+        SimpleXYSeries series = newImplicitXSeries();
+
+        series.setModel(Arrays.asList(7, 8, 9, 10), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+
+        assertEquals(4, series.size());
+        assertEquals(3, series.getX(3));
+        assertEquals(10, series.getY(3));
+
+        // x-vals remain implicit:
+        assertNull(series.getxVals());
+    }
+
+    @Test
+    public void setModel_afterUseImplicitXVals_xyInterleaved() {
+        SimpleXYSeries series = newImplicitXSeries();
+
+        series.setModel(Arrays.asList(10, 1, 20, 2), SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED);
+
+        assertEquals(2, series.size());
+        assertEquals(20, series.getX(1));
+        assertEquals(2, series.getY(1));
+    }
+
+    @Test
+    public void resize_afterUseImplicitXVals() {
+        SimpleXYSeries series = newImplicitXSeries();
+
+        series.resize(5);
+        assertEquals(5, series.size());
+        assertEquals(4, series.getX(4));
+        assertNull(series.getY(4));
+
+        series.resize(2);
+        assertEquals(2, series.size());
+        assertEquals(1, series.getX(1));
+        assertEquals(2, series.getY(1));
+    }
+
+    @Test
+    public void setXY_afterUseImplicitXVals_setsYOnly() {
+        SimpleXYSeries series = newImplicitXSeries();
+
+        series.setXY(99, 42, 1);
+
+        assertEquals(1, series.getX(1));
+        assertEquals(42, series.getY(1));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void setX_afterUseImplicitXVals_throwsIllegalStateException() {
+        SimpleXYSeries series = newImplicitXSeries();
+        series.setX(99, 1);
     }
 }

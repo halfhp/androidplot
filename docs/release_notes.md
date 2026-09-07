@@ -39,6 +39,9 @@ For details on what to expect in general when updating to a new version of Andro
   documented, and the `Region(v1, v2)` constructor no longer swaps a null value to the wrong edge.
 * Fix `ConcurrentModificationException` on the render thread when `XYPlot` value markers are
   added or removed while the plot is drawing; the marker lists are now `CopyOnWriteArrayList`s.
+* Fix `NullPointerException` from `SimpleXYSeries.setModel(...)`, `resize(...)` and `setXY(...)`
+  after `useImplicitXVals()`.  `setModel` and `resize` keep the x-vals implicit, `setXY` sets
+  only the y value, and `setX` throws an `IllegalStateException` explaining why.
 
 **Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
 * The plot view is now composited with hardware acceleration when the app has it enabled.  The

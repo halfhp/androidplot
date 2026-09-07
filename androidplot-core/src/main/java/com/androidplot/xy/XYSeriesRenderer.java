@@ -6,7 +6,8 @@ import com.androidplot.ui.SeriesBundle;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.util.Layerable;
 
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Base class for all Renderers that render XYSeries data.
@@ -21,11 +22,13 @@ public abstract class XYSeriesRenderer<SeriesType extends XYSeries, XYFormatterT
 
     /**
      * TODO: get rid of this method!
-     * @return Map of all unique XYRegionFormatters to region labels.
+     * @return Map of all unique XYRegionFormatters to region labels, in the order the regions
+     * were encountered.  A region without a label maps to null.
      */
-    public Hashtable<XYRegionFormatter, String> getUniqueRegionFormatters() {
+    public Map<XYRegionFormatter, String> getUniqueRegionFormatters() {
 
-        Hashtable<XYRegionFormatter, String> found = new Hashtable<>();
+        // a LinkedHashMap rather than a Hashtable; regions are not required to have a label:
+        Map<XYRegionFormatter, String> found = new LinkedHashMap<>();
         for(SeriesBundle<SeriesType, ? extends XYFormatterType> sfPair : getSeriesAndFormatterList()) {
             Layerable<RectRegion> regionIndexer = sfPair.getFormatter().getRegions();
             for (RectRegion region : regionIndexer.elements()) {

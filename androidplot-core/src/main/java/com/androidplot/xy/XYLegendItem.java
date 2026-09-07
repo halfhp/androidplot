@@ -2,6 +2,7 @@
 package com.androidplot.xy;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.androidplot.ui.widget.LegendItem;
 
@@ -16,13 +17,14 @@ public class XYLegendItem implements LegendItem {
     public final Object item;
     private final String text;
 
-    public XYLegendItem(@NonNull Type cellType, @NonNull Object item, @NonNull String text) {
+    public XYLegendItem(@NonNull Type cellType, @NonNull Object item, @Nullable String text) {
         this.type = cellType;
         this.item = item;
         this.text = text;
     }
 
     @Override
+    @Nullable
     public String getTitle() {
         return this.text;
     }

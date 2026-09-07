@@ -13,8 +13,8 @@ import com.androidplot.ui.widget.LegendWidget;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -36,7 +36,10 @@ public class XYLegendWidget extends LegendWidget<XYLegendItem> {
             @Override
             public int compare(XYLegendItem o1, XYLegendItem o2) {
                 if(o1.type == o2.type) {
-                    return o1.getTitle().compareTo(o2.getTitle());
+                    // series and regions may have no title; sort those as an empty string:
+                    final String t1 = o1.getTitle() != null ? o1.getTitle() : "";
+                    final String t2 = o2.getTitle() != null ? o2.getTitle() : "";
+                    return t1.compareTo(t2);
                 } else {
                     return(o1.type.compareTo(o2.type));
                 }
@@ -71,7 +74,7 @@ public class XYLegendWidget extends LegendWidget<XYLegendItem> {
         }
 
         for (XYSeriesRenderer renderer : plot.getRendererList()) {
-            Hashtable<XYRegionFormatter, String> urf = renderer.getUniqueRegionFormatters();
+            Map<XYRegionFormatter, String> urf = renderer.getUniqueRegionFormatters();
             for (Entry<XYRegionFormatter, String> entry : urf.entrySet()) {
                 items.add(new XYLegendItem(XYLegendItem.Type.REGION, entry.getKey(), entry.getValue()));
             }

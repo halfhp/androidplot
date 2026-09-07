@@ -8,7 +8,7 @@ public interface LegendItem {
 
     /**
      *
-     * @return The user facing label for this item.
+     * @return The user facing label for this item, or null if it has none.
      */
     String getTitle();
 }

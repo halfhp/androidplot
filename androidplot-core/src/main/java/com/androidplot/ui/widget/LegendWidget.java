@@ -134,12 +134,18 @@ public abstract class LegendWidget<ItemT extends LegendItem> extends Widget {
             canvas.drawRect(iconRect, iconBorderPaint);
         }
 
+        final String title = legendItem.getTitle();
+        if (title == null) {
+            // nothing to draw for an untitled item (Canvas.drawText rejects null):
+            return;
+        }
+
         float centeredTextOriginY = getRectCenterY(cellRect) + (FontUtils.getFontHeight(textPaint)/2);
 
         if (textPaint.getTextAlign().equals(Paint.Align.RIGHT)) {
-            canvas.drawText(legendItem.getTitle(), iconRect.left - 2, centeredTextOriginY, textPaint);
+            canvas.drawText(title, iconRect.left - 2, centeredTextOriginY, textPaint);
         } else {
-            canvas.drawText(legendItem.getTitle(), iconRect.right + 2, centeredTextOriginY, textPaint);
+            canvas.drawText(title, iconRect.right + 2, centeredTextOriginY, textPaint);
         }
     }
 

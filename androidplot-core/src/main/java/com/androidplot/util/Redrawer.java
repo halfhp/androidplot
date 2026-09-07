@@ -45,6 +45,9 @@ public class Redrawer implements Runnable {
             this.plots.add(new WeakReference<>(plot));
         }
         setMaxRefreshRate(maxRefreshRate);
+        // armed before the thread starts so that a finish() arriving before the thread has
+        // been scheduled is not undone by run() (which used to set this flag itself).
+        keepAlive = true;
         thread = new Thread(this, "Androidplot Redrawer");
         thread.start();
         if(startImmediately) {
@@ -87,7 +90,6 @@ public class Redrawer implements Runnable {
 
     @Override
     public void run() {
-        keepAlive = true;
         try {
         while(keepAlive) {
             if(keepRunning) {

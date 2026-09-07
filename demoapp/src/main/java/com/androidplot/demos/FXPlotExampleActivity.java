@@ -13,16 +13,51 @@ import java.text.*;
 import java.util.*;
 
 /**
- * A simple XYPlot
+ * Plots f(x) with custom LineLabelRenderers: origin labels in red on the bottom/left edges,
+ * every other label in gray on the top/right edges.
  */
 public class FXPlotExampleActivity extends Activity {
 
-    private XYPlot plot;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fx_plot_example);
+        XYPlot plot = findViewById(R.id.plot);
+
+        LineAndPointFormatter series1Format =
+                new LineAndPointFormatter(this, R.xml.line_point_formatter);
+        plot.addSeries(generateSeries(-5, 5, 100), series1Format);
+
+        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1);
+        plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 1);
+
+        plot.centerOnDomainOrigin(0);
+        plot.centerOnRangeOrigin(0);
+
+        // LineLabelRenderer is the extension point for drawing tick labels yourself
+        // use our custom renderer to make origin labels red
+        plot.getGraph().setLineLabelRenderer(XYGraphWidget.Edge.BOTTOM, new MyLineLabelRenderer());
+        plot.getGraph().setLineLabelRenderer(XYGraphWidget.Edge.LEFT, new MyLineLabelRenderer());
+
+        // skip every other line for top and right edge labels
+        plot.getGraph().setLineLabelRenderer(XYGraphWidget.Edge.RIGHT, new MySecondaryLabelRenderer());
+        plot.getGraph().setLineLabelRenderer(XYGraphWidget.Edge.TOP, new MySecondaryLabelRenderer());
+
+        // don't show decimal places for top and right edge labels
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.TOP).setFormat(new DecimalFormat("0"));
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.RIGHT).setFormat(new DecimalFormat("0"));
+
+        // create a dash effect for domain and range grid lines:
+        DashPathEffect dashFx = new DashPathEffect(
+                new float[] {PixelUtils.dpToPix(3), PixelUtils.dpToPix(3)}, 0);
+        plot.getGraph().getDomainGridLinePaint().setPathEffect(dashFx);
+        plot.getGraph().getRangeGridLinePaint().setPathEffect(dashFx);
+    }
 
     /**
      * Custom line label renderer that highlights origin labels
      */
-    class MyLineLabelRenderer extends XYGraphWidget.LineLabelRenderer {
+    private static class MyLineLabelRenderer extends XYGraphWidget.LineLabelRenderer {
 
         @Override
         protected void drawLabel(Canvas canvas, String text, Paint paint,
@@ -41,8 +76,7 @@ public class FXPlotExampleActivity extends Activity {
     /**
      * Draws every other tick label and renders text in gray instead of white.
      */
-    class MySecondaryLabelRenderer extends MyLineLabelRenderer {
-
+    private static class MySecondaryLabelRenderer extends MyLineLabelRenderer {
 
         @Override
         public void drawLabel(Canvas canvas, XYGraphWidget.LineLabelStyle style,
@@ -57,50 +91,8 @@ public class FXPlotExampleActivity extends Activity {
         }
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fx_plot_example);
-
-        // initialize our XYPlot reference:
-        plot = (XYPlot) findViewById(R.id.plot);
-
-        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1);
-        plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 1);
-
-        plot.centerOnDomainOrigin(0);
-        plot.centerOnRangeOrigin(0);
-
-        // create formatters to use for drawing a series using LineAndPointRenderer
-        // and configure them from xml:
-        LineAndPointFormatter series1Format =
-                new LineAndPointFormatter(this, R.xml.line_point_formatter);
-
-        // use our custom renderer to make origin labels red
-        plot.getGraph().setLineLabelRenderer(XYGraphWidget.Edge.BOTTOM, new MyLineLabelRenderer());
-        plot.getGraph().setLineLabelRenderer(XYGraphWidget.Edge.LEFT, new MyLineLabelRenderer());
-
-        // skip every other line for top and right edge labels
-        plot.getGraph().setLineLabelRenderer(XYGraphWidget.Edge.RIGHT, new MySecondaryLabelRenderer());
-        plot.getGraph().setLineLabelRenderer(XYGraphWidget.Edge.TOP, new MySecondaryLabelRenderer());
-
-        // don't show decimal places for top and right edge labels
-        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.TOP).setFormat(new DecimalFormat("0"));
-        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.RIGHT).setFormat(new DecimalFormat("0"));
-
-        // create a dash effect for domain and range grid lines:
-        DashPathEffect dashFx = new DashPathEffect(
-                new float[] {PixelUtils.dpToPix(3), PixelUtils.dpToPix(3)}, 0);
-        plot.getGraph().getDomainGridLinePaint().setPathEffect(dashFx);
-        plot.getGraph().getRangeGridLinePaint().setPathEffect(dashFx);
-
-        // add a new series' to the xyplot:
-        plot.addSeries(generateSeries(-5, 5, 100), series1Format);
-    }
-
-    protected XYSeries generateSeries(double minX, double maxX, double resolution) {
-        final double range = maxX - minX;
-        final double step = range / resolution;
+    private XYSeries generateSeries(double minX, double maxX, double resolution) {
+        final double step = (maxX - minX) / resolution;
         List<Number> xVals = new ArrayList<>();
         List<Number> yVals = new ArrayList<>();
 
@@ -114,7 +106,7 @@ public class FXPlotExampleActivity extends Activity {
         return new SimpleXYSeries(xVals, yVals, "f(x) = (x^2) - 13");
     }
 
-    protected double fx(double x) {
+    private double fx(double x) {
         return Math.abs(x*x) - 13;
     }
 }

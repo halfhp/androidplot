@@ -7,6 +7,7 @@ import com.androidplot.Series;
 
 import java.util.ArrayList;
 import java.util.List;
+import androidx.annotation.NonNull;
 
 /**
  * A stack of series to be rendered.  The stack order is immutable but individual elements may be
@@ -18,6 +19,7 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
 
     private final ArrayList<StackElement<SeriesType, FormatterType>> elements;
 
+    @NonNull
     public ArrayList<StackElement<SeriesType, FormatterType>> getElements() {
         return elements;
     }
@@ -29,16 +31,17 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
         private SeriesBundle<SeriesType, FormatterType> seriesBundle;
         private boolean isEnabled = true;
 
-        public StackElement(SeriesBundle<SeriesType, FormatterType> seriesBundle) {
+        public StackElement(@NonNull SeriesBundle<SeriesType, FormatterType> seriesBundle) {
             set(seriesBundle);
         }
 
 
+        @NonNull
         public SeriesBundle<SeriesType, FormatterType> get() {
             return seriesBundle;
         }
 
-        public void set(SeriesBundle<SeriesType, FormatterType> seriesBundle) {
+        public void set(@NonNull SeriesBundle<SeriesType, FormatterType> seriesBundle) {
             this.seriesBundle = seriesBundle;
         }
 
@@ -56,7 +59,7 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
         }
     }
 
-    public RenderStack(Plot plot) {
+    public RenderStack(@NonNull Plot plot) {
         this.plot = plot;
         elements = new ArrayList<>(plot.getRegistry().size());
     }
@@ -79,7 +82,7 @@ public class RenderStack<SeriesType extends Series, FormatterType extends Format
      * of false on all stack elements associated with the specified renderer.
      * @param rendererClass
      */
-    public void disable(Class<? extends SeriesRenderer> rendererClass) {
+    public void disable(@NonNull Class<? extends SeriesRenderer> rendererClass) {
         for(RenderStack.StackElement element : getElements()) {
             if(element.get().getFormatter().getRendererClass() == rendererClass) {
                 element.setEnabled(false);

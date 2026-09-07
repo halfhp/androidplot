@@ -2,6 +2,8 @@
 
 package com.androidplot.ui;
 
+import androidx.annotation.NonNull;
+
 /**
  * Encapsulates a sizing algorithm and an associated value.
  *
@@ -10,11 +12,11 @@ package com.androidplot.ui;
  */
 public class SizeMetric extends LayoutMetric<SizeMode> {
 
-    public SizeMetric(float value, SizeMode layoutType) {
+    public SizeMetric(float value, @NonNull SizeMode layoutType) {
         super(value, layoutType);
     }
 
-    protected void validatePair(float value, SizeMode layoutType) {
+    protected void validatePair(float value, @NonNull SizeMode layoutType) {
         switch(layoutType) {
             case RELATIVE:
                 if(value < 0 || value > 1) {
@@ -42,7 +44,7 @@ public class SizeMetric extends LayoutMetric<SizeMode> {
     }
 
     @Override
-    public void setLayoutType(SizeMode layoutType) {
+    public void setLayoutType(@NonNull SizeMode layoutType) {
         super.setLayoutType(layoutType);
     }
 }

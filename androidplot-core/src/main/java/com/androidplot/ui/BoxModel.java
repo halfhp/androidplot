@@ -3,6 +3,7 @@
 package com.androidplot.ui;
 
 import android.graphics.RectF;
+import androidx.annotation.NonNull;
 
 /**
  * Convenience implementation of {@link BoxModelable}.
@@ -46,7 +47,8 @@ public class BoxModel implements BoxModelable{
      * @param boundsRect
      * @return
      */
-    public RectF getMarginatedRect(RectF boundsRect) {
+    @NonNull
+    public RectF getMarginatedRect(@NonNull RectF boundsRect) {
         return new RectF( boundsRect.left + getMarginLeft(),
                 boundsRect.top + getMarginTop(),
                 boundsRect.right - getMarginRight(),
@@ -58,7 +60,8 @@ public class BoxModel implements BoxModelable{
      * @param marginRect
      * @return
      */
-    public RectF getPaddedRect(RectF marginRect) {
+    @NonNull
+    public RectF getPaddedRect(@NonNull RectF marginRect) {
         return new RectF(marginRect.left + getPaddingLeft(),
                 marginRect.top + getPaddingTop(),
                 marginRect.right - getPaddingRight(),

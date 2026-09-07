@@ -2,6 +2,8 @@
 
 package com.androidplot.ui;
 
+import androidx.annotation.NonNull;
+
 
 
 abstract class LayoutMetric<LayoutType extends Enum> {
@@ -12,7 +14,7 @@ abstract class LayoutMetric<LayoutType extends Enum> {
     private float value;
     //private float lastRow;
 
-    public LayoutMetric(float value, LayoutType layoutType) {
+    public LayoutMetric(float value, @NonNull LayoutType layoutType) {
         validatePair(value, layoutType);
         set(value, layoutType);
         //setLayoutType(layoutType);
@@ -25,9 +27,9 @@ abstract class LayoutMetric<LayoutType extends Enum> {
      * @param value 
      * @param layoutType
      */
-    protected abstract void validatePair(float value, LayoutType layoutType);
+    protected abstract void validatePair(float value, @NonNull LayoutType layoutType);
 
-    public void set(float value, LayoutType layoutType) {
+    public void set(float value, @NonNull LayoutType layoutType) {
         validatePair(value, layoutType);
         this.value = value;
         this.layoutType = layoutType;
@@ -44,11 +46,12 @@ abstract class LayoutMetric<LayoutType extends Enum> {
 
     public abstract float getPixelValue(float size);
 
+    @NonNull
     public LayoutType getLayoutType() {
         return layoutType;
     }
 
-    public void setLayoutType(LayoutType layoutType) {
+    public void setLayoutType(@NonNull LayoutType layoutType) {
         validatePair(value, layoutType);
         this.layoutType = layoutType;
     }

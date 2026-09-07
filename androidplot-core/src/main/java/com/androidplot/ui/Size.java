@@ -4,6 +4,7 @@ package com.androidplot.ui;
 
 import android.graphics.RectF;
 import com.androidplot.util.PixelUtils;
+import androidx.annotation.NonNull;
 
 /**
  * Defines physical dimensions & scaling characteristics
@@ -23,7 +24,7 @@ public class Size {
      * @param width Width value used algorithm to calculate the width of the associated widget(s).
      * @param widthLayoutType Algorithm used to calculate the width of the associated widget(s).
      */
-    public Size(float height, SizeMode heightLayoutType, float width, SizeMode widthLayoutType) {
+    public Size(float height, @NonNull SizeMode heightLayoutType, float width, @NonNull SizeMode widthLayoutType) {
         this.height = new SizeMetric(height, heightLayoutType);
         this.width = new SizeMetric(width, widthLayoutType);
     }
@@ -34,19 +35,21 @@ public class Size {
      * @param height
      * @param width
      */
-    public Size(SizeMetric height, SizeMetric width) {
+    public Size(@NonNull SizeMetric height, @NonNull SizeMetric width) {
         this.height = height;
         this.width = width;
     }
 
+    @NonNull
     public SizeMetric getHeight() {
         return height;
     }
 
-    public void setHeight(SizeMetric height) {
+    public void setHeight(@NonNull SizeMetric height) {
         this.height = height;
     }
 
+    @NonNull
     public SizeMetric getWidth() {
         return width;
     }
@@ -56,7 +59,8 @@ public class Size {
      * @param canvasRect
      * @return
      */
-    public RectF getRectF(RectF canvasRect) {
+    @NonNull
+    public RectF getRectF(@NonNull RectF canvasRect) {
         return new RectF(
                 0,
                 0,
@@ -64,7 +68,7 @@ public class Size {
                 height.getPixelValue(canvasRect.height()));
     }
 
-    public void setWidth(SizeMetric width) {
+    public void setWidth(@NonNull SizeMetric width) {
         this.width = width;
     }
 }

@@ -5,6 +5,7 @@ package com.androidplot.ui;
 import android.graphics.RectF;
 
 import java.util.Iterator;
+import androidx.annotation.NonNull;
 
 /**
  * Encapsulates the visual aspects of a table; number of rows and columns
@@ -34,14 +35,15 @@ public class DynamicTableModel extends TableModel {
 
     }
 
-    public DynamicTableModel(int numColumns, int numRows, TableOrder order) {
+    public DynamicTableModel(int numColumns, int numRows, @NonNull TableOrder order) {
         super(order);
         this.numColumns = numColumns;
         this.numRows = numRows;
     }
 
     @Override
-    public TableModelIterator getIterator(RectF tableRect, int totalElements) {
+    @NonNull
+    public TableModelIterator getIterator(@NonNull RectF tableRect, int totalElements) {
         return new TableModelIterator(this, tableRect, totalElements);
     }
 
@@ -52,7 +54,8 @@ public class DynamicTableModel extends TableModel {
      * @return a RectF representing the first (top-left) element in
      * the tableRect passed in.
      */
-    public RectF getCellRect(RectF tableRect, int numElements) {
+    @NonNull
+    public RectF getCellRect(@NonNull RectF tableRect, int numElements) {
         RectF cellRect = new RectF();
         cellRect.left = tableRect.left;
         cellRect.top = tableRect.top;

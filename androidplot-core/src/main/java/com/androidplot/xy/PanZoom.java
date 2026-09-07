@@ -38,7 +38,6 @@ public class PanZoom implements View.OnTouchListener {
     // rectangle created by the space between two fingers
     protected RectF fingersRect;
     private View.OnTouchListener delegate;
-    private State state = new State();
 
     // Definition of the touch states
     protected enum DragState {
@@ -99,33 +98,75 @@ public class PanZoom implements View.OnTouchListener {
         MIN_TICKS
     }
 
+    /**
+     * A snapshot of an {@link XYPlot}'s domain and range boundaries, as captured by
+     * {@link PanZoom#getState()} and restored by {@link PanZoom#setState(State)}.  Each boundary
+     * edge is stored independently; an edge whose mode is null is left untouched when the state
+     * is applied.
+     */
     // TODO: consider making this immutable / threadsafe
     public static class State implements Serializable {
         private Number domainLowerBoundary;
         private Number domainUpperBoundary;
         private Number rangeLowerBoundary;
         private Number rangeUpperBoundary;
-        private BoundaryMode domainBoundaryMode;
-        private BoundaryMode rangeBoundaryMode;
+        private BoundaryMode domainLowerBoundaryMode;
+        private BoundaryMode domainUpperBoundaryMode;
+        private BoundaryMode rangeLowerBoundaryMode;
+        private BoundaryMode rangeUpperBoundaryMode;
 
         public void setDomainBoundaries(Number lowerBoundary, Number upperBoundary, BoundaryMode mode) {
+            setDomainBoundaries(lowerBoundary, mode, upperBoundary, mode);
+        }
+
+        public void setDomainBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode,
+                                        Number upperBoundary, BoundaryMode upperBoundaryMode) {
             this.domainLowerBoundary = lowerBoundary;
+            this.domainLowerBoundaryMode = lowerBoundaryMode;
             this.domainUpperBoundary = upperBoundary;
-            this.domainBoundaryMode = mode;
+            this.domainUpperBoundaryMode = upperBoundaryMode;
         }
 
         public void setRangeBoundaries(Number lowerBoundary, Number upperBoundary, BoundaryMode mode) {
+            setRangeBoundaries(lowerBoundary, mode, upperBoundary, mode);
+        }
+
+        public void setRangeBoundaries(Number lowerBoundary, BoundaryMode lowerBoundaryMode,
+                                       Number upperBoundary, BoundaryMode upperBoundaryMode) {
             this.rangeLowerBoundary = lowerBoundary;
+            this.rangeLowerBoundaryMode = lowerBoundaryMode;
             this.rangeUpperBoundary = upperBoundary;
-            this.rangeBoundaryMode = mode;
+            this.rangeUpperBoundaryMode = upperBoundaryMode;
         }
 
+        /**
+         * Applies the captured domain boundaries to plot.  An edge whose mode is null (this state
+         * was never populated for that edge) is skipped, since a null mode would crash the plot's
+         * next render pass.
+         * @param plot
+         */
         public void applyDomainBoundaries(@NonNull XYPlot plot) {
-            plot.setDomainBoundaries(domainLowerBoundary, domainUpperBoundary, domainBoundaryMode);
+            if (domainLowerBoundaryMode != null) {
+                plot.setDomainLowerBoundary(domainLowerBoundary, domainLowerBoundaryMode);
+            }
+            if (domainUpperBoundaryMode != null) {
+                plot.setDomainUpperBoundary(domainUpperBoundary, domainUpperBoundaryMode);
+            }
         }
 
+        /**
+         * Applies the captured range boundaries to plot.  An edge whose mode is null (this state
+         * was never populated for that edge) is skipped, since a null mode would crash the plot's
+         * next render pass.
+         * @param plot
+         */
         public void applyRangeBoundaries(@NonNull XYPlot plot) {
-            plot.setRangeBoundaries(rangeLowerBoundary, rangeUpperBoundary, rangeBoundaryMode);
+            if (rangeLowerBoundaryMode != null) {
+                plot.setRangeLowerBoundary(rangeLowerBoundary, rangeLowerBoundaryMode);
+            }
+            if (rangeUpperBoundaryMode != null) {
+                plot.setRangeUpperBoundary(rangeUpperBoundary, rangeUpperBoundaryMode);
+            }
         }
 
         public void apply(@NonNull XYPlot plot) {
@@ -149,23 +190,36 @@ public class PanZoom implements View.OnTouchListener {
         this.zoomLimit = limit;
     }
 
+    /**
+     * @return A snapshot of the plot's current domain and range boundaries, reflecting any
+     * panning / zooming that has taken place.  Suitable for persisting (eg. in an Activity's
+     * saved instance state) and later restoring via {@link #setState(State)}.
+     */
     public State getState() {
-        return this.state;
+        final State state = new State();
+        state.setDomainBoundaries(
+                plot.getUserMinX(), plot.getDomainLowerBoundaryMode(),
+                plot.getUserMaxX(), plot.getDomainUpperBoundaryMode());
+        state.setRangeBoundaries(
+                plot.getUserMinY(), plot.getRangeLowerBoundaryMode(),
+                plot.getUserMaxY(), plot.getRangeUpperBoundaryMode());
+        return state;
     }
 
+    /**
+     * Applies a previously captured state to the plot.  Note that the plot is not redrawn.
+     * @param state
+     */
     public void setState(@NonNull State state) {
-        this.state = state;
         state.apply(plot);
     }
 
     protected void adjustRangeBoundary(Number lower, Number upper,  BoundaryMode mode) {
-        state.setRangeBoundaries(lower, upper, mode);
-        state.applyRangeBoundaries(plot);
+        plot.setRangeBoundaries(lower, upper, mode);
     }
 
     protected void adjustDomainBoundary(Number lower, Number upper, BoundaryMode mode) {
-        state.setDomainBoundaries(lower, upper, mode);
-        state.applyDomainBoundaries(plot);
+        plot.setDomainBoundaries(lower, upper, mode);
     }
 
     /**

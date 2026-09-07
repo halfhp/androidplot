@@ -20,6 +20,11 @@ For details on what to expect in general when updating to a new version of Andro
   [XML Configuration](xml_configuration.md) doc.
 * Compile and target SDK 37; build updated to AGP 9.4 / Gradle 9.7 / Kotlin 2.2.
 * Snapshot builds of unreleased changes are now published to the Central snapshots repository.
+* Fix crash on the render thread after restoring a `PanZoom.State` that was captured before any
+  pan or zoom gesture (eg. saving `getState()` in `onSaveInstanceState` and rotating the device).
+  `getState()` now snapshots the plot's actual boundaries and modes for both axes, and applying a
+  state skips any axis edge it holds no mode for.  `XYPlot` gains public getters for its four
+  boundary modes.
 
 **Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
 * The plot view is now composited with hardware acceleration when the app has it enabled.  The

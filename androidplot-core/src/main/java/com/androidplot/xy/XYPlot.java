@@ -1002,6 +1002,54 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         setRangeFramingModel(XYFramingModel.EDGE);
     }
 
+    public BoundaryMode getDomainLowerBoundaryMode() {
+        return constraints.getDomainLowerBoundaryMode();
+    }
+
+    public BoundaryMode getDomainUpperBoundaryMode() {
+        return constraints.getDomainUpperBoundaryMode();
+    }
+
+    public BoundaryMode getRangeLowerBoundaryMode() {
+        return constraints.getRangeLowerBoundaryMode();
+    }
+
+    public BoundaryMode getRangeUpperBoundaryMode() {
+        return constraints.getRangeUpperBoundaryMode();
+    }
+
+    /**
+     * @return The user specified lower domain boundary, or null if the lower domain boundary
+     * mode is not {@link BoundaryMode#FIXED}.
+     */
+    protected Number getUserMinX() {
+        return constraints.getMinX();
+    }
+
+    /**
+     * @return The user specified upper domain boundary, or null if the upper domain boundary
+     * mode is not {@link BoundaryMode#FIXED}.
+     */
+    protected Number getUserMaxX() {
+        return constraints.getMaxX();
+    }
+
+    /**
+     * @return The user specified lower range boundary, or null if the lower range boundary
+     * mode is not {@link BoundaryMode#FIXED}.
+     */
+    protected Number getUserMinY() {
+        return constraints.getMinY();
+    }
+
+    /**
+     * @return The user specified upper range boundary, or null if the upper range boundary
+     * mode is not {@link BoundaryMode#FIXED}.
+     */
+    protected Number getUserMaxY() {
+        return constraints.getMaxY();
+    }
+
     public XYCoords getOrigin() {
         return calculatedOrigin;
     }

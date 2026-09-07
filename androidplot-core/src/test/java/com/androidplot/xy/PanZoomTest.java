@@ -235,4 +235,80 @@ public class PanZoomTest extends AndroidplotTest {
         assertEquals(10f, distance.right);
         assertEquals(10f, distance.bottom);
     }
+
+    private XYPlot newRealPlot() {
+        XYPlot plot = new XYPlot(getContext(), "test");
+        plot.addSeries(TestUtils.generateXYSeries("series", 10, 0, 100), new LineAndPointFormatter());
+        return plot;
+    }
+
+    @Test
+    public void setState_withUnpopulatedState_leavesPlotBoundariesIntact() {
+        XYPlot plot = newRealPlot();
+        plot.setDomainBoundaries(2, 8, BoundaryMode.FIXED);
+        plot.setRangeBoundaries(-1, 1, BoundaryMode.FIXED);
+        plot.calculateMinMaxVals();
+
+        // a partial config (no vertical pan, no zoom) never touches the range axis:
+        PanZoom panZoom = PanZoom.attach(plot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.NONE);
+
+        // simulates restoring a state that was captured before any pan / zoom gesture:
+        panZoom.setState(new PanZoom.State());
+
+        // this is what the render thread does on the next frame:
+        plot.calculateMinMaxVals();
+
+        assertEquals(2.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(8.0, plot.getBounds().getMaxX().doubleValue(), 0);
+        assertEquals(-1.0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(1.0, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
+    @Test
+    public void getState_setState_roundTrip_preservesFixedBoundaries() {
+        XYPlot plot = newRealPlot();
+        plot.setDomainBoundaries(2, 8, BoundaryMode.FIXED);
+        plot.setRangeBoundaries(-1, 1, BoundaryMode.FIXED);
+        PanZoom panZoom = PanZoom.attach(plot);
+
+        // capture before any gesture, as an Activity would in onSaveInstanceState:
+        PanZoom.State state = panZoom.getState();
+
+        // boundaries change (eg. a new Activity instance is created with different defaults)...
+        plot.setDomainBoundaries(0, 100, BoundaryMode.FIXED);
+        plot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
+
+        // ...and restoring the state brings the originals back:
+        panZoom.setState(state);
+        plot.calculateMinMaxVals();
+
+        assertEquals(2.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(8.0, plot.getBounds().getMaxX().doubleValue(), 0);
+        assertEquals(-1.0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(1.0, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
+    @Test
+    public void getState_setState_roundTrip_preservesMixedBoundaryModes() {
+        XYPlot plot = newRealPlot();
+        plot.setDomainBoundaries(2, BoundaryMode.FIXED, 8, BoundaryMode.AUTO);
+        plot.setRangeBoundaries(-1, BoundaryMode.AUTO, 1, BoundaryMode.FIXED);
+        plot.calculateMinMaxVals();
+        final double autoMaxX = plot.getBounds().getMaxX().doubleValue();
+        final double autoMinY = plot.getBounds().getMinY().doubleValue();
+        PanZoom panZoom = PanZoom.attach(plot);
+
+        PanZoom.State state = panZoom.getState();
+
+        plot.setDomainBoundaries(0, 100, BoundaryMode.FIXED);
+        plot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
+
+        panZoom.setState(state);
+        plot.calculateMinMaxVals();
+
+        assertEquals(2.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(autoMaxX, plot.getBounds().getMaxX().doubleValue(), 0);
+        assertEquals(autoMinY, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(1.0, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
 }

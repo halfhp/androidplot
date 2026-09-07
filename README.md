@@ -30,7 +30,7 @@ If you enjoy the lib, please [rate us on codix.io](https://codix.io/gh/repo/half
 
 ```groovy
 dependencies {
-    implementation "com.androidplot:androidplot-core:1.5.11"
+    implementation "com.androidplot:androidplot-core:1.6.0"
 }
 ```
 

@@ -9,6 +9,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # kotlin-stdlib must match the Kotlin compiler bundled with AGP's
+      # built-in Kotlin support; bump it by hand alongside AGP.
+      - dependency-name: org.jetbrains.kotlin:kotlin-stdlib
     groups:
       # Batch routine dependency bumps into a single PR.
       gradle-dependencies:

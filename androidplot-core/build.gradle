@@ -63,6 +63,9 @@ android {
     }
 
     testOptions {
+        // needed so Robolectric can resolve the library's own attrs/styleables from
+        // AttributeSets built in tests (see XYPlotAttrsTest etc.)
+        unitTests.includeAndroidResources = true
         unitTests.all {
             jacoco {
                 includeNoLocationClasses = true

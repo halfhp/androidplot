@@ -28,9 +28,11 @@ import org.robolectric.shadows.ShadowLog;
  *
  * <p>Sizing: {@link ActivityController#setup()} ends with {@code visible()}, which attaches the
  * activity's decor view to a window and lays it out at the emulated display size (320x470 by
- * default), so every plot in the layout has real dimensions, widget rects and grid rects after
+ * default), so every plot in the layout has real dimensions and widget rects after
  * {@link #launch}; nothing needs to be measured or laid out by hand.  Only a view that is not in
- * the window (eg. a list row that has not been created yet) needs {@link #layOut}.
+ * the window (eg. a list row that has not been created yet) needs {@link #layOut}.  Robolectric
+ * does not draw the window though, and a graph's grid rect (needed for screen/series conversion)
+ * is computed on its first draw, so tests that touch a plot call {@link #draw} first.
  *
  * <p>Threads: {@code destroy()} removes the decor view from the window, which is what stops each
  * plot's render thread; the examples' Redrawer and data threads are stopped by the activities
@@ -97,6 +99,19 @@ final class DemoAppTest {
         view.layout(0, 0, width, height);
     }
 
+    /**
+     * Runs a synchronous measure/layout pass over the activity's window at its current size,
+     * then drains the main looper.  Robolectric schedules the traversal a requestLayout() asks
+     * for through the Choreographer, which only runs when the test clock is advanced; doing the
+     * pass directly keeps tests deterministic.  Widgets such as Spinner apply a pending
+     * selection (and notify their listener) during layout, so call this after setSelection().
+     */
+    static void layoutPass(Activity activity) {
+        View decor = activity.getWindow().getDecorView();
+        layOut(decor, decor.getWidth(), decor.getHeight());
+        idle();
+    }
+
     /** Draws a laid-out view (and its children) onto a bitmap of its own size. */
     static void draw(View view) {
         assertTrue("view has no size: " + view, view.getWidth() > 0 && view.getHeight() > 0);
@@ -132,14 +147,18 @@ final class DemoAppTest {
         }
     }
 
-    /** Delivers a down/up tap at the given view-relative point. */
+    /**
+     * Delivers a tap at the given view-relative point.  As a parent ViewGroup would, the UP is
+     * only delivered if the view consumed the DOWN.
+     */
     static void tap(View view, PointF point) {
         long now = SystemClock.uptimeMillis();
         MotionEvent down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN, point.x, point.y, 0);
         MotionEvent up = MotionEvent.obtain(now, now, MotionEvent.ACTION_UP, point.x, point.y, 0);
         try {
-            view.dispatchTouchEvent(down);
-            view.dispatchTouchEvent(up);
+            if (view.dispatchTouchEvent(down)) {
+                view.dispatchTouchEvent(up);
+            }
         } finally {
             down.recycle();
             up.recycle();

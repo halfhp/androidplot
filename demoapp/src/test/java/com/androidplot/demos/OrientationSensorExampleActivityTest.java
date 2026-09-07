@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.shadows.SensorEventBuilder;
 import org.robolectric.shadows.ShadowSensor;
 import org.robolectric.shadows.ShadowSensorManager;
 
@@ -45,7 +46,8 @@ public class OrientationSensorExampleActivityTest {
         // to that instance
         SensorManager sensorManager = controller.get().getSystemService(SensorManager.class);
         ShadowSensorManager shadowSensorManager = shadowOf(sensorManager);
-        shadowSensorManager.addSensor(ShadowSensor.newInstance(Sensor.TYPE_ROTATION_VECTOR));
+        Sensor sensor = ShadowSensor.newInstance(Sensor.TYPE_ROTATION_VECTOR);
+        shadowSensorManager.addSensor(sensor);
 
         controller.setup();
         DemoAppTest.idle();
@@ -62,12 +64,11 @@ public class OrientationSensorExampleActivityTest {
 
         // a rotation of -90 degrees about the z axis as a unit quaternion (x, y, z, w), which
         // SensorManager.getOrientation reports as an azimuth of +90 degrees
-        SensorEvent event = ShadowSensorManager.createSensorEvent(4, Sensor.TYPE_ROTATION_VECTOR);
         float halfAngle = (float) Math.toRadians(-45);
-        event.values[0] = 0;
-        event.values[1] = 0;
-        event.values[2] = (float) Math.sin(halfAngle);
-        event.values[3] = (float) Math.cos(halfAngle);
+        SensorEvent event = SensorEventBuilder.newBuilder()
+                .setSensor(sensor)
+                .setValues(new float[] {0, 0, (float) Math.sin(halfAngle), (float) Math.cos(halfAngle)})
+                .build();
         shadowSensorManager.sendSensorEventToListeners(event);
 
         // one sample of azimuth, pitch and roll each in the history and the levels

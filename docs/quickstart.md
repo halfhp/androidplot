@@ -64,7 +64,7 @@ This example uses a default style to decorate the plot.  The full list of XML st
 [available here](attrs.md).  While new attributes are added regularly,
 not all configurable properties are yet available.  
 
-If something you need is missing, use [Fig Syntax](https://github.com/halfhp/fig)
+If something you need is missing, use the [XML configuration syntax](xml_configuration.md)
 directly within your Plot's XML, prefixing each property with "androidPlot".  Example:
 
 ```xml
@@ -195,7 +195,7 @@ public class SimpleXYPlotActivity extends Activity {
 
 One potentially confusing section of the code above are the initializations of LineAndPointFormatter   
 You probably noticed that they take a mysterious reference to an xml resource file. This is actually 
-using [Fig](https://github.com/halfhp/fig) to configure the instance properties from XML.  
+using [XML configuration](xml_configuration.md) to configure the instance properties from XML.  
 
 If you'd prefer to avoid the XML and keep everything in Java, just replace the code:
 

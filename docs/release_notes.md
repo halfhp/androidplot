@@ -2,6 +2,15 @@
 For details on what to expect in general when updating to a new version of Androiplot, check out the
 [versioning doc](versioning.md).
 
+# 1.5.12
+* (#88) Fix crash when a formatter config or `androidPlot.` attribute references a color, dimension
+  or integer resource.  Negative integer values are now accepted as well.
+* The XML configuration engine (formerly the separate Fig library) is now part of androidplot-core;
+  the library no longer has a dependency on `com.halfhp.fig:figlib`.  See the new
+  [XML Configuration](xml_configuration.md) doc.
+* Compile and target SDK 37; build updated to AGP 9.4 / Gradle 9.7 / Kotlin 2.2.
+* Snapshot builds of unreleased changes are now published to the Central snapshots repository.
+
 # 1.5.11
 * Update project to latest gradle / build tools
 * Fix issue with jetifier flagging an outdated dependency

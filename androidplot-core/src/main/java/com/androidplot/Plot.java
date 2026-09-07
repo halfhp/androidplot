@@ -34,8 +34,8 @@ import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.util.AttrUtils;
 import com.androidplot.util.DisplayDimensions;
 import com.androidplot.util.PixelUtils;
-import com.halfhp.fig.Fig;
-import com.halfhp.fig.FigException;
+import com.androidplot.util.fig.Fig;
+import com.androidplot.util.fig.FigException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

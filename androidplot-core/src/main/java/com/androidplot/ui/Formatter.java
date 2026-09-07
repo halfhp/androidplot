@@ -4,7 +4,7 @@ package com.androidplot.ui;
 
 import android.content.Context;
 import com.androidplot.Plot;
-import com.halfhp.fig.*;
+import com.androidplot.util.fig.*;
 
 /**
  * Base class of all Formatters.  Encapsulates visual elements of a series; line style, color etc.

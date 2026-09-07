@@ -78,9 +78,11 @@ barRenderer.setBarOrientation(BarRenderer.BarOrientation.OVERLAID);
 ```
 
 ##### STACKED
-Bars in the same group are stacked on top of each-other.  Limitations:
-* Range Origin must be set to 0.
-* All `XYSeries` must contain no negative values.
+Bars in the same group are stacked on top of each-other, starting from the range origin (which defaults
+to the range minimum; use `setUserRangeOrigin(0)` to stack from zero).  Negative values stack downward
+from the origin.  Limitation: when using `BoundaryMode.AUTO` for the range, the upper boundary is
+derived from the largest individual value rather than the sum of a stack, so set a fixed upper range
+boundary (or `getInnerLimits().setMaxY(...)`) large enough to hold your tallest stack.
 
 ![image](images/bargroup_stacked.png)
 

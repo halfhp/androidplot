@@ -110,34 +110,34 @@ implementation of the XYSeries interface) and LineAndPointFormatter:
 
 ```java
 import android.app.Activity;
-import android.graphics.*;
+import android.graphics.DashPathEffect;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
 
 import com.androidplot.util.PixelUtils;
+import com.androidplot.xy.CatmullRomInterpolator;
+import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYGraphWidget;
+import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
-import com.androidplot.xy.*;
 
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
-import java.util.*;
+import java.util.Arrays;
 
 /**
  * A simple XYPlot
  */
 public class SimpleXYPlotActivity extends Activity {
 
-    private XYPlot plot;
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_xy_plot_example);
-
-        // initialize our XYPlot reference:
-        plot = (XYPlot) findViewById(R.id.plot);
+        XYPlot plot = findViewById(R.id.plot);
 
         // create a couple arrays of y-values to plot:
         final Number[] domainLabels = {1, 2, 3, 6, 7, 8, 9, 10, 13, 14};
@@ -166,7 +166,7 @@ public class SimpleXYPlotActivity extends Activity {
                 PixelUtils.dpToPix(20),
                 PixelUtils.dpToPix(15)}, 0));
 
-        // just for fun, add some smoothing to the lines:
+        // (optional) add some smoothing to the lines:
         // see: http://androidplot.com/smooth-curves-and-androidplot/
         series1Format.setInterpolationParams(
                 new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
@@ -178,14 +178,15 @@ public class SimpleXYPlotActivity extends Activity {
         plot.addSeries(series1, series1Format);
         plot.addSeries(series2, series2Format);
 
+        // map the implicit index x-values onto the domainLabels array for the bottom edge labels:
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
             @Override
-            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
+            public StringBuffer format(Object obj, @NonNull StringBuffer toAppendTo, @NonNull FieldPosition pos) {
                 int i = Math.round(((Number) obj).floatValue());
                 return toAppendTo.append(domainLabels[i]);
             }
             @Override
-            public Object parseObject(String source, ParsePosition pos) {
+            public Object parseObject(String source, @NonNull ParsePosition pos) {
                 return null;
             }
         });

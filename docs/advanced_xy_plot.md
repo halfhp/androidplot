@@ -46,7 +46,8 @@ Basic usage:
 ```java
 XYSeries series = ... // instantiate an XYSeries however you want here
 
-// wrap our series in a SampledXYSeries with a threshold of 1000:
+// wrap our series in a SampledXYSeries: each sampled level halves the point count (ratio 2)
+// until a level has no more than 100 points (threshold):
 SampledXYSeries sampledSeries =
     new SampledXYSeries(series, OrderedXYSeries.XOrder.ASCENDING, 2,100);
 

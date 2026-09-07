@@ -37,8 +37,10 @@ running on a fixed frequency.  Check out the [ECG demo source](../demoapp/src/ma
 Sometimes it's more efficient to only redraw the plot as a result of an event such as a GPS update, button click, etc.
 Event driven updates are as simple as invoking `Plot.redraw()` from the callback handling the event of interest,
 after the data being plotted has been updated.  While it's possible for the event triggering the redraw
-to fire at a faster rate than the plot is capable of redrawing, no special care needs to be taken as Androidplot
-ignores subsequent invocations of redraw() when a previous invocation is already active.
+to fire at a faster rate than the plot is capable of redrawing, no special care needs to be taken: in
+background rendering mode, `redraw()` calls made while a render is in progress are coalesced into a single
+additional render once the current one finishes, so the latest data is always drawn without queuing up
+a backlog of frames.
 
 # Synchronization
 A major challenge of plotting dynamic data is the need to render an accurate representation of the data

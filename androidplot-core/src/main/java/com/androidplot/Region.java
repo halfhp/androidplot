@@ -26,13 +26,20 @@ public class Region {
         return r;
     }
 
+    /**
+     * @param v1
+     * @param v2
+     * Values are ordered so that min is the smaller of the two.  A null value represents infinity
+     * relative to its position (null v1 = negative infinity, null v2 = positive infinity) and
+     * is never reordered.
+     */
     public Region(Number v1, Number v2) {
-        if (v1 != null && v2 != null && v1.doubleValue() < v2.doubleValue()) {
-            this.setMin(v1);
-            this.setMax(v2);
-        } else {
+        if (v1 != null && v2 != null && v1.doubleValue() > v2.doubleValue()) {
             this.setMin(v2);
             this.setMax(v1);
+        } else {
+            this.setMin(v1);
+            this.setMax(v2);
         }
     }
 
@@ -170,18 +177,24 @@ public class Region {
     }
 
      /**
-     * Tests whether this segment intersects another
+     * Tests whether this segment intersects another.  A null min represents negative infinity
+     * and a null max represents positive infinity, both for the params and for this region's
+     * own min / max.
      * @param line2Min
      * @param line2Max
      * @return
      */
     public  boolean intersects(Number line2Min, Number line2Max) {
+        final double min1 = getMin() == null ? Double.NEGATIVE_INFINITY : getMin().doubleValue();
+        final double max1 = getMax() == null ? Double.POSITIVE_INFINITY : getMax().doubleValue();
+        final double min2 = line2Min == null ? Double.NEGATIVE_INFINITY : line2Min.doubleValue();
+        final double max2 = line2Max == null ? Double.POSITIVE_INFINITY : line2Max.doubleValue();
 
         // is this line completely within line2?
-        if(line2Min.doubleValue() <= getMin().doubleValue() && line2Max.doubleValue() >= getMax().doubleValue()) {
+        if(min2 <= min1 && max2 >= max1) {
             return true;
         // is line1 partially within line2
-        } else return contains(line2Min) || contains(line2Max);
+        } else return (min2 >= min1 && min2 <= max1) || (max2 >= min1 && max2 <= max1);
     }
 
     public boolean isMinSet() {

@@ -9,6 +9,7 @@ import org.junit.Test;
 import static junit.framework.Assert.assertNotSame;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class RegionTest {
@@ -21,6 +22,45 @@ public class RegionTest {
     @After
     public void tearDown() throws Exception {
 
+    }
+
+    @Test
+    public void testConstructor_preservesNullPlacement() throws Exception {
+        // a null min means negative infinity and a null max means positive infinity,
+        // so they must not be swapped:
+        Region lr = new Region(null, 5);
+        assertNull(lr.getMin());
+        assertEquals(5, lr.getMax().intValue());
+
+        lr = new Region(5, null);
+        assertEquals(5, lr.getMin().intValue());
+        assertNull(lr.getMax());
+
+        lr = new Region(null, null);
+        assertNull(lr.getMin());
+        assertNull(lr.getMax());
+    }
+
+    @Test
+    public void testIntersects_nullIsInfinity() throws Exception {
+        Region lr = new Region(0, 10);
+
+        assertTrue(lr.intersects(null, 5));
+        assertTrue(lr.intersects(null, 0));
+        assertFalse(lr.intersects(null, -5));
+
+        assertTrue(lr.intersects(5, null));
+        assertTrue(lr.intersects(10, null));
+        assertFalse(lr.intersects(15, null));
+
+        assertTrue(lr.intersects(null, null));
+
+        // this region's own null bounds are treated the same way:
+        assertTrue(new Region(null, 5).intersects(0, 10));
+        assertFalse(new Region(null, -5).intersects(0, 10));
+        assertTrue(new Region(5, null).intersects(0, 10));
+        assertFalse(new Region(15, null).intersects(0, 10));
+        assertTrue(new Region(null, null).intersects(0, 10));
     }
 
     @Test

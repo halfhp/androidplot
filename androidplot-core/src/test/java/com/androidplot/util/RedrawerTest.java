@@ -88,6 +88,24 @@ public class RedrawerTest extends AndroidplotTest {
         }
     }
 
+    /**
+     * finish() may be called before the redrawer's thread has been scheduled (eg. an activity
+     * created and destroyed back to back on a slow device). The thread must still exit rather
+     * than un-doing the finish and parking forever.
+     */
+    @Test
+    public void finish_beforeThreadRuns_stillExits() throws Exception {
+        Plot plot = mock(Plot.class);
+        Redrawer redrawer = new Redrawer(Collections.singletonList(plot), 100, false);
+        // the constructor already started the real thread; finish it, then replay the race by
+        // invoking run() again as if the thread were only now getting scheduled.
+        redrawer.finish();
+        Thread replay = new Thread(redrawer, "replayed redrawer");
+        replay.start();
+        replay.join(2000);
+        assertFalse("run() invoked after finish() must return immediately", replay.isAlive());
+    }
+
     private static boolean redrawerThreadAlive() {
         for (Thread t : Thread.getAllStackTraces().keySet()) {
             if ("Androidplot Redrawer".equals(t.getName()) && t.isAlive()) {

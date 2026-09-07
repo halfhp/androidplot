@@ -15,10 +15,19 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
+
+    // Robolectric tests exercising every example activity; same versions as androidplot-core.
+    // The Robolectric SDK level is pinned in src/test/resources/robolectric.properties.
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.robolectric:robolectric:4.16.1"
 }
 
 kotlin {
-    jvmToolchain(17)
+    // emit Java 17 bytecode from whichever JDK runs the build (CI uses 21); a toolchain pin
+    // would instead require a JDK 17 installation to be present.
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
 }
 
 // Every merge to master publishes the demoapp to the Play beta track, so the version code is
@@ -84,6 +93,13 @@ android {
             debuggable = true
         }
     }
+    testOptions {
+        unitTests {
+            // lets Robolectric inflate the example layouts and read the manifest
+            includeAndroidResources = true
+        }
+    }
+
     lint {
         abortOnError = false
     }

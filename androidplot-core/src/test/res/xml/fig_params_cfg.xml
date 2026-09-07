@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Fig configuration used by FigParamsTest -->
+<config
+    size="3dp"
+    mode="relative"
+    label="from xml"
+    margins="1|2|3|4"
+    paint.color="#FF102030"
+    boxedBool="true"/>

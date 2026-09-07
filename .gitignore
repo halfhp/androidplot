@@ -21,3 +21,6 @@ demoapp/publisher.json
 
 # macOS
 .DS_Store
+
+# worktrees created by Claude Code agents
+.claude/worktrees/

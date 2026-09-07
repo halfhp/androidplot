@@ -92,6 +92,10 @@ public class PixelUtils {
             // Match found.
             // Extract value.
             float value = Float.valueOf(matcher.group(1));
+            // the pattern accepts a leading '-' outside the value group; apply it here:
+            if (dimension.trim().startsWith("-")) {
+                value = -value;
+            }
             // Extract dimension units.
             String unit = matcher.group(3).toLowerCase();
             // Get Android dimension constant.

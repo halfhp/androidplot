@@ -135,25 +135,54 @@ public abstract class Fig {
         }
     }
 
-    private static Method getMethodByName(Class clazz, final String methodName)
+    /**
+     * Finds a public method by case insensitive name.  Class.getMethods() returns overloads in
+     * no particular order, so when several methods share the name the one whose parameter list
+     * has the expected count and consists only of types this configurator can inflate is
+     * preferred (eg. Paint.setColor(int) over Paint.setColor(long)); otherwise the first match
+     * is returned so that the caller can report the mismatch.
+     */
+    private static Method getMethodByName(Class clazz, final String methodName, int paramCount)
             throws NoSuchMethodException {
-        final Method[] methods = clazz.getMethods();
-        for (Method method : methods) {
+        Method fallback = null;
+        for (Method method : clazz.getMethods()) {
             if (method.getName().equalsIgnoreCase(methodName)) {
-                return method;
+                final Class[] paramTypes = method.getParameterTypes();
+                if (paramTypes.length == paramCount && isInflatable(paramTypes)) {
+                    return method;
+                }
+                if (fallback == null) {
+                    fallback = method;
+                }
             }
+        }
+        if (fallback != null) {
+            return fallback;
         }
         throw new NoSuchMethodException("No such public method (case insensitive): " +
                 methodName + " in " + clazz);
     }
 
+    private static boolean isInflatable(Class[] paramTypes) {
+        for (Class param : paramTypes) {
+            if (!(Enum.class.isAssignableFrom(param)
+                    || param == Float.TYPE || param == Float.class
+                    || param == Integer.TYPE || param == Integer.class
+                    || param == Boolean.TYPE || param == Boolean.class
+                    || param == String.class)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-    private static Method getSetter(Class clazz, final String fieldId) throws NoSuchMethodException {
-        return getMethodByName(clazz, SETTER_PREFIX + fieldId);
+    private static Method getSetter(Class clazz, final String fieldId, int paramCount)
+            throws NoSuchMethodException {
+        return getMethodByName(clazz, SETTER_PREFIX + fieldId, paramCount);
     }
 
     private static Method getGetter(Class clazz, final String fieldId) throws NoSuchMethodException {
-        return getMethodByName(clazz, GETTER_PREFIX + fieldId);
+        return getMethodByName(clazz, GETTER_PREFIX + fieldId, 0);
     }
 
     /**
@@ -307,14 +336,14 @@ public abstract class Fig {
                 int idx = key.lastIndexOf(DOT_SEPARATOR);
                 String fieldId = idx > 0 ? key.substring(idx + 1, key.length()) : key;
 
-                Method m = getSetter(o.getClass(), fieldId);
+                // split on "|"
+                // TODO: add support for String args containing a '|'
+                String[] paramStrs = value.split("\\|");
+
+                Method m = getSetter(o.getClass(), fieldId, paramStrs.length);
                 Class[] paramTypes = m.getParameterTypes();
                 // TODO: add support for generic type params
                 if (paramTypes.length >= 1) {
-
-                    // split on "|"
-                    // TODO: add support for String args containing a '|'
-                    String[] paramStrs = value.split("\\|");
                     if (paramStrs.length == paramTypes.length) {
                         Object[] oa = inflateParams(ctx, paramTypes, paramStrs);
                         m.invoke(o, oa);

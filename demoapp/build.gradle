@@ -23,7 +23,7 @@ dependencies {
     // kotlin.stdlib.default.dependency=false is set in gradle.properties so that the pure-java
     // core lib doesn't publish a kotlin-stdlib dependency; declare it explicitly here instead.
     // Version should match the Kotlin compiler bundled with AGP's built-in Kotlin support.
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.2.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.4.10"
     implementation "androidx.core:core-ktx:1.19.0"
 	implementation project(':androidplot-core')
     implementation 'androidx.recyclerview:recyclerview:1.4.0'

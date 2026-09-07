@@ -50,10 +50,39 @@ final class DemoAppTest {
         return controller;
     }
 
-    /** Runs the activity through pause, stop and destroy, then drains the main looper. */
+    /**
+     * Runs the activity through pause, stop and destroy, drains the main looper and waits for
+     * the plots' render threads to exit.  The wait matters: Robolectric resets its native
+     * graphics state between tests, and a render thread still mid-frame at that point fails
+     * with a confusing NPE inside Canvas.
+     */
     static void finish(ActivityController<?> controller) {
         controller.pause().stop().destroy();
         idle();
+        awaitAndroidplotThreads();
+    }
+
+    /** Waits (bounded) for every "Androidplot ..." thread to exit; does not fail if one lingers. */
+    static void awaitAndroidplotThreads() {
+        long deadline = System.currentTimeMillis() + THREAD_EXIT_TIMEOUT_MS;
+        while (System.currentTimeMillis() < deadline && !androidplotThreads().isEmpty()) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+    }
+
+    private static List<Thread> androidplotThreads() {
+        List<Thread> threads = new ArrayList<>();
+        for (Thread thread : liveThreads()) {
+            if (thread.getName().startsWith("Androidplot")) {
+                threads.add(thread);
+            }
+        }
+        return threads;
     }
 
     /** Runs everything currently queued on the main looper (Robolectric's default PAUSED mode). */
@@ -160,9 +189,8 @@ final class DemoAppTest {
             }
             fail("Threads still alive after destroy: " + names);
         }
-        for (Thread thread : liveThreads()) {
-            assertTrue("Androidplot thread survived destroy: " + thread.getName(),
-                    !thread.getName().startsWith("Androidplot"));
+        for (Thread thread : androidplotThreads()) {
+            fail("Androidplot thread survived destroy: " + thread.getName());
         }
     }
 }

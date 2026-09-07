@@ -2,6 +2,9 @@
 For details on what to expect in general when updating to a new version of Androiplot, check out the
 [versioning doc](versioning.md).
 
+# 1.6.1
+_Unreleased._
+
 # 1.6.0
 A maintenance release focused on correctness and modernisation.  Highlights:
 

@@ -13,6 +13,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Modifier;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -37,6 +39,16 @@ public class SeriesRegistryTest extends AndroidplotTest {
         assertEquals(0, seriesRegistry.size());
         seriesRegistry.add(new SimpleXYSeries("s1"), new LineAndPointFormatter());
         assertEquals(1, seriesRegistry.size());
+    }
+
+    @Test
+    public void add_and_clear_areSynchronizedLikeRemove() throws Exception {
+        // the render thread iterates the registry, so every mutator must hold the same monitor:
+        assertTrue(Modifier.isSynchronized(
+                SeriesRegistry.class.getMethod("add", Series.class, Formatter.class).getModifiers()));
+        assertTrue(Modifier.isSynchronized(SeriesRegistry.class.getMethod("clear").getModifiers()));
+        assertTrue(Modifier.isSynchronized(
+                SeriesRegistry.class.getMethod("remove", Series.class).getModifiers()));
     }
 
     @Test

@@ -39,7 +39,7 @@ public abstract class SeriesRegistry
         return registry.isEmpty();
     }
 
-    public boolean add(SeriesType series, FormatterType formatter) {
+    public synchronized boolean add(SeriesType series, FormatterType formatter) {
         if(series == null || formatter == null) {
             throw new IllegalArgumentException("Neither series nor formatter param may be null.");
         }
@@ -94,12 +94,8 @@ public abstract class SeriesRegistry
     /**
      * Remove all series from the plot.
      */
-    public void clear() {
-        for(Iterator<BundleType> it
-            = registry.iterator(); it.hasNext();) {
-            it.next();
-            it.remove();
-        }
+    public synchronized void clear() {
+        registry.clear();
     }
 
     public List<SeriesBundle<SeriesType, FormatterType>> getLegendEnabledItems() {

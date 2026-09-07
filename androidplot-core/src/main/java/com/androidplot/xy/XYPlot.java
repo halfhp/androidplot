@@ -728,22 +728,48 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
     }
 
     public void updateRangeMinMaxForOriginModel() {
+        double origin = userRangeOrigin.doubleValue();
+        double maxDelta = distance(bounds.getMaxY().doubleValue(), origin);
+        double minDelta = distance(bounds.getMinY().doubleValue(), origin);
+        double delta = maxDelta > minDelta ? maxDelta : minDelta;
+        double lowerBoundary = origin - delta;
+        double upperBoundary = origin + delta;
         switch (rangeOriginBoundaryMode) {
             case AUTO:
-                double origin = userRangeOrigin.doubleValue();
-                double maxDelta = distance(bounds.getMaxY().doubleValue(), origin);
-                double minDelta = distance(bounds.getMinY().doubleValue(), origin);
-                if (maxDelta > minDelta) {
-                    bounds.setMinY(origin - maxDelta);
-                    bounds.setMaxY(origin + maxDelta);
+                bounds.setMinY(lowerBoundary);
+                bounds.setMaxY(upperBoundary);
+                break;
+            // if fixed, then the value already exists within "user" vals.
+            case FIXED:
+                break;
+            case GROW: {
+
+                if (prevMinY == null || lowerBoundary < prevMinY.doubleValue()) {
+                    bounds.setMinY(lowerBoundary);
                 } else {
-                    bounds.setMinY(origin - minDelta);
-                    bounds.setMaxY(origin + minDelta);
+                    bounds.setMinY(prevMinY);
+                }
+
+                if (prevMaxY == null || upperBoundary > prevMaxY.doubleValue()) {
+                    bounds.setMaxY(upperBoundary);
+                } else {
+                    bounds.setMaxY(prevMaxY);
+                }
+            }
+            break;
+            case SHRINK:
+                if (prevMinY == null || lowerBoundary > prevMinY.doubleValue()) {
+                    bounds.setMinY(lowerBoundary);
+                } else {
+                    bounds.setMinY(prevMinY);
+                }
+
+                if (prevMaxY == null || upperBoundary < prevMaxY.doubleValue()) {
+                    bounds.setMaxY(upperBoundary);
+                } else {
+                    bounds.setMaxY(prevMaxY);
                 }
                 break;
-            case FIXED:
-            case GROW:
-            case SHRINK:
             default:
                 throw new UnsupportedOperationException(
                         "Range Origin Boundary Mode not yet supported: " + rangeOriginBoundaryMode);

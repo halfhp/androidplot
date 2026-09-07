@@ -31,6 +31,9 @@ For details on what to expect in general when updating to a new version of Andro
 * Fix `ConcurrentModificationException` (and silently skipped listeners) when a `PlotListener`
   or series removes itself from the plot from within `onBeforeDraw` / `onAfterDraw`.  The
   listener list is now a `CopyOnWriteArrayList`; `Plot.getListeners()` returns a `List`.
+* Fix `centerOnRangeOrigin(...)` with `BoundaryMode.FIXED`, `GROW` or `SHRINK` throwing
+  `UnsupportedOperationException` on every frame; the range axis now supports the same origin
+  boundary modes as the domain axis.
 
 **Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
 * The plot view is now composited with hardware acceleration when the app has it enabled.  The

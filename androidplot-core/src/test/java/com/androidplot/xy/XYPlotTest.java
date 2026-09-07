@@ -110,6 +110,57 @@ public class XYPlotTest extends AndroidplotTest {
                 
     }
 
+    @Test
+    public void testRangeOriginFixedMode() throws Exception {
+        plot.addSeries(series0To100, new LineAndPointFormatter());
+        plot.centerOnRangeOrigin(50, 20, BoundaryMode.FIXED);
+        plot.calculateMinMaxVals();
+
+        assertEquals(30.0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(70.0, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
+    @Test
+    public void testRangeOriginGrowMode() throws Exception {
+        plot.addSeries(series0To100, new LineAndPointFormatter());
+        plot.centerOnRangeOrigin(50, null, BoundaryMode.GROW);
+        plot.calculateMinMaxVals();
+
+        assertEquals(0.0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100.0, plot.getBounds().getMaxY().doubleValue(), 0);
+
+        // introduce a larger range set.  boundaries should change
+        series0To100.setModel(numList2, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+        plot.calculateMinMaxVals();
+
+        assertEquals(-100.0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(200.0, plot.getBounds().getMaxY().doubleValue(), 0);
+
+        // revert series model back to the previous set.  boundaries should remain the same
+        series0To100.setModel(numList1, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+        plot.calculateMinMaxVals();
+
+        assertEquals(-100.0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(200.0, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
+    @Test
+    public void testRangeOriginShrinkMode() throws Exception {
+        plot.addSeries(series0To100, new LineAndPointFormatter());
+        plot.centerOnRangeOrigin(50, null, BoundaryMode.SHRINK);
+        plot.calculateMinMaxVals();
+
+        assertEquals(0.0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100.0, plot.getBounds().getMaxY().doubleValue(), 0);
+
+        // update with more extreme values...nothing should change in shrink mode:
+        series0To100.setModel(numList2, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+        plot.calculateMinMaxVals();
+
+        assertEquals(0.0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(100.0, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void centerOnRangeOrigin_throwsIllegalArgumentException_ifNullOrigin() {
         plot.centerOnRangeOrigin(null);

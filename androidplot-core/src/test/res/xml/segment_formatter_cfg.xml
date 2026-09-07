@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Fig configuration used by SegmentFormatterTest -->
+<config
+    fillPaint.color="#FF00AA00"
+    outerEdgePaint.color="#FF112233"
+    outerEdgePaint.strokeWidth="4px"
+    labelPaint.textSize="15px"
+    labelPaint.textAlign="left"
+    offset="6dp"
+    radialInset="1px"
+    innerInset="2px"
+    outerInset="3px"
+    legendIconEnabled="false"/>

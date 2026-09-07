@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <resources>
     <dimen name="title_font_size">30dp</dimen>
     <dimen name="pie_segment_label_font_size">20dp</dimen>

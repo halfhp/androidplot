@@ -40,9 +40,11 @@ If you enjoy the lib, please [rate us on codix.io](http://codix.io/gh/repo/halfh
 Technical questions should be posted using the [androidplot tag](http://stackoverflow.com/questions/tagged/androidplot) on Stack Overflow.  For everything else use the [Google Groups forum](https://groups.google.com/d/forum/androidplot).
 
 # License
-Androidplot has been made available under the Apache 2.0 license:
+Androidplot has been made available under the Apache 2.0 license. Source files carry an
+[SPDX](https://spdx.dev/learn/handling-license-info/) `SPDX-License-Identifier: Apache-2.0` tag
+in place of a full license header; the full text is in [LICENSE.md](LICENSE.md).
 
-    Copyright 2021 Androidplot.com
+    Copyright 2026 Androidplot.com
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

@@ -25,6 +25,9 @@ For details on what to expect in general when updating to a new version of Andro
   next `redraw()` call.
 * Resizing a plot while it is rendering could previously deadlock; the locks involved are now
   always taken in the same order.
+* Detaching and quickly re-attaching a plot (as happens when scrolling a RecyclerView) could
+  previously leave it without a render thread, or with recycled buffers, until its next resize.
+  Thread handover is now explicit and the replacement thread always renders.
 
 # 1.5.11
 * Update project to latest gradle / build tools

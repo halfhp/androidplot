@@ -2,14 +2,21 @@
 
 package com.androidplot.xy;
 
+import android.content.res.TypedArray;
+import android.util.TypedValue;
 import android.graphics.*;
 import com.androidplot.Plot;
+import com.androidplot.R;
 import com.androidplot.test.AndroidplotTest;
+import com.androidplot.ui.SizeMode;
 import com.androidplot.util.fig.*;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.robolectric.RuntimeEnvironment;
 
 import java.util.Arrays;
@@ -18,12 +25,22 @@ import java.util.Iterator;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyFloat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class XYPlotTest extends AndroidplotTest {
 
+    @Mock
+    TypedArray typedArray;
+
     XYPlot plot;  // testing
-    
+
     List<Integer> numList1;
     List<Integer> numList2;
     SimpleXYSeries series0To100;
@@ -703,5 +720,68 @@ public class XYPlotTest extends AndroidplotTest {
         plot.removeMarkers();
         assertEquals(0, plot.getXValueMarkers().size());
         assertEquals(0, plot.getYValueMarkers().size());
+    }
+
+    /**
+     * Makes the mock TypedArray behave like an empty attribute set: every
+     * boolean / int / float lookup returns the supplied default.
+     */
+    private void stubAttrsAsDefaults() {
+        final Answer<Object> returnDefault = new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) {
+                return invocation.getArgument(1);
+            }
+        };
+        when(typedArray.getBoolean(anyInt(), anyBoolean())).thenAnswer(returnDefault);
+        when(typedArray.getInt(anyInt(), anyInt())).thenAnswer(returnDefault);
+        when(typedArray.getFloat(anyInt(), anyFloat())).thenAnswer(returnDefault);
+    }
+
+    @Test
+    public void processAttrs_domainTitleVisibleFalse_hidesDomainTitleOnly() {
+        stubAttrsAsDefaults();
+        when(typedArray.getBoolean(eq(R.styleable.xy_XYPlot_domainTitleVisible), anyBoolean()))
+                .thenReturn(false);
+
+        plot.processAttrs(typedArray);
+
+        assertFalse(plot.getDomainTitle().isVisible());
+        assertTrue(plot.getRangeTitle().isVisible());
+        assertTrue(plot.getGraph().isVisible());
+        assertTrue(plot.getLegend().isVisible());
+    }
+
+    @Test
+    public void processAttrs_rangeTitleVisibleFalse_hidesRangeTitleOnly() {
+        stubAttrsAsDefaults();
+        when(typedArray.getBoolean(eq(R.styleable.xy_XYPlot_rangeTitleVisible), anyBoolean()))
+                .thenReturn(false);
+
+        plot.processAttrs(typedArray);
+
+        assertFalse(plot.getRangeTitle().isVisible());
+        assertTrue(plot.getDomainTitle().isVisible());
+        assertTrue(plot.getGraph().isVisible());
+        assertTrue(plot.getLegend().isVisible());
+    }
+
+    @Test
+    public void processAttrs_domainTitleHeight_resizesDomainTitleOnly() {
+        stubAttrsAsDefaults();
+        final float graphHeight = plot.getGraph().getSize().getHeight().getValue();
+        final SizeMode graphHeightMode = plot.getGraph().getSize().getHeight().getLayoutType();
+        final TypedValue dimension = new TypedValue();
+        dimension.type = TypedValue.TYPE_DIMENSION;
+        when(typedArray.hasValue(R.styleable.xy_XYPlot_domainTitleHeight)).thenReturn(true);
+        when(typedArray.peekValue(R.styleable.xy_XYPlot_domainTitleHeight)).thenReturn(dimension);
+        when(typedArray.getDimension(eq(R.styleable.xy_XYPlot_domainTitleHeight), anyFloat()))
+                .thenReturn(123f);
+
+        plot.processAttrs(typedArray);
+
+        assertEquals(123f, plot.getDomainTitle().getSize().getHeight().getValue());
+        assertEquals(graphHeight, plot.getGraph().getSize().getHeight().getValue());
+        assertEquals(graphHeightMode, plot.getGraph().getSize().getHeight().getLayoutType());
     }
 }

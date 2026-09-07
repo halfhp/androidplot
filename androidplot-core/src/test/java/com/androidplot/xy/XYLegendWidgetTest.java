@@ -19,9 +19,12 @@ import org.mockito.Mockito;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -98,5 +101,75 @@ public class XYLegendWidgetTest extends AndroidplotTest {
         inOrder.verify(legendWidget).drawIcon(any(Canvas.class), any(RectF.class), eq(i2));
         inOrder.verify(legendWidget).drawIcon(any(Canvas.class), any(RectF.class), eq(i3));
         inOrder.verify(legendWidget).drawIcon(any(Canvas.class), any(RectF.class), eq(i1));
+    }
+
+    @Test
+    public void draw_nullSeriesTitles_sortsAndDrawsWithoutThrowing() throws Exception {
+        // CandlestickSeries et al. create series with a null title:
+        final XYSeries untitled1 = new SimpleXYSeries(null);
+        final XYSeries untitled2 = new SimpleXYSeries(null);
+        final XYSeries titled = new SimpleXYSeries("titled");
+        seriesRegistry.add(untitled1, new LineAndPointFormatter());
+        seriesRegistry.add(untitled2, new LineAndPointFormatter());
+        seriesRegistry.add(titled, new LineAndPointFormatter());
+
+        legendWidget.draw(canvas);
+
+        verify(legendWidget, times(3))
+                .drawIcon(any(Canvas.class), any(RectF.class), any(XYLegendItem.class));
+        verify(canvas, times(1)).drawText(eq("titled"), anyFloat(), anyFloat(), any(Paint.class));
+        verify(canvas, never()).drawText((String) isNull(), anyFloat(), anyFloat(), any(Paint.class));
+    }
+
+    @Test
+    public void draw_nullTitleWithoutComparator_drawsNoTextForThatItem() throws Exception {
+        legendWidget.setLegendItemComparator(null);
+        final XYLegendItem untitled = new XYLegendItem(XYLegendItem.Type.SERIES,
+                new LineAndPointFormatter(), null);
+        final XYLegendItem titled = new XYLegendItem(XYLegendItem.Type.SERIES,
+                new LineAndPointFormatter(), "titled");
+        doReturn(Lists.newArrayList(untitled, titled)).when(legendWidget).getLegendItems();
+
+        legendWidget.draw(canvas);
+
+        verify(legendWidget, times(2))
+                .drawIcon(any(Canvas.class), any(RectF.class), any(XYLegendItem.class));
+        verify(canvas, times(1)).drawText(eq("titled"), anyFloat(), anyFloat(), any(Paint.class));
+        verify(canvas, never()).drawText((String) isNull(), anyFloat(), anyFloat(), any(Paint.class));
+    }
+
+    @Test
+    public void draw_regionWithoutLabel_drawsRegionIconWithoutThrowing() throws Exception {
+        final XYSeries series = new SimpleXYSeries("series");
+        final XYSeriesFormatter formatter = new LineAndPointFormatter();
+
+        // the 4-arg RectRegion constructor leaves the label null:
+        formatter.addRegion(new RectRegion(0, 10, 0, 10), new XYRegionFormatter(0));
+        formatter.addRegion(new RectRegion(0, 20, 0, 20, "labelled"), new XYRegionFormatter(0));
+        seriesRegistry.add(series, formatter);
+
+        legendWidget.draw(canvas);
+
+        verify(legendWidget, times(2))
+                .drawRegionLegendIcon(any(Canvas.class), any(RectF.class), any(XYRegionFormatter.class));
+        verify(canvas, times(1)).drawText(eq("labelled"), anyFloat(), anyFloat(), any(Paint.class));
+        verify(canvas, never()).drawText((String) isNull(), anyFloat(), anyFloat(), any(Paint.class));
+    }
+
+    @Test
+    public void draw_moreItemsThanTableCells_drawsWhatFitsWithoutThrowing() throws Exception {
+        // a 2x2 table can only hold 4 of the 5 items:
+        legendWidget.setTableModel(new DynamicTableModel(2, 2));
+        final List<XYLegendItem> legendItems = Lists.newArrayList();
+        for (int i = 0; i < 5; i++) {
+            legendItems.add(new XYLegendItem(XYLegendItem.Type.SERIES,
+                    new LineAndPointFormatter(), "item " + i));
+        }
+        doReturn(legendItems).when(legendWidget).getLegendItems();
+
+        legendWidget.draw(canvas);
+
+        verify(legendWidget, times(4))
+                .drawIcon(any(Canvas.class), any(RectF.class), any(XYLegendItem.class));
     }
 }

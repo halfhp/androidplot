@@ -72,23 +72,57 @@ public class DynamicTableModel extends TableModel {
                                     Axis axis,
                                     int numElementsInTable) {
         int axisElements = 0;
-        
+
         float axisSizePix = 0;
         switch (axis) {
             case ROW:
-                axisElements = numRows;
+                axisElements = calculateNumRows(numElementsInTable);
                 axisSizePix = tableRect.height();
                 break;
             case COLUMN:
-                axisElements = numColumns;
+                axisElements = calculateNumColumns(numElementsInTable);
                 axisSizePix = tableRect.width();
                 break;
         }
-        if(axisElements != 0) {
-            return axisSizePix / axisElements;
+        return axisSizePix / Math.max(axisElements, 1);
+    }
+
+    /**
+     * @param totalElements Number of elements to be laid out in the table.
+     * @return The number of rows the table will actually use; the configured row count
+     * if there is one, otherwise the number of rows needed to fit totalElements into
+     * the configured number of columns (rounded up).
+     */
+    protected int calculateNumRows(int totalElements) {
+        if (numRows > 0) {
+            return numRows;
+        } else if (numColumns > 0) {
+            return ceilDiv(totalElements, numColumns);
         } else {
-            return axisSizePix / numElementsInTable;
+            // unlimited rows and columns (impossible) so default a single row with n columns:
+            return 1;
         }
+    }
+
+    /**
+     * @param totalElements Number of elements to be laid out in the table.
+     * @return The number of columns the table will actually use; the configured column count
+     * if there is one, otherwise the number of columns needed to fit totalElements into
+     * the configured number of rows (rounded up).
+     */
+    protected int calculateNumColumns(int totalElements) {
+        if (numColumns > 0) {
+            return numColumns;
+        } else if (numRows > 0) {
+            return ceilDiv(totalElements, numRows);
+        } else {
+            // unlimited rows and columns (impossible) so default a single row with n columns:
+            return totalElements;
+        }
+    }
+
+    private static int ceilDiv(int dividend, int divisor) {
+        return (dividend + divisor - 1) / divisor;
     }
 
 
@@ -130,23 +164,10 @@ public class DynamicTableModel extends TableModel {
             this.totalElements = totalElements;
             order = dynamicTableModel.getOrder();
 
-            // unlimited columns:
-            if(dynamicTableModel.getNumColumns() == 0 && dynamicTableModel.getNumRows() >= 1) {
-                calculatedRows = dynamicTableModel.getNumRows();
-
-                // round up:
-                calculatedColumns = Float.valueOf((totalElements / (float) calculatedRows) + 0.5f).intValue();
-            } else if(dynamicTableModel.getNumRows() == 0 && dynamicTableModel.getNumColumns() >= 1) {
-                calculatedColumns = dynamicTableModel.getNumColumns();
-                calculatedRows = Float.valueOf((totalElements / (float) calculatedColumns) + 0.5f).intValue();
-            // unlimited rows and columns (impossible) so default a single row with n columns:
-            }else if(dynamicTableModel.getNumColumns() == 0 && dynamicTableModel.getNumRows() == 0) {
-                calculatedRows = 1;
-                calculatedColumns = totalElements;
-            } else {
-                calculatedRows = dynamicTableModel.getNumRows();
-                calculatedColumns = dynamicTableModel.getNumColumns();
-            }
+            // use the same row / column counts that size the cells so that the
+            // table wraps where the cells run out:
+            calculatedRows = dynamicTableModel.calculateNumRows(totalElements);
+            calculatedColumns = dynamicTableModel.calculateNumColumns(totalElements);
             calculatedNumElements = calculatedRows * calculatedColumns;
             lastElementRect = dynamicTableModel.getCellRect(tableRect, totalElements);
         }
@@ -172,8 +193,8 @@ public class DynamicTableModel extends TableModel {
 
             switch (order) {
                 case ROW_MAJOR:
-                    if (dynamicTableModel.getNumColumns() > 0 && lastColumn >= (dynamicTableModel.getNumColumns() - 1)) {
-                        // move to the begining of the next row down:// move to the begining of the next row down:
+                    if (lastColumn >= (calculatedColumns - 1)) {
+                        // move to the begining of the next row down:
                         nextElementRect.offsetTo(tableRect.left, lastElementRect.bottom);
                         lastColumn = 0;
                         lastRow++;
@@ -184,7 +205,7 @@ public class DynamicTableModel extends TableModel {
                     }
                     break;
                 case COLUMN_MAJOR:
-                    if (dynamicTableModel.getNumRows() > 0 && lastRow >= (dynamicTableModel.getNumRows() - 1)) {
+                    if (lastRow >= (calculatedRows - 1)) {
                         // move to the top of the next column over:
                         nextElementRect.offsetTo(lastElementRect.right, tableRect.top);
                         lastRow = 0;

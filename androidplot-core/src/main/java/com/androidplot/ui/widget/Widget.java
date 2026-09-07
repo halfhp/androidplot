@@ -86,7 +86,12 @@ public abstract class Widget implements BoxModelable, Resizable {
     public void position(float x, HorizontalPositioning horizontalPositioning, float y,
                          VerticalPositioning verticalPositioning, Anchor anchor) {
         setPositionMetrics(new PositionMetrics(x, horizontalPositioning, y, verticalPositioning, anchor));
-        layoutManager.addToTop(this);
+
+        // only add on the first call; re-positioning an existing widget must not
+        // draw it a second time or alter its z-order:
+        if (!layoutManager.contains(this)) {
+            layoutManager.addToTop(this);
+        }
     }
 
     /**

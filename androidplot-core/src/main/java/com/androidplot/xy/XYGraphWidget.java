@@ -362,24 +362,6 @@ public class XYGraphWidget extends Widget {
                 R.styleable.xy_XYPlot_graphAnchor, R.styleable.xy_XYPlot_graphVisible
         );
 
-        // domainLabel size & position
-        AttrUtils.configureWidget(attrs, this,
-                R.styleable.xy_XYPlot_domainTitleHeightMode, R.styleable.xy_XYPlot_domainTitleHeight,
-                R.styleable.xy_XYPlot_domainTitleWidthMode, R.styleable.xy_XYPlot_domainTitleWidth,
-                R.styleable.xy_XYPlot_domainTitleHorizontalPositioning, R.styleable.xy_XYPlot_domainTitleHorizontalPosition,
-                R.styleable.xy_XYPlot_domainTitleVerticalPositioning, R.styleable.xy_XYPlot_domainTitleVerticalPosition,
-                R.styleable.xy_XYPlot_domainTitleAnchor, R.styleable.xy_XYPlot_domainTitleVisible
-        );
-
-        // rangeLabel size & position
-        AttrUtils.configureWidget(attrs, this,
-                R.styleable.xy_XYPlot_rangeTitleHeightMode, R.styleable.xy_XYPlot_rangeTitleHeight,
-                R.styleable.xy_XYPlot_rangeTitleWidthMode, R.styleable.xy_XYPlot_rangeTitleWidth,
-                R.styleable.xy_XYPlot_rangeTitleHorizontalPositioning, R.styleable.xy_XYPlot_rangeTitleHorizontalPosition,
-                R.styleable.xy_XYPlot_rangeTitleVerticalPositioning, R.styleable.xy_XYPlot_rangeTitleVerticalPosition,
-                R.styleable.xy_XYPlot_rangeTitleAnchor, R.styleable.xy_XYPlot_rangeTitleVisible
-        );
-
         // rotation
         AttrUtils.configureWidgetRotation(attrs, this, R.styleable.xy_XYPlot_graphRotation);
 

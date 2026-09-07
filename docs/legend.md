@@ -36,6 +36,9 @@ visible space into cells.  For example, A 2x2 legend using `ROW_MAJOR` ordering:
 plot.getLegend().setTableModel(new DynamicTableModel(2, 2, TableOrder.ROW_MAJOR));
 ```
 
+Passing 0 for either dimension lets that dimension grow to fit the number of legend items.  If both
+dimensions are fixed and there are more items than cells, the extra items are simply not drawn.
+
 ### FixedTableModel
 The `FixedTableModel` takes a desired size of each cell in pixels and adds cells using the specified `TableOrder`.
 It automatically wraps to the next row or column (based on `TableOrder`) when the cell being added

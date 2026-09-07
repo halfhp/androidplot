@@ -7,17 +7,12 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import com.androidplot.util.PixelUtils;
-import com.androidplot.xy.XYSeries;
 import com.androidplot.ui.*;
 import com.androidplot.xy.*;
 
 import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
 import java.util.Arrays;
 
 /**
@@ -45,152 +40,20 @@ public class XYRegionExampleActivity extends Activity {
     private XYRegionFormatter warmupRegionFormatter;
     private XYRegionFormatter homeRunRegionFormatter;
 
-    private CheckBox timCB;
-    private CheckBox nickCB;
-
-    private CheckBox r2CheckBox;
-    private CheckBox r3CheckBox;
-    private CheckBox r4CheckBox;
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xyregion_example);
         plot = findViewById(R.id.xyRegionExamplePlot);
-        timCB = findViewById(R.id.s1CheckBox);
-        timCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                onS1CheckBoxClicked();
-            }
-        });
-
-        nickCB = findViewById(R.id.s2CheckBox);
-        nickCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                onS2CheckBoxClicked();
-            }
-        });
-
-        r2CheckBox = findViewById(R.id.r2CheckBox);
-        r2CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                onCheckBoxClicked(r2CheckBox, timFormatter, shortRegionFormatter, shortRegion);
-            }
-        });
-
-        r3CheckBox = findViewById(R.id.r3CheckBox);
-        r3CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                onCheckBoxClicked(r3CheckBox, nickFormatter, warmupRegionFormatter, warmupRegion);
-            }
-        });
-
-        r4CheckBox = findViewById(R.id.r4CheckBox);
-        r4CheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                onCheckBoxClicked(r4CheckBox, nickFormatter, homeRunRegionFormatter, homeRunRegion);
-            }
-        });
 
         seriesSetup();
         markerSetup();
-        axisLabelSetup();
         regionSetup();
         makePlotPretty();
-    }
-
-    private void onS1CheckBoxClicked() {
-        if (timCB.isChecked()) {
-            plot.addSeries(timSeries, timFormatter);
-            r2CheckBox.setEnabled(true);
-        } else {
-            plot.removeSeries(timSeries);
-            r2CheckBox.setEnabled(false);
-        }
-        plot.redraw();
-    }
-
-    private void onS2CheckBoxClicked() {
-        if (nickCB.isChecked()) {
-            plot.addSeries(nickSeries, nickFormatter);
-            r3CheckBox.setEnabled(true);
-            r4CheckBox.setEnabled(true);
-        } else {
-            plot.removeSeries(nickSeries);
-            r3CheckBox.setEnabled(false);
-            r4CheckBox.setEnabled(false);
-        }
-        plot.redraw();
+        bindCheckBoxes();
     }
 
     /**
-     * Processes a run box event
-     * @param cb The checkbox event origin
-     * @param lpf LineAndPointFormatter with which rr and rf are to be added/removed
-     * @param rf The XYRegionFormatter with which rr should be rendered
-     * @param rr The RectRegion to add/remove
-     */
-    private void onCheckBoxClicked(CheckBox cb, LineAndPointFormatter lpf,
-            XYRegionFormatter rf, RectRegion rr) {
-        if (cb.isChecked()) {
-            lpf.removeRegion(rr);
-        } else {
-            lpf.addRegion(rr, rf);
-        }
-    }
-
-    /**
-     * Cleans up the plot's general layout and color scheme
-     */
-    private void makePlotPretty() {
-        // use a 2x5 grid with room for 10 items:
-        plot.getLegend().setTableModel(new DynamicTableModel(4, 2));
-        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT)
-                .setFormat(new NumberFormat() {
-                    @Override
-                    public StringBuffer format(double value, StringBuffer buffer,
-                            FieldPosition field) {
-                        return new StringBuffer(value + "'");
-                    }
-
-                    @Override
-                    public StringBuffer format(long value, StringBuffer buffer,
-                            FieldPosition field) {
-                        throw new UnsupportedOperationException("Not yet implemented.");
-                    }
-
-                    @Override
-                    public Number parse(String string, ParsePosition position) {
-                        throw new UnsupportedOperationException("Not yet implemented.");
-                    }
-                });
-
-        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM)
-                .setFormat(new DecimalFormat("#"));
-
-        plot.getGraph().setDomainGridLinePaint(null);
-
-        plot.getLegend().setWidth(PixelUtils.dpToPix(100), SizeMode.FILL);
-
-        // reposition the grid so that it rests above the bottom-left
-        // edge of the graph widget:
-        plot.getLegend().position(
-                50,
-                HorizontalPositioning.ABSOLUTE_FROM_CENTER,
-                200,
-                VerticalPositioning.ABSOLUTE_FROM_TOP,
-                Anchor.TOP_MIDDLE);
-
-        plot.setRangeBoundaries(0, BoundaryMode.FIXED, 500, BoundaryMode.FIXED);
-    }
-
-    /**
-     * Create 4 XYSeries from the values defined above add add them to the plot.
-     * Also add some arbitrary regions.
+     * Two SimpleXYSeries with interpolated LineAndPointFormatters.
      */
     private void seriesSetup() {
 
@@ -206,7 +69,7 @@ public class XYRegionExampleActivity extends Activity {
 
         plot.addSeries(timSeries, timFormatter);
 
-        // SERIES #2:
+        // NICK
         nickFormatter = new LineAndPointFormatter(Color.BLUE, Color.BLUE, null, null);
         nickFormatter.getLinePaint().setStrokeWidth(PixelUtils.dpToPix(LINE_THICKNESS_DP));
         nickFormatter.getVertexPaint().setStrokeWidth(PixelUtils.dpToPix(POINT_SIZE_DP));
@@ -223,66 +86,28 @@ public class XYRegionExampleActivity extends Activity {
     }
 
     /**
-     * Add some color coded regions to our axis labels.
-     */
-    private void axisLabelSetup() {
-        // DOMAIN
-        // TODO
-        //        plot.getGraphWidget().addDomainLineLabelFormatter(
-        //                Double.NEGATIVE_INFINITY, 2, new SimpleLineLabelFormatter(Color.GRAY));
-        //        plot.getGraphWidget().addDomainLineLabelFormatter(
-        //                2, Double.POSITIVE_INFINITY, new SimpleLineLabelFormatter(Color.WHITE));
-        //        // RANGE
-        //        plot.getGraphWidget().addRangeLineLabelFormatter(
-        //                Double.NEGATIVE_INFINITY, HOME_RUN_DIST, new SimpleLineLabelFormatter(Color.RED));
-        //        plot.getGraphWidget().addRangeLineLabelFormatter(
-        //                HOME_RUN_DIST, Double.POSITIVE_INFINITY, new SimpleLineLabelFormatter(Color.GREEN));
-    }
-
-    /**
-     * Add some markers to our plot.
+     * YValueMarker draws a labeled horizontal line at a range value.
      */
     private void markerSetup() {
+        plot.addMarker(wallMarker(380, "Fenway Park LF Wall", Color.BLUE));
+        plot.addMarker(wallMarker(309, "ATT Park RF Wall", Color.CYAN));
+    }
 
-        YValueMarker fenwayLfMarker = new YValueMarker(
-                380,                                        // y-val to mark
-                "Fenway Park LF Wall",                      // marker label
-                new HorizontalPosition(
-                        // object instance to set text positioning on the marker
-                        PixelUtils.dpToPix(5),              // 5dp offset
-                        HorizontalPositioning.ABSOLUTE_FROM_RIGHT),  // offset origin
-                Color.BLUE,                                 // line paint color
-                Color.BLUE);                                // text paint color
-
-        YValueMarker attRfMarker = new YValueMarker(
-                309,                                        // y-val to mark
-                "ATT Park RF Wall",                         // marker label
-                new HorizontalPosition(
-                        // object instance to set text positioning on the marker
-                        PixelUtils.dpToPix(5),              // 5dp offset
-                        HorizontalPositioning.ABSOLUTE_FROM_RIGHT),  // offset origin
-                Color.CYAN,                                 // line paint color
-                Color.CYAN);                                // text paint color
-
-        fenwayLfMarker.getTextPaint().setTextSize(PixelUtils.dpToPix(14));
-        attRfMarker.getTextPaint().setTextSize(PixelUtils.dpToPix(14));
-
-        DashPathEffect dpe = new DashPathEffect(
-                new float[] {PixelUtils.dpToPix(2), PixelUtils.dpToPix(2)}, 0);
-
-        fenwayLfMarker.getLinePaint().setPathEffect(dpe);
-        attRfMarker.getLinePaint().setPathEffect(dpe);
-
-        plot.addMarker(fenwayLfMarker);
-        plot.addMarker(attRfMarker);
+    private YValueMarker wallMarker(float y, String label, int color) {
+        YValueMarker marker = new YValueMarker(y, label,
+                new HorizontalPosition(PixelUtils.dpToPix(5), HorizontalPositioning.ABSOLUTE_FROM_RIGHT),
+                color, color);
+        marker.getTextPaint().setTextSize(PixelUtils.dpToPix(14));
+        marker.getLinePaint().setPathEffect(new DashPathEffect(
+                new float[] {PixelUtils.dpToPix(2), PixelUtils.dpToPix(2)}, 0));
+        return marker;
     }
 
     /**
-     * Add some fill regions to our series data
+     * RectRegion + XYRegionFormatter: a series is filled with the region's color
+     * wherever it passes through the region.
      */
     private void regionSetup() {
-
-        // and another region:
         shortRegionFormatter = new XYRegionFormatter(Color.RED);
         shortRegionFormatter.getPaint().setAlpha(60);
         shortRegion = new RectRegion(
@@ -291,8 +116,6 @@ public class XYRegionExampleActivity extends Activity {
         timFormatter.addRegion(shortRegion, shortRegionFormatter);
         nickFormatter.addRegion(shortRegion, shortRegionFormatter);
 
-        // the next three regions are horizontal regions with minY/maxY
-        // set to negative and positive infinity respectively.
         warmupRegionFormatter = new XYRegionFormatter(Color.LTGRAY);
         warmupRegionFormatter.getPaint().setAlpha(60);
 
@@ -310,5 +133,77 @@ public class XYRegionExampleActivity extends Activity {
         timFormatter.addRegion(homeRunRegion, homeRunRegionFormatter);
         nickFormatter.addRegion(homeRunRegion, homeRunRegionFormatter);
         nickFormatter.setFillDirection(FillDirection.RANGE_ORIGIN);
+    }
+
+    /**
+     * Cleans up the plot's general layout and color scheme
+     */
+    private void makePlotPretty() {
+        // use a 4x2 grid with room for 8 items:
+        plot.getLegend().setTableModel(new DynamicTableModel(4, 2));
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT)
+                .setFormat(new DecimalFormat("0.0''"));
+
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM)
+                .setFormat(new DecimalFormat("#"));
+
+        plot.getGraph().setDomainGridLinePaint(null);
+
+        plot.getLegend().setWidth(PixelUtils.dpToPix(100), SizeMode.FILL);
+
+        // reposition the legend so that it rests above the bottom-left
+        // edge of the graph widget:
+        plot.getLegend().position(
+                50,
+                HorizontalPositioning.ABSOLUTE_FROM_CENTER,
+                200,
+                VerticalPositioning.ABSOLUTE_FROM_TOP,
+                Anchor.TOP_MIDDLE);
+
+        plot.setRangeBoundaries(0, BoundaryMode.FIXED, 500, BoundaryMode.FIXED);
+    }
+
+    private void bindCheckBoxes() {
+        CheckBox r2CheckBox = findViewById(R.id.r2CheckBox);
+        CheckBox r3CheckBox = findViewById(R.id.r3CheckBox);
+        CheckBox r4CheckBox = findViewById(R.id.r4CheckBox);
+        r2CheckBox.setOnCheckedChangeListener((cb, checked) ->
+                toggleRegion(checked, timFormatter, shortRegion, shortRegionFormatter));
+        r3CheckBox.setOnCheckedChangeListener((cb, checked) ->
+                toggleRegion(checked, nickFormatter, warmupRegion, warmupRegionFormatter));
+        r4CheckBox.setOnCheckedChangeListener((cb, checked) ->
+                toggleRegion(checked, nickFormatter, homeRunRegion, homeRunRegionFormatter));
+
+        CheckBox timCB = findViewById(R.id.s1CheckBox);
+        timCB.setOnCheckedChangeListener((cb, checked) -> {
+            toggleSeries(checked, timSeries, timFormatter);
+            r2CheckBox.setEnabled(checked);
+        });
+
+        CheckBox nickCB = findViewById(R.id.s2CheckBox);
+        nickCB.setOnCheckedChangeListener((cb, checked) -> {
+            toggleSeries(checked, nickSeries, nickFormatter);
+            r3CheckBox.setEnabled(checked);
+            r4CheckBox.setEnabled(checked);
+        });
+    }
+
+    private void toggleSeries(boolean checked, XYSeries series, LineAndPointFormatter formatter) {
+        if (checked) {
+            plot.addSeries(series, formatter);
+        } else {
+            plot.removeSeries(series);
+        }
+        plot.redraw();
+    }
+
+    private void toggleRegion(boolean checked, LineAndPointFormatter lpf,
+            RectRegion rr, XYRegionFormatter rf) {
+        if (checked) {
+            lpf.addRegion(rr, rf);
+        } else {
+            lpf.removeRegion(rr);
+        }
+        plot.redraw();
     }
 }

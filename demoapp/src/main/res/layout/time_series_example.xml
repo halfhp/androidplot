@@ -11,7 +11,6 @@
     <com.androidplot.xy.XYPlot
         android:id="@+id/plot1"
         style="@style/APDefacto.Light"
-        renderMode="use_main_thread"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         ap:backgroundColor="@color/ap_white"

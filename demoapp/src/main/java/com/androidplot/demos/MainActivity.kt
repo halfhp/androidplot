@@ -2,98 +2,41 @@
 package com.androidplot.demos
 
 import android.app.Activity
-import android.os.Bundle
 import android.content.Intent
+import android.os.Bundle
 import com.androidplot.demos.databinding.MainBinding
 
 class MainActivity : Activity() {
 
-    private lateinit var binding: MainBinding
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = MainBinding.inflate(layoutInflater)
-
-        binding.animatedXYPlotExButton.setOnClickListener {
-            startActivity(Intent(this, AnimatedXYPlotActivity::class.java))
-        }
-
-        binding.startScatterExButton.setOnClickListener {
-            startActivity(Intent(this, ScatterPlotActivity::class.java))
-        }
-
-        binding.startSimplePieExButton.setOnClickListener {
-            startActivity(Intent(this, SimplePieChartActivity::class.java))
-        }
-
-        binding.startDynamicXYExButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, DynamicXYPlotActivity::class.java))
-        }
-
-        binding.startCandlestickExButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, CandlestickChartActivity::class.java))
-        }
-
-        binding.startSimpleXYExButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, SimpleXYPlotActivity::class.java))
-        }
-
-        binding.startBarPlotExButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, BarPlotExampleActivity::class.java))
-        }
-
-        binding.startOrSensorExButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, OrientationSensorExampleActivity::class.java))
-        }
-
-        binding.startDualScaleExButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, DualScaleActivity::class.java))
-        }
-
-        binding.startTimeSeriesExButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, TimeSeriesActivity::class.java))
-        }
-
-        binding.startStepChartExButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, StepChartExampleActivity::class.java))
-        }
-
-        binding.startScrollZoomButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, TouchZoomExampleActivity::class.java))
-        }
-
-        binding.startXyRegionExampleButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, XYRegionExampleActivity::class.java))
-        }
-
-        binding.startXyListViewExButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, ListViewActivity::class.java))
-        }
-
-        binding.startXyRecyclerViewExButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, RecyclerViewActivity::class.java))
-        }
-
-        binding.startXYPlotWithBgImgExample.setOnClickListener {
-            startActivity(Intent(this@MainActivity, XYPlotWithBgImgActivity::class.java))
-        }
-
-        binding.startECGExample.setOnClickListener {
-            startActivity(Intent(this@MainActivity, ECGExample::class.java))
-        }
-
-        binding.fxPlotExample.setOnClickListener {
-            startActivity(Intent(this@MainActivity, FXPlotExampleActivity::class.java))
-        }
-
-        binding.bubbleChartExample.setOnClickListener {
-            startActivity(Intent(this@MainActivity, BubbleChartActivity::class.java))
-        }
-
-        binding.aboutButton.setOnClickListener {
-            startActivity(Intent(this@MainActivity, AboutActivity::class.java))
-        }
-
+        val binding = MainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // each button opens one example activity
+        listOf(
+            binding.startSimplePieExButton to SimplePieChartActivity::class.java,
+            binding.startSimpleXYExButton to SimpleXYPlotActivity::class.java,
+            binding.animatedXYPlotExButton to AnimatedXYPlotActivity::class.java,
+            binding.startScatterExButton to ScatterPlotActivity::class.java,
+            binding.startDynamicXYExButton to DynamicXYPlotActivity::class.java,
+            binding.startCandlestickExButton to CandlestickChartActivity::class.java,
+            binding.startOrSensorExButton to OrientationSensorExampleActivity::class.java,
+            binding.startDualScaleExButton to DualScaleActivity::class.java,
+            binding.startTimeSeriesExButton to TimeSeriesActivity::class.java,
+            binding.startStepChartExButton to StepChartExampleActivity::class.java,
+            binding.startScrollZoomButton to TouchZoomExampleActivity::class.java,
+            binding.startBarPlotExButton to BarPlotExampleActivity::class.java,
+            binding.startXyRegionExampleButton to XYRegionExampleActivity::class.java,
+            binding.startXyListViewExButton to ListViewActivity::class.java,
+            binding.startXyRecyclerViewExButton to RecyclerViewActivity::class.java,
+            binding.startXYPlotWithBgImgExample to XYPlotWithBgImgActivity::class.java,
+            binding.startECGExample to ECGExample::class.java,
+            binding.fxPlotExample to FXPlotExampleActivity::class.java,
+            binding.bubbleChartExample to BubbleChartActivity::class.java,
+            binding.aboutButton to AboutActivity::class.java,
+        ).forEach { (button, activity) ->
+            button.setOnClickListener { startActivity(Intent(this, activity)) }
+        }
     }
 }

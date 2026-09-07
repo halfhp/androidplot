@@ -19,11 +19,9 @@ import com.androidplot.xy.CandlestickSeries;
 import com.androidplot.xy.CatmullRomInterpolator;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.PointLabelFormatter;
-import com.androidplot.xy.PointLabeler;
 import com.androidplot.xy.StepMode;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYSeries;
 
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
@@ -35,17 +33,15 @@ import java.text.ParsePosition;
  */
 public class CandlestickChartActivity extends Activity {
 
-    private XYPlot plot;
-
-    private DecimalFormat currencyFormat = new DecimalFormat("$0.00");
+    private static final String[] DAYS = {"Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.candlestick_example);
+        XYPlot plot = findViewById(R.id.plot);
 
-        // initialize our XYPlot reference:
-        plot = (XYPlot) findViewById(R.id.plot);
+        final DecimalFormat currencyFormat = new DecimalFormat("$0.00");
 
         final CandlestickSeries candlestickSeries = new CandlestickSeries(
                 new CandlestickSeries.Item(1, 10, 2, 9.04),
@@ -67,10 +63,21 @@ public class CandlestickChartActivity extends Activity {
 
         CandlestickFormatter formatter = new CandlestickFormatter(this, R.xml.candlestick_formatter);
 
-        // draw candlestick bodies as triangles instead of squares:
-        // triangles will point up for items that closed higher than they opened
-        // and down for those that closed lower:
+        // bodies default to SQUARE; try BodyStyle.TRIANGULAR (points up when close > open)
         formatter.setBodyStyle(CandlestickFormatter.BodyStyle.SQUARE);
+
+        formatter.setPointLabelFormatter(
+                new PointLabelFormatter(Color.BLACK, PixelUtils.dpToPix(8), 0));
+        formatter.getPointLabelFormatter().getTextPaint().setFakeBoldText(true);
+        formatter.getPointLabelFormatter().getTextPaint().setTextAlign(Paint.Align.LEFT);
+
+        // add labels for close vals:
+        formatter.setPointLabeler((series, index) -> {
+            if(series == candlestickSeries.getCloseSeries()) {
+                return currencyFormat.format(series.getY(index).doubleValue());
+            }
+            return null;
+        });
 
         // add the candlestick series data to the plot:
         CandlestickMaker.make(plot, formatter, candlestickSeries);
@@ -91,7 +98,6 @@ public class CandlestickChartActivity extends Activity {
                 minMax.getMax().doubleValue() + 1,
                 BoundaryMode.FIXED);
 
-
         // setup the domain tick label formatting, etc:
         plot.setDomainBoundaries(-1, 6, BoundaryMode.FIXED);
         plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1);
@@ -99,53 +105,15 @@ public class CandlestickChartActivity extends Activity {
             @Override
             public StringBuffer format(Object object, @NonNull StringBuffer buffer,
                                        @NonNull FieldPosition field) {
-                int day = ((Number) object).intValue() % 7;
-                switch (day) {
-                    case 0:
-                        buffer.append("Sun");
-                        break;
-                    case 1:
-                        buffer.append("Mon");
-                        break;
-                    case 2:
-                        buffer.append("Tues");
-                        break;
-                    case 3:
-                        buffer.append("Wed");
-                        break;
-                    case 4:
-                        buffer.append("Thurs");
-                        break;
-                    case 5:
-                        buffer.append("Fri");
-                        break;
-                    case 6:
-                        buffer.append("Sat");
-                    default:
-                        // show nothing
-
+                int day = ((Number) object).intValue();
+                if (day >= 0) {
+                    buffer.append(DAYS[day % 7]);
                 }
                 return buffer;
             }
 
             @Override
             public Object parseObject(String string, @NonNull ParsePosition position) {
-                return null;
-            }
-        });
-
-        formatter.setPointLabelFormatter(
-                new PointLabelFormatter(Color.BLACK, PixelUtils.dpToPix(8), 0));
-        formatter.getPointLabelFormatter().getTextPaint().setFakeBoldText(true);
-        formatter.getPointLabelFormatter().getTextPaint().setTextAlign(Paint.Align.LEFT);
-
-        // add labels for close vals:
-        formatter.setPointLabeler(new PointLabeler() {
-            @Override
-            public String getLabel(XYSeries series, int index) {
-                if(series == candlestickSeries.getCloseSeries()) {
-                    return currencyFormat.format(series.getY(index).doubleValue());
-                }
                 return null;
             }
         });

@@ -3,6 +3,7 @@
 package com.androidplot.demos;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Color;
@@ -27,25 +28,18 @@ import java.util.Arrays;
 /**
  * Demonstrates animating XYSeries data from a zero value up/down to the actual values set.  Once
  * the animation completes, labels for each point are made visible.
- *
- * IMPORTANT: This example makes use of {@link ValueAnimator} which is only available in
- * SDK level 11 and later..
  */
 public class AnimatedXYPlotActivity extends Activity {
-
-    private XYPlot plot;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_xy_plot_example);
-
-        // initialize our XYPlot reference:
-        plot = (XYPlot) findViewById(R.id.plot);
+        XYPlot plot = findViewById(R.id.plot);
 
         // create a couple arrays of y-values to plot:
-        final Number[] domainLabels = {1, 2, 3, 6, 7, 8, 9, 10, 13, 14};
+        Number[] domainLabels = {1, 2, 3, 6, 7, 8, 9, 10, 13, 14};
         Number[] series1Numbers = {1, 4, 2, 8, 4, 16, 8, 32, 16, 64};
         Number[] series2Numbers = {5, 2, 10, 5, 20, 10, 40, 20, 80, 40};
 
@@ -56,12 +50,10 @@ public class AnimatedXYPlotActivity extends Activity {
         XYSeries series2 = new SimpleXYSeries(
                 Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series2");
 
-        // create formatters to use for drawing a series using LineAndPointRenderer
-        // and configure them from xml:
-        final LineAndPointFormatter series1Format =
+        LineAndPointFormatter series1Format =
                 new LineAndPointFormatter(this, R.xml.line_point_formatter);
 
-        final LineAndPointFormatter series2Format =
+        LineAndPointFormatter series2Format =
                 new LineAndPointFormatter(this, R.xml.line_point_formatter);
         series2Format.getLinePaint().setColor(Color.RED);
 
@@ -73,13 +65,14 @@ public class AnimatedXYPlotActivity extends Activity {
         series2Format.setInterpolationParams(
                 new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
 
-        // wrap each series in instances of ScalingXYSeries before adding to the plot
-        // so that we can animate the series values below:
-        final ScalingXYSeries scalingSeries1 = new ScalingXYSeries(series1, 0, ScalingXYSeries.Mode.Y_ONLY);
+        // ScalingXYSeries lets us animate the scale of an existing series without copying data
+        ScalingXYSeries scalingSeries1 = new ScalingXYSeries(series1, 0, ScalingXYSeries.Mode.Y_ONLY);
         plot.addSeries(scalingSeries1, series1Format);
 
-        final ScalingXYSeries scalingSeries2 = new ScalingXYSeries(series2, 0, ScalingXYSeries.Mode.Y_ONLY);
+        ScalingXYSeries scalingSeries2 = new ScalingXYSeries(series2, 0, ScalingXYSeries.Mode.Y_ONLY);
         plot.addSeries(scalingSeries2, series2Format);
+
+        plot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
 
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
             @Override
@@ -95,45 +88,25 @@ public class AnimatedXYPlotActivity extends Activity {
             }
         });
 
-        plot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
-
         // animate a scale value from a starting val of 0 to a final value of 1:
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
 
         // use an animation pattern that begins and ends slowly:
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
 
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float scale = valueAnimator.getAnimatedFraction();
-                scalingSeries1.setScale(scale);
-                scalingSeries2.setScale(scale);
-                plot.redraw();
-            }
+        animator.addUpdateListener(a -> {
+            float scale = a.getAnimatedFraction();
+            scalingSeries1.setScale(scale);
+            scalingSeries2.setScale(scale);
+            plot.redraw();
         });
-        animator.addListener(new Animator.AnimatorListener() {
+        animator.addListener(new AnimatorListenerAdapter() {
             @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
+            public void onAnimationEnd(Animator a) {
                 // the animation is over, so show point labels:
                 series1Format.getPointLabelFormatter().getTextPaint().setColor(Color.WHITE);
                 series2Format.getPointLabelFormatter().getTextPaint().setColor(Color.WHITE);
                 plot.redraw();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
             }
         });
 

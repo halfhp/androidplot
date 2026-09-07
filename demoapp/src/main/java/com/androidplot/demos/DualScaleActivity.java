@@ -34,26 +34,22 @@ import java.util.Arrays;
  */
 public class DualScaleActivity extends Activity {
 
-    private XYPlot plot;
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dual_scale_example);
-        plot = (XYPlot) findViewById(R.id.plot);
+        XYPlot plot = findViewById(R.id.plot);
 
         Number[] childCosts = {5500, 5550,5496, 5800, 5815};
         Number[] minWages = {9, 9, 9, 9, 10};
 
         // create and normalize series data:
-        final NormedXYSeries costsSeries = new NormedXYSeries(new SimpleXYSeries(
+        NormedXYSeries costsSeries = new NormedXYSeries(new SimpleXYSeries(
                 Arrays.asList(childCosts), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Yearly Cost"));
-        final NormedXYSeries minWageSeries = new NormedXYSeries(new SimpleXYSeries(
+        NormedXYSeries minWageSeries = new NormedXYSeries(new SimpleXYSeries(
                 Arrays.asList(minWages), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Min Wage"));
 
-        // create formatters to use for drawing a series using LineAndPointRenderer
-        // and configure them from xml:
         LineAndPointFormatter childCostsFormat =
                 new LineAndPointFormatter(this, R.xml.line_point_formatter_with_labels);
         childCostsFormat.setVertexPaint(null);
@@ -64,10 +60,7 @@ public class DualScaleActivity extends Activity {
         minWageFormat.setVertexPaint(null);
         minWageFormat.setPointLabelFormatter(null);
 
-        // add an "dash" effect to the series2 line:
         minWageFormat.getLinePaint().setPathEffect(new DashPathEffect(new float[] {
-
-                // always use DP when specifying pixel sizes, to keep things consistent across devices:
                 PixelUtils.dpToPix(20),
                 PixelUtils.dpToPix(15)}, 0));
 
@@ -84,7 +77,9 @@ public class DualScaleActivity extends Activity {
         plot.addSeries(minWageSeries, minWageFormat);
 
         plot.setRangeBoundaries(-1, 2, BoundaryMode.FIXED);
+        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1);
 
+        // LEFT and RIGHT labels each denormalize back into their own series' units -- this is the dual scale
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).getPaint().setColor(Color.GREEN);
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).setFormat(new Format() {
 
@@ -123,7 +118,6 @@ public class DualScaleActivity extends Activity {
             }
         });
 
-        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1);
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
 
             @Override

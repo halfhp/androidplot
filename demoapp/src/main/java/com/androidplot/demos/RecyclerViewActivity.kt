@@ -13,7 +13,9 @@ import com.androidplot.demos.databinding.RecyclerviewExampleBinding
 import com.androidplot.demos.databinding.RecyclerviewExampleItemBinding
 import com.androidplot.util.PixelUtils
 import com.androidplot.xy.*
-import java.util.*
+import kotlin.random.Random
+
+private typealias PlotData = List<SeriesBundle<XYSeries, LineAndPointFormatter>>
 
 class RecyclerViewActivity : Activity() {
     private lateinit var binding: RecyclerviewExampleBinding
@@ -26,6 +28,8 @@ class RecyclerViewActivity : Activity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // formatters below are built before any Plot view exists, so init PixelUtils by hand
         PixelUtils.init(this)
 
         binding = RecyclerviewExampleBinding.inflate(layoutInflater)
@@ -39,17 +43,19 @@ class RecyclerViewActivity : Activity() {
     class MyRecyclerViewHolder(
         private val binding: RecyclerviewExampleItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: List<SeriesBundle<XYSeries, LineAndPointFormatter>>, title: String) {
+        // recycling: clear the plot, re-add this row's series, redraw
+        fun bind(data: PlotData, title: String) {
             val plot = binding.plot
             plot.clear()
             plot.title.text = title
-            data.map { plot.addSeries(it.series, it.formatter) }
+            data.forEach { plot.addSeries(it.series, it.formatter) }
             plot.redraw()
         }
     }
 
     class MyRecyclerViewAdapter : RecyclerView.Adapter<MyRecyclerViewHolder>() {
-        private val seriesData = generateData()
+        private val seriesData: List<PlotData> =
+            List(NUM_PLOTS) { List(NUM_SERIES_PER_PLOT) { k -> generateBundle("S$k") } }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyRecyclerViewHolder {
             val itemBinding = RecyclerviewExampleItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -62,55 +68,20 @@ class RecyclerViewActivity : Activity() {
 
         override fun getItemCount() = seriesData.size
 
-        private fun generateData(): List<List<SeriesBundle<XYSeries, LineAndPointFormatter>>> {
-            val theData = mutableListOf<List<SeriesBundle<XYSeries, LineAndPointFormatter>>>()
-            fun generateBundle(seriesLabel: String): SeriesBundle<XYSeries, LineAndPointFormatter> {
-                val generator = Random()
-                val nums = ArrayList<Number>()
-                for (j in 0 until NUM_POINTS_PER_SERIES) {
-                    nums.add(generator.nextFloat())
-                }
+        private fun randomColor() = Color.rgb(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
 
-                val formatter = LineAndPointFormatter(
-                    Color.rgb(
-                        java.lang.Double.valueOf(Math.random() * 255).toInt(),
-                        java.lang.Double.valueOf(Math.random() * 255).toInt(),
-                        java.lang.Double.valueOf(Math.random() * 255).toInt()
-                    ),
-                    Color.rgb(
-                        java.lang.Double.valueOf(Math.random() * 255).toInt(),
-                        java.lang.Double.valueOf(Math.random() * 255).toInt(),
-                        java.lang.Double.valueOf(Math.random() * 255).toInt()
-                    ),
-                    null, null
-                )
+        private fun generateBundle(seriesLabel: String): SeriesBundle<XYSeries, LineAndPointFormatter> {
+            val yVals = List<Number>(NUM_POINTS_PER_SERIES) { Random.nextFloat() }
 
+            val formatter = LineAndPointFormatter(randomColor(), randomColor(), null, null).apply {
                 // for fun, configure interpolation on the formatter:
-                formatter.interpolationParams = CatmullRomInterpolator.Params(
-                    20,
-                    CatmullRomInterpolator.Type.Centripetal
-                )
-
-                return SeriesBundle(
-                    SimpleXYSeries(
-                        nums,
-                        SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-                        seriesLabel
-                    ),
-                    formatter
-                )
+                interpolationParams = CatmullRomInterpolator.Params(20, CatmullRomInterpolator.Type.Centripetal)
             }
 
-            for (i in 0 until NUM_PLOTS) {
-                val seriesList: MutableList<SeriesBundle<XYSeries, LineAndPointFormatter>> =
-                    ArrayList(NUM_SERIES_PER_PLOT)
-
-                for (k in 0 until NUM_SERIES_PER_PLOT) {
-                    seriesList.add(generateBundle("S$k"))
-                }
-                theData.add(seriesList)
-            }
-            return theData
+            return SeriesBundle(
+                SimpleXYSeries(yVals, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, seriesLabel),
+                formatter
+            )
         }
     }
 }

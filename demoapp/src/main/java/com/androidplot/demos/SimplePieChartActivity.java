@@ -2,14 +2,11 @@
 
 package com.androidplot.demos;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.*;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -17,135 +14,45 @@ import com.androidplot.pie.PieChart;
 import com.androidplot.pie.PieRenderer;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
-import com.androidplot.util.*;
-
-import java.util.*;
+import com.androidplot.util.PixelUtils;
 
 /**
- * The simplest possible example of using AndroidPlot to plot some data.
+ * PieChart with tap-to-select segments, a donut-size seek bar and an intro sweep animation.
  */
-public class SimplePieChartActivity extends Activity
-{
+public class SimplePieChartActivity extends Activity {
 
-    public static final int SELECTED_SEGMENT_OFFSET = 50;
+    private static final int SELECTED_SEGMENT_OFFSET = 50;
 
+    private PieChart pie;
     private TextView donutSizeTextView;
     private SeekBar donutSizeSeekBar;
 
-    public PieChart pie;
-
-    private Segment s1;
-    private Segment s2;
-    private Segment s3;
-    private Segment s4;
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pie_chart);
+        pie = findViewById(R.id.mySimplePieChart);
 
-        // initialize our XYPlot reference:
-        pie = (PieChart) findViewById(R.id.mySimplePieChart);
+        EmbossMaskFilter emf = new EmbossMaskFilter(new float[]{1, 1, 1}, 0.4f, 10, 8.2f);
+        pie.addSegment(new Segment("s1", 3), segmentFormatter(R.xml.pie_segment_formatter1, emf));
+        pie.addSegment(new Segment("s2", 1), segmentFormatter(R.xml.pie_segment_formatter2, emf));
+        pie.addSegment(new Segment("s3", 7), segmentFormatter(R.xml.pie_segment_formatter3, emf));
+        pie.addSegment(new Segment("s4", 9), segmentFormatter(R.xml.pie_segment_formatter4, emf));
 
-        // enable the legend:
         pie.getLegend().setVisible(true);
-
-        final float padding = PixelUtils.dpToPix(30);
+        float padding = PixelUtils.dpToPix(30);
         pie.getPie().setPadding(padding, padding, padding, padding);
-
-        // detect segment clicks:
-        pie.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                PointF click = new PointF(motionEvent.getX(), motionEvent.getY());
-                if(pie.getPie().containsPoint(click)) {
-                    Segment segment = pie.getRenderer(PieRenderer.class).getContainingSegment(click);
-
-                    if(segment != null) {
-                        final boolean isSelected = getFormatter(segment).getOffset() != 0;
-                        deselectAll();
-                        setSelected(segment, !isSelected);
-                        pie.redraw();
-                    }
-                }
-                return false;
-            }
-
-            private SegmentFormatter getFormatter(Segment segment) {
-                return pie.getFormatter(segment, PieRenderer.class);
-            }
-
-            private void deselectAll() {
-                List<Segment> segments = pie.getRegistry().getSeriesList();
-                for(Segment segment : segments) {
-                    setSelected(segment, false);
-                }
-            }
-
-            private void setSelected(Segment segment, boolean isSelected) {
-                SegmentFormatter f = getFormatter(segment);
-                if(isSelected) {
-                    f.setOffset(SELECTED_SEGMENT_OFFSET);
-                } else {
-                    f.setOffset(0);
-                }
-            }
-        });
-
-        donutSizeSeekBar = (SeekBar) findViewById(R.id.donutSizeSeekBar);
-        donutSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {}
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                pie.getRenderer(PieRenderer.class).setDonutSize(seekBar.getProgress()/100f,
-                        PieRenderer.DonutMode.PERCENT);
-                pie.redraw();
-                updateDonutText();
-            }
-        });
-
-        donutSizeTextView = (TextView) findViewById(R.id.donutSizeTextView);
-        updateDonutText();
-
-        s1 = new Segment("s1", 3);
-        s2 = new Segment("s2", 1);
-        s3 = new Segment("s3", 7);
-        s4 = new Segment("s4", 9);
-
-        EmbossMaskFilter emf = new EmbossMaskFilter(
-                new float[]{1, 1, 1}, 0.4f, 10, 8.2f);
-
-        SegmentFormatter sf1 = new SegmentFormatter(this, R.xml.pie_segment_formatter1);
-        sf1.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
-        sf1.getFillPaint().setMaskFilter(emf);
-
-        SegmentFormatter sf2 = new SegmentFormatter(this, R.xml.pie_segment_formatter2);
-        sf2.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
-        sf2.getFillPaint().setMaskFilter(emf);
-
-        SegmentFormatter sf3 = new SegmentFormatter(this, R.xml.pie_segment_formatter3);
-        sf3.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
-        sf3.getFillPaint().setMaskFilter(emf);
-
-        SegmentFormatter sf4 = new SegmentFormatter(this, R.xml.pie_segment_formatter4);
-        sf4.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
-        sf4.getFillPaint().setMaskFilter(emf);
-
-        pie.addSegment(s1, sf1);
-        pie.addSegment(s2, sf2);
-        pie.addSegment(s3, sf3);
-        pie.addSegment(s4, sf4);
-
         pie.getBorderPaint().setColor(Color.TRANSPARENT);
         pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
+
+        // detect segment clicks:
+        pie.setOnTouchListener((v, event) -> {
+            onPieTouched(new PointF(event.getX(), event.getY()));
+            return false;
+        });
+
+        bindDonutSeekBar();
     }
 
     @Override
@@ -154,29 +61,69 @@ public class SimplePieChartActivity extends Activity
         setupIntroAnimation();
     }
 
-    protected void updateDonutText() {
+    private SegmentFormatter segmentFormatter(int xmlId, EmbossMaskFilter emf) {
+        SegmentFormatter formatter = new SegmentFormatter(this, xmlId);
+        formatter.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
+        formatter.getFillPaint().setMaskFilter(emf);
+        return formatter;
+    }
+
+    // toggles the tapped segment's offset, deselecting all others
+    private void onPieTouched(PointF point) {
+        if (!pie.getPie().containsPoint(point)) {
+            return;
+        }
+        Segment tapped = pie.getRenderer(PieRenderer.class).getContainingSegment(point);
+        if (tapped == null) {
+            return;
+        }
+        boolean wasSelected = pie.getFormatter(tapped, PieRenderer.class).getOffset() != 0;
+        for (Segment segment : pie.getRegistry().getSeriesList()) {
+            SegmentFormatter formatter = pie.getFormatter(segment, PieRenderer.class);
+            formatter.setOffset(segment == tapped && !wasSelected ? SELECTED_SEGMENT_OFFSET : 0);
+        }
+        pie.redraw();
+    }
+
+    private void bindDonutSeekBar() {
+        donutSizeTextView = findViewById(R.id.donutSizeTextView);
+        donutSizeSeekBar = findViewById(R.id.donutSizeSeekBar);
+        donutSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                pie.getRenderer(PieRenderer.class).setDonutSize(seekBar.getProgress() / 100f,
+                        PieRenderer.DonutMode.PERCENT);
+                pie.redraw();
+                updateDonutText();
+            }
+        });
+        updateDonutText();
+    }
+
+    private void updateDonutText() {
         donutSizeTextView.setText(donutSizeSeekBar.getProgress() + "%");
     }
 
-    protected void setupIntroAnimation() {
-
-        final PieRenderer renderer = pie.getRenderer(PieRenderer.class);
-        // start with a zero degrees pie:
-
+    // PieRenderer.setExtentDegs drives the animation: sweep the pie open from 0 to 360 degrees
+    private void setupIntroAnimation() {
+        PieRenderer renderer = pie.getRenderer(PieRenderer.class);
         renderer.setExtentDegs(0);
+
         // animate a scale value from a starting val of 0 to a final value of 1:
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
 
         // use an animation pattern that begins and ends slowly:
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
 
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float scale = valueAnimator.getAnimatedFraction();
-                renderer.setExtentDegs(360 * scale);
-                pie.redraw();
-            }
+        animator.addUpdateListener(a -> {
+            renderer.setExtentDegs(360 * a.getAnimatedFraction());
+            pie.redraw();
         });
 
         // the animation will run for 1.5 seconds:

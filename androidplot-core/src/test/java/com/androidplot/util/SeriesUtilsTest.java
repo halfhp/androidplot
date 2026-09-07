@@ -294,4 +294,15 @@ public class SeriesUtilsTest {
         assertEquals(0, result.getMin().intValue());
         assertEquals(4, result.getMax().intValue());
     }
+
+    @Test
+    public void iBounds_emptySeries_returnsNonNegativeBounds() {
+        SimpleXYSeries series = new SimpleXYSeries("empty");
+        series.setXOrder(OrderedXYSeries.XOrder.ASCENDING);
+
+        // previously yielded [-1, 0], causing series.getY(-1) to be invoked by renderers:
+        Region result = SeriesUtils.iBounds(series, new RectRegion(0, 1, 0, 1));
+        assertEquals(0, result.getMin().intValue());
+        assertEquals(0, result.getMax().intValue());
+    }
 }

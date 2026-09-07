@@ -52,13 +52,6 @@
         android:orientation="horizontal">
 
         <CheckBox
-            android:id="@+id/r1CheckBox"
-            android:text="R1"
-            android:checked="true"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"/>
-
-        <CheckBox
             android:id="@+id/r2CheckBox"
             android:text="R2"
             android:checked="true"
@@ -75,13 +68,6 @@
         <CheckBox
             android:id="@+id/r4CheckBox"
             android:text="R4"
-            android:checked="true"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"/>
-
-        <CheckBox
-            android:id="@+id/r5CheckBox"
-            android:text="R5"
             android:checked="true"
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"/>

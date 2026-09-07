@@ -98,7 +98,9 @@ android {
 }
 
 group = 'com.androidplot'
-version = rootProject.ext.theVersionName
+// Pass -Psnapshot to publish a <version>-SNAPSHOT build to the Central snapshots
+// repository; without it the exact version is published as a release.
+version = rootProject.ext.theVersionName + (project.hasProperty('snapshot') ? '-SNAPSHOT' : '')
 
 def siteUrl = 'http://androidplot.com'
 def gitUrl = 'https://github.com/halfhp/androidplot.git'
@@ -137,11 +139,14 @@ afterEvaluate {
     publishing {
         repositories {
             maven {
-                // Central Publisher Portal, via its OSSRH-compatible staging API.
-                // Uploads land as a pending deployment; the release workflow then
-                // calls the Portal's manual API to publish them.
+                // Central Publisher Portal. Releases go via its OSSRH-compatible
+                // staging API and land as a pending deployment that the release
+                // workflow then asks the Portal to publish. Snapshots go straight
+                // to the Central snapshots repository.
                 name = "MavenCentral"
-                url = "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
+                url = version.endsWith('-SNAPSHOT')
+                        ? "https://central.sonatype.com/repository/maven-snapshots/"
+                        : "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
                 credentials {
                     username = System.getenv("MAVEN_CENTRAL_USERNAME")
                     password = System.getenv("MAVEN_CENTRAL_PASSWORD")
@@ -156,7 +161,7 @@ afterEvaluate {
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.androidplot'
                 artifactId = 'androidplot-core'
-                version = rootProject.ext.theVersionName
+                version = project.version
 
                 pom {
                     packaging = 'aar'

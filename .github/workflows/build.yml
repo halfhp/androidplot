@@ -97,3 +97,14 @@ jobs:
           name: Demoapp APK
           path: demoapp/build/outputs/apk/release/*.apk
           retention-days: 30
+
+      # Publishes <version>-SNAPSHOT of the core library so unreleased changes
+      # can be consumed by Maven coordinates from the Central snapshots repo.
+      - name: Publish Snapshot to Maven Central
+        if: github.ref_name == 'master'
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
+        run: ./gradlew :androidplot-core:publish -Psnapshot

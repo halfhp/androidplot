@@ -18,6 +18,19 @@ dependencies {
 }
 ```
 
+To try unreleased changes, every push to master publishes a snapshot build. Add the Central
+snapshots repository and depend on the `-SNAPSHOT` version of the next release:
+
+```groovy
+repositories {
+    maven { url = "https://central.sonatype.com/repository/maven-snapshots/" }
+}
+
+dependencies {
+    implementation "com.androidplot:androidplot-core:1.5.11-SNAPSHOT"
+}
+```
+
 *NOTE: As of version 1.5.8 Androidplot has migrated over from the Android Support Libraries to androidx.
 If you have a very old project and experience issues, may need to stay on version 1.5.7*
 

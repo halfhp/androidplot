@@ -64,7 +64,7 @@ This example uses a default style to decorate the plot.  The full list of XML st
 [available here](attrs.md).  While new attributes are added regularly,
 not all configurable properties are yet available.  
 
-If something you need is missing, use [Fig Syntax](https://github.com/halfhp/fig)
+If something you need is missing, use the [XML configuration syntax](xml_configuration.md)
 directly within your Plot's XML, prefixing each property with "androidPlot".  Example:
 
 ```xml

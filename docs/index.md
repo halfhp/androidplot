@@ -40,7 +40,8 @@ Source code examples of the various plot types.
 * [f(x) Plot](../demoapp/src/main/java/com/androidplot/demos/FXPlotExampleActivity.java)
 
 # XML Attributes
-A complete list of XML attributes is [available here](attrs.md).
+A complete list of XML attributes is [available here](attrs.md).  Formatters and plots can also be
+styled through property paths, described in [XML Configuration](xml_configuration.md).
 # Javadoc
 Javadocs for versions through 1.5.7 are [available here](https://javadoc.io/doc/com.androidplot/androidplot-core).  Due to a build issue
 producing Javadocs for the latest releases has been paused.  There have been very

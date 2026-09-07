@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.androidplot.Plot;
 import com.androidplot.ui.SeriesBundle;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.CatmullRomInterpolator;
@@ -30,56 +29,19 @@ public class ListViewActivity extends Activity {
     private static final int NUM_PLOTS = 10;
     private static final int NUM_POINTS_PER_SERIES = 10;
     private static final int NUM_SERIES_PER_PLOT = 5;
-    private ListView lv;
+    private static final Random RANDOM = new Random();
 
     private List<List<SeriesBundle<XYSeries, LineAndPointFormatter>>> seriesData = new ArrayList<>(NUM_PLOTS);
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listview_example);
+
+        // formatters below are built before any Plot view exists, so init PixelUtils by hand
         PixelUtils.init(this);
         generateData();
-        lv = (ListView) findViewById(R.id.listView1);
-        lv.setAdapter(new MyViewAdapter(getApplicationContext(), R.layout.listview_example_item, null));
-    }
-
-    protected void generateData() {
-        Random generator = new Random();
-        for(int i = 0; i < NUM_PLOTS; i++) {
-            List<SeriesBundle<XYSeries, LineAndPointFormatter>> seriesList
-                    = new ArrayList<>(NUM_SERIES_PER_PLOT);
-
-            for (int k = 0; k < NUM_SERIES_PER_PLOT; k++) {
-                ArrayList<Number> nums = new ArrayList<>();
-                for (int j = 0; j < NUM_POINTS_PER_SERIES; j++) {
-                    nums.add(generator.nextFloat());
-                }
-
-                double rl = Math.random();
-                double gl = Math.random();
-                double bl = Math.random();
-
-                double rp = Math.random();
-                double gp = Math.random();
-                double bp = Math.random();
-
-                LineAndPointFormatter lpf = new LineAndPointFormatter(
-                        Color.rgb(Double.valueOf(rl * 255).intValue(),
-                                Double.valueOf(gl * 255).intValue(), Double.valueOf(bl * 255).intValue()),
-                        Color.rgb(Double.valueOf(rp * 255).intValue(),
-                                Double.valueOf(gp * 255).intValue(), Double.valueOf(bp * 255).intValue()),
-                        null, null);
-
-                // for fun, configure interpolation on the formatter:
-                lpf.setInterpolationParams(
-                        new CatmullRomInterpolator.Params(20, CatmullRomInterpolator.Type.Centripetal));
-
-                seriesList.add(new SeriesBundle<XYSeries, LineAndPointFormatter>(
-                        new SimpleXYSeries(nums, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "S" + k),
-                        lpf));
-            }
-            seriesData.add(seriesList);
-        }
+        ListView lv = findViewById(R.id.listView1);
+        lv.setAdapter(new MyViewAdapter(this, R.layout.listview_example_item, null));
     }
 
     class MyViewAdapter extends ArrayAdapter<View> {
@@ -92,17 +54,16 @@ public class ListViewActivity extends Activity {
             return NUM_PLOTS;
         }
 
+        // recycling: clear the plot, re-add this row's series, redraw
         @NonNull
         @Override
         public View getView(int pos, View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater inf = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
             View v = convertView;
             if (v == null) {
-                v = inf.inflate(R.layout.listview_example_item, parent, false);
+                v = LayoutInflater.from(getContext()).inflate(R.layout.listview_example_item, parent, false);
             }
 
-            Plot p = (XYPlot) v.findViewById(R.id.xyplot);
+            XYPlot p = v.findViewById(R.id.xyplot);
             p.clear();
             p.getTitle().setText("plot" + pos);
 
@@ -113,5 +74,35 @@ public class ListViewActivity extends Activity {
             p.redraw();
             return v;
         }
+    }
+
+    private void generateData() {
+        for(int i = 0; i < NUM_PLOTS; i++) {
+            List<SeriesBundle<XYSeries, LineAndPointFormatter>> seriesList
+                    = new ArrayList<>(NUM_SERIES_PER_PLOT);
+
+            for (int k = 0; k < NUM_SERIES_PER_PLOT; k++) {
+                ArrayList<Number> nums = new ArrayList<>();
+                for (int j = 0; j < NUM_POINTS_PER_SERIES; j++) {
+                    nums.add(RANDOM.nextFloat());
+                }
+
+                LineAndPointFormatter lpf = new LineAndPointFormatter(
+                        randomColor(), randomColor(), null, null);
+
+                // for fun, configure interpolation on the formatter:
+                lpf.setInterpolationParams(
+                        new CatmullRomInterpolator.Params(20, CatmullRomInterpolator.Type.Centripetal));
+
+                seriesList.add(new SeriesBundle<>(
+                        new SimpleXYSeries(nums, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "S" + k),
+                        lpf));
+            }
+            seriesData.add(seriesList);
+        }
+    }
+
+    private static int randomColor() {
+        return Color.rgb(RANDOM.nextInt(256), RANDOM.nextInt(256), RANDOM.nextInt(256));
     }
 }

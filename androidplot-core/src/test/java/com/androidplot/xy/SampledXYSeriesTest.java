@@ -9,6 +9,8 @@ import org.junit.*;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -157,5 +159,112 @@ public class SampledXYSeriesTest extends AndroidplotTest {
         assertEquals(0.0, plot.getBounds().getMinX().doubleValue(), 0);
         assertEquals(149.0, plot.getBounds().getMaxX().doubleValue(), 0);
         assertEquals(150, series.size());
+    }
+
+    @Test
+    public void setZoomFactor_beyondMax_usesSmallestZoomLevel() {
+        XYSeries rawData = TestUtils.generateXYSeries("my series", 2000);
+        SampledXYSeries sampled = new SampledXYSeries(rawData, 2, 100);
+        assertEquals(16d, sampled.getMaxZoomFactor(), 0.0001);
+
+        sampled.setZoomFactor(1000);
+        assertEquals(125, sampled.size());
+
+        // back to raw data at 1x or less:
+        sampled.setZoomFactor(1);
+        assertEquals(2000, sampled.size());
+        sampled.setZoomFactor(0.5);
+        assertEquals(2000, sampled.size());
+    }
+
+    @Test
+    public void accessors_roundTrip() {
+        XYSeries rawData = TestUtils.generateXYSeries("my series", 200);
+        SampledXYSeries sampled = new SampledXYSeries(rawData,
+                OrderedXYSeries.XOrder.DESCENDING, 2, 50);
+
+        assertEquals(OrderedXYSeries.XOrder.DESCENDING, sampled.getXOrder());
+        assertEquals(2f, sampled.getRatio(), 0);
+        assertEquals(50, sampled.getThreshold());
+        assertEquals("my series", sampled.getTitle());
+        assertNotNull(sampled.getBounds());
+        assertSame(sampled.getBounds(), sampled.minMax());
+
+        sampled.setThreshold(20);
+        assertEquals(20, sampled.getThreshold());
+        sampled.setRatio(3);
+        assertEquals(3f, sampled.getRatio(), 0);
+
+        RectRegion bounds = new RectRegion(0, 1, 0, 1);
+        sampled.setBounds(bounds);
+        assertSame(bounds, sampled.getBounds());
+    }
+
+    @Test
+    public void setThreshold_notBelowRawSize_throws() {
+        XYSeries rawData = TestUtils.generateXYSeries("my series", 200);
+        SampledXYSeries sampled = new SampledXYSeries(rawData, 2, 50);
+        try {
+            sampled.setThreshold(200);
+            fail("expected IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
+        assertEquals(50, sampled.getThreshold());
+    }
+
+    @Test
+    public void setRatio_notGreaterThanOne_throws() {
+        XYSeries rawData = TestUtils.generateXYSeries("my series", 200);
+        SampledXYSeries sampled = new SampledXYSeries(rawData, 2, 50);
+        for (float ratio : new float[] {1, 0.5f, 0}) {
+            try {
+                sampled.setRatio(ratio);
+                fail("expected IllegalArgumentException for ratio " + ratio);
+            } catch (IllegalArgumentException e) {
+                // expected
+            }
+        }
+        assertEquals(2f, sampled.getRatio(), 0);
+    }
+
+    @Test
+    public void setAlgorithm_resamplesWithTheNewSampler() {
+        XYSeries rawData = TestUtils.generateXYSeries("my series", 200);
+        SampledXYSeries sampled = new SampledXYSeries(rawData, 2, 50);
+        final int[] runs = {0};
+        Sampler sampler = new Sampler() {
+            @Override
+            public RectRegion run(XYSeries input, EditableXYSeries output) {
+                synchronized (runs) {
+                    runs[0]++;
+                }
+                return new RectRegion(0, 1, 0, 1);
+            }
+        };
+
+        sampled.setAlgorithm(sampler);
+
+        assertSame(sampler, sampled.getAlgorithm());
+        // one run per sampled zoom level: 200 / 2 = 100 > 50, then 100 / 2 = 50 is not > 50
+        assertEquals(sampled.getZoomLevels().size(), runs[0]);
+        assertEquals(1, runs[0]);
+    }
+
+    @Test
+    public void resample_samplerFailure_isRethrown() {
+        XYSeries rawData = TestUtils.generateXYSeries("my series", 200);
+        SampledXYSeries sampled = new SampledXYSeries(rawData, 2, 50);
+        try {
+            sampled.setAlgorithm(new Sampler() {
+                @Override
+                public RectRegion run(XYSeries input, EditableXYSeries output) {
+                    throw new IllegalStateException("boom");
+                }
+            });
+            fail("expected RuntimeException");
+        } catch (RuntimeException e) {
+            assertEquals("boom", e.getCause().getMessage());
+        }
     }
 }

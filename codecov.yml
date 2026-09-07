@@ -1,0 +1,20 @@
+# Coverage floor: a PR that drops core coverage below the target shows as failing on Codecov.
+# Core line coverage was 95.7% when this was set.
+coverage:
+  status:
+    project:
+      default:
+        target: 93%
+        threshold: 0.5%   # tolerate small dips from refactors
+    patch:
+      default:
+        target: 70%       # new code should arrive mostly tested
+        informational: true
+ignore:
+  - "demoapp/**"          # the demo app is exercised by tests but is not the product
+parsers:
+  jacoco:
+    # count a line whose branches were only partly exercised as covered, as JaCoCo's own
+    # line coverage does; otherwise Codecov reports ~4 points below the JaCoCo figure the
+    # target above was calibrated against.
+    partials_as_hits: true

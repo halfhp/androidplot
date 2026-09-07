@@ -3,6 +3,15 @@ For details on what to expect in general when updating to a new version of Andro
 [versioning doc](versioning.md).
 
 # 1.6.0
+* Fix `Redrawer` occasionally never exiting (or never resuming) when `finish()`, `pause()` or
+  `start()` raced with its thread: the flag was set before the thread started, or a notify slipped
+  in between the thread checking its state and waiting.
+* `XYPlot.seriesToScreenY(Number)` previously returned a y pixel flipped relative to
+  `seriesToScreen(XYCoords)` and `screenToSeriesY` (the largest series value landed on the bottom
+  edge of the grid).  It now agrees with them, so code that compensated for the inversion should
+  drop the compensation.
+* Removed three unused, undocumented public classes: `SimpleLineLabelFormatter`, `RenderBundle` and
+  `APTrace`.  None were referenced by the library, the demo app or the docs.
 * (#96) Background-mode plots are no longer forced onto a software layer, removing a full-size CPU
   copy of the view from every frame.  `Redrawer` now tolerates plots that have been garbage
   collected instead of crashing, and exits on its own once none remain.

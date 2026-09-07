@@ -91,8 +91,19 @@ public class Redrawer implements Runnable {
     @Override
     public void run() {
         try {
-        while(keepAlive) {
-            if(keepRunning) {
+            while (true) {
+                // the flags are only ever changed while holding this monitor (pause/start/
+                // finish are synchronized), so checking them inside it before waiting means a
+                // notify() can never slip in between the check and the wait() and be lost.
+                synchronized (this) {
+                    while (keepAlive && !keepRunning) {
+                        wait();
+                    }
+                    if (!keepAlive) {
+                        break;
+                    }
+                }
+
                 // redraw plot(s) and sleep in an interruptible state for a
                 // max of sleepTime ms.
                 // TODO: record start and end timestamps and
@@ -105,15 +116,11 @@ public class Redrawer implements Runnable {
                     break;
                 }
                 synchronized (this) {
-                    wait(sleepTime);
-                }
-            } else {
-                // sleep until notified
-                synchronized (this) {
-                    wait();
+                    if (keepAlive && keepRunning) {
+                        wait(sleepTime);
+                    }
                 }
             }
-        }
         } catch (InterruptedException ignored) {
 
         } finally {

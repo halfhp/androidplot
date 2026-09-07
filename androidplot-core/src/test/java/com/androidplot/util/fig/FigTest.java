@@ -2,6 +2,7 @@
 package com.androidplot.util.fig;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 
 import com.androidplot.test.AndroidplotTest;
 
@@ -81,6 +82,24 @@ public class FigTest extends AndroidplotTest {
         }
     }
 
+    /**
+     * Has the same overloaded setter as {@link android.graphics.Paint#setColor(long)} /
+     * {@link android.graphics.Paint#setColor(int)} on API 29+; only the int overload can be
+     * inflated from XML.
+     */
+    static class Overloaded {
+        private int intColor;
+        private long longColor;
+
+        public void setColor(long color) {
+            this.longColor = color;
+        }
+
+        public void setColor(int color) {
+            this.intColor = color;
+        }
+    }
+
     @Test
     public void testGetFieldAt() throws Exception {
         C c = new C();
@@ -153,6 +172,29 @@ public class FigTest extends AndroidplotTest {
         HashMap<String, String> params = new HashMap<>();
         params.put("d", "@color/does_not_exist");
         Fig.configure(RuntimeEnvironment.application, a, params);
+    }
+
+    /**
+     * An overloaded setter must resolve to the overload Fig can inflate, whatever order
+     * reflection happens to list the overloads in.
+     */
+    @Test
+    public void testConfigure_prefersInflatableOverload() throws Exception {
+        Overloaded o = new Overloaded();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("color", "#FF00AA00");
+        Fig.configure(RuntimeEnvironment.application, o, params);
+        assertEquals(0xFF00AA00, o.intColor);
+        assertEquals(0L, o.longColor);
+    }
+
+    @Test
+    public void testConfigure_paintColor() throws Exception {
+        Paint paint = new Paint();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("color", "#FF00AA00");
+        Fig.configure(RuntimeEnvironment.application, paint, params);
+        assertEquals(0xFF00AA00, paint.getColor());
     }
 
     private File getFileFromPath(String fileName) {

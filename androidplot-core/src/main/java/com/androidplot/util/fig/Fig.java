@@ -148,8 +148,50 @@ public abstract class Fig {
     }
 
 
+    /**
+     * Finds the setter for fieldId.  When the name is overloaded, an overload whose parameters
+     * can all be inflated from XML (see {@link #inflateParams}) is preferred: eg. since API 29
+     * {@link android.graphics.Paint} has both setColor(int) and setColor(long), and the order
+     * in which reflection lists them is unspecified, so picking the first match by name alone
+     * would make an attribute like backgroundPaint.color fail to inflate on some runtimes.
+     */
     private static Method getSetter(Class clazz, final String fieldId) throws NoSuchMethodException {
-        return getMethodByName(clazz, SETTER_PREFIX + fieldId);
+        final String methodName = SETTER_PREFIX + fieldId;
+        Method fallback = null;
+        for (Method method : clazz.getMethods()) {
+            if (method.getName().equalsIgnoreCase(methodName)) {
+                if (isInflatable(method.getParameterTypes())) {
+                    return method;
+                } else if (fallback == null) {
+                    fallback = method;
+                }
+            }
+        }
+        if (fallback != null) {
+            return fallback;
+        }
+        throw new NoSuchMethodException("No such public method (case insensitive): " +
+                methodName + " in " + clazz);
+    }
+
+    private static boolean isInflatable(Class[] params) {
+        for (Class param : params) {
+            if (!isInflatable(param)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @return true if {@link #inflateParams} can produce a value of the given type.
+     */
+    private static boolean isInflatable(Class param) {
+        return Enum.class.isAssignableFrom(param)
+                || param.equals(Float.TYPE) || param == Float.class
+                || param.equals(Integer.TYPE) || param == Integer.class
+                || param.equals(Boolean.TYPE) || param == Boolean.class
+                || param.equals(String.class);
     }
 
     private static Method getGetter(Class clazz, final String fieldId) throws NoSuchMethodException {

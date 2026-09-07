@@ -20,6 +20,10 @@ If you enjoy the lib, please [rate us on codix.io](https://codix.io/gh/repo/half
 * Bubble Charts
 * Dynamic plots
 * Pan & Zoom
+* Background-thread rendering
+* Large datasets (automatic downsampling)
+* Value markers & shaded regions
+* XML styling & custom renderers
 
 # Getting Started
 

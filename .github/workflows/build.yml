@@ -1,9 +1,21 @@
 name: build androidplot
 
+# Documentation-only changes cannot affect the build, so they don't run it (and a docs-only
+# merge to master publishes no snapshot or beta). Everything else runs the full workflow.
 on:
   push:
     branches: [master]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/ISSUE_TEMPLATE.md'
+      - '_config.yml'
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/ISSUE_TEMPLATE.md'
+      - '_config.yml'
 
 permissions:
   contents: read

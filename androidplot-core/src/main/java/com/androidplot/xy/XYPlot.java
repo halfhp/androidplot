@@ -314,6 +314,22 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
                 R.styleable.xy_XYPlot_legendVerticalPositioning, R.styleable.xy_XYPlot_legendVerticalPosition,
                 R.styleable.xy_XYPlot_legendAnchor, R.styleable.xy_XYPlot_legendVisible);
 
+        // domainTitle size & position
+        AttrUtils.configureWidget(attrs, getDomainTitle(),
+                R.styleable.xy_XYPlot_domainTitleHeightMode, R.styleable.xy_XYPlot_domainTitleHeight,
+                R.styleable.xy_XYPlot_domainTitleWidthMode, R.styleable.xy_XYPlot_domainTitleWidth,
+                R.styleable.xy_XYPlot_domainTitleHorizontalPositioning, R.styleable.xy_XYPlot_domainTitleHorizontalPosition,
+                R.styleable.xy_XYPlot_domainTitleVerticalPositioning, R.styleable.xy_XYPlot_domainTitleVerticalPosition,
+                R.styleable.xy_XYPlot_domainTitleAnchor, R.styleable.xy_XYPlot_domainTitleVisible);
+
+        // rangeTitle size & position
+        AttrUtils.configureWidget(attrs, getRangeTitle(),
+                R.styleable.xy_XYPlot_rangeTitleHeightMode, R.styleable.xy_XYPlot_rangeTitleHeight,
+                R.styleable.xy_XYPlot_rangeTitleWidthMode, R.styleable.xy_XYPlot_rangeTitleWidth,
+                R.styleable.xy_XYPlot_rangeTitleHorizontalPositioning, R.styleable.xy_XYPlot_rangeTitleHorizontalPosition,
+                R.styleable.xy_XYPlot_rangeTitleVerticalPositioning, R.styleable.xy_XYPlot_rangeTitleVerticalPosition,
+                R.styleable.xy_XYPlot_rangeTitleAnchor, R.styleable.xy_XYPlot_rangeTitleVisible);
+
         getGraph().processAttrs(attrs);
     }
 

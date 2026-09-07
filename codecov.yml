@@ -1,0 +1,13 @@
+# Coverage floor: a PR that drops core coverage below the target shows as failing on Codecov.
+coverage:
+  status:
+    project:
+      default:
+        target: 90%
+        threshold: 0.5%   # tolerate small dips from refactors
+    patch:
+      default:
+        target: 70%       # new code should arrive mostly tested
+        informational: true
+ignore:
+  - "demoapp/**"          # the demo app is exercised by tests but is not the product

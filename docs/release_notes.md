@@ -3,6 +3,8 @@ For details on what to expect in general when updating to a new version of Andro
 [versioning doc](versioning.md).
 
 # 1.6.0
+* Removed three unused, undocumented public classes: `SimpleLineLabelFormatter`, `RenderBundle` and
+  `APTrace`.  None were referenced by the library, the demo app or the docs.
 * (#96) Background-mode plots are no longer forced onto a software layer, removing a full-size CPU
   copy of the view from every frame.  `Redrawer` now tolerates plots that have been garbage
   collected instead of crashing, and exits on its own once none remain.

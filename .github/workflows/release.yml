@@ -6,6 +6,15 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      publish_maven_central:
+        description: Publish the core library to Maven Central
+        type: boolean
+        default: true
+      publish_play:
+        description: Publish the demoapp to Google Play
+        type: boolean
+        default: true
 
 permissions:
   contents: write # needed to attach artifacts to the GitHub release
@@ -50,7 +59,7 @@ jobs:
           KEY_PASSWORD: ${{ secrets.DEMOAPP_KEY_PASSWORD }}
         run: |
           printf '%s' "$ENCODED" | base64 -d > "${GITHUB_WORKSPACE}/demoapp/keystore.jks"
-          ./gradlew :demoapp:assembleRelease :demoapp:bundleRelease
+          ./gradlew :demoapp:assembleRelease
 
       - name: Attach Artifacts to GitHub Release
         if: github.ref_type == 'tag'
@@ -65,6 +74,7 @@ jobs:
 
       # TODO: OSSRH was decommissioned; this must move to the Central Publisher Portal.
       - name: Publish to Maven Central
+        if: github.event_name != 'workflow_dispatch' || inputs.publish_maven_central
         env:
           OSSRH_ACTOR: ${{ secrets.OSSRH_ACTOR }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
@@ -72,16 +82,10 @@ jobs:
           SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
         run: ./gradlew publish
 
-      # Requires a PLAY_PUBLISHER_JSON secret containing the Play Console
-      # service account credentials. Skipped until that secret is configured.
-      - name: Check for Play Publisher Credentials
-        id: play
-        env:
-          PLAY_JSON: ${{ secrets.PLAY_PUBLISHER_JSON }}
-        run: echo "available=${{ env.PLAY_JSON != '' }}" >> "$GITHUB_OUTPUT"
-
+      # Uploads the APK rather than an app bundle: the demoapp has only ever
+      # shipped APKs and is not enrolled in Play App Signing, which bundles require.
       - name: Publish Demoapp to Google Play
-        if: steps.play.outputs.available == 'true'
+        if: github.event_name != 'workflow_dispatch' || inputs.publish_play
         env:
           KEYSTORE: keystore.jks
           KEY_ALIAS: Key0
@@ -91,4 +95,4 @@ jobs:
           PLAY_JSON: ${{ secrets.PLAY_PUBLISHER_JSON }}
         run: |
           printf '%s' "$PLAY_JSON" > "${GITHUB_WORKSPACE}/demoapp/publisher.json"
-          ./gradlew :demoapp:publishReleaseBundle
+          ./gradlew :demoapp:publishReleaseApk

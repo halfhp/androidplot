@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Fig configuration used by BarFormatterTest -->
+<config
+    fillPaint.color="#FF00AA00"
+    borderPaint.color="#FF112233"
+    marginTop="1px"
+    marginBottom="2px"
+    marginLeft="3px"
+    marginRight="4px"/>

@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class RegionTest {
 
@@ -81,7 +82,65 @@ public class RegionTest {
 
     @Test
     public void testContains() throws Exception {
+        Region region = new Region(1, 10);
+        assertTrue(region.contains(1));
+        assertTrue(region.contains(5.5));
+        assertTrue(region.contains(10));
+        assertFalse(region.contains(0.999));
+        assertFalse(region.contains(10.001));
+    }
 
+    @Test
+    public void setMinMax_copiesBothBoundsFromTheOtherRegion() {
+        Region region = new Region(0, 1);
+        region.setMinMax(new Region(-5, 7));
+        assertEquals(-5.0, region.getMin().doubleValue(), 0);
+        assertEquals(7.0, region.getMax().doubleValue(), 0);
+        assertEquals(12.0, region.length().doubleValue(), 0);
+    }
+
+    @Test
+    public void measure_returnsDistanceOrNull() {
+        assertEquals(7.0, Region.measure(3, 10).doubleValue(), 0);
+        assertEquals(7.0, Region.measure(10, 3).doubleValue(), 0);
+        assertNull(Region.measure(null, 3));
+        assertNull(Region.measure(3, null));
+    }
+
+    @Test
+    public void withDefaults_requiresFullyDefinedDefaults() {
+        try {
+            Region.withDefaults(null);
+            fail("expected IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            Region.withDefaults(new Region(null, 5));
+            fail("expected IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
+
+        Region region = Region.withDefaults(new Region(1, 2));
+        assertFalse(region.isDefined());
+        assertEquals(1.0, region.getMin().doubleValue(), 0);
+        assertEquals(2.0, region.getMax().doubleValue(), 0);
+    }
+
+    @Test
+    public void toString_describesBoundsAndDefaults() {
+        Region region = new Region(1, 2);
+        String s = region.toString();
+        assertTrue(s, s.startsWith("Region{"));
+        assertTrue(s, s.contains("min=1"));
+        assertTrue(s, s.contains("max=2"));
+        assertTrue(s, s.contains("defaults=this"));
+
+        Region withDefaults = Region.withDefaults(region);
+        String d = withDefaults.toString();
+        assertTrue(d, d.contains("min=null"));
+        assertTrue(d, d.contains("defaults=Region{"));
     }
 
     @Test

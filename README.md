@@ -1,11 +1,9 @@
-# ![image](docs/images/aplogo_small.png) Androidplot [![AndroidPlot](https://www.appbrain.com/stats/libraries/shield/androidplot.svg)](https://www.appbrain.com/stats/libraries/details/androidplot/androidplot) [![Codix](http://codix.io/gh/badge/halfhp/androidplot)](http://codix.io/gh/repo/halfhp/androidplot) [![codecov](https://codecov.io/gh/halfhp/androidplot/branch/master/graph/badge.svg)](https://codecov.io/gh/halfhp/androidplot) [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/androidplot.svg?style=social&label=Follow%20Us)](https://twitter.com/androidplot)
+# ![image](docs/images/aplogo_small.png) Androidplot [![Maven Central](https://img.shields.io/maven-central/v/com.androidplot/androidplot-core.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.androidplot/androidplot-core) [![AndroidPlot](https://www.appbrain.com/stats/libraries/shield/androidplot.svg)](https://www.appbrain.com/stats/libraries/details/androidplot/androidplot) [![codecov](https://codecov.io/gh/halfhp/androidplot/branch/master/graph/badge.svg)](https://codecov.io/gh/halfhp/androidplot) [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/androidplot.svg?style=social&label=Follow%20Us)](https://twitter.com/androidplot)
 
-A library for creating dynamic and static charts in Android apps. 
+A library for creating dynamic and static charts in Android apps.
 
-Androidplot is compatible with all versions of Android from 1.6 onward, works equally with Kotlin and Java codebases
-and is compatible with Jetpack compose.
-
-If you enjoy the lib, please [rate us on codix.io](http://codix.io/gh/repo/halfhp/androidplot)!
+Androidplot runs on Android 2.0 (API 5) and up, works equally well from Kotlin and Java, and can be
+used from Jetpack Compose via `AndroidView`.
 
 <img src="docs/images/screens/fx_vert.png" width="115"> <img src="docs/images/screens/candlestick_vert.png" width="115"> <img src="docs/images/screens/pie_vert.png" width="115"> <img src="docs/images/screens/scatter_vert.png" width="115"> <img src="docs/images/screens/step_vert.png" width="115"> <img src="docs/images/screens/bubble_vert.png" width="115"> <img src="docs/images/screens/bar_vert.png" width="115">
 
@@ -21,19 +19,33 @@ If you enjoy the lib, please [rate us on codix.io](http://codix.io/gh/repo/halfh
 * Dynamic plots
 * Pan & Zoom
 
-# Usage
+# Getting Started
 
-* **[Quickstart](docs/quickstart.md)** :star: 
-* [Full Documentation](docs/index.md)
+```groovy
+dependencies {
+    implementation "com.androidplot:androidplot-core:1.5.11"
+}
+```
+
+Then follow the **[Quickstart](docs/quickstart.md)** :star: to get your first plot on screen, or dive into
+the [full documentation](docs/index.md).  Every push to master also publishes a
+[snapshot build](docs/quickstart.md#add-the-dependency) if you want to try unreleased changes.
+
+# Demo App
+
+The demo app showcases every plot type and feature, and its source is the best reference for how
+things fit together:
+
+* [Install it from Google Play](https://play.google.com/store/apps/details?id=com.androidplot.demos)
+* [Browse the source](demoapp/src/main/java/com/androidplot/demos)
 
 # Links
 
 * [Website](http://androidplot.com)
-* [Github Repo](https://github.com/halfhp/androidplot)
-* [Bitbucket Repo](https://bitbucket.org/androidplot/androidplot)
-* [Demo App (Google Play Store)](https://play.google.com/store/apps/details?id=com.androidplot.demos&hl=en)
-* [Demo App Soure Code](https://bitbucket.org/androidplot/androidplot/src/1538c5dfa56aed0d2cfdcbc7cdc6173e605543cd/demoapp/?at=master)
-* [Bugs](https://github.com/halfhp/androidplot/issues) :ant: 
+* :movie_camera: [Watch Androidplot get a cavity check at Google I/O 2018](https://www.youtube.com/watch?v=x9T5EYE-QWQ),
+  where it stars in *Effective ProGuard keep rules for smaller applications*
+* [Bugs](https://github.com/halfhp/androidplot/issues) :ant:
+* [Release Notes](docs/release_notes.md)
 * [Contributing Source Code](docs/contributing.md)
 
 # Help

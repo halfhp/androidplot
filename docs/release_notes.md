@@ -48,6 +48,22 @@ For details on what to expect in general when updating to a new version of Andro
   `IndexOutOfBoundsException`) and `moveAbove(...)` silently moving it to the bottom when the
   reference element is not in the list; both now throw `IllegalArgumentException` and leave the
   list unchanged.
+* Fix `PanZoom` clamping a horizontal pan to the range (y) outer limits when only `minY`/`maxY`
+  outer limits are set, which snapped the data away on the first drag.
+* Fix `PanZoom` pan and zoom losing precision on large-magnitude axes such as epoch milliseconds;
+  small drags did not move the window and zoom quantized.  The value-space math is now done in
+  double.  `PanZoom.calculateZoom(RectF, float, boolean)` is deprecated in favor of a `RectRegion`
+  overload.
+* Fix `PieRenderer.setDonutSize(0, DonutMode.PIXELS)` making the pie invisible; a donut size of 0
+  pixels now means no hole.
+* Fix pie segments with a zero value drawing their label on top of the neighbouring segment.
+* Fix `Plot.removeSeries(series, rendererClass)` returning false when a series that is not a
+  `PlotListener` was removed, and unregistering a `PlotListener` series (ex. `SimpleXYSeries`,
+  which relies on it for draw-time locking) while the series was still registered with another
+  renderer.
+* Fix `Plot.clear()` and `SeriesRegistry.add()`/`clear()` mutating the series registry without
+  synchronizing against the render thread, which could throw a `ConcurrentModificationException`
+  mid-render.
 
 **Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
 * The plot view is now composited with hardware acceleration when the app has it enabled.  The

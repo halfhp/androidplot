@@ -10,10 +10,15 @@ import android.view.View;
 import com.androidplot.test.*;
 import com.androidplot.ui.*;
 import com.androidplot.util.fig.*;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.LineAndPointRenderer;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -152,6 +157,71 @@ public class PlotTest extends AndroidplotTest {
         plot.removeSeries(m3);
     }
 
+
+    @Test
+    public void removeSeries_byRenderer_returnsWhetherAnythingWasRemoved() {
+        XYPlot plot = new XYPlot(getContext(), "XYPlot");
+
+        // a plain series that is not a PlotListener:
+        XYSeries s1 = new XYSeries() {
+            @Override
+            public int size() {
+                return 0;
+            }
+
+            @Override
+            public Number getX(int index) {
+                return null;
+            }
+
+            @Override
+            public Number getY(int index) {
+                return null;
+            }
+
+            @Override
+            public String getTitle() {
+                return "s1";
+            }
+        };
+        assertFalse(s1 instanceof PlotListener);
+        plot.addSeries(s1, new LineAndPointFormatter());
+
+        assertTrue(plot.removeSeries(s1, LineAndPointRenderer.class));
+        assertEquals(0, plot.getRegistry().size());
+
+        // nothing left to remove:
+        assertFalse(plot.removeSeries(s1, LineAndPointRenderer.class));
+    }
+
+    @Test
+    public void removeSeries_byRenderer_keepsListenerWhileSeriesIsStillRegistered() {
+        Plot plot = new MockPlot("MockPlot");
+
+        // a PlotListener series registered with two renderers:
+        MockSeries m1 = new MockSeries();
+        plot.addSeries(m1, new MockFormatter1());
+        plot.addSeries(m1, new MockFormatter2());
+        assertTrue(plot.getListeners().contains(m1));
+
+        // still registered with MockRenderer2, so it must remain a listener:
+        assertTrue(plot.removeSeries(m1, MockRenderer1.class));
+        assertTrue(plot.getListeners().contains(m1));
+
+        // now gone from the plot entirely:
+        assertTrue(plot.removeSeries(m1, MockRenderer2.class));
+        assertFalse(plot.getListeners().contains(m1));
+        assertEquals(0, plot.getRegistry().size());
+    }
+
+    @Test
+    public void clear_isSynchronizedWithRendering() throws Exception {
+        // clear() mutates the registry that renderOnCanvas iterates, so it must hold the same
+        // monitor as renderOnCanvas / addSeries / removeSeries:
+        assertTrue(Modifier.isSynchronized(Plot.class.getMethod("clear").getModifiers()));
+        assertTrue(Modifier.isSynchronized(
+                Plot.class.getDeclaredMethod("renderOnCanvas", Canvas.class).getModifiers()));
+    }
 
     @Test
     public void testGetFormatter() {

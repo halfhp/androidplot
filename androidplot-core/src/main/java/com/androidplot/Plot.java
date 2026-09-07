@@ -744,11 +744,11 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         List removedItems = getRegistry().remove(series, rendererClass);
 
         // if series implements PlotListener and is not assigned to any other renderers remove it as a listener:
-        if (removedItems.size() == 1 && series instanceof PlotListener) {
+        final boolean removed = !removedItems.isEmpty();
+        if (removed && series instanceof PlotListener && getSeries(series).isEmpty()) {
             removeListener((PlotListener) series);
-            return true;
         }
-        return false;
+        return removed;
     }
 
     /**
@@ -767,7 +767,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     /**
      * Remove all series from the plot.
      */
-    public void clear() {
+    public synchronized void clear() {
         for(SeriesType series : getRegistry().getSeriesList()) {
             if(series instanceof  PlotListener) {
                 removeListener((PlotListener) series);

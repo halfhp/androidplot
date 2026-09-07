@@ -18,6 +18,9 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     private static final float FULL_PIE_DEGS = 360f;
     private static final float HALF_PIE_DEGS = 180f;
 
+    // segments sweeping less than this are considered empty and are not labeled.
+    private static final float MIN_LABELED_SWEEP_DEGS = 0.0001f;
+
     // starting angle to use when drawing the first radial line of the first segment.
     private float startDegs = 0;
 
@@ -73,6 +76,9 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
     protected void drawSegment(Canvas canvas, RectF bounds, Segment seg, SegmentFormatter f,
             float rad, float startAngle, float sweep) {
         canvas.save();
+
+        // a segment with no sweep (ex. a zero value) has nowhere to put its label:
+        final boolean hasSweep = Math.abs(sweep) > MIN_LABELED_SWEEP_DEGS;
         startAngle = startAngle + f.getRadialInset();
         sweep = sweep - (f.getRadialInset() * 2);
 
@@ -85,17 +91,7 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         final float cx = translated.x;
         final float cy = translated.y;
 
-        float donutSizePx;
-        switch (donutMode) {
-            case PERCENT:
-                donutSizePx = donutSize * rad;
-                break;
-            case PIXELS:
-                donutSizePx = (donutSize > 0) ? donutSize : (rad + donutSize);
-                break;
-            default:
-                throw new UnsupportedOperationException("Unsupported DonutMde: " + donutMode);
-        }
+        final float donutSizePx = getDonutSizePx(rad);
 
         final float outerRad = rad - f.getOuterInset();
         final float innerRad = donutSizePx == 0 ? 0 : donutSizePx + f.getInnerInset();
@@ -178,8 +174,25 @@ public class PieRenderer extends SeriesRenderer<PieChart, Segment, SegmentFormat
         // TODO: move segment labelling outside the segment drawing loop
         // TODO: so that the labels will not be clipped by the edge of the next
         // TODO: segment being drawn.
-        if (f.getLabelPaint() != null) {
+        if (hasSweep && f.getLabelPaint() != null) {
             drawSegmentLabel(canvas, labelOrigin, seg, f);
+        }
+    }
+
+    /**
+     * Calculates the size of the pie's empty inner space in pixels.
+     * @param rad The radius of the pie in pixels
+     * @return Size of the donut hole in pixels; 0 means no hole.
+     */
+    protected float getDonutSizePx(float rad) {
+        switch (donutMode) {
+            case PERCENT:
+                return donutSize * rad;
+            case PIXELS:
+                // 0 means no hole; negative values are an inset from the outer radius:
+                return (donutSize >= 0) ? donutSize : (rad + donutSize);
+            default:
+                throw new UnsupportedOperationException("Unsupported DonutMode: " + donutMode);
         }
     }
 

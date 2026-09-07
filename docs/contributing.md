@@ -35,11 +35,8 @@ Every merge to master runs the full test suite and then:
   where `n` is the commit count, so no manual version bump is needed.
 
 ## Releasing
-Releases are cut by pushing a tag named exactly `<version>` (e.g. `1.6.0`) matching `theVersionName` in
-`build.gradle`.  The release workflow verifies the tag, runs the tests, publishes the library
-to Maven Central, publishes the demo app to the Play Store's production track, and creates a
-GitHub release with the artifacts attached.  Bump `theVersionName` and update the release notes
-before tagging.
+See [releasing.md](releasing.md) for the release checklist: what to prepare, how the tag-driven
+release workflow works, how to verify it, and the post-release steps.
 
 # Git Newcomers
 If you're new to Git, this section will show you the basics of checking out a local copy of the project and building it.

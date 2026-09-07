@@ -1,0 +1,99 @@
+name: release androidplot
+
+# Publishes the core library to Maven Central and the demoapp to Google Play.
+# Runs when a version tag (e.g. v1.5.11) is pushed, or on demand.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      publish_maven_central:
+        description: Publish the core library to Maven Central
+        type: boolean
+        default: true
+      publish_play:
+        description: Publish the demoapp to Google Play
+        type: boolean
+        default: true
+
+permissions:
+  contents: write # needed to attach artifacts to the GitHub release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Verify Tag Matches Project Version
+        if: github.ref_type == 'tag'
+        run: |
+          version=$(sed -nE "s/.*theVersionName = '([^']+)'.*/\1/p" build.gradle)
+          if [ "v$version" != "${GITHUB_REF_NAME}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match theVersionName '$version' in build.gradle"
+            exit 1
+          fi
+
+      - name: Set Up JDK 17
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set Up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        with:
+          cache-read-only: true
+
+      - name: Build and Test
+        run: ./gradlew testDebugUnitTest :androidplot-core:assembleRelease
+
+      - name: Build Signed Demoapp
+        env:
+          ENCODED: ${{ secrets.DEMOAPP_KEYSTORE }}
+          KEYSTORE: keystore.jks
+          KEY_ALIAS: Key0
+          KEYSTORE_PASSWORD: ${{ secrets.DEMOAPP_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.DEMOAPP_KEY_PASSWORD }}
+        run: |
+          printf '%s' "$ENCODED" | base64 -d > "${GITHUB_WORKSPACE}/demoapp/keystore.jks"
+          ./gradlew :demoapp:assembleRelease
+
+      - name: Attach Artifacts to GitHub Release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1 \
+            || gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --generate-notes
+          gh release upload "${GITHUB_REF_NAME}" --clobber \
+            androidplot-core/build/outputs/aar/androidplot-core-release.aar \
+            demoapp/build/outputs/apk/release/demoapp-release.apk
+
+      # TODO: OSSRH was decommissioned; this must move to the Central Publisher Portal.
+      - name: Publish to Maven Central
+        if: github.event_name != 'workflow_dispatch' || inputs.publish_maven_central
+        env:
+          OSSRH_ACTOR: ${{ secrets.OSSRH_ACTOR }}
+          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
+        run: ./gradlew publish
+
+      # Uploads an APK rather than an app bundle. The demoapp's 2011 signing key
+      # is 1024-bit RSA, which Play App Signing does not accept, and bundles
+      # require Play App Signing. Play still accepts APKs for existing apps.
+      - name: Publish Demoapp to Google Play
+        if: github.event_name != 'workflow_dispatch' || inputs.publish_play
+        env:
+          KEYSTORE: keystore.jks
+          KEY_ALIAS: Key0
+          KEYSTORE_PASSWORD: ${{ secrets.DEMOAPP_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.DEMOAPP_KEY_PASSWORD }}
+          PUBLISHER_ACCT_JSON_FILE: publisher.json
+          PLAY_JSON: ${{ secrets.PLAY_PUBLISHER_JSON }}
+        run: |
+          printf '%s' "$PLAY_JSON" > "${GITHUB_WORKSPACE}/demoapp/publisher.json"
+          ./gradlew :demoapp:publishReleaseApk

@@ -25,6 +25,22 @@ branch of Androidplot.  Please make sure that:
 
 Adding Unit Tests for new methods / functionality is highly encouraged.
 
+## What Happens on Merge
+Every merge to master runs the full test suite and then:
+
+* Publishes a `<version>-SNAPSHOT` of the library to the
+  [Central snapshots repository](https://central.sonatype.com/repository/maven-snapshots/).
+* If the change touched library or demo app source, publishes a new build of the demo app to
+  the Play Store's open testing (beta) track.  Beta builds are versioned `<version>-beta.<n>`
+  where `n` is the commit count, so no manual version bump is needed.
+
+## Releasing
+Releases are cut by pushing a tag of the form `v<version>` matching `theVersionName` in
+`build.gradle`.  The release workflow verifies the tag, runs the tests, publishes the library
+to Maven Central, publishes the demo app to the Play Store's production track, and creates a
+GitHub release with the artifacts attached.  Bump `theVersionName` and update the release notes
+before tagging.
+
 # Git Newcomers
 If you're new to Git, this section will show you the basics of checking out a local copy of the project and building it.
 

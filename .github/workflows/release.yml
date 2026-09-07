@@ -26,6 +26,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the demoapp version code is derived from the commit count
 
       - name: Verify Tag Matches Project Version
         if: github.ref_type == 'tag'
@@ -59,7 +61,7 @@ jobs:
           KEY_PASSWORD: ${{ secrets.DEMOAPP_KEY_PASSWORD }}
         run: |
           printf '%s' "$ENCODED" | base64 -d > "${GITHUB_WORKSPACE}/demoapp/keystore.jks"
-          ./gradlew :demoapp:assembleRelease
+          ./gradlew :demoapp:assembleRelease -Prelease
 
       - name: Attach Artifacts to GitHub Release
         if: github.ref_type == 'tag'
@@ -98,7 +100,9 @@ jobs:
       # Uploads an APK rather than an app bundle. The demoapp's 2011 signing key
       # is 1024-bit RSA, which Play App Signing does not accept, and bundles
       # require Play App Signing. Play still accepts APKs for existing apps.
-      - name: Publish Demoapp to Google Play
+      # Betas are published continuously by the build workflow; a tagged release
+      # goes to production.
+      - name: Publish Demoapp to Google Play (production)
         if: github.event_name != 'workflow_dispatch' || inputs.publish_play
         env:
           KEYSTORE: keystore.jks
@@ -109,4 +113,4 @@ jobs:
           PLAY_JSON: ${{ secrets.PLAY_PUBLISHER_JSON }}
         run: |
           printf '%s' "$PLAY_JSON" > "${GITHUB_WORKSPACE}/demoapp/publisher.json"
-          ./gradlew :demoapp:publishReleaseApk
+          ./gradlew :demoapp:publishReleaseApk -Prelease --track production

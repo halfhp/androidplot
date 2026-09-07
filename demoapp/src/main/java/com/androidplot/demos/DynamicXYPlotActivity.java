@@ -46,7 +46,7 @@ public class DynamicXYPlotActivity extends Activity {
         plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 5);
         plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 10);
 
-        // only display whole numbers in domain labels
+        // whole numbers on domain labels, one decimal place on range labels
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).
                 setFormat(new DecimalFormat("0"));
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).

@@ -1,10 +1,10 @@
 name: release androidplot
 
 # Publishes the core library to Maven Central and the demoapp to Google Play.
-# Runs when a version tag (e.g. v1.5.11) is pushed, or on demand.
+# Runs when a version tag (e.g. 1.5.11, matching theVersionName) is pushed, or on demand.
 on:
   push:
-    tags: ['v*']
+    tags: ['[0-9]*']
   workflow_dispatch:
     inputs:
       publish_maven_central:
@@ -33,7 +33,7 @@ jobs:
         if: github.ref_type == 'tag'
         run: |
           version=$(sed -nE "s/.*theVersionName = '([^']+)'.*/\1/p" build.gradle)
-          if [ "v$version" != "${GITHUB_REF_NAME}" ]; then
+          if [ "$version" != "${GITHUB_REF_NAME}" ]; then
             echo "Tag ${GITHUB_REF_NAME} does not match theVersionName '$version' in build.gradle"
             exit 1
           fi
@@ -63,13 +63,24 @@ jobs:
           printf '%s' "$ENCODED" | base64 -d > "${GITHUB_WORKSPACE}/demoapp/keystore.jks"
           ./gradlew :demoapp:assembleRelease -Prelease
 
+      # The release body is this version's section of docs/release_notes.md, matching how
+      # earlier releases were written up.
       - name: Attach Artifacts to GitHub Release
         if: github.ref_type == 'tag'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          awk -v v="${GITHUB_REF_NAME}" '
+            $0 == "# " v { on = 1; next }
+            on && /^# / { exit }
+            on { print }
+          ' docs/release_notes.md > /tmp/release-notes.md
+          if [ ! -s /tmp/release-notes.md ]; then
+            echo "No '# ${GITHUB_REF_NAME}' section found in docs/release_notes.md"
+            exit 1
+          fi
           gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1 \
-            || gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --generate-notes
+            || gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --notes-file /tmp/release-notes.md
           gh release upload "${GITHUB_REF_NAME}" --clobber \
             androidplot-core/build/outputs/aar/androidplot-core-release.aar \
             demoapp/build/outputs/apk/release/demoapp-release.apk

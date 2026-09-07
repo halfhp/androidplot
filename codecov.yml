@@ -1,9 +1,10 @@
 # Coverage floor: a PR that drops core coverage below the target shows as failing on Codecov.
+# Core line coverage was 95.7% when this was set.
 coverage:
   status:
     project:
       default:
-        target: 90%
+        target: 93%
         threshold: 0.5%   # tolerate small dips from refactors
     patch:
       default:

@@ -3,6 +3,8 @@ For details on what to expect in general when updating to a new version of Andro
 [versioning doc](versioning.md).
 
 # 1.5.12
+* (#125) Fix grid lines and labels not being drawn for an axis with inverted boundaries (min
+  greater than max) when using `StepMode.INCREMENT_BY_VAL` or `INCREMENT_BY_FIT`.
 * (#120) Fix background-thread plots never rendering when their first layout pass gives them a
   zero-sized dimension.  The background render loop has been reworked while fixing this; see
   **Behavior changes** below.

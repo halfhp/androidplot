@@ -53,6 +53,32 @@ public class StepCalculatorTest {
         assertEquals(1.0, step.getStepPix());
     }
 
+    /**
+     * https://github.com/halfhp/androidplot/issues/125: with inverted bounds (min > max) the pixel
+     * step must stay positive so grid drawing can walk the axis, and the value step carries the
+     * sign, consistent with what the other step modes produce for inverted bounds.
+     */
+    @Test
+    public void testIncrementByVal_invertedBounds() throws Exception {
+        Region pixBounds = new Region(50, 150);
+        Region realBounds = new Region();
+        realBounds.setMin(200);
+        realBounds.setMax(100);
+        Step step = XYStepCalculator.getStep(StepMode.INCREMENT_BY_VAL, 1, realBounds, pixBounds);
+        assertEquals(1.0, step.getStepPix());
+        assertEquals(-1.0, step.getStepVal());
+        assertEquals(100.0, step.getStepCount());
+
+        // the other modes already behave this way:
+        step = XYStepCalculator.getStep(StepMode.INCREMENT_BY_PIXELS, 1, realBounds, pixBounds);
+        assertEquals(1.0, step.getStepPix());
+        assertEquals(-1.0, step.getStepVal());
+
+        step = XYStepCalculator.getStep(StepMode.SUBDIVIDE, 101, realBounds, pixBounds);
+        assertEquals(1.0, step.getStepPix());
+        assertEquals(-1.0, step.getStepVal());
+    }
+
     @Test
     public void testIncrementByPixels() throws Exception {
         Region pixBounds = new Region(50, 150);

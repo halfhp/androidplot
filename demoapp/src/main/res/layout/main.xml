@@ -143,7 +143,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/about_button"
-                android:text="@string/about_button"/>
+                android:text="@string/about_button"
+                android:textColor="@color/about_button_text"
+                android:textStyle="bold"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

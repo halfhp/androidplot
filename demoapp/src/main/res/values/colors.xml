@@ -3,4 +3,5 @@
 <resources>
     <color name="line_point_formatter_line">#00AA00</color>
     <color name="about_button">#3DDC84</color>
+    <color name="about_button_text">#073042</color>
 </resources>

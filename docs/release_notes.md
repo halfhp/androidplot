@@ -3,6 +3,14 @@ For details on what to expect in general when updating to a new version of Andro
 [versioning doc](versioning.md).
 
 # 1.6.0
+* Nullability annotations (`androidx.annotation.NonNull` / `Nullable`) across the whole public API of
+  `androidplot-core`: every reference-typed return value and parameter of every public or protected
+  method and constructor is annotated, so Kotlin callers see real nullable / non-null types instead
+  of platform types.  Kotlin code may see new compile errors where it passed `null` to a parameter
+  that is now `@NonNull`, or used a now-`@Nullable` return (for example `XYSeries.getX()` /
+  `getY()`, `Region.getMin()` / `getMax()`, `XYPlot.getDomainOrigin()` / `getRangeOrigin()`,
+  `Plot.getRenderer()` and formatter paint getters that return `null` when disabled) without a null
+  check.  A test (`NullabilityAnnotationsTest`) keeps the annotations complete.
 * Fix `Redrawer` occasionally never exiting (or never resuming) when `finish()`, `pause()` or
   `start()` raced with its thread: the flag was set before the thread started, or a notify slipped
   in between the thread checking its state and waiting.

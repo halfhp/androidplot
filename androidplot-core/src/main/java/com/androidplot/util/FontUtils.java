@@ -3,6 +3,8 @@
 package com.androidplot.util;
 
 import android.graphics.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class FontUtils {
 
@@ -13,7 +15,7 @@ public class FontUtils {
      * @param paint
      * @return
      */
-    public static float getFontHeight(Paint paint) {
+    public static float getFontHeight(@NonNull Paint paint) {
         Paint.FontMetrics metrics = paint.getFontMetrics();
         return (-metrics.ascent) + metrics.descent;
         //return (-metrics.top) + metrics.bottom;
@@ -25,7 +27,8 @@ public class FontUtils {
      * @param paint
      * @return
      */
-    public static Rect getPackedStringDimensions(String text, Paint paint) {
+    @NonNull
+    public static Rect getPackedStringDimensions(@NonNull String text, @NonNull Paint paint) {
         Rect size = new Rect();
         paint.getTextBounds(text, ZERO, text.length(), size);
         return size;
@@ -39,7 +42,8 @@ public class FontUtils {
      * @param paint
      * @return
      */
-    public static Rect getStringDimensions(String text, Paint paint) {
+    @Nullable
+    public static Rect getStringDimensions(@Nullable String text, @NonNull Paint paint) {
         Rect size = new Rect();
         if(text == null || text.length() == ZERO) {
             return null;
@@ -57,7 +61,7 @@ public class FontUtils {
      * @param cx
      * @param cy
      */
-    public static void drawTextVerticallyCentered(Canvas canvas, String text, float cx, float cy, Paint paint) {
+    public static void drawTextVerticallyCentered(@NonNull Canvas canvas, @NonNull String text, float cx, float cy, @NonNull Paint paint) {
         Rect textBounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), textBounds);
         canvas.drawText(text, cx, cy - textBounds.exactCenterY(), paint);

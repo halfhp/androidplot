@@ -5,6 +5,8 @@ package com.androidplot.util;
 import android.graphics.RectF;
 
 import com.androidplot.ui.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Convenience methods for dealing with {@link android.graphics.RectF}
@@ -20,7 +22,7 @@ public abstract class RectFUtils {
      * @param r2 May not be null
      * @return True if r1 and r2 are identical, false otherwise.
      */
-    public static boolean areIdentical(RectF r1, RectF r2) {
+    public static boolean areIdentical(@NonNull RectF r1, @NonNull RectF r2) {
         return r1.left == r2.left &&
                 r1.top == r2.top &&
                 r1.right == r2.right &&
@@ -34,7 +36,8 @@ public abstract class RectFUtils {
      * @return The {@link RectF} created as a result of applying insets, or the passed in
      * instance, if the insets were null.
      */
-    public static RectF applyInsets(RectF rect, Insets insets) {
+    @NonNull
+    public static RectF applyInsets(@NonNull RectF rect, @Nullable Insets insets) {
         if (insets != null) {
             return new RectF(
                     rect.left + insets.getLeft(),
@@ -56,6 +59,7 @@ public abstract class RectFUtils {
      * @param h2 height2
      * @return
      */
+    @NonNull
     public static RectF createFromEdges(float w1, float h1, float w2, float h2) {
         final boolean w1IsLeft = w1 <= w2;
         final boolean h1IsTop = h1 <= h2;

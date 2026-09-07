@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import androidx.annotation.NonNull;
 
 public class PixelUtils {
     private static DisplayMetrics metrics;
@@ -21,15 +22,17 @@ public class PixelUtils {
      * Recalculates scale value etc.  Should be called when an application starts or
      * whenever the screen is rotated.
      */
-    public static void init(Context ctx) {
+    public static void init(@NonNull Context ctx) {
         metrics = ctx.getResources().getDisplayMetrics();
     }
 
-    public static PointF add(PointF lhs, PointF rhs) {
+    @NonNull
+    public static PointF add(@NonNull PointF lhs, @NonNull PointF rhs) {
         return new PointF(lhs.x + rhs.x, lhs.y + rhs.y);
     }
 
-    public static PointF sub(PointF lhs, PointF rhs) {
+    @NonNull
+    public static PointF sub(@NonNull PointF lhs, @NonNull PointF rhs) {
         return new PointF(lhs.x - rhs.x, lhs.y - rhs.y);
     }
 
@@ -79,7 +82,7 @@ public class PixelUtils {
     protected static final String DIMENSION_REGEX = "^\\-?\\s*(\\d+(\\.\\d+)*)\\s*([a-zA-Z]+)\\s*$";
     protected static final Pattern DIMENSION_PATTERN = Pattern.compile(DIMENSION_REGEX);
 
-    public static float stringToDimension(String dimension) {
+    public static float stringToDimension(@NonNull String dimension) {
         // Mimics TypedValue.complexToDimension(int data, DisplayMetrics metrics).
         InternalDimension internalDimension = stringToInternalDimension(dimension);
         return TypedValue.applyDimension(internalDimension.unit, internalDimension.value, metrics);

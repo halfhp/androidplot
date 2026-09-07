@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import androidx.annotation.NonNull;
 
 /**
  * Utility class for invoking Plot.redraw() on a background thread
@@ -39,7 +40,7 @@ public class Redrawer implements Runnable {
      * @param maxRefreshRate Desired frequency at which to redraw plots.
      * @param startImmediately If true, invokes run() immediately after construction.
      */
-    public Redrawer(List<Plot> plots, float maxRefreshRate, boolean startImmediately) {
+    public Redrawer(@NonNull List<Plot> plots, float maxRefreshRate, boolean startImmediately) {
         this.plots = new ArrayList<>(plots.size());
         for(Plot plot : plots) {
             this.plots.add(new WeakReference<>(plot));
@@ -55,7 +56,7 @@ public class Redrawer implements Runnable {
         }
     }
 
-    public Redrawer(Plot plot, float maxRefreshRate, boolean startImmediately) {
+    public Redrawer(@NonNull Plot plot, float maxRefreshRate, boolean startImmediately) {
         this(Collections.singletonList(plot), maxRefreshRate, startImmediately);
     }
 

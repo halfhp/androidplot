@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.regex.Pattern;
+import androidx.annotation.NonNull;
 
 /**
  * Configures an object from XML by mapping attribute names onto setter methods.
@@ -246,7 +247,7 @@ public abstract class Fig {
      * @param file The file containing the config xml.
      * @throws FigException
      */
-    public static void configure(Context ctx, Object obj, File file) throws FigException {
+    public static void configure(@NonNull Context ctx, @NonNull Object obj, @NonNull File file) throws FigException {
 
         try {
             XmlPullParserFactory xppf = XmlPullParserFactory.newInstance();
@@ -268,7 +269,7 @@ public abstract class Fig {
      * @param params
      * @throws FigException
      */
-    public static void configure(Context ctx, Object obj, HashMap<String, String> params) throws FigException {
+    public static void configure(@NonNull Context ctx, @NonNull Object obj, @NonNull HashMap<String, String> params) throws FigException {
         for (String key : params.keySet()) {
             configure(ctx, obj, key, params.get(key));
         }
@@ -312,7 +313,7 @@ public abstract class Fig {
      * @param xmlFileId ID of an XML config file in /res/xml
      * @throws FigException
      */
-    public static void configure(Context ctx, Object obj, int xmlFileId) throws FigException {
+    public static void configure(@NonNull Context ctx, @NonNull Object obj, int xmlFileId) throws FigException {
         XmlResourceParser xrp = ctx.getResources().getXml(xmlFileId);
         try {
             configure(ctx, obj, xrp);

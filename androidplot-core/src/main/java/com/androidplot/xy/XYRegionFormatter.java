@@ -5,7 +5,7 @@ package com.androidplot.xy;
 import android.content.Context;
 import android.graphics.Paint;
 
-import com.halfhp.fig.*;
+import com.androidplot.util.fig.*;
 
 /**
  * Base class of all XYRegionFormatters.

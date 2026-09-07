@@ -8,7 +8,7 @@ import android.util.*;
 
 import com.androidplot.test.*;
 import com.androidplot.ui.*;
-import com.halfhp.fig.*;
+import com.androidplot.util.fig.*;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;

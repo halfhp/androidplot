@@ -5,7 +5,7 @@ package com.androidplot.xy;
 import android.graphics.*;
 import com.androidplot.Plot;
 import com.androidplot.test.AndroidplotTest;
-import com.halfhp.fig.*;
+import com.androidplot.util.fig.*;
 
 import org.junit.After;
 import org.junit.Before;

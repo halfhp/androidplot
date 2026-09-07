@@ -42,7 +42,7 @@ public class XYConstraints {
     }
 
     public boolean contains(@NonNull RectRegion rectRegion) {
-        return contains(rectRegion.getMinY(), rectRegion.getMinY())
+        return contains(rectRegion.getMinX(), rectRegion.getMinY())
                 && contains(rectRegion.getMaxX(), rectRegion.getMaxY());
     }
 

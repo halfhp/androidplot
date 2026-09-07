@@ -3,6 +3,10 @@ For details on what to expect in general when updating to a new version of Andro
 [versioning doc](versioning.md).
 
 # 1.6.0
+* `XYPlot.seriesToScreenY(Number)` previously returned a y pixel flipped relative to
+  `seriesToScreen(XYCoords)` and `screenToSeriesY` (the largest series value landed on the bottom
+  edge of the grid).  It now agrees with them, so code that compensated for the inversion should
+  drop the compensation.
 * Removed three unused, undocumented public classes: `SimpleLineLabelFormatter`, `RenderBundle` and
   `APTrace`.  None were referenced by the library, the demo app or the docs.
 * (#96) Background-mode plots are no longer forced onto a software layer, removing a full-size CPU

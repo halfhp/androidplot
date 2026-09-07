@@ -3,6 +3,9 @@ For details on what to expect in general when updating to a new version of Andro
 [versioning doc](versioning.md).
 
 # 1.5.12
+* (#120) Fix background-thread plots never rendering when their first layout pass gives them a
+  zero-sized dimension.  The background render loop has been reworked while fixing this; see
+  **Behavior changes** below.
 * (#118) Fix pie chart segments larger than half the pie not responding to clicks over part of
   their area.
 * (#88) Fix crash when a formatter config or `androidPlot.` attribute references a color, dimension
@@ -12,6 +15,19 @@ For details on what to expect in general when updating to a new version of Andro
   [XML Configuration](xml_configuration.md) doc.
 * Compile and target SDK 37; build updated to AGP 9.4 / Gradle 9.7 / Kotlin 2.2.
 * Snapshot builds of unreleased changes are now published to the Central snapshots repository.
+
+**Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
+* `redraw()` requests are no longer dropped when the render thread is busy drawing.  Requests
+  made during a render are coalesced into one additional render pass, so the latest data is
+  always drawn.  Apps that issue `redraw()` faster than the plot can draw will see one extra
+  frame per burst compared to previous versions.
+* Plots now re-render automatically when resized; previously a resized plot was blank until the
+  next `redraw()` call.
+* Resizing a plot while it is rendering could previously deadlock; the locks involved are now
+  always taken in the same order.
+* Detaching and quickly re-attaching a plot (as happens when scrolling a RecyclerView) could
+  previously leave it without a render thread, or with recycled buffers, until its next resize.
+  Thread handover is now explicit and the replacement thread always renders.
 
 # 1.5.11
 * Update project to latest gradle / build tools

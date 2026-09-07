@@ -16,14 +16,21 @@ import org.robolectric.RuntimeEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 
 public class PlotTest extends AndroidplotTest {
 
@@ -319,6 +326,177 @@ public class PlotTest extends AndroidplotTest {
         assertEquals(44f, plot.getPlotPaddingBottom());
     }
 
+    /**
+     * Regression tests for https://github.com/halfhp/androidplot/issues/120: a background-mode
+     * plot whose first layout pass gives it a zero-sized dimension used to leave its render thread
+     * permanently un-wakeable, so it never drew once it was given a real size.
+     */
+    @Test
+    public void backgroundRender_afterZeroSizedLayout_rendersOnResize() throws Exception {
+        RenderCountingPlot plot = new RenderCountingPlot();
+        try {
+            plot.onSizeChanged(100, 0, 0, 0);
+            plot.awaitRenderThreadParked();
+            assertEquals(0, plot.rendersOnCanvas.get());
+
+            plot.onSizeChanged(100, 100, 100, 0);
+            assertTrue("plot never rendered after being resized to a non-zero size",
+                    plot.rendered.await(5, TimeUnit.SECONDS));
+        } finally {
+            plot.onDetachedFromWindow();
+        }
+    }
+
+    @Test
+    public void backgroundRender_afterZeroSizedLayout_rendersOnRedraw() throws Exception {
+        RenderCountingPlot plot = new RenderCountingPlot();
+        try {
+            plot.onSizeChanged(100, 0, 0, 0);
+            plot.awaitRenderThreadParked();
+            plot.onSizeChanged(100, 100, 100, 0);
+            plot.redraw();
+            assertTrue("plot never rendered after redraw() following a resize",
+                    plot.rendered.await(5, TimeUnit.SECONDS));
+        } finally {
+            plot.onDetachedFromWindow();
+        }
+    }
+
+    /**
+     * A redraw() issued while the render thread is busy drawing must not be dropped: the
+     * thread has to render again afterwards so the latest data reaches the screen.
+     */
+    @Test
+    public void backgroundRender_redrawDuringRender_rendersAgain() throws Exception {
+        RenderCountingPlot plot = new RenderCountingPlot();
+        plot.holdRenderIndex = 0;
+        try {
+            plot.onSizeChanged(100, 100, 0, 0);
+            assertTrue(plot.heldRenderStarted.await(5, TimeUnit.SECONDS));
+
+            // render thread is now blocked inside its first render
+            plot.redraw();
+            plot.redraw();
+            plot.releaseHeldRender.countDown();
+
+            assertTrue("redraw() issued during a render was dropped",
+                    plot.renderedTwice.await(5, TimeUnit.SECONDS));
+            // several requests made during one render coalesce into a single extra pass
+            plot.awaitRenderThreadParked();
+            assertEquals(2, plot.rendersOnCanvas.get());
+        } finally {
+            plot.releaseHeldRender.countDown();
+            plot.onDetachedFromWindow();
+        }
+    }
+
+    /**
+     * Detaching and re-attaching a plot before its render thread has finished exiting (as a
+     * RecyclerView does when scrolling) must hand over cleanly: the replacement thread renders,
+     * and the exiting thread must not recycle the buffers out from under it.
+     */
+    @Test
+    public void backgroundRender_reattachWhileOldThreadExiting_keepsRendering() throws Exception {
+        RenderCountingPlot plot = new RenderCountingPlot();
+        try {
+            plot.onSizeChanged(100, 100, 0, 0);
+            plot.awaitRenders(1);
+            plot.awaitRenderThreadParked();
+
+            // park the old thread inside a render, then detach and re-attach while it's stuck
+            plot.holdRenderIndex = 1;
+            plot.redraw();
+            assertTrue(plot.heldRenderStarted.await(5, TimeUnit.SECONDS));
+            plot.onDetachedFromWindow();
+            plot.onAttachedToWindow();
+            plot.releaseHeldRender.countDown();
+
+            // the replacement thread renders on start, and again on request
+            plot.awaitRenders(3);
+            plot.awaitRenderThreadParked();
+            plot.redraw();
+            plot.awaitRenders(4);
+
+            // the buffers survived the old thread's exit: onDraw still has a bitmap to draw
+            Canvas canvas = spy(new Canvas());
+            plot.onDraw(canvas);
+            verify(canvas).drawBitmap(any(Bitmap.class), eq(0f), eq(0f), (Paint) isNull());
+        } finally {
+            plot.releaseHeldRender.countDown();
+            plot.onDetachedFromWindow();
+        }
+    }
+
+    /** A background-mode plot that reports when it has rendered onto a real canvas. */
+    static class RenderCountingPlot extends MockPlot {
+        final CountDownLatch rendered = new CountDownLatch(1);
+        final CountDownLatch renderedTwice = new CountDownLatch(2);
+        final AtomicInteger rendersOnCanvas = new AtomicInteger();
+
+        /** zero-based index of the render to block inside until releaseHeldRender fires */
+        volatile int holdRenderIndex = -1;
+        final CountDownLatch heldRenderStarted = new CountDownLatch(1);
+        final CountDownLatch releaseHeldRender = new CountDownLatch(1);
+
+        RenderCountingPlot() {
+            super("RenderCountingPlot", RenderMode.USE_BACKGROUND_THREAD);
+        }
+
+        @Override
+        protected synchronized void renderOnCanvas(Canvas canvas) {
+            super.renderOnCanvas(canvas);
+            if (canvas != null) {
+                if (rendersOnCanvas.get() == holdRenderIndex) {
+                    heldRenderStarted.countDown();
+                    try {
+                        releaseHeldRender.await(5, TimeUnit.SECONDS);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                rendersOnCanvas.incrementAndGet();
+                rendered.countDown();
+                renderedTwice.countDown();
+            }
+        }
+
+        /** Blocks until at least n renders onto a real canvas have completed. */
+        void awaitRenders(int n) throws Exception {
+            long deadline = System.currentTimeMillis() + 5000;
+            while (rendersOnCanvas.get() < n) {
+                if (System.currentTimeMillis() > deadline) {
+                    fail("expected " + n + " renders, got " + rendersOnCanvas.get());
+                }
+                Thread.sleep(10);
+            }
+        }
+
+        /**
+         * Blocks until the render thread is waiting for a redraw request, so that a subsequent
+         * notify cannot be lost by arriving before the thread has started waiting.
+         */
+        void awaitRenderThreadParked() throws Exception {
+            long deadline = System.currentTimeMillis() + 5000;
+            while (System.currentTimeMillis() < deadline) {
+                boolean anyLive = false;
+                boolean allParked = true;
+                for (Thread t : Thread.getAllStackTraces().keySet()) {
+                    if ("Androidplot renderThread".equals(t.getName())) {
+                        anyLive = true;
+                        if (t.getState() != Thread.State.WAITING) {
+                            allParked = false;
+                        }
+                    }
+                }
+                if (anyLive && allParked) {
+                    return;
+                }
+                Thread.sleep(10);
+            }
+            fail("render thread never parked");
+        }
+    }
+
     static class MockPlotListener implements PlotListener {
 
         public void onBeforeDraw(Plot source, Canvas canvas) {
@@ -429,6 +607,10 @@ public class PlotTest extends AndroidplotTest {
     public static class MockPlot extends Plot<MockSeries, Formatter, SeriesRenderer, MockSeriesBundle, SeriesRegistry<MockSeriesBundle, MockSeries, Formatter>> {
         public MockPlot(String title) {
             super(RuntimeEnvironment.application, title);
+        }
+
+        public MockPlot(String title, RenderMode mode) {
+            super(RuntimeEnvironment.application, title, mode);
         }
 
         @Override

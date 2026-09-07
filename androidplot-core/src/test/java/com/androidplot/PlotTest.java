@@ -5,6 +5,7 @@ package com.androidplot;
 import android.content.res.TypedArray;
 import android.graphics.*;
 import android.util.*;
+import android.view.View;
 
 import com.androidplot.test.*;
 import com.androidplot.ui.*;
@@ -28,6 +29,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -425,6 +428,31 @@ public class PlotTest extends AndroidplotTest {
             plot.releaseHeldRender.countDown();
             plot.onDetachedFromWindow();
         }
+    }
+
+    /**
+     * https://github.com/halfhp/androidplot/issues/96: in background mode the view only ever
+     * draws a bitmap, so it must not be forced onto a software layer, which would add a
+     * full-size CPU copy of the view on every frame.
+     */
+    @Test
+    public void onSizeChanged_backgroundMode_doesNotForceSoftwareLayer() {
+        MockPlot plot = spy(new MockPlot("bg", Plot.RenderMode.USE_BACKGROUND_THREAD));
+        doReturn(true).when(plot).isHardwareAccelerated();
+        try {
+            plot.onSizeChanged(100, 100, 0, 0);
+            verify(plot, never()).setLayerType(eq(View.LAYER_TYPE_SOFTWARE), any());
+        } finally {
+            plot.onDetachedFromWindow();
+        }
+    }
+
+    @Test
+    public void onSizeChanged_mainThreadMode_forcesSoftwareLayer() {
+        MockPlot plot = spy(new MockPlot("main", Plot.RenderMode.USE_MAIN_THREAD));
+        doReturn(true).when(plot).isHardwareAccelerated();
+        plot.onSizeChanged(100, 100, 0, 0);
+        verify(plot).setLayerType(eq(View.LAYER_TYPE_SOFTWARE), any());
     }
 
     /** A background-mode plot that reports when it has rendered onto a real canvas. */

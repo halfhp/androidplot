@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.androidplot:androidplot-core:1.6.0-SNAPSHOT"
+    implementation "com.androidplot:androidplot-core:1.6.1-SNAPSHOT"
 }
 ```
 

@@ -4,7 +4,7 @@ ext {
     theCompileSdkVersion = 37
     theTargetSdkVersion = 37
     theMinSdkVersion = 5
-    theVersionName = '1.6.0'
+    theVersionName = '1.6.1'
     // only used by the demoapp when the commit count cannot be determined; see demoapp/build.gradle
     theVersionCode = 228
     gitUrl = 'https://github.com/halfhp/androidplot.git'

@@ -3,6 +3,8 @@ For details on what to expect in general when updating to a new version of Andro
 [versioning doc](versioning.md).
 
 # 1.5.12
+* (#118) Fix pie chart segments larger than half the pie not responding to clicks over part of
+  their area.
 * (#88) Fix crash when a formatter config or `androidPlot.` attribute references a color, dimension
   or integer resource.  Negative integer values are now accepted as well.
 * The XML configuration engine (formerly the separate Fig library) is now part of androidplot-core;

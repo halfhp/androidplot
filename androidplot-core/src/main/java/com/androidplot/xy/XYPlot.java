@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 
 import com.androidplot.Plot;
 import com.androidplot.R;
+import com.androidplot.Region;
 import com.androidplot.ui.Anchor;
 import com.androidplot.ui.DynamicTableModel;
 import com.androidplot.ui.HorizontalPositioning;
@@ -483,12 +484,15 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
                 updateDomainMinMaxForOriginModel();
                 break;
             case EDGE:
+                // when no value could be calculated (ex: no series data yet) pass null rather
+                // than the placeholder default so that it is never latched by GROW/SHRINK:
                 bounds.setMaxX(applyUserMinMax(getCalculatedUpperBoundary(
-                        constraints.getDomainUpperBoundaryMode(), prevMaxX, bounds.getMaxX()),
+                        constraints.getDomainUpperBoundaryMode(), prevMaxX,
+                        bounds.isMaxXSet() ? bounds.getMaxX() : null),
                         innerLimits.getMaxX(), outerLimits.getMaxX()));
                 bounds.setMinX(applyUserMinMax(getCalculatedLowerBoundary(
                         constraints.getDomainLowerBoundaryMode(),
-                        prevMinX, bounds.getMinX()),
+                        prevMinX, bounds.isMinXSet() ? bounds.getMinX() : null),
                         outerLimits.getMinX(), innerLimits.getMinX()));
                 break;
             default:
@@ -504,16 +508,21 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
             	if (getRegistry().size() > 0) {
                     bounds.setMaxY(applyUserMinMax(getCalculatedUpperBoundary(
                             constraints.getRangeUpperBoundaryMode(),
-                            prevMaxY, bounds.getMaxY()), innerLimits.getMaxY(), outerLimits.getMaxY()));
+                            prevMaxY, bounds.isMaxYSet() ? bounds.getMaxY() : null),
+                            innerLimits.getMaxY(), outerLimits.getMaxY()));
                     bounds.setMinY(applyUserMinMax(getCalculatedLowerBoundary(
                             constraints.getRangeLowerBoundaryMode(),
-                            prevMinY, bounds.getMinY()), outerLimits.getMinY(), innerLimits.getMinY()));
+                            prevMinY, bounds.isMinYSet() ? bounds.getMinY() : null),
+                            outerLimits.getMinY(), innerLimits.getMinY()));
             	}
                 break;
             default:
                 throw new UnsupportedOperationException(
                         "Range Framing Model not yet supported: " + constraints.getRangeFramingModel());
         }
+
+        padZeroLengthBounds(bounds.getxRegion(), constraints.getMinX(), constraints.getMaxX());
+        padZeroLengthBounds(bounds.getyRegion(), constraints.getMinY(), constraints.getMaxY());
 
 
         calculatedOrigin.x = userDomainOrigin != null ?
@@ -523,6 +532,39 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
                 userRangeOrigin : bounds.getMinY();
     }
 
+    /**
+     * Ensures that an axis derived from series data never ends up with min == max, which
+     * cannot be scaled onto the screen.  A flat axis is padded symmetrically so the data
+     * is centered with a visible grid; user-fixed edges are left untouched.
+     *
+     * @param region the axis bounds to pad
+     * @param userMin the user-set lower boundary, or null if it was calculated
+     * @param userMax the user-set upper boundary, or null if it was calculated
+     */
+    protected static void padZeroLengthBounds(Region region, Number userMin, Number userMax) {
+        if (!region.isMinSet() || !region.isMaxSet()) {
+            return;
+        }
+        final double min = region.getMin().doubleValue();
+        final double max = region.getMax().doubleValue();
+        if (min != max || (userMin != null && userMax != null)) {
+            return;
+        }
+        final double pad = min == 0 ? 1 : Math.abs(min) * 0.1;
+        if (userMin == null) {
+            region.setMin(min - pad);
+        }
+        if (userMax == null) {
+            region.setMax(max + pad);
+        }
+    }
+
+    /**
+     * @param mode
+     * @param previousMax
+     * @param calculatedMax the max derived from series data; null if there was no data.
+     * @return
+     */
     protected Number getCalculatedUpperBoundary(BoundaryMode mode, Number previousMax, Number calculatedMax) {
         switch (mode) {
             case FIXED:
@@ -530,12 +572,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
             case AUTO:
                 break;
             case GROW:
-                if (!(previousMax == null || calculatedMax.doubleValue() > previousMax.doubleValue())) {
+                if (calculatedMax == null || !(previousMax == null
+                        || calculatedMax.doubleValue() > previousMax.doubleValue())) {
                     calculatedMax = previousMax;
                 }
                 break;
             case SHRINK:
-                if (!(previousMax == null || calculatedMax.doubleValue() < previousMax.doubleValue())) {
+                if (calculatedMax == null || !(previousMax == null
+                        || calculatedMax.doubleValue() < previousMax.doubleValue())) {
                     calculatedMax = previousMax;
                 }
                 break;
@@ -545,6 +589,12 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         return calculatedMax;
     }
 
+    /**
+     * @param mode
+     * @param previousMin
+     * @param calculatedMin the min derived from series data; null if there was no data.
+     * @return
+     */
     protected Number getCalculatedLowerBoundary(BoundaryMode mode, Number previousMin, Number calculatedMin) {
         switch (mode) {
             case FIXED:
@@ -552,12 +602,14 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
             case AUTO:
                 break;
             case GROW:
-                if (!(previousMin == null || calculatedMin.doubleValue() < previousMin.doubleValue())) {
+                if (calculatedMin == null || !(previousMin == null
+                        || calculatedMin.doubleValue() < previousMin.doubleValue())) {
                     return previousMin;
                 }
                 break;
             case SHRINK:
-                if (!(previousMin == null || calculatedMin.doubleValue() > previousMin.doubleValue())) {
+                if (calculatedMin == null || !(previousMin == null
+                        || calculatedMin.doubleValue() > previousMin.doubleValue())) {
                     return previousMin;
                 }
                 break;

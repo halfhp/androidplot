@@ -25,6 +25,7 @@ public class DemoAppWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int widgetId : appWidgetIds) {
+            // 1. build the plot in code -- there is no layout xml for a widget
             XYPlot plot = new XYPlot(context, "Widget Example");
             final int h = (int) context.getResources().getDimension(R.dimen.sample_widget_height);
             final int w = (int) context.getResources().getDimension(R.dimen.sample_widget_width);
@@ -48,36 +49,28 @@ public class DemoAppWidgetProvider extends AppWidgetProvider {
             plot.getGraph().getGridInsets().setLeft(PixelUtils.dpToPix(36));
             plot.getGraph().getGridInsets().setBottom(PixelUtils.dpToPix(16));
 
+            // 2. size it by hand since it is never attached to a window
             plot.measure(w, h);
             plot.layout(0, 0, w, h);
 
+            // 3. add data, then render into a bitmap for RemoteViews
             Number[] series1Numbers = {1, 4, 2, 8, 4, 16, 8, 32, 16, 64};
             Number[] series2Numbers = {5, 2, 10, 5, 20, 10, 40, 20, 80, 40};
 
-            // Turn the above arrays into XYSeries':
-            XYSeries series1 = new SimpleXYSeries(
-                    Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
-                    SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
-                    "Series1");                             // Set the display title of the series
-
-            // same as above
+            // Y_VALS_ONLY: x is the element index
+            XYSeries series1 = new SimpleXYSeries(Arrays.asList(series1Numbers),
+                    SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1");
             XYSeries series2 = new SimpleXYSeries(Arrays.asList(series2Numbers),
                     SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series2");
 
-            // Create a formatter to use for drawing a series using LineAndPointRenderer:
+            // LineAndPointFormatter(lineColor, pointColor, fillColor, pointLabelFormatter):
             LineAndPointFormatter series1Format = new LineAndPointFormatter(
-                    Color.rgb(0, 200, 0),                   // line color
-                    Color.rgb(0, 100, 0),                   // point color
-                    null, null);                            // fill color (none)
+                    Color.rgb(0, 200, 0), Color.rgb(0, 100, 0), null, null);
 
-            // add a new series' to the xyplot:
             plot.addSeries(series1, series1Format);
-
-            // same as above:
             plot.addSeries(series2,
                     new LineAndPointFormatter(
                             Color.rgb(0, 0, 200), Color.rgb(0, 0, 100), null, null));
-
 
             // reduce the number of range labels
             plot.setLinesPerRangeLabel(3);

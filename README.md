@@ -1,9 +1,11 @@
-# ![image](docs/images/aplogo_small.png) Androidplot [![Maven Central](https://img.shields.io/maven-central/v/com.androidplot/androidplot-core.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.androidplot/androidplot-core) [![AndroidPlot](https://www.appbrain.com/stats/libraries/shield/androidplot.svg)](https://www.appbrain.com/stats/libraries/details/androidplot/androidplot) [![codecov](https://codecov.io/gh/halfhp/androidplot/branch/master/graph/badge.svg)](https://codecov.io/gh/halfhp/androidplot) [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/androidplot.svg?style=social&label=Follow%20Us)](https://twitter.com/androidplot)
+# ![image](docs/images/aplogo_small.png) Androidplot [![Maven Central](https://img.shields.io/maven-central/v/com.androidplot/androidplot-core.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.androidplot/androidplot-core) [![AndroidPlot](https://www.appbrain.com/stats/libraries/shield/androidplot.svg)](https://www.appbrain.com/stats/libraries/details/androidplot/androidplot) [![Codix](https://codix.io/gh/badge/halfhp/androidplot)](https://codix.io/gh/repo/halfhp/androidplot) [![codecov](https://codecov.io/gh/halfhp/androidplot/branch/master/graph/badge.svg)](https://codecov.io/gh/halfhp/androidplot) [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/androidplot.svg?style=social&label=Follow%20Us)](https://twitter.com/androidplot)
 
 A library for creating dynamic and static charts in Android apps.
 
 Androidplot runs on Android 2.0 (API 5) and up, works equally well from Kotlin and Java, and can be
 used from Jetpack Compose via `AndroidView`.
+
+If you enjoy the lib, please [rate us on codix.io](https://codix.io/gh/repo/halfhp/androidplot)!
 
 <img src="docs/images/screens/fx_vert.png" width="115"> <img src="docs/images/screens/candlestick_vert.png" width="115"> <img src="docs/images/screens/pie_vert.png" width="115"> <img src="docs/images/screens/scatter_vert.png" width="115"> <img src="docs/images/screens/step_vert.png" width="115"> <img src="docs/images/screens/bubble_vert.png" width="115"> <img src="docs/images/screens/bar_vert.png" width="115">
 

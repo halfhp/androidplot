@@ -3,7 +3,8 @@
 A library for creating dynamic and static charts in Android apps.
 
 Androidplot runs on Android 2.0 (API 5) and up, works equally well from Kotlin and Java, and can be
-used from Jetpack Compose via `AndroidView`.
+used from Jetpack Compose via `AndroidView`.  The core library is lightweight: its only dependency is
+the `androidx.annotation` jar, which every Android app already has, so it adds nothing else to your APK.
 
 If you enjoy the lib, please [rate us on codix.io](https://codix.io/gh/repo/halfhp/androidplot)!
 

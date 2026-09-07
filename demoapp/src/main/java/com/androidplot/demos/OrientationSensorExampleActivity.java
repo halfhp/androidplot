@@ -3,16 +3,15 @@
 package com.androidplot.demos;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.*;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.Toast;
 import com.androidplot.Plot;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.util.PlotStatistics;
@@ -20,170 +19,84 @@ import com.androidplot.util.Redrawer;
 import com.androidplot.xy.*;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Collections;
 
-// Monitor the phone's orientation sensor and plot the resulting azimuth pitch and roll values.
-// See: http://developer.android.com/reference/android/hardware/SensorEvent.html
-public class OrientationSensorExampleActivity extends Activity implements SensorEventListener
-{
+/**
+ * Monitors the phone's orientation sensor and plots the resulting azimuth, pitch and roll values.
+ * See: http://developer.android.com/reference/android/hardware/SensorEvent.html
+ */
+public class OrientationSensorExampleActivity extends Activity implements SensorEventListener {
+
+    private static final String TAG = OrientationSensorExampleActivity.class.getSimpleName();
     private static final int HISTORY_SIZE = 1000;
-    private SensorManager sensorMgr = null;
-    private Sensor orSensor = null;
 
-    private XYPlot aprLevelsPlot = null;
-    private XYPlot aprHistoryPlot = null;
-
-    private CheckBox hwAcceleratedCb;
-    private CheckBox showFpsCb;
+    private XYPlot aprLevelsPlot;
+    private XYPlot aprHistoryPlot;
 
     private SimpleXYSeries aLvlSeries;
     private SimpleXYSeries pLvlSeries;
     private SimpleXYSeries rLvlSeries;
-    private SimpleXYSeries azimuthHistorySeries = null;
-    private SimpleXYSeries pitchHistorySeries = null;
-    private SimpleXYSeries rollHistorySeries = null;
+    private SimpleXYSeries azimuthHistorySeries;
+    private SimpleXYSeries pitchHistorySeries;
+    private SimpleXYSeries rollHistorySeries;
 
     private Redrawer redrawer;
 
-    /** Called when the activity is first created. */
+    private SensorManager sensorMgr;
+    private Sensor orSensor;
+    // scratch space for orientationDegrees(), reused so nothing is allocated per sensor event
+    private final float[] rotationMatrix = new float[9];
+    private final float[] orientation = new float[3];
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.orientation_sensor_example);
+        aprLevelsPlot = findViewById(R.id.aprLevelsPlot);
+        aprHistoryPlot = findViewById(R.id.aprHistoryPlot);
 
-        // setup the APR Levels plot:
-        aprLevelsPlot = (XYPlot) findViewById(R.id.aprLevelsPlot);
-        aprLevelsPlot.setDomainBoundaries(-1, 1, BoundaryMode.FIXED);
+        configureLevelsPlot();
+        configureHistoryPlot();
 
-        aLvlSeries = new SimpleXYSeries("A");
-        pLvlSeries = new SimpleXYSeries("P");
-        rLvlSeries = new SimpleXYSeries("R");
-
-        aprLevelsPlot.addSeries(aLvlSeries,
-                        new BarFormatter(Color.rgb(0, 200, 0), Color.rgb(0, 80, 0)));
-        aprLevelsPlot.addSeries(pLvlSeries,
-                        new BarFormatter(Color.rgb(200, 0, 0), Color.rgb(0, 80, 0)));
-        aprLevelsPlot.addSeries(rLvlSeries,
-                        new BarFormatter(Color.rgb(0, 0, 200), Color.rgb(0, 80, 0)));
-
-        aprLevelsPlot.setDomainStepValue(3);
-        aprLevelsPlot.setLinesPerRangeLabel(3);
-
-        // per the android documentation, the minimum and maximum readings we can get from
-        // any of the orientation sensors is -180 and 359 respectively so we will fix our plot's
-        // boundaries to those values.  If we did not do this, the plot would auto-range which
-        // can be visually confusing in the case of dynamic plots.
-        aprLevelsPlot.setRangeBoundaries(-180, 359, BoundaryMode.FIXED);
-
-        // update our domain and range axis labels:
-        aprLevelsPlot.setDomainLabel("");
-        aprLevelsPlot.getDomainTitle().pack();
-        aprLevelsPlot.setRangeLabel("Angle (Degs)");
-        aprLevelsPlot.getRangeTitle().pack();
-        aprLevelsPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
-                setFormat(new DecimalFormat("#"));
-
-        // setup the APR History plot:
-        aprHistoryPlot = (XYPlot) findViewById(R.id.aprHistoryPlot);
-
-        azimuthHistorySeries = new SimpleXYSeries("Az.");
-        azimuthHistorySeries.useImplicitXVals();
-        pitchHistorySeries = new SimpleXYSeries("Pitch");
-        pitchHistorySeries.useImplicitXVals();
-        rollHistorySeries = new SimpleXYSeries("Roll");
-        rollHistorySeries.useImplicitXVals();
-
-        aprHistoryPlot.setRangeBoundaries(-180, 359, BoundaryMode.FIXED);
-        aprHistoryPlot.setDomainBoundaries(0, HISTORY_SIZE, BoundaryMode.FIXED);
-        aprHistoryPlot.addSeries(azimuthHistorySeries,
-                new LineAndPointFormatter(
-                        Color.rgb(100, 100, 200), null, null, null));
-        aprHistoryPlot.addSeries(pitchHistorySeries,
-                new LineAndPointFormatter(
-                        Color.rgb(100, 200, 100), null, null, null));
-        aprHistoryPlot.addSeries(rollHistorySeries,
-                new LineAndPointFormatter(
-                        Color.rgb(200, 100, 100), null, null, null));
-        aprHistoryPlot.setDomainStepMode(StepMode.INCREMENT_BY_VAL);
-        aprHistoryPlot.setDomainStepValue(HISTORY_SIZE/10);
-        aprHistoryPlot.setLinesPerRangeLabel(3);
-        aprHistoryPlot.setDomainLabel("Sample Index");
-        aprHistoryPlot.getDomainTitle().pack();
-        aprHistoryPlot.setRangeLabel("Angle (Degs)");
-        aprHistoryPlot.getRangeTitle().pack();
-
-        aprHistoryPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
-                setFormat(new DecimalFormat("#"));
-
-        aprHistoryPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).
-                setFormat(new DecimalFormat("#"));
-
-        // setup checkboxes:
-        hwAcceleratedCb = (CheckBox) findViewById(R.id.hwAccelerationCb);
-        final PlotStatistics levelStats = new PlotStatistics(1000, false);
-        final PlotStatistics histStats = new PlotStatistics(1000, false);
-
+        // PlotStatistics is an Androidplot utility that can annotate a plot with its frame rate:
+        PlotStatistics levelStats = new PlotStatistics(1000, false);
+        PlotStatistics histStats = new PlotStatistics(1000, false);
         aprLevelsPlot.addListener(levelStats);
         aprHistoryPlot.addListener(histStats);
-        hwAcceleratedCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b) {
-                    aprLevelsPlot.setLayerType(View.LAYER_TYPE_NONE, null);
-                    aprHistoryPlot.setLayerType(View.LAYER_TYPE_NONE, null);
-                } else {
-                    aprLevelsPlot.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                    aprHistoryPlot.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                }
-            }
+        CheckBox showFpsCb = findViewById(R.id.showFpsCb);
+        showFpsCb.setOnCheckedChangeListener((cb, checked) -> {
+            levelStats.setAnnotatePlotEnabled(checked);
+            histStats.setAnnotatePlotEnabled(checked);
         });
 
-        showFpsCb = (CheckBox) findViewById(R.id.showFpsCb);
-        showFpsCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                levelStats.setAnnotatePlotEnabled(b);
-                histStats.setAnnotatePlotEnabled(b);
-            }
-        });
+        // redraw both plots from a background thread at up to 100hz:
+        redrawer = new Redrawer(Arrays.<Plot>asList(aprHistoryPlot, aprLevelsPlot), 100, false);
 
-        // get a ref to the BarRenderer so we can make some changes to it:
-        BarRenderer barRenderer = aprLevelsPlot.getRenderer(BarRenderer.class);
-        if(barRenderer != null) {
-            // make our bars a little thicker than the default so they can be seen better:
-            barRenderer.setBarGroupWidth(
-                    BarRenderer.BarGroupWidthMode.FIXED_WIDTH, PixelUtils.dpToPix(18));
-        }
-
-        // register for orientation sensor events:
-        sensorMgr = (SensorManager) getApplicationContext().getSystemService(Context.SENSOR_SERVICE);
-        for (Sensor sensor : sensorMgr.getSensorList(Sensor.TYPE_ORIENTATION)) {
-            if (sensor.getType() == Sensor.TYPE_ORIENTATION) {
-                orSensor = sensor;
-            }
-        }
-
-        // if we can't access the orientation sensor then exit:
+        // prefer the fused rotation vector; fall back to the legacy orientation sensor.
+        // the listener is registered in onResume and unregistered in onPause.
+        sensorMgr = getSystemService(SensorManager.class);
+        orSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         if (orSensor == null) {
-            System.out.println("Failed to attach to orSensor.");
-            cleanup();
+            orSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         }
-
-        sensorMgr.registerListener(this, orSensor, SensorManager.SENSOR_DELAY_UI);
-
-        redrawer = new Redrawer(
-                Arrays.asList(new Plot[]{aprHistoryPlot, aprLevelsPlot}),
-                100, false);
+        if (orSensor == null) {
+            Log.w(TAG, "No orientation sensor available.");
+            Toast.makeText(this, "This device has no orientation sensor", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        sensorMgr.registerListener(this, orSensor, SensorManager.SENSOR_DELAY_UI);
         redrawer.start();
     }
 
     @Override
     public void onPause() {
         redrawer.pause();
+        sensorMgr.unregisterListener(this);
         super.onPause();
     }
 
@@ -193,29 +106,86 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         super.onDestroy();
     }
 
-    private void cleanup() {
-        // aunregister with the orientation sensor before exiting:
-        sensorMgr.unregisterListener(this);
-        finish();
+    // one bar per reading, so the sensor's latest values can be compared at a glance
+    private void configureLevelsPlot() {
+        aLvlSeries = new SimpleXYSeries("A");
+        pLvlSeries = new SimpleXYSeries("P");
+        rLvlSeries = new SimpleXYSeries("R");
+
+        aprLevelsPlot.addSeries(aLvlSeries,
+                new BarFormatter(Color.rgb(0, 200, 0), Color.rgb(0, 80, 0)));
+        aprLevelsPlot.addSeries(pLvlSeries,
+                new BarFormatter(Color.rgb(200, 0, 0), Color.rgb(0, 80, 0)));
+        aprLevelsPlot.addSeries(rLvlSeries,
+                new BarFormatter(Color.rgb(0, 0, 200), Color.rgb(0, 80, 0)));
+
+        aprLevelsPlot.setDomainBoundaries(-1, 1, BoundaryMode.FIXED);
+        aprLevelsPlot.setDomainStepValue(3);
+        aprLevelsPlot.setLinesPerRangeLabel(3);
+
+        // per the android documentation, the minimum and maximum readings we can get from
+        // any of the orientation sensors is -180 and 359 respectively so we will fix our plot's
+        // boundaries to those values.  If we did not do this, the plot would auto-range which
+        // can be visually confusing in the case of dynamic plots.
+        aprLevelsPlot.setRangeBoundaries(-180, 359, BoundaryMode.FIXED);
+
+        aprLevelsPlot.setDomainLabel("");
+        aprLevelsPlot.getDomainTitle().pack();
+        aprLevelsPlot.setRangeLabel("Angle (Degs)");
+        aprLevelsPlot.getRangeTitle().pack();
+        aprLevelsPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
+                setFormat(new DecimalFormat("#"));
+
+        // make our bars a little thicker than the default so they can be seen better:
+        aprLevelsPlot.getRenderer(BarRenderer.class).setBarGroupWidth(
+                BarRenderer.BarGroupWidthMode.FIXED_WIDTH, PixelUtils.dpToPix(18));
     }
 
+    // a scrolling window of the last HISTORY_SIZE readings
+    private void configureHistoryPlot() {
+        azimuthHistorySeries = new SimpleXYSeries("Az.");
+        azimuthHistorySeries.useImplicitXVals();
+        pitchHistorySeries = new SimpleXYSeries("Pitch");
+        pitchHistorySeries.useImplicitXVals();
+        rollHistorySeries = new SimpleXYSeries("Roll");
+        rollHistorySeries.useImplicitXVals();
 
-    // Called whenever a new orSensor reading is taken.
+        aprHistoryPlot.addSeries(azimuthHistorySeries,
+                new LineAndPointFormatter(Color.rgb(100, 100, 200), null, null, null));
+        aprHistoryPlot.addSeries(pitchHistorySeries,
+                new LineAndPointFormatter(Color.rgb(100, 200, 100), null, null, null));
+        aprHistoryPlot.addSeries(rollHistorySeries,
+                new LineAndPointFormatter(Color.rgb(200, 100, 100), null, null, null));
+
+        aprHistoryPlot.setRangeBoundaries(-180, 359, BoundaryMode.FIXED);
+        aprHistoryPlot.setDomainBoundaries(0, HISTORY_SIZE, BoundaryMode.FIXED);
+        aprHistoryPlot.setDomainStep(StepMode.INCREMENT_BY_VAL, HISTORY_SIZE / 10);
+        aprHistoryPlot.setLinesPerRangeLabel(3);
+
+        aprHistoryPlot.setDomainLabel("Sample Index");
+        aprHistoryPlot.getDomainTitle().pack();
+        aprHistoryPlot.setRangeLabel("Angle (Degs)");
+        aprHistoryPlot.getRangeTitle().pack();
+        aprHistoryPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).
+                setFormat(new DecimalFormat("#"));
+        aprHistoryPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).
+                setFormat(new DecimalFormat("#"));
+    }
+
+    // sensor plumbing
+
     @Override
     public synchronized void onSensorChanged(SensorEvent sensorEvent) {
+        float[] apr = sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR
+                ? orientationDegrees(sensorEvent) : sensorEvent.values;
 
         // update level data:
-        aLvlSeries.setModel(Arrays.asList(
-                new Number[]{sensorEvent.values[0]}),
+        aLvlSeries.setModel(Collections.singletonList((Number) apr[0]),
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-
-        pLvlSeries.setModel(Arrays.asList(
-                        new Number[]{sensorEvent.values[1]}),
-                        SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-
-        rLvlSeries.setModel(Arrays.asList(
-                        new Number[]{sensorEvent.values[2]}),
-                        SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+        pLvlSeries.setModel(Collections.singletonList((Number) apr[1]),
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+        rLvlSeries.setModel(Collections.singletonList((Number) apr[2]),
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 
         // get rid the oldest sample in history:
         if (rollHistorySeries.size() > HISTORY_SIZE) {
@@ -225,13 +195,27 @@ public class OrientationSensorExampleActivity extends Activity implements Sensor
         }
 
         // add the latest history sample:
-        azimuthHistorySeries.addLast(null, sensorEvent.values[0]);
-        pitchHistorySeries.addLast(null, sensorEvent.values[1]);
-        rollHistorySeries.addLast(null, sensorEvent.values[2]);
+        azimuthHistorySeries.addLast(null, apr[0]);
+        pitchHistorySeries.addLast(null, apr[1]);
+        rollHistorySeries.addLast(null, apr[2]);
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
         // Not interested in this event
+    }
+
+    // The rotation vector is the modern replacement for the legacy orientation sensor; this turns
+    // it into the same azimuth/pitch/roll degrees. It is the only non-Androidplot logic in this file.
+    private float[] orientationDegrees(SensorEvent event) {
+        SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
+        SensorManager.getOrientation(rotationMatrix, orientation);
+        for (int i = 0; i < orientation.length; i++) {
+            orientation[i] = (float) Math.toDegrees(orientation[i]);
+        }
+        if (orientation[0] < 0) {
+            orientation[0] += 360; // azimuth: -180..180 -> 0..360, as TYPE_ORIENTATION reports it
+        }
+        return orientation;
     }
 }

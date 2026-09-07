@@ -135,6 +135,52 @@ public class XYGraphWidgetTest extends AndroidplotTest {
         runDrawGridTest();
     }
 
+    /**
+     * https://github.com/halfhp/androidplot/issues/125: inverted boundaries (min > max) with
+     * INCREMENT_BY_VAL drew no grid lines or labels at all.
+     */
+    @Test
+    public void drawGrid_invertedBounds_drawsGrid() {
+        bounds = new RectRegion(0, 0, 0, 0);
+        bounds.setMinX(100);
+        bounds.setMaxX(0);
+        bounds.setMinY(100);
+        bounds.setMaxY(0);
+        when(xyPlot.getBounds()).thenReturn(bounds);
+        when(xyPlot.getDomainOrigin()).thenReturn(null);
+        when(xyPlot.getRangeOrigin()).thenReturn(null);
+
+        doNothing().when(graphWidget).
+                drawDomainLine(any(Canvas.class), anyFloat(), any(Number.class), any(Paint.class), anyBoolean(), anyBoolean());
+        doNothing().when(graphWidget).
+                drawRangeLine(any(Canvas.class), anyFloat(), any(Number.class), any(Paint.class), anyBoolean(), anyBoolean());
+
+        graphWidget.drawGrid(canvas);
+
+        ArgumentCaptor<Float> xPix = ArgumentCaptor.forClass(Float.class);
+        ArgumentCaptor<Number> xVal = ArgumentCaptor.forClass(Number.class);
+        verify(graphWidget, times(101)).drawDomainLine(
+                eq(canvas), xPix.capture(), xVal.capture(), any(Paint.class), anyBoolean(), anyBoolean());
+
+        // lines are laid out left to right and values run from max (100) at the left edge down
+        // to 0 at the right edge:
+        assertEquals(0f, xPix.getAllValues().get(0), 0.001f);
+        assertEquals(100.0, xVal.getAllValues().get(0).doubleValue(), 0.001);
+        assertEquals(10f, xPix.getAllValues().get(100), 0.001f);
+        assertEquals(0.0, xVal.getAllValues().get(100).doubleValue(), 0.001);
+
+        ArgumentCaptor<Float> yPix = ArgumentCaptor.forClass(Float.class);
+        ArgumentCaptor<Number> yVal = ArgumentCaptor.forClass(Number.class);
+        verify(graphWidget, times(101)).drawRangeLine(
+                eq(canvas), yPix.capture(), yVal.capture(), any(Paint.class), anyBoolean(), anyBoolean());
+
+        // the bottom of the grid carries the range minimum (100) and the top the maximum (0):
+        assertEquals(0f, yPix.getAllValues().get(0), 0.001f);
+        assertEquals(0.0, yVal.getAllValues().get(0).doubleValue(), 0.001);
+        assertEquals(100f, yPix.getAllValues().get(100), 0.001f);
+        assertEquals(100.0, yVal.getAllValues().get(100).doubleValue(), 0.001);
+    }
+
     @Test
     public void drawGrid_centeredOrigin_drawsGrid() {
 

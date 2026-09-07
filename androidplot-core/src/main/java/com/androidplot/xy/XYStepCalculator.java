@@ -48,6 +48,14 @@ public class XYStepCalculator {
             case INCREMENT_BY_FIT:
                 stepVal = stepValue;
                 stepPix = stepValue / realBounds.ratio(pixelBounds).doubleValue();
+                if (stepPix < 0) {
+                    // the axis is inverted (min > max), so a positive value step runs against
+                    // the pixel direction.  Grid drawing walks the axis in pixel order, so keep
+                    // the pixel step positive and let the value step carry the sign, which is
+                    // how the other step modes already come out for inverted bounds.  (#125)
+                    stepPix = -stepPix;
+                    stepVal = -stepVal;
+                }
                 stepCount = pixelBounds.length().doubleValue() / stepPix;
                 break;
             case INCREMENT_BY_PIXELS:

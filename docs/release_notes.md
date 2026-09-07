@@ -20,6 +20,34 @@ For details on what to expect in general when updating to a new version of Andro
   [XML Configuration](xml_configuration.md) doc.
 * Compile and target SDK 37; build updated to AGP 9.4 / Gradle 9.7 / Kotlin 2.2.
 * Snapshot builds of unreleased changes are now published to the Central snapshots repository.
+* Fix crash on the render thread after restoring a `PanZoom.State` that was captured before any
+  pan or zoom gesture (eg. saving `getState()` in `onSaveInstanceState` and rotating the device).
+  `getState()` now snapshots the plot's actual boundaries and modes for both axes, and applying a
+  state skips any axis edge it holds no mode for.  A `State` serialized by an earlier version
+  still deserializes (its `serialVersionUID` is pinned) and restores as a no-op.  `XYPlot` gains
+  public getters for its four boundary modes.
+* Fix `SampledXYSeries` crashing the render thread on its first draw: the series had no active
+  data until a zoom factor was applied, and had no bounds when its data was too small to produce
+  any sampled zoom level.  `ZoomEstimator` also tolerates a series without bounds.
+* Fix `ConcurrentModificationException` (and silently skipped listeners) when a `PlotListener`
+  or series removes itself from the plot from within `onBeforeDraw` / `onAfterDraw`.  The
+  listener list is now a `CopyOnWriteArrayList`; `Plot.getListeners()` returns a `List`.
+* Fix `centerOnRangeOrigin(...)` with `BoundaryMode.FIXED`, `GROW` or `SHRINK` throwing
+  `UnsupportedOperationException` on every frame; the range axis now supports the same origin
+  boundary modes as the domain axis.
+* Fix `NullPointerException` when a `RectRegion` with a null (unbounded) edge is tested for
+  intersection, eg. a fill region added to a `LineAndPointFormatter`.  Null now means infinity as
+  documented, and the `Region(v1, v2)` constructor no longer swaps a null value to the wrong edge.
+  `LineAndPointRenderer` draws such a region clipped to the plot's visible bounds.
+* Fix `ConcurrentModificationException` on the render thread when `XYPlot` value markers are
+  added or removed while the plot is drawing; the marker lists are now `CopyOnWriteArrayList`s.
+* Fix `NullPointerException` from `SimpleXYSeries.setModel(...)`, `resize(...)` and `setXY(...)`
+  after `useImplicitXVals()`.  `setModel` and `resize` keep the x-vals implicit, `setXY` sets
+  only the y value, and `setX` throws an `IllegalStateException` explaining why.
+* Fix `LayerListOrganizer.moveBeneath(...)` losing the moved element (and throwing
+  `IndexOutOfBoundsException`) and `moveAbove(...)` silently moving it to the bottom when the
+  reference element is not in the list; both now throw `IllegalArgumentException` and leave the
+  list unchanged.
 
 **Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
 * The plot view is now composited with hardware acceleration when the app has it enabled.  The

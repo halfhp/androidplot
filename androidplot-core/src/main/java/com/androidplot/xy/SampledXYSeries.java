@@ -70,6 +70,9 @@ public class SampledXYSeries implements FastXYSeries, OrderedXYSeries {
 
     public void resample() {
         bounds = null;
+
+        // until a zoom factor is applied, the series is the raw data (1x zoom):
+        activeSeries = rawData;
         zoomLevels = new ArrayList<>();
         int t = (int) Math.ceil(rawData.size() / getRatio());
         List<Thread> threads = new ArrayList<>(zoomLevels.size());
@@ -108,6 +111,11 @@ public class SampledXYSeries implements FastXYSeries, OrderedXYSeries {
             throw new RuntimeException("Exception encountered during resampling", lastResamplingException);
         }
 
+        // no zoom levels were generated (rawData.size / ratio is already below threshold) so
+        // the sampler never ran; compute bounds directly from the raw data instead:
+        if (bounds == null) {
+            bounds = SeriesUtils.minMax(rawData);
+        }
     }
 
     protected List<EditableXYSeries> getZoomLevels() {
@@ -186,6 +194,10 @@ public class SampledXYSeries implements FastXYSeries, OrderedXYSeries {
         this.threshold = threshold;
     }
 
+    /**
+     * @return The min/max bounds of the raw data.  Never null after construction unless
+     * explicitly set to null via {@link #setBounds(RectRegion)}.
+     */
     public RectRegion getBounds() {
         return bounds;
     }

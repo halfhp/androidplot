@@ -25,9 +25,9 @@ import com.androidplot.util.AttrUtils;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.util.SeriesUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A View to graphically display x/y coordinates.
@@ -106,8 +106,10 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
     @SuppressWarnings("FieldCanBeLocal")
     private Number rangeOriginExtent = null;
 
-    private ArrayList<YValueMarker> yValueMarkers;
-    private ArrayList<XValueMarker> xValueMarkers;
+    // XYGraphWidget.drawMarkers iterates these on the render thread while markers may be
+    // added / removed from another thread, so they must be safe to mutate during iteration:
+    private List<YValueMarker> yValueMarkers;
+    private List<XValueMarker> xValueMarkers;
 
     private PreviewMode previewMode;
 
@@ -219,8 +221,8 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         setPlotMarginTop(PixelUtils.dpToPix(DEFAULT_PLOT_TOP_MARGIN_DP));
         setPlotMarginBottom(PixelUtils.dpToPix(DEFAULT_PLOT_BOTTOM_MARGIN_DP));
 
-        xValueMarkers = new ArrayList<>();
-        yValueMarkers = new ArrayList<>();
+        xValueMarkers = new CopyOnWriteArrayList<>();
+        yValueMarkers = new CopyOnWriteArrayList<>();
 
         domainStepModel = new StepModel(StepMode.SUBDIVIDE, 10);
         rangeStepModel = new StepModel(StepMode.SUBDIVIDE, 10);
@@ -728,22 +730,48 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
     }
 
     public void updateRangeMinMaxForOriginModel() {
+        double origin = userRangeOrigin.doubleValue();
+        double maxDelta = distance(bounds.getMaxY().doubleValue(), origin);
+        double minDelta = distance(bounds.getMinY().doubleValue(), origin);
+        double delta = maxDelta > minDelta ? maxDelta : minDelta;
+        double lowerBoundary = origin - delta;
+        double upperBoundary = origin + delta;
         switch (rangeOriginBoundaryMode) {
             case AUTO:
-                double origin = userRangeOrigin.doubleValue();
-                double maxDelta = distance(bounds.getMaxY().doubleValue(), origin);
-                double minDelta = distance(bounds.getMinY().doubleValue(), origin);
-                if (maxDelta > minDelta) {
-                    bounds.setMinY(origin - maxDelta);
-                    bounds.setMaxY(origin + maxDelta);
+                bounds.setMinY(lowerBoundary);
+                bounds.setMaxY(upperBoundary);
+                break;
+            // if fixed, then the value already exists within "user" vals.
+            case FIXED:
+                break;
+            case GROW: {
+
+                if (prevMinY == null || lowerBoundary < prevMinY.doubleValue()) {
+                    bounds.setMinY(lowerBoundary);
                 } else {
-                    bounds.setMinY(origin - minDelta);
-                    bounds.setMaxY(origin + minDelta);
+                    bounds.setMinY(prevMinY);
+                }
+
+                if (prevMaxY == null || upperBoundary > prevMaxY.doubleValue()) {
+                    bounds.setMaxY(upperBoundary);
+                } else {
+                    bounds.setMaxY(prevMaxY);
+                }
+            }
+            break;
+            case SHRINK:
+                if (prevMinY == null || lowerBoundary > prevMinY.doubleValue()) {
+                    bounds.setMinY(lowerBoundary);
+                } else {
+                    bounds.setMinY(prevMinY);
+                }
+
+                if (prevMaxY == null || upperBoundary < prevMaxY.doubleValue()) {
+                    bounds.setMaxY(upperBoundary);
+                } else {
+                    bounds.setMaxY(prevMaxY);
                 }
                 break;
-            case FIXED:
-            case GROW:
-            case SHRINK:
             default:
                 throw new UnsupportedOperationException(
                         "Range Origin Boundary Mode not yet supported: " + rangeOriginBoundaryMode);
@@ -1000,6 +1028,54 @@ public class XYPlot extends Plot<XYSeries, XYSeriesFormatter, XYSeriesRenderer, 
         setUserMinY((mode == BoundaryMode.FIXED) ? boundary : null);
         setRangeLowerBoundaryMode(mode);
         setRangeFramingModel(XYFramingModel.EDGE);
+    }
+
+    public BoundaryMode getDomainLowerBoundaryMode() {
+        return constraints.getDomainLowerBoundaryMode();
+    }
+
+    public BoundaryMode getDomainUpperBoundaryMode() {
+        return constraints.getDomainUpperBoundaryMode();
+    }
+
+    public BoundaryMode getRangeLowerBoundaryMode() {
+        return constraints.getRangeLowerBoundaryMode();
+    }
+
+    public BoundaryMode getRangeUpperBoundaryMode() {
+        return constraints.getRangeUpperBoundaryMode();
+    }
+
+    /**
+     * @return The user specified lower domain boundary, or null if the lower domain boundary
+     * mode is not {@link BoundaryMode#FIXED}.
+     */
+    protected Number getUserMinX() {
+        return constraints.getMinX();
+    }
+
+    /**
+     * @return The user specified upper domain boundary, or null if the upper domain boundary
+     * mode is not {@link BoundaryMode#FIXED}.
+     */
+    protected Number getUserMaxX() {
+        return constraints.getMaxX();
+    }
+
+    /**
+     * @return The user specified lower range boundary, or null if the lower range boundary
+     * mode is not {@link BoundaryMode#FIXED}.
+     */
+    protected Number getUserMinY() {
+        return constraints.getMinY();
+    }
+
+    /**
+     * @return The user specified upper range boundary, or null if the upper range boundary
+     * mode is not {@link BoundaryMode#FIXED}.
+     */
+    protected Number getUserMaxY() {
+        return constraints.getMaxY();
     }
 
     public XYCoords getOrigin() {

@@ -14,6 +14,12 @@ import com.androidplot.util.*;
 import org.junit.*;
 import org.mockito.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
+
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -234,5 +240,160 @@ public class PanZoomTest extends AndroidplotTest {
         assertEquals(0f, distance.top);
         assertEquals(10f, distance.right);
         assertEquals(10f, distance.bottom);
+    }
+
+    private XYPlot newRealPlot() {
+        XYPlot plot = new XYPlot(getContext(), "test");
+        plot.addSeries(TestUtils.generateXYSeries("series", 10, 0, 100), new LineAndPointFormatter());
+        return plot;
+    }
+
+    @Test
+    public void setState_withUnpopulatedState_leavesPlotBoundariesIntact() {
+        XYPlot plot = newRealPlot();
+        plot.setDomainBoundaries(2, 8, BoundaryMode.FIXED);
+        plot.setRangeBoundaries(-1, 1, BoundaryMode.FIXED);
+        plot.calculateMinMaxVals();
+
+        // a partial config (no vertical pan, no zoom) never touches the range axis:
+        PanZoom panZoom = PanZoom.attach(plot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.NONE);
+
+        // simulates restoring a state that was captured before any pan / zoom gesture:
+        panZoom.setState(new PanZoom.State());
+
+        // this is what the render thread does on the next frame:
+        plot.calculateMinMaxVals();
+
+        assertEquals(2.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(8.0, plot.getBounds().getMaxX().doubleValue(), 0);
+        assertEquals(-1.0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(1.0, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
+    @Test
+    public void getState_setState_roundTrip_preservesFixedBoundaries() {
+        XYPlot plot = newRealPlot();
+        plot.setDomainBoundaries(2, 8, BoundaryMode.FIXED);
+        plot.setRangeBoundaries(-1, 1, BoundaryMode.FIXED);
+        PanZoom panZoom = PanZoom.attach(plot);
+
+        // capture before any gesture, as an Activity would in onSaveInstanceState:
+        PanZoom.State state = panZoom.getState();
+
+        // boundaries change (eg. a new Activity instance is created with different defaults)...
+        plot.setDomainBoundaries(0, 100, BoundaryMode.FIXED);
+        plot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
+
+        // ...and restoring the state brings the originals back:
+        panZoom.setState(state);
+        plot.calculateMinMaxVals();
+
+        assertEquals(2.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(8.0, plot.getBounds().getMaxX().doubleValue(), 0);
+        assertEquals(-1.0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(1.0, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
+    @Test
+    public void state_serialVersionUID_matchesOriginalClass() {
+        // States serialized by older versions of the library must keep deserializing; see the
+        // comment on PanZoom.State.serialVersionUID.
+        assertEquals(-4221152827129598653L,
+                ObjectStreamClass.lookup(PanZoom.State.class).getSerialVersionUID());
+    }
+
+    @Test
+    public void state_javaSerialization_roundTrip_preservesBoundaries() throws Exception {
+        XYPlot plot = newRealPlot();
+        plot.setDomainBoundaries(2, BoundaryMode.FIXED, 8, BoundaryMode.AUTO);
+        plot.setRangeBoundaries(-1, BoundaryMode.AUTO, 1, BoundaryMode.FIXED);
+        plot.calculateMinMaxVals();
+        final double autoMaxX = plot.getBounds().getMaxX().doubleValue();
+        final double autoMinY = plot.getBounds().getMinY().doubleValue();
+        PanZoom panZoom = PanZoom.attach(plot);
+
+        // serialize as a Bundle would when saving instance state:
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(bytes);
+        out.writeObject(panZoom.getState());
+        out.close();
+
+        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()));
+        PanZoom.State restored = (PanZoom.State) in.readObject();
+        in.close();
+
+        plot.setDomainBoundaries(0, 100, BoundaryMode.FIXED);
+        plot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
+
+        panZoom.setState(restored);
+        plot.calculateMinMaxVals();
+
+        assertEquals(2.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(autoMaxX, plot.getBounds().getMaxX().doubleValue(), 0);
+        assertEquals(autoMinY, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(1.0, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
+    /**
+     * A State serialized by the library as it was before per-edge boundary modes were added
+     * (domain 2..8 FIXED, range -1..1 FIXED), captured from the compiled class on master.
+     */
+    private static final String LEGACY_STATE_HEX =
+            "aced000573720020636f6d2e616e64726f6964706c6f742e78792e50616e5a6f6f6d245374617465c56b73de4c4ded43" +
+            "0200064c0012646f6d61696e426f756e646172794d6f64657400214c636f6d2f616e64726f6964706c6f742f78792f42" +
+            "6f756e646172794d6f64653b4c0013646f6d61696e4c6f776572426f756e646172797400124c6a6176612f6c616e672f" +
+            "4e756d6265723b4c0013646f6d61696e5570706572426f756e6461727971007e00024c001172616e6765426f756e6461" +
+            "72794d6f646571007e00014c001272616e67654c6f776572426f756e6461727971007e00024c001272616e6765557070" +
+            "6572426f756e6461727971007e000278707e72001f636f6d2e616e64726f6964706c6f742e78792e426f756e64617279" +
+            "4d6f646500000000000000001200007872000e6a6176612e6c616e672e456e756d000000000000000012000078707400" +
+            "054649584544737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c75657872" +
+            "00106a6176612e6c616e672e4e756d62657286ac951d0b94e08b0200007870000000027371007e00080000000871007e" +
+            "00067371007e0008ffffffff7371007e000800000001";
+
+    @Test
+    public void state_serializedByOlderVersion_deserializesAndAppliesAsNoOp() throws Exception {
+        byte[] bytes = new byte[LEGACY_STATE_HEX.length() / 2];
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = (byte) Integer.parseInt(LEGACY_STATE_HEX.substring(i * 2, i * 2 + 2), 16);
+        }
+        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bytes));
+        PanZoom.State legacy = (PanZoom.State) in.readObject();
+        in.close();
+
+        // the legacy stream carries no per-edge modes, so applying it must leave the plot alone:
+        XYPlot plot = newRealPlot();
+        plot.setDomainBoundaries(10, 20, BoundaryMode.FIXED);
+        plot.setRangeBoundaries(30, 40, BoundaryMode.FIXED);
+        PanZoom.attach(plot).setState(legacy);
+        plot.calculateMinMaxVals();
+
+        assertEquals(10.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(20.0, plot.getBounds().getMaxX().doubleValue(), 0);
+        assertEquals(30.0, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(40.0, plot.getBounds().getMaxY().doubleValue(), 0);
+    }
+
+    @Test
+    public void getState_setState_roundTrip_preservesMixedBoundaryModes() {
+        XYPlot plot = newRealPlot();
+        plot.setDomainBoundaries(2, BoundaryMode.FIXED, 8, BoundaryMode.AUTO);
+        plot.setRangeBoundaries(-1, BoundaryMode.AUTO, 1, BoundaryMode.FIXED);
+        plot.calculateMinMaxVals();
+        final double autoMaxX = plot.getBounds().getMaxX().doubleValue();
+        final double autoMinY = plot.getBounds().getMinY().doubleValue();
+        PanZoom panZoom = PanZoom.attach(plot);
+
+        PanZoom.State state = panZoom.getState();
+
+        plot.setDomainBoundaries(0, 100, BoundaryMode.FIXED);
+        plot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
+
+        panZoom.setState(state);
+        plot.calculateMinMaxVals();
+
+        assertEquals(2.0, plot.getBounds().getMinX().doubleValue(), 0);
+        assertEquals(autoMaxX, plot.getBounds().getMaxX().doubleValue(), 0);
+        assertEquals(autoMinY, plot.getBounds().getMinY().doubleValue(), 0);
+        assertEquals(1.0, plot.getBounds().getMaxY().doubleValue(), 0);
     }
 }

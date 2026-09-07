@@ -41,6 +41,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Base class for all Plot implementations.
@@ -171,7 +172,9 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     private HashMap<Class<? extends RendererType>, RendererType> renderers;
 
     private RegistryType registry;
-    private final ArrayList<PlotListener> listeners;
+    // listeners may add / remove themselves (or a series) from within a draw callback, so this
+    // must be safe to mutate while notifyListenersBeforeDraw / AfterDraw iterate over it:
+    private final List<PlotListener> listeners;
 
     // the current render thread, if any.  Replaced under renderSync; read without the lock
     // where only a best-effort check is needed.
@@ -260,7 +263,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
     }
 
     {
-        listeners = new ArrayList<>();
+        listeners = new CopyOnWriteArrayList<>();
         registry = getRegistryInstance();
         renderers = new HashMap<>();
 
@@ -643,7 +646,7 @@ public abstract class Plot<SeriesType extends Series, FormatterType extends Form
         return listeners.remove(listener);
     }
 
-    protected ArrayList<PlotListener> getListeners() {
+    protected List<PlotListener> getListeners() {
         return listeners;
     }
 

@@ -205,7 +205,7 @@ public class PlotTest extends AndroidplotTest {
     @Test
     public void testAddListener() {
         Plot plot = new MockPlot("MockPlot");
-        ArrayList<PlotListener> listeners = plot.getListeners();
+        List<PlotListener> listeners = plot.getListeners();
 
         assertEquals(0, listeners.size());
 
@@ -231,7 +231,7 @@ public class PlotTest extends AndroidplotTest {
     @Test
     public void testRemoveListener() {
         Plot plot = new MockPlot("MockPlot");
-        ArrayList<PlotListener> listeners = plot.getListeners();
+        List<PlotListener> listeners = plot.getListeners();
 
         assertEquals(0, listeners.size());
 
@@ -284,6 +284,84 @@ public class PlotTest extends AndroidplotTest {
         Plot plot = new MockPlot("foo");
         plot.setTitle("bar");
         assertEquals("bar", plot.getTitle().getText());
+    }
+
+    /** Counts onAfterDraw invocations. */
+    static class CountingPlotListener extends MockPlotListener {
+        int afterDrawCount;
+
+        @Override
+        public void onAfterDraw(Plot source, Canvas canvas) {
+            afterDrawCount++;
+        }
+    }
+
+    @Test
+    public void renderOnCanvas_listenerRemovingItselfDuringDraw_doesNotThrow() {
+        final Plot plot = new MockPlot("MockPlot", Plot.RenderMode.USE_MAIN_THREAD);
+        final PlotListener selfRemovingListener = new PlotListener() {
+            @Override
+            public void onBeforeDraw(Plot source, Canvas canvas) {
+            }
+
+            @Override
+            public void onAfterDraw(Plot source, Canvas canvas) {
+                source.removeListener(this);
+            }
+        };
+        CountingPlotListener otherListener = new CountingPlotListener();
+        plot.addListener(otherListener);
+        plot.addListener(selfRemovingListener);
+
+        plot.renderOnCanvas(new Canvas());
+
+        assertEquals(1, otherListener.afterDrawCount);
+        assertEquals(1, plot.getListeners().size());
+        assertTrue(plot.getListeners().contains(otherListener));
+    }
+
+    @Test
+    public void renderOnCanvas_listenerRemovingItselfDuringDraw_stillNotifiesRemainingListeners() {
+        final Plot plot = new MockPlot("MockPlot", Plot.RenderMode.USE_MAIN_THREAD);
+        final PlotListener selfRemovingListener = new PlotListener() {
+            @Override
+            public void onBeforeDraw(Plot source, Canvas canvas) {
+            }
+
+            @Override
+            public void onAfterDraw(Plot source, Canvas canvas) {
+                source.removeListener(this);
+            }
+        };
+        CountingPlotListener otherListener = new CountingPlotListener();
+        plot.addListener(selfRemovingListener);
+        plot.addListener(otherListener);
+
+        plot.renderOnCanvas(new Canvas());
+
+        assertEquals(1, otherListener.afterDrawCount);
+        assertEquals(1, plot.getListeners().size());
+        assertTrue(plot.getListeners().contains(otherListener));
+    }
+
+    @Test
+    public void renderOnCanvas_seriesRemovingItselfDuringDraw_doesNotThrow() {
+        final Plot plot = new MockPlot("MockPlot", Plot.RenderMode.USE_MAIN_THREAD);
+        // series implementing PlotListener are auto-registered as listeners:
+        final MockSeries selfRemovingSeries = new MockSeries() {
+            @Override
+            public void onAfterDraw(Plot source, Canvas canvas) {
+                source.removeSeries(this);
+            }
+        };
+        plot.addSeries(new MockSeries(), new MockFormatter1());
+        plot.addSeries(selfRemovingSeries, new MockFormatter1());
+        assertEquals(2, plot.getListeners().size());
+
+        plot.renderOnCanvas(new Canvas());
+
+        assertEquals(1, plot.getListeners().size());
+        assertEquals(1, plot.getRegistry().size());
     }
 
     @Test

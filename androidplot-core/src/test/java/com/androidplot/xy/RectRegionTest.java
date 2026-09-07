@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -69,6 +71,36 @@ public class RectRegionTest extends AndroidplotTest{
         RectRegion region5 = new RectRegion(-100, 1, -100, 1, "");
         assertTrue(region1.intersects(region5));
         assertTrue(region5.intersects(region1));
+    }
+
+    @Test
+    public void testIntersects_nullBoundsAreTreatedAsInfinity() throws Exception {
+        RectRegion region = new RectRegion(0, 10, 0, 10);
+
+        // open towards negative infinity on both axes, overlapping region:
+        assertTrue(region.intersects(new RectRegion(null, 5, null, 5)));
+        assertTrue(region.intersects(null, 5, null, 5));
+
+        // open towards negative infinity on both axes, entirely below / left of region:
+        assertFalse(region.intersects(new RectRegion(null, -5, null, -5)));
+        assertFalse(region.intersects(null, -5, null, -5));
+
+        // open towards positive infinity:
+        assertTrue(region.intersects(new RectRegion(5, null, 5, null)));
+        assertFalse(region.intersects(new RectRegion(15, null, 15, null)));
+
+        // open on one axis only:
+        assertTrue(region.intersects(new RectRegion(null, null, 5, 6)));
+        assertFalse(region.intersects(new RectRegion(null, null, 15, 16)));
+
+        // unbounded on all sides intersects everything, in either direction:
+        assertTrue(region.intersects(new RectRegion(null, null, null, null)));
+        assertTrue(new RectRegion(null, null, null, null).intersects(region));
+
+        // the list form used by the renderers for fill regions:
+        assertEquals(1, region.intersects(Arrays.asList(
+                new RectRegion(null, 5, null, 5),
+                new RectRegion(null, -5, null, -5))).size());
     }
 
     @Test

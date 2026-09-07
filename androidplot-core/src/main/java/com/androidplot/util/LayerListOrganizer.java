@@ -29,11 +29,18 @@ public class LayerListOrganizer<ElementType> implements Layerable<ElementType> {
             }
     }
 
+    /**
+     * @param objectToMove
+     * @param reference
+     * @return
+     * @throws IllegalArgumentException if reference is not an element of this list, or is the
+     * same as objectToMove.  The list is left unchanged.
+     */
     public boolean moveAbove(ElementType objectToMove, ElementType reference) {
         if(objectToMove == reference) {
             throw new IllegalArgumentException("Illegal argument to moveAbove(A, B); A cannot be equal to B.");
         }
-
+        checkReference(reference, "moveAbove");
 
         list.remove(objectToMove);
         int refIndex = list.indexOf(reference);
@@ -41,16 +48,31 @@ public class LayerListOrganizer<ElementType> implements Layerable<ElementType> {
         return true;
     }
 
+    /**
+     * @param objectToMove
+     * @param reference
+     * @return
+     * @throws IllegalArgumentException if reference is not an element of this list, or is the
+     * same as objectToMove.  The list is left unchanged.
+     */
     public boolean moveBeneath(ElementType objectToMove, ElementType reference) {
         if (objectToMove == reference) {
             throw new IllegalArgumentException("Illegal argument to moveBeaneath(A, B); A cannot be equal to B.");
         }
+        checkReference(reference, "moveBeneath");
 
         list.remove(objectToMove);
         int refIndex = list.indexOf(reference);
         list.add(refIndex, objectToMove);
         return true;
 
+    }
+
+    private void checkReference(ElementType reference, String operation) {
+        if (!list.contains(reference)) {
+            throw new IllegalArgumentException(
+                    "Illegal argument to " + operation + "(A, B); B must be an element of the list.");
+        }
     }
 
     public boolean moveToBottom(ElementType key) {

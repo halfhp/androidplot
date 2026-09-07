@@ -42,6 +42,10 @@ For details on what to expect in general when updating to a new version of Andro
 * Fix `NullPointerException` from `SimpleXYSeries.setModel(...)`, `resize(...)` and `setXY(...)`
   after `useImplicitXVals()`.  `setModel` and `resize` keep the x-vals implicit, `setXY` sets
   only the y value, and `setX` throws an `IllegalStateException` explaining why.
+* Fix `LayerListOrganizer.moveBeneath(...)` losing the moved element (and throwing
+  `IndexOutOfBoundsException`) and `moveAbove(...)` silently moving it to the bottom when the
+  reference element is not in the list; both now throw `IllegalArgumentException` and leave the
+  list unchanged.
 
 **Behavior changes for `RenderMode.USE_BACKGROUND_THREAD`:**
 * The plot view is now composited with hardware acceleration when the app has it enabled.  The

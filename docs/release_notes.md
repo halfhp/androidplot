@@ -3,6 +3,20 @@ For details on what to expect in general when updating to a new version of Andro
 [versioning doc](versioning.md).
 
 # 1.6.0
+A maintenance release focused on correctness and modernisation.  Highlights:
+
+* Builds with the current Android toolchain (compile/target SDK 37, AGP 9.4, Gradle 9.7); the core
+  library's minimum SDK is unchanged.
+* The core library's only dependency is now `androidx.annotation`; the XML configuration engine
+  (formerly the separate Fig library) lives in `androidplot-core`.
+* Nullability annotations across the whole public API for Kotlin callers.
+* Around forty bug fixes, including several crashes, found by a code review of the library and a
+  large expansion of the test suite (core line coverage is now above 95%).
+* A reworked background render loop and demo app; see **Behavior changes** below for the handful of
+  observable differences.
+
+Full list:
+
 * Nullability annotations (`androidx.annotation.NonNull` / `Nullable`) across the whole public API of
   `androidplot-core`: every reference-typed return value and parameter of every public or protected
   method and constructor is annotated, so Kotlin callers see real nullable / non-null types instead

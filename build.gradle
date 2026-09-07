@@ -18,8 +18,8 @@ ext {
     theCompileSdkVersion = 37
     theTargetSdkVersion = 37
     theMinSdkVersion = 5
-    theVersionName = '1.5.11'
-    theVersionCode = 227
+    theVersionName = '1.5.12'
+    theVersionCode = 228
     gitUrl = 'https://github.com/halfhp/androidplot.git'
 }
 

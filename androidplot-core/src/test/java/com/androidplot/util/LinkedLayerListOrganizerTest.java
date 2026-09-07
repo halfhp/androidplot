@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class LinkedLayerListOrganizerTest {
@@ -25,7 +27,22 @@ public class LinkedLayerListOrganizerTest {
 
     @Test
     public void testMoveToTop() throws Exception {
+        Object obj1 = new Object();
+        Object obj2 = new Object();
+        Object obj3 = new Object();
+        LinkedList<Object> list = new LinkedList<>(Arrays.asList(obj1, obj2, obj3));
+        LayerListOrganizer<Object> organizer = new LayerListOrganizer<>(list);
 
+        assertTrue(organizer.moveToTop(obj1));
+        assertEquals(Arrays.asList(obj2, obj3, obj1), list);
+
+        // already on top:
+        assertTrue(organizer.moveToTop(obj1));
+        assertEquals(Arrays.asList(obj2, obj3, obj1), list);
+
+        // unknown element is not added:
+        assertFalse(organizer.moveToTop(new Object()));
+        assertEquals(Arrays.asList(obj2, obj3, obj1), list);
     }
 
     @Test
@@ -117,21 +134,71 @@ public class LinkedLayerListOrganizerTest {
 
     @Test
     public void testMoveUp() throws Exception {
+        Object obj1 = new Object();
+        Object obj2 = new Object();
+        Object obj3 = new Object();
+        LinkedList<Object> list = new LinkedList<>(Arrays.asList(obj1, obj2, obj3));
+        LayerListOrganizer<Object> organizer = new LayerListOrganizer<>(list);
 
+        assertTrue(organizer.moveUp(obj1));
+        assertEquals(Arrays.asList(obj2, obj1, obj3), list);
+        assertTrue(organizer.moveUp(obj1));
+        assertEquals(Arrays.asList(obj2, obj3, obj1), list);
+
+        // already at the top:
+        assertTrue(organizer.moveUp(obj1));
+        assertEquals(Arrays.asList(obj2, obj3, obj1), list);
+
+        // unknown element:
+        assertFalse(organizer.moveUp(new Object()));
+        assertEquals(Arrays.asList(obj2, obj3, obj1), list);
     }
 
     @Test
     public void testMoveDown() throws Exception {
+        Object obj1 = new Object();
+        Object obj2 = new Object();
+        Object obj3 = new Object();
+        LinkedList<Object> list = new LinkedList<>(Arrays.asList(obj1, obj2, obj3));
+        LayerListOrganizer<Object> organizer = new LayerListOrganizer<>(list);
 
+        assertTrue(organizer.moveDown(obj3));
+        assertEquals(Arrays.asList(obj1, obj3, obj2), list);
+        assertTrue(organizer.moveDown(obj3));
+        assertEquals(Arrays.asList(obj3, obj1, obj2), list);
+
+        // already at the bottom:
+        assertTrue(organizer.moveDown(obj3));
+        assertEquals(Arrays.asList(obj3, obj1, obj2), list);
+
+        // unknown element:
+        assertFalse(organizer.moveDown(new Object()));
+        assertEquals(Arrays.asList(obj3, obj1, obj2), list);
     }
 
     @Test
     public void testAddFirst() throws Exception {
+        Object obj1 = new Object();
+        Object obj2 = new Object();
+        LinkedList<Object> list = new LinkedList<>();
+        LayerListOrganizer<Object> organizer = new LayerListOrganizer<>(list);
 
+        organizer.addToBottom(obj1);
+        organizer.addToBottom(obj2);
+        assertEquals(Arrays.asList(obj2, obj1), list);
+        assertEquals(list, organizer.elements());
     }
 
     @Test
     public void testAddLast() throws Exception {
+        Object obj1 = new Object();
+        Object obj2 = new Object();
+        LinkedList<Object> list = new LinkedList<>();
+        LayerListOrganizer<Object> organizer = new LayerListOrganizer<>(list);
 
+        organizer.addToTop(obj1);
+        organizer.addToTop(obj2);
+        assertEquals(Arrays.asList(obj1, obj2), list);
+        assertEquals(list, organizer.elements());
     }
 }

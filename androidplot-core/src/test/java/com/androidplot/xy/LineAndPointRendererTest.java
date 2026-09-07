@@ -227,6 +227,36 @@ public class LineAndPointRendererTest extends AndroidplotTest {
     }
 
     @Test
+    public void renderPath_rendersRegionsWithUnboundedEdges() {
+        LineAndPointFormatter formatter =
+                new LineAndPointFormatter(0, 0, 0, null);
+
+        // null edges represent infinity; this region covers everything below / left of 0.5:
+        XYRegionFormatter open = new XYRegionFormatter(Color.RED);
+        formatter.addRegion(new RectRegion(null, 0.5, null, 0.5, "open"), open);
+
+        // everything above / right of 5, which is outside the plot's visible bounds of -1..1:
+        XYRegionFormatter far = new XYRegionFormatter(Color.GREEN);
+        formatter.addRegion(new RectRegion(5, null, 5, null, "far"), far);
+
+        SimpleXYSeries series = new SimpleXYSeries(
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "some data", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        xyPlot.addSeries(series, formatter);
+        LineAndPointRenderer renderer = xyPlot.getRenderer(LineAndPointRenderer.class);
+
+        renderer.renderPath(canvas, plotArea, new Path(), mock(PointF.class), mock(PointF.class), formatter);
+
+        ArgumentCaptor<RectF> rect = ArgumentCaptor.forClass(RectF.class);
+        verify(canvas).drawRect(rect.capture(), eq(open.getPaint()));
+        verify(canvas, never()).drawRect(any(RectF.class), eq(far.getPaint()));
+
+        // the unbounded edges are clipped to the plot area:
+        assertEquals(plotArea.left, rect.getValue().left);
+        assertEquals(plotArea.bottom, rect.getValue().bottom);
+    }
+
+    @Test
     public void drawSeries_withPointLabelFormatter_drawsPointLabels() {
         LineAndPointFormatter formatter =
                 new LineAndPointFormatter(0, 0, 0, null);

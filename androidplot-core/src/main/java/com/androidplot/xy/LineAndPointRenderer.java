@@ -288,9 +288,9 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         for (RectRegion thisRegion : bounds.intersects(formatter.getRegions().elements())) {
             XYRegionFormatter regionFormatter = formatter.getRegionFormatter(thisRegion);
             RectRegion thisRegionTransformed = bounds
-                    .transform(thisRegion, plotRegion, false, true);
+                    .transform(clipToBounds(thisRegion, bounds), plotRegion, false, true);
             thisRegionTransformed.intersect(plotRegion);
-            if(thisRegion.isFullyDefined()) {
+            if(thisRegionTransformed.isFullyDefined()) {
                 RectF thisRegionRectF = thisRegionTransformed.asRectF();
                 if (thisRegionRectF != null) {
                     try {
@@ -310,5 +310,25 @@ public class LineAndPointRenderer<FormatterType extends LineAndPointFormatter> e
         }
 
         path.rewind();
+    }
+
+    /**
+     * A null edge on a region represents infinity (see {@link RectRegion#intersects(Number, Number, Number, Number)}).
+     * Nothing beyond the visible bounds can be drawn anyway, so such an edge is replaced by the
+     * corresponding edge of bounds, producing a region that can be transformed into screen space.
+     * @param region
+     * @param bounds The plot's visible bounds; must be fully defined.
+     * @return region itself if it is fully defined, otherwise a fully defined copy.
+     */
+    protected static RectRegion clipToBounds(RectRegion region, RectRegion bounds) {
+        if (region.isFullyDefined()) {
+            return region;
+        }
+        return new RectRegion(
+                region.getMinX() != null ? region.getMinX() : bounds.getMinX(),
+                region.getMaxX() != null ? region.getMaxX() : bounds.getMaxX(),
+                region.getMinY() != null ? region.getMinY() : bounds.getMinY(),
+                region.getMaxY() != null ? region.getMaxY() : bounds.getMaxY(),
+                region.getLabel());
     }
 }

@@ -10,7 +10,7 @@ dependencies {
     // core lib doesn't publish a kotlin-stdlib dependency; declare it explicitly here instead.
     // Version should match the Kotlin compiler bundled with AGP's built-in Kotlin support.
     implementation "org.jetbrains.kotlin:kotlin-stdlib:2.2.10"
-    implementation "androidx.core:core-ktx:1.19.0"
+    implementation "androidx.core:core-ktx:1.19.1"
 	implementation project(':androidplot-core')
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
 
@@ -19,7 +19,7 @@ dependencies {
     // Robolectric tests exercising every example activity; same versions as androidplot-core.
     // The Robolectric SDK level is pinned in src/test/resources/robolectric.properties.
     testImplementation "junit:junit:4.13.2"
-    testImplementation "org.robolectric:robolectric:4.16.1"
+    testImplementation "org.robolectric:robolectric:4.17"
 }
 
 kotlin {

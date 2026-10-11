@@ -88,7 +88,7 @@ jobs:
 
       - name: Upload Test and Lint Reports
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: Reports
           path: |
@@ -98,7 +98,7 @@ jobs:
           if-no-files-found: ignore
 
       - name: Upload Core Library AAR
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: Core Library
           path: androidplot-core/build/outputs/aar/*.aar
@@ -132,7 +132,7 @@ jobs:
 
       - name: Upload Demoapp APK
         if: github.ref_name == 'master'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: Demoapp APK
           path: demoapp/build/outputs/apk/release/*.apk
